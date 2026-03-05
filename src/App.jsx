@@ -102,7 +102,7 @@ const WORDS = [
   "vliegen", "vouwen", "waggelen", "wiebelen", "zeilen", "zwemmen",
 ];
 
-const ROUND_TIME = 10;
+const ROUND_TIME = 120;
 
 function shuffle(arr) {
   const a = [...arr];
@@ -597,13 +597,14 @@ export default function App() {
           padding: 12px 0;
           gap: 8px;
           flex-shrink: 0;
+          position: relative;
         }
 
         .round-player { font-family: 'Righteous', cursive; font-size: clamp(14px, 4vw, 20px); color: #a78bfa; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        .timer-wrap { flex-shrink: 0; }
+        .timer-wrap { position: absolute; left: 50%; transform: translateX(-50%); flex-shrink: 0; }
 
-        .round-stats { display: flex; gap: 8px; flex-shrink: 0; }
+        .round-stats { display: flex; gap: 8px; flex-shrink: 0; margin-left: auto; }
         .stat { font-size: 14px; font-weight: 800; padding: 5px 10px; border-radius: 20px; white-space: nowrap; }
         .correct-stat { background: rgba(74,222,128,0.2); color: #4ade80; }
         .skip-stat { background: rgba(251,191,36,0.15); color: #fbbf24; }
