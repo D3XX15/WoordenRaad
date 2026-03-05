@@ -135,7 +135,7 @@ const WORDS = [
   'tunnelvisie', 'turbulentie', 'uitbuiting', 'uitzetting', 'undercover', 'utopie',
   'vaccinatie', 'verjaring', 'vervreemding', 'vetorecht', 'vluchteling', 'volksopstand',
   'wapenhandel', 'wedergeboorte', 'whistleblower', 'xenofobie', 'zelfmoordaanslag',
-  'zielenknijper', 'zonsverduistering', 'zwarte markt',
+  'zielenknijper', 'zonsverduistering', 'zwarte markt', 'reflectie',
 
   // Spreekwoorden
   'alle hens aan dek', 'als de kat van huis is dansen de muizen', 'al doende leert men',
