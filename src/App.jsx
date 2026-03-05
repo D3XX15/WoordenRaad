@@ -154,7 +154,7 @@ const WORDS = [
   'potten en pannen gooien', 'roet in het eten gooien', 'schijnheilig als een kat',
   'slapende honden wakker maken', 'spijkers op laag water zoeken', 'tegen de stroom ingaan',
   'twee honden vechten om een been', 'uit de school klappen', 'van een mug een olifant maken',
-  'van het kastje naar de muur sturen', 'ver van je bed show', 'vissen achter het net',
+  'van het kastje naar de muur sturen', 'ver van je bed show',
   'vlak voor het doel missen', 'vuur met vuur bestrijden', 'water naar de zee dragen',
   'wie niet waagt wie niet wint', 'wijn in oude zakken', 'wolf in schaapskleren',
   'zijn hand overspelen', 'zijn tanden laten zien', 'zijn vingers branden aan iets',
@@ -167,7 +167,7 @@ const WORDS = [
 
 ];
 
-const ROUND_TIME = 120;
+const DEFAULT_ROUND_TIME = 120;
 
 function shuffle(arr) {
   const a = [...arr];
@@ -183,6 +183,7 @@ function shuffle(arr) {
 function SetupScreen({ onStart }) {
   const [count, setCount] = useState(3);
   const [names, setNames] = useState(Array(3).fill(""));
+  const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
 
   const updateCount = (n) => {
     setCount(n);
@@ -245,9 +246,25 @@ function SetupScreen({ onStart }) {
           </div>
         </div>
 
+        <div className="setup-section">
+          <label className="setup-label">Tijd per ronde</label>
+          <div className="time-control">
+            <button
+              className="time-btn"
+              onClick={() => setRoundTime((t) => Math.max(30, t - 30))}
+              disabled={roundTime <= 30}
+            >−30s</button>
+            <span className="time-display">{roundTime}s</span>
+            <button
+              className="time-btn"
+              onClick={() => setRoundTime((t) => t + 30)}
+            >+30s</button>
+          </div>
+        </div>
+
         <button
           className={`start-btn ${canStart ? "ready" : ""}`}
-          onClick={() => canStart && onStart(names.map((n) => n.trim()))}
+          onClick={() => canStart && onStart(names.map((n) => n.trim()), roundTime)}
           disabled={!canStart}
         >
           Spel starten →
@@ -273,23 +290,23 @@ function HandoffScreen({ player, onReady }) {
   );
 }
 
-function RoundScreen({ player, words, onRoundEnd }) {
+function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const [wordIndex, setWordIndex] = useState(0);
   const [scores, setScores] = useState({ correct: 0, skipped: 0 });
   const scoresRef = useRef({ correct: 0, skipped: 0 });
-  const [timeLeft, setTimeLeft] = useState(ROUND_TIME);
+  const [timeLeft, setTimeLeft] = useState(roundTime);
   const [flash, setFlash] = useState(null); // "correct" | "skip"
   const [done, setDone] = useState(false);
   const timerRef = useRef(null);
 
   const startTimeRef = useRef(null);
-  const [timeRemaining, setTimeRemaining] = useState(ROUND_TIME); // exact float for smooth circle
+  const [timeRemaining, setTimeRemaining] = useState(roundTime); // exact float for smooth circle
 
   useEffect(() => {
     startTimeRef.current = Date.now();
     timerRef.current = setInterval(() => {
       const elapsed = (Date.now() - startTimeRef.current) / 1000;
-      const remaining = Math.max(0, ROUND_TIME - elapsed);
+      const remaining = Math.max(0, roundTime - elapsed);
       setTimeRemaining(remaining);
       setTimeLeft(Math.round(remaining));
       if (remaining <= 0) {
@@ -328,7 +345,7 @@ function RoundScreen({ player, words, onRoundEnd }) {
     setWordIndex(wordIndexRef.current);
   };
 
-  const pct = timeRemaining / ROUND_TIME;
+  const pct = timeRemaining / roundTime;
   const timerColor = timeLeft > 30 ? "#4ade80" : timeLeft > 10 ? "#fbbf24" : "#f87171";
   const circumference = 2 * Math.PI * 44;
 
@@ -439,10 +456,11 @@ export default function App() {
   const [roundNum, setRoundNum] = useState(0); // how many rounds completed
   const [wordDeck, setWordDeck] = useState([]);
   const [usedWords, setUsedWords] = useState(new Set());
+  const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
 
   const totalRounds = players.length; // each player plays once = 1 full round
 
-  const startGame = (names) => {
+  const startGame = (names, time) => {
     const empty = Array(names.length).fill(0);
     setPlayers(names);
     setScores(empty);
@@ -450,6 +468,7 @@ export default function App() {
     setCurrentPlayerIdx(0);
     setRoundNum(0);
     setUsedWords(new Set());
+    setRoundTime(time);
     setWordDeck(shuffle(WORDS));
     setPhase("handoff");
   };
@@ -603,6 +622,29 @@ export default function App() {
           transition: all 0.25s;
           margin-top: 4px;
         }
+        .time-control { display: flex; align-items: center; gap: 12px; }
+        .time-btn {
+          width: 64px; height: 44px;
+          border-radius: 12px;
+          border: 1.5px solid rgba(255,255,255,0.15);
+          background: rgba(255,255,255,0.05);
+          color: white;
+          font-family: inherit;
+          font-size: 15px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.18s;
+        }
+        .time-btn:hover:not(:disabled) { border-color: #a78bfa; background: rgba(167,139,250,0.15); }
+        .time-btn:disabled { opacity: 0.3; cursor: default; }
+        .time-display {
+          flex: 1;
+          text-align: center;
+          font-family: 'Righteous', cursive;
+          font-size: 24px;
+          color: #a78bfa;
+        }
+
         .start-btn.ready {
           background: linear-gradient(135deg, #a78bfa, #60a5fa);
           color: white;
@@ -824,6 +866,7 @@ export default function App() {
           player={players[currentPlayerIdx]}
           words={currentWords}
           onRoundEnd={(s) => onRoundEnd(s)}
+          roundTime={roundTime}
         />
       )}
 
