@@ -436,21 +436,29 @@ export default function App() {
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
+        html, body {
           font-family: 'Nunito', sans-serif;
           background: #0f0a1e;
           min-height: 100vh;
+          min-height: 100dvh;
           color: white;
+          overflow-x: hidden;
+          -webkit-text-size-adjust: 100%;
         }
 
         .screen {
           min-height: 100vh;
+          min-height: 100dvh;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 20px;
+          padding: 16px;
+          padding-left: max(16px, env(safe-area-inset-left));
+          padding-right: max(16px, env(safe-area-inset-right));
+          padding-bottom: max(16px, env(safe-area-inset-bottom));
           position: relative;
           overflow: hidden;
+          width: 100%;
         }
 
         /* ── Background noise/grain ── */
@@ -470,11 +478,12 @@ export default function App() {
         .setup-card {
           background: rgba(255,255,255,0.06);
           border: 1px solid rgba(255,255,255,0.12);
-          border-radius: 28px;
-          padding: 40px 36px;
+          border-radius: 24px;
+          padding: 28px 20px;
           width: 100%;
           max-width: 480px;
           backdrop-filter: blur(20px);
+          overflow: hidden;
         }
 
         .logo-area { text-align: center; margin-bottom: 36px; }
@@ -508,7 +517,7 @@ export default function App() {
         .count-btn:hover { border-color: #a78bfa; background: rgba(167,139,250,0.15); }
         .count-btn.active { background: #a78bfa; border-color: #a78bfa; color: #0f0a1e; }
 
-        .names-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .names-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         .name-input-wrap { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 12px; transition: border-color 0.2s; }
         .name-input-wrap:focus-within { border-color: #a78bfa; }
         .name-num { font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.3); min-width: 14px; }
@@ -540,19 +549,19 @@ export default function App() {
         .handoff-screen { background: none; }
         .handoff-card {
           text-align: center;
-          padding: 60px 40px;
+          padding: 40px 24px;
           background: rgba(255,255,255,0.06);
           border: 1px solid rgba(255,255,255,0.12);
-          border-radius: 32px;
+          border-radius: 28px;
           max-width: 400px;
           width: 100%;
           backdrop-filter: blur(20px);
         }
-        .handoff-icon { font-size: 64px; margin-bottom: 20px; animation: bounce 1.5s infinite; }
-        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
-        .handoff-sub { font-size: 14px; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; margin-bottom: 12px; }
-        .handoff-name { font-family: 'Righteous', cursive; font-size: 42px; color: #a78bfa; margin-bottom: 20px; }
-        .handoff-tip { font-size: 14px; color: rgba(255,255,255,0.45); margin-bottom: 36px; }
+        .handoff-icon { font-size: 52px; margin-bottom: 16px; animation: bounce 1.5s infinite; }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        .handoff-sub { font-size: 12px; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; margin-bottom: 10px; }
+        .handoff-name { font-family: 'Righteous', cursive; font-size: clamp(28px, 8vw, 42px); color: #a78bfa; margin-bottom: 16px; word-break: break-word; }
+        .handoff-tip { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
         .handoff-btn {
           padding: 16px 32px;
           border-radius: 16px;
@@ -585,16 +594,17 @@ export default function App() {
           justify-content: space-between;
           width: 100%;
           max-width: 520px;
-          padding: 16px 4px;
-          gap: 16px;
+          padding: 12px 0;
+          gap: 8px;
+          flex-shrink: 0;
         }
 
-        .round-player { font-family: 'Righteous', cursive; font-size: 22px; color: #a78bfa; flex: 1; }
+        .round-player { font-family: 'Righteous', cursive; font-size: clamp(14px, 4vw, 20px); color: #a78bfa; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
         .timer-wrap { flex-shrink: 0; }
 
-        .round-stats { display: flex; gap: 12px; flex: 1; justify-content: flex-end; }
-        .stat { font-size: 16px; font-weight: 800; padding: 6px 12px; border-radius: 20px; }
+        .round-stats { display: flex; gap: 8px; flex-shrink: 0; }
+        .stat { font-size: 14px; font-weight: 800; padding: 5px 10px; border-radius: 20px; white-space: nowrap; }
         .correct-stat { background: rgba(74,222,128,0.2); color: #4ade80; }
         .skip-stat { background: rgba(251,191,36,0.15); color: #fbbf24; }
 
@@ -615,13 +625,16 @@ export default function App() {
 
         .current-word {
           font-family: 'Righteous', cursive;
-          font-size: clamp(40px, 10vw, 72px);
+          font-size: clamp(32px, 9vw, 68px);
           background: linear-gradient(135deg, #f9fafb, #a78bfa);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
-          line-height: 1.1;
+          line-height: 1.15;
           animation: wordIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+          word-break: break-word;
+          max-width: 100%;
+          padding: 0 8px;
         }
         @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
 
@@ -631,10 +644,11 @@ export default function App() {
 
         .action-row {
           display: flex;
-          gap: 16px;
+          gap: 12px;
           width: 100%;
           max-width: 520px;
-          padding: 0 4px 32px;
+          padding: 0 0 max(24px, env(safe-area-inset-bottom));
+          flex-shrink: 0;
         }
 
         .action-btn {
@@ -642,18 +656,19 @@ export default function App() {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 8px;
-          padding: 24px 16px;
-          border-radius: 24px;
+          gap: 6px;
+          padding: 20px 12px;
+          border-radius: 20px;
           border: none;
           cursor: pointer;
           font-family: 'Righteous', cursive;
           transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
           -webkit-tap-highlight-color: transparent;
+          min-width: 0;
         }
         .action-btn:active { transform: scale(0.93); }
-        .btn-icon { font-size: 32px; }
-        .btn-label { font-size: 16px; }
+        .btn-icon { font-size: 28px; }
+        .btn-label { font-size: clamp(13px, 3.5vw, 16px); white-space: nowrap; }
 
         .skip-btn { background: rgba(251,191,36,0.15); color: #fbbf24; border: 2px solid rgba(251,191,36,0.3); }
         .skip-btn:hover { background: rgba(251,191,36,0.25); }
@@ -665,13 +680,14 @@ export default function App() {
         .score-card {
           background: rgba(255,255,255,0.06);
           border: 1px solid rgba(255,255,255,0.12);
-          border-radius: 28px;
-          padding: 40px 32px;
+          border-radius: 24px;
+          padding: 28px 20px;
           width: 100%;
           max-width: 440px;
           backdrop-filter: blur(20px);
+          overflow: hidden;
         }
-        .score-title { font-family: 'Righteous', cursive; font-size: 28px; text-align: center; margin-bottom: 28px; }
+        .score-title { font-family: 'Righteous', cursive; font-size: clamp(22px, 6vw, 28px); text-align: center; margin-bottom: 20px; }
         .scores-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
         .score-row {
           display: flex;
@@ -692,9 +708,9 @@ export default function App() {
         .score-row:nth-child(5){animation-delay:0.25s}
         .score-row:nth-child(6){animation-delay:0.3s}
 
-        .rank-badge { font-size: 20px; min-width: 28px; text-align: center; }
-        .score-name { flex: 1; font-size: 18px; font-weight: 700; }
-        .score-pts { font-family: 'Righteous', cursive; font-size: 20px; color: #a78bfa; }
+        .rank-badge { font-size: 18px; min-width: 26px; text-align: center; flex-shrink: 0; }
+        .score-name { flex: 1; font-size: clamp(14px, 4vw, 18px); font-weight: 700; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .score-pts { font-family: 'Righteous', cursive; font-size: clamp(16px, 4vw, 20px); color: #a78bfa; flex-shrink: 0; }
 
         .score-btn {
           width: 100%;
@@ -714,10 +730,15 @@ export default function App() {
         .continue-btn:hover { transform: translateY(-2px); }
         .final-btns { display: flex; flex-direction: column; }
 
-        @media (max-width: 400px) {
-          .setup-card { padding: 28px 20px; }
+        @media (max-width: 380px) {
           .names-grid { grid-template-columns: 1fr; }
-          .round-player { font-size: 16px; }
+          .logo-title { font-size: 28px; }
+          .timer-wrap svg { width: 80px; height: 80px; }
+        }
+        @media (max-height: 680px) {
+          .handoff-card { padding: 28px 20px; }
+          .handoff-icon { font-size: 40px; margin-bottom: 10px; }
+          .word-stage { gap: 10px; padding: 12px; }
         }
       `}</style>
 
