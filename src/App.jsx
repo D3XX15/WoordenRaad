@@ -100,6 +100,71 @@ const WORDS = [
   "slapen", "slingeren", "snurken", "springen", "stoeien", "struikelen",
   "surfen", "tikken", "trampolinespringen", "vallen", "vangen", "verstoppen",
   "vliegen", "vouwen", "waggelen", "wiebelen", "zeilen", "zwemmen",
+
+  // Moeilijkere woorden
+  'abseilen', 'acupunctuur', 'adrenaline', 'afgrond', 'afpersen', 'agressor', 'algoritme',
+  'allergie', 'amputatie', 'anarchie', 'anesthesie', 'antenne', 'archeologie', 'assertief',
+  'astronoom', 'atoomkern', 'autopsie', 'avondklok', 'baksteen', 'bankroet', 'begrafenis',
+  'belasting', 'beroerte', 'beschaving', 'bewusteloos', 'bijtanken', 'blackout', 'bloedarmoede',
+  'boeddhisme', 'brainwash', 'brainstorm', 'brandstichting', 'bureaucratie', 'camouflagepak',
+  'censuur', 'chantage', 'cholesterol', 'claustrofobie', 'cliffhanger', 'cocaïne', 'coma',
+  'concentratiekamp', 'confrontatie', 'corruptie', 'crisis', 'cyberpesten', 'dagvaarding',
+  'dementie', 'democratie', 'depressie', 'desinfecteren', 'dialyse', 'dictator', 'dilemma',
+  'diplomatie', 'discriminatie', 'dissectie', 'doping', 'draaikolk', 'droogte', 'dwangbuis',
+  'eclips', 'embargo', 'epidemie', 'erfenis', 'evacuatie', 'evolutie', 'executie',
+  'explosief', 'faillissement', 'fanatisme', 'fascisme', 'flitspaal', 'forensisch', 'fraude',
+  'frictie', 'fundamentalisme', 'fusie', 'geheugenverlies', 'genocide', 'gerechtshof',
+  'getuige', 'gijzeling', 'gletsjer', 'globalisering', 'grafiek', 'guerrilla', 'hallucinatie',
+  'hartstilstand', 'hersenletsel', 'herverdeling', 'hiërarchie', 'hijacking', 'holocaust',
+  'homeopathie', 'hoogtevrees', 'hormoon', 'hypnose', 'hypotheek', 'hysterie', 'illusie',
+  'immigratie', 'immuunsysteem', 'imperialisme', 'implosie', 'inflatie', 'injectie',
+  'inquisitie', 'intimidatie', 'invasie', 'isolatie', 'jaloezie', 'keizersnede', 'kidnapping',
+  'klimaatcrisis', 'klokkenluider', 'kluizenaar', 'kwantumfysica', 'laserschip', 'lawine',
+  'legitimiteit', 'lobbyist', 'lockdown', 'manipulatie', 'martelaar', 'massamoord',
+  'meditatie', 'migraine', 'militaire coup', 'misogynie', 'monopolie', 'mutatie', 'narcisme',
+  'nationalisme', 'nepnieuws', 'nihilisme', 'nucleaire reactor', 'obsessie', 'oligarchie',
+  'onderbewustzijn', 'ondergrondse beweging', 'onteigening', 'oorlogsmisdaad', 'overdosis',
+  'overlevingsdrang', 'pandemie', 'paradox', 'paranoia', 'parlementaire democratie',
+  'persoonlijkheidsstoornis', 'pesticide', 'pionier', 'plagiaat', 'polarisatie', 'populisme',
+  'posttraumatische stress', 'propaganda', 'protocolbreuk', 'psychiatrie', 'quarantaine',
+  'radicalisering', 'radioactiviteit', 'rebellie', 'reïncarnatie', 'recessie', 'referendum',
+  'rehabilitatie', 'relatief', 'repatriëring', 'revolutie', 'sabotage', 'sancties',
+  'schandaal', 'schizofrenie', 'slavernij', 'sluipschutter', 'smokkel', 'soevereiniteit',
+  'spionage', 'staking', 'stigma', 'stralingsvergiftiging', 'surrogaatmoeder', 'taboe',
+  'terreurcel', 'tijdreizen', 'totalitarisme', 'transplantatie', 'tribunal', 'tsunami',
+  'tunnelvisie', 'turbulentie', 'uitbuiting', 'uitzetting', 'undercover', 'utopie',
+  'vaccinatie', 'verjaring', 'vervreemding', 'vetorecht', 'vluchteling', 'volksopstand',
+  'wapenhandel', 'wedergeboorte', 'whistleblower', 'xenofobie', 'zelfmoordaanslag',
+  'zielenknijper', 'zonsverduistering', 'zwarte markt',
+
+  // Spreekwoorden
+  'alle hens aan dek', 'als de kat van huis is dansen de muizen', 'al doende leert men',
+  'beter laat dan nooit', 'de appel valt niet ver van de boom', 'door de zure appel heen bijten',
+  'een gewaarschuwd man telt voor twee', 'een koude douche krijgen', 'een oogie dichtknijpen',
+  'een storm in een glas water', 'ergens de brui aan geven', 'goede raad is duur',
+  'het kind met het badwater weggooien', 'het roer omgooien', 'hoge bomen vangen veel wind',
+  'iemand een hak zetten', 'iemand in de maling nemen', 'iemand op de kast jagen',
+  'in de wolken zijn', 'in het nauw gedreven', 'je bed hebben gelegen',
+  'je kunt niet op twee paarden tegelijk wedden', 'je vel te duur verkopen',
+  'zoals het klokje thuis tikt tikt het nergens', 'langs de neus weg',
+  'met de deur in huis vallen', 'met lege handen staan', 'met zijn rug tegen de muur staan',
+  'met stomheid geslagen zijn', 'nieuwe bezems vegen schoon', 'niet alle dagen zondag',
+  'olie op het vuur gooien', 'om de hete brij heen draaien', 'onder de duim houden',
+  'op zijn lauweren rusten', 'over de rooie gaan', 'over één kam scheren',
+  'potten en pannen gooien', 'roet in het eten gooien', 'schijnheilig als een kat',
+  'slapende honden wakker maken', 'spijkers op laag water zoeken', 'tegen de stroom ingaan',
+  'twee honden vechten om een been', 'uit de school klappen', 'van een mug een olifant maken',
+  'van het kastje naar de muur sturen', 'ver van je bed show', 'vissen achter het net',
+  'vlak voor het doel missen', 'vuur met vuur bestrijden', 'water naar de zee dragen',
+  'wie niet waagt wie niet wint', 'wijn in oude zakken', 'wolf in schaapskleren',
+  'zijn hand overspelen', 'zijn tanden laten zien', 'zijn vingers branden aan iets',
+  'zo vader zo zoon', 'door de mand vallen', 'met de gebakken peren zitten',
+  'de koe bij de horens vatten', 'het bijltje erbij neergooien', 'iemand de wind uit de zeilen nemen',
+  'met alle winden meedraaien', 'geen haar op zijn hoofd', 'uit zijn vel springen',
+  'de hand in eigen boezem steken', 'achter het net vissen', 'iets op zijn beloop laten',
+  'twee vliegen in één klap', 'een blinde kan zien', 'als twee druppels water',
+  'met de neus in de boter vallen', 'de pineut zijn', 'in de aap gelogeerd zijn',
+
 ];
 
 const ROUND_TIME = 120;
@@ -116,8 +181,8 @@ function shuffle(arr) {
 // ── Screens ──────────────────────────────────────────────────────────────────
 
 function SetupScreen({ onStart }) {
-  const [count, setCount] = useState(4);
-  const [names, setNames] = useState(Array(4).fill(""));
+  const [count, setCount] = useState(3);
+  const [names, setNames] = useState(Array(3).fill(""));
 
   const updateCount = (n) => {
     setCount(n);
@@ -303,7 +368,7 @@ function RoundScreen({ player, words, onRoundEnd }) {
           <>
             <div className="word-counter">woord {wordIndex + 1}</div>
             <div className="current-word">{words[wordIndex]}</div>
-            <div className="word-hint">Beelden uit of leg uit — maar zeg het woord niet!</div>
+            <div className="word-hint">Beeld of leg uit — maar zeg het woord niet!</div>
           </>
         )}
       </div>
@@ -581,6 +646,7 @@ export default function App() {
           flex-direction: column;
           background: none;
           transition: background 0.2s;
+          padding-top: max(28px, env(safe-area-inset-top));
         }
         .round-screen.flash-correct { animation: flashGreen 0.4s ease; }
         .round-screen.flash-skip { animation: flashOrange 0.4s ease; }
