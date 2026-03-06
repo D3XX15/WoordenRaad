@@ -288,6 +288,8 @@ const WORDS = [
   'crème brûlée',
   'dim sum',
   'donuts',
+  'pesten',
+  'doofstom',
   'dragonfruit',
   'eclairs',
   'enchilada',
