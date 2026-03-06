@@ -500,7 +500,7 @@ const WORDS = [
   'ingenieur',
   'inspecteur',
   'instrumentmaker',
-  'jagter',
+  'jager',
   'juwelier',
   'kaartenmaker',
   'kapper',
