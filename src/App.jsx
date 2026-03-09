@@ -5,7 +5,7 @@ const WORDS = [
   'aardvarken', 'adelaar', 'albatros', 'alpaca', 'anakonda', 'axolotl', 'baviaan', 'beer',
   'bever', 'bijenkoningin', 'bizon', 'blauwe vinvis', 'blauwvintonijn', 'boomkikker', 'boomslang',
   'buffel', 'buizerd', 'buldog', 'cheetah', 'chihuahua', 'cobra', 'condor', 'das',
-  'dingo', 'dinosaurus', 'dolfijn', 'drakehagedis', 'dromedaris', 'duif', 'dwergpinguïn', 'eekhoorn',
+  'dingo', 'dinosaurus', 'dolfijn', 'draak', 'dromedaris', 'duif', 'dwergpinguïn', 'eekhoorn',
   'egel', 'ekster', 'eland', 'elektrische paling', 'emoe', 'fazant', 'fennek', 'flamingo',
   'flesvleermuis', 'fluweelkrab', 'fret', 'galapagosschildpad', 'gecko', 'gibbon', 'giraffe',
   'gorilla', 'goudjakhalzen', 'goudvis', 'grizzlybeer', 'guppie', 'haai', 'haas',
