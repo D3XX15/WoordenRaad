@@ -533,7 +533,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
           <div className="word-done-msg">Tijd is om! ⏰</div>
         ) : skipPenalty > 0 ? (
           <div className="penalty-wrap">
-            <div className="penalty-label">⏸ Overgeslagen — wacht even</div>
+            <div className="penalty-label">Overgeslagen — wacht even</div>
             <div className="penalty-countdown">{skipPenalty}</div>
           </div>
         ) : (
