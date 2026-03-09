@@ -12,7 +12,7 @@ const WORDS = [
   'leeuw', 'lemming', 'lepelaar', 'luiaard', 'lynx', 'maanvis', 'meerkat', 'mier',
   'miereneter', 'nerts', 'moeflon', 'mol', 'muskusrat', 'narwal', 'neushoorn', 'nijlpaard',
   'octopus', 'okapi', 'olifant', 'orang-oetan', 'orca', 'otter', 'panda', 'panther',
-  'papegaai', 'pauw', 'pelikaan', 'pinguin', 'platypus', 'poema', 'prairiehond', 'raaf',
+  'papegaai', 'pauw', 'pelikaan', 'pinguïn', 'platypus', 'poema', 'prairiehond', 'raaf',
   'reiger', 'rendier', 'reuzenoctopus', 'salamander', 'schildpad', 'slang', 'sneeuwluipaard', 'sperwer',
   'spin', 'springbok', 'stekelvarken', 'stinkdier', 'stokstaartje', 'struisvogel', 'tapir', 'tarantula',
   'tijger', 'toekan', 'uil', 'valkparkiet', 'vampier', 'veelvraat', 'vliegende vis', 'vlinder',
@@ -24,8 +24,8 @@ const WORDS = [
   'baguette', 'balsamico', 'banaan', 'barbecue', 'basilicum', 'biefstuk', 'bitterbal', 'bitterballen',
   'bladerdeeg', 'bloemkool', 'boerenkool', 'bolognese', 'bonbons', 'borrelplank', 'boterham', 'bouillon',
   'broccoli', 'brownie', 'bruschetta', 'caesarsalade', 'cannelloni', 'caprese', 'caramel', 'carpaccio',
-  'cheesecake', 'chips', 'chocolade', 'churros', 'couscous', 'croissant', 'crème brûlée', 'curry',
-  'dim sum', 'donut', 'donuts', 'drakenvrucht', 'druiven', 'eclairs', 'ei', 'enchilada',
+  'cheesecake', 'chili con carne', 'chips', 'chocolade', 'churros', 'couscous', 'croissant', 'crème brûlée',
+  'curry', 'dim sum', 'donut', 'donuts', 'drakenvrucht', 'druiven', 'eclairs', 'ei', 'empanada', 'enchilada',
   'erwtensoep', 'falafel', 'fondue', 'friet', 'fruitsalade', 'garnaal', 'gazpacho', 'gehaktbal',
   'gelato', 'goulash', 'groentesoep', 'gyros', 'hamburger', 'hotdog', 'hummus', 'jalapeno',
   'kaas', 'kaasfondue', 'kaneelbroodje', 'kapsalon', 'kerrieworst', 'kimchi', 'kip', 'kipnuggets',
@@ -35,19 +35,19 @@ const WORDS = [
   'parmezaan', 'passievrucht', 'pasta', 'penne', 'pesto', 'piccalilly', 'pindakaas', 'pizza',
   'poffertjes', 'pommes frites', 'popcorn', 'prei', 'pulled pork', 'quiche', 'ratatouille', 'ravioli',
   'rendang', 'ricotta', 'rijstpap', 'rijsttafel', 'risotto', 'rolmops', 'roomijs', 'rucola',
-  'salade', 'sandwich', 'sashimi', 'satésaus', 'scones', 'shakshuka', 'slagroom', 'smoothie',
+  'salade', 'sandwich', 'sashimi', 'satésaus', 'scones', 'shakshuka', 'slagroom', 'smoothie', 'spiegelei',
   'soep', 'soufflé', 'spaghetti', 'stampot', 'stoofpot', 'strudel', 'sushi', 'taart',
   'taco', 'tapenade', 'tartaar', 'teriyaki', 'thee', 'tiramisu', 'toast', 'tomatensoep',
   'tompouce', 'tortilla', 'truffel', 'tzatziki', 'uiensoep', 'vanillepudding', 'wafel', 'wafels',
   'watermeloen', 'witlof', 'wrap', 'yoghurt',
   // Beroepen & mensen
   'accountant', 'acrobaat', 'acteur', 'advocaat', 'apotheker', 'archeoloog', 'architect', 'astroloog',
-  'astronaut', 'automonteur', 'bakker', 'barista', 'beveiliger', 'bibliothecaris', 'biochemicus', 'blogger',
+  'astronaut', 'automonteur', 'bakker', 'barista', 'beveiliger', 'bibliothecaris', 'biochemicus', 'bioloog', 'blogger',
   'boekhoudster', 'botanicus', 'brandweer', 'brandweerman', 'buschauffeur', 'cardioloog', 'casinodealer', 'chef-kok',
   'chiropractor', 'chirurg', 'circusdirecteur', 'clown', 'coach', 'cowboy', 'croupier', 'cryptograaf',
   'danser', 'dansleraar', 'dataanalist', 'dermatoloog', 'detective', 'dierenarts', 'dierentrainer', 'diplomaat',
   'dirigent', 'dj', 'documentairemaker', 'dokter', 'dronepiloot', 'duikinstructeur', 'econoom', 'entomoloog',
-  'ethisch hacker', 'etholoog', 'evenementenorganisator', 'examinator', 'exploratiegeoloog', 'extinctiebiolog', 'farmacoloog', 'filosoof',
+  'ethisch hacker', 'etholoog', 'evenementenorganisator', 'examinator', 'filosoof',
   'fotograaf', 'fysiotherapeut', 'gameontwikkelaar', 'gastronoom', 'geneesheer', 'geograaf', 'geoloog', 'gids',
   'glazenwasser', 'goochelaar', 'grafisch ontwerper', 'gynaecoloog', 'handelaar', 'heks', 'hersenchirurg', 'hovenier',
   'hypnotherapeut', 'ijsbeeldhouwer', 'illustrator', 'immunoloog', 'informaticus', 'ingenieur', 'inspecteur', 'instrumentmaker',
@@ -55,10 +55,10 @@ const WORDS = [
   'kassamedewerker', 'kinderarts', 'klimaatoloog', 'klokkenhersteller', 'klusjesman', 'kok', 'kostuumontwerper', 'kraamverzorger',
   'kruidenier', 'kunstcriticus', 'kunstenaar', 'kweker', 'laborant', 'landmeter', 'lasser', 'leraar',
   'levensmiddelentechnoloog', 'loodgieter', 'luchtverkeersleider', 'magiër', 'makelaar', 'marionettespeler', 'matroos', 'meteoroloog',
-  'microbioloog', 'mijningenieur', 'modeontwerper', 'moleculair bioloog', 'monteur', 'museumconservator', 'musicus', 'nanotechnoloog',
+  'microbioloog', 'mijningenieur', 'modeontwerper', 'monteur', 'museumconservator', 'musicus', 'nanotechnoloog',
   'neuroloog', 'notaris', 'numismaticus', 'oceanograaf', 'ontwerper', 'oogarts', 'operazanger', 'optician',
   'ornitholoog', 'orthopeed', 'paleontoloog', 'parasitoloog', 'parfumeur', 'patholoog', 'pedagoog', 'piloot',
-  'piraat', 'planoloog', 'podoloog', 'politicoloog', 'politieagent', 'postbode', 'primatolog', 'producent',
+  'piraat', 'planoloog', 'podoloog', 'politicoloog', 'politieagent', 'postbode', 'primatoloog', 'producent',
   'profvoetballer', 'psychiater', 'psycholoog', 'radioloog', 'rechercheur', 'revalidatiearts', 'ridder', 'roboticus',
   'ruimtevaarder', 'ruimtewetenschapper', 'scenarioschrijver', 'scheikundige', 'schilder', 'schildwacht', 'schoonmaker', 'schrijver',
   'sheriff', 'skateboarder', 'slager', 'socioloog', 'soldaat', 'sommelier', 'stadsplanner', 'stand-upcomedian',
@@ -101,7 +101,7 @@ const WORDS = [
   'kompas', 'kookwekker', 'kraan', 'kroon', 'kruisboog', 'krukje', 'kubus', 'kurketrekker',
   'kwikthermometer', 'ladder', 'lampion', 'lantaarn', 'laserpointer', 'lasso', 'leidraad', 'lepel',
   'leugendetector', 'liniaal', 'loep', 'luchtballon', 'luidspreker', 'magneet', 'magnetron', 'maillot',
-  'manchetknoop', 'mand', 'marionet', 'masker', 'medaille', 'megafoon', 'meubelstuk', 'mikrofoon',
+  'manchetknoop', 'mand', 'marionet', 'masker', 'medaille', 'megafoon', 'meubelstuk', 'microfoon',
   'moersleutel', 'molen', 'morse', 'muziekdoos', 'naaimachine', 'naaldhak', 'neonlamp', 'notenbalk',
   'orgelpijp', 'papiermolen', 'parachute', 'paraplu', 'penseel', 'pikhouweel', 'flipperkast', 'pistoolholster',
   'plantenpot', 'poederdoos', 'potloodventer', 'printer', 'projector', 'puzzel', 'puzzeldoos', 'radarscherm',
@@ -132,7 +132,7 @@ const WORDS = [
   'ambulance', 'boot', 'brandweerauto', 'bus', 'camper', 'caravan', 'draagstoel', 'duikboot',
   'elektrische auto', 'ferry', 'fietskar', 'forens', 'gondel', 'graafmachine', 'helikopter', 'hoverboard',
   'jetski', 'kabelbaan', 'kajak', 'kar', 'locomotief', 'metro', 'monorail', 'motorfiets',
-  'pick-uptruck', 'politieauto', 'racewagen', 'raket', 'riksja', 'roeboot', 'rolschaatsen', 'segway',
+  'pick-uptruck', 'politieauto', 'racewagen', 'raket', 'riksja', 'roeiboot', 'rolschaatsen', 'segway',
   'slee', 'sloep', 'speedboot', 'step', 'stoomboot', 'stoomlocomotief', 'submarine', 'suv',
   'tractor', 'tram', 'trolleybus', 'veerboot', 'vliegdekschip', 'vliegtuig', 'vrachtwagen', 'zweefvliegtuig',
 
@@ -175,7 +175,7 @@ const WORDS = [
   'allergie', 'amputatie', 'anarchie', 'anesthesie', 'antenne', 'archeologie', 'assertief', 'astronoom',
   'atoomkern', 'auteursrecht', 'autopsie', 'avondklok', 'baksteen', 'bankroet', 'begrafenis', 'belasting',
   'beroerte', 'beschaving', 'bewusteloos', 'bijtanken', 'stroomuitval', 'bloedarmoede', 'boeddhisme', 'brainstorm',
-  'hersenspoeling', 'brandstichting', 'bureaucratie', 'camouflagepak', 'celcius', 'censuur', 'chantage', 'cholesterol',
+  'hersenspoeling', 'brandstichting', 'bureaucratie', 'camouflagepak', 'celsius', 'censuur', 'chantage', 'cholesterol',
   'claustrofobie', 'cliffhanger', 'cocaïne', 'coma', 'concentratiekamp', 'confrontatie', 'corruptie', 'crisis',
   'cyberpesten', 'dagvaarding', 'dementie', 'democratie', 'depressie', 'desinfecteren', 'dialyse', 'dictator',
   'dilemma', 'diplomatie', 'discriminatie', 'dissectie', 'doofstom', 'doping', 'draaikolk', 'droogte',
@@ -466,7 +466,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
           <div className="word-done-msg">Tijd is om! ⏰</div>
         ) : skipPenalty > 0 ? (
           <div className="penalty-wrap">
-            <div className="penalty-label">Overgeslagen — wacht even</div>
+            <div className="penalty-label">⏸ Overgeslagen — wacht even</div>
             <div className="penalty-countdown">{skipPenalty}</div>
           </div>
         ) : (
