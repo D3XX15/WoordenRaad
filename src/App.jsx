@@ -80,7 +80,7 @@ const WORDS = [
   'kruidenier', 'kunstcriticus', 'kunstenaar', 'kweker', 'laborant', 'landmeter', 'lasser', 'leraar',
   'levensmiddelentechnoloog', 'loodgieter', 'luchtverkeersleider', 'magiër', 'makelaar', 'marionettespeler', 'matroos', 'meteoroloog',
   'microbioloog', 'mijningenieur', 'modeontwerper', 'moleculair bioloog', 'monteur', 'museumconservator', 'musicus', 'nanotechnoloog',
-  'neuroloog', 'notaris', 'numismaticus', 'oceanograaf', 'ontwerper', 'oogarts', 'operazanger', 'optician',
+  'neuroloog', 'notaris', 'numismaticus', 'oceanograaf', 'ontwerper', 'oogarts', 'operazanger', 'opticien',
   'ornitholoog', 'orthopeed', 'paleontoloog', 'parasitoloog', 'parfumeur', 'patholoog', 'pedagoog', 'piloot',
   'piraat', 'planoloog', 'podoloog', 'politicoloog', 'politieagent', 'postbode', 'primatoloog', 'producent',
   'profvoetballer', 'psychiater', 'psycholoog', 'radioloog', 'rechercheur', 'revalidatiearts', 'ridder', 'roboticus',
