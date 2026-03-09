@@ -174,9 +174,9 @@ const WORDS = [
   'zeewind', 'zilt water', 'zomer', 'zon', 'zonsondergang', 'zonsopgang', 'zwaartekracht',
   
   // Vervoer & reizen
-  'aanhanger', 'achtbaan', 'ambulance', 'benzine', 'benzinestation', 'bindwagen', 'boeing', 'boot', 'brandweerauto',
+  'aanhanger', 'achtbaan', 'ambulance', 'benzine', 'benzinestation', 'boeing', 'boot', 'brandweerauto',
   'brandweerwagen', 'bromfiets', 'bus', 'camper', 'caravan', 'cargobike', 'catamaran', 'commandowagen',
-  'container', 'containerschip', 'deklift', 'diesel', 'diligence', 'draagstoel', 'dressuurschip', 'driewieler', 'drijvend hotel',
+  'container', 'containerschip', 'deklift', 'diesel', 'diligence', 'draagstoel', 'driewieler', 'drijvend hotel',
   'dronepost', 'dubbeldekker', 'duikboot', 'elektrische auto', 'elektrische scooter', 'elektrische step', 'ferry', 'fietskar',
   'fietstaxi', 'forens', 'vrachtschip', 'gondel', 'gondelbaan', 'graafmachine', 'grensovergang', 'hangbrug',
   'hefschroefvliegtuig', 'helikopter', 'hoogspoortrein', 'hoverboard', 'hovercraft', 'hydrofoil', 'intercity', 'internationale trein',
@@ -203,7 +203,7 @@ const WORDS = [
   'krantenwinkel', 'kroeg', 'kunstmuseum', 'laadpaal', 'laboratorium', 'lagerhuis', 'lagune', 'landgoed',
   'loods', 'luchthaven', 'lunapark', 'manege', 'markt', 'megabioscoop', 'monument', 'moskee',
   'museum', 'observatorium', 'oceanuarium', 'ouderenhuis', 'paleis', 'parkbank', 'parkeergarage', 'passantenhaven',
-  'pier', 'pleintje', 'politiebureau', 'poppenkast', 'postkantoor', 'pretpark', 'pyramide', 'racebaan', 'rechtbank', 'rechtsbank', 'recreatiegebied', 'renbaan', 'restaurant', 'rioolstelsel', 'ruïne',
+  'pier', 'pleintje', 'politiebureau', 'poppenkast', 'postkantoor', 'pretpark', 'pyramide', 'racebaan', 'rechtbank', 'recreatiegebied', 'renbaan', 'restaurant', 'rioolstelsel', 'ruïne',
   'schaatsbaan', 'school', 'silo', 'sluis', 'speeltuin', 'sporthal', 'stad', 'stadion',
   'stadshuis', 'standbeeld', 'sterrenwacht', 'strandtent', 'supermarkt', 'synagoge', 'tandartspraktijk', 'tankstation',
   'tempel', 'theater', 'toren', 'torentje', 'treinstation', 'universiteit', 'vakantiepark', 'vergaderzaal',
