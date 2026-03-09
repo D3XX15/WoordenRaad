@@ -175,7 +175,7 @@ const WORDS = [
   
   // Vervoer & reizen
   'aanhanger', 'achtbaan', 'ambulance', 'benzine', 'benzinestation', 'boeing', 'boot', 'brandweerauto',
-  'brandweerwagen', 'bromfiets', 'bus', 'camper', 'caravan', 'cargobike', 'catamaran', 'commandowagen',
+  'brandweerwagen', 'bromfiets', 'bus', 'camper', 'caravan', 'catamaran', 'commandowagen',
   'container', 'containerschip', 'deklift', 'diesel', 'diligence', 'draagstoel', 'driewieler', 'drijvend hotel',
   'dronepost', 'dubbeldekker', 'duikboot', 'elektrische auto', 'elektrische scooter', 'elektrische step', 'ferry', 'fietskar',
   'fietstaxi', 'forens', 'vrachtschip', 'gondel', 'gondelbaan', 'graafmachine', 'grensovergang', 'hangbrug',
