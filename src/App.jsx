@@ -26,7 +26,7 @@ const WORDS = [
   'stier', 'stinkdier', 'stokstaartje', 'struisvogel', 'tapir', 'tarantula', 'tijger',
   'toekan', 'tor', 'uil', 'valkparkiet', 'vampier', 'varaan', 'veelvraat', 'vleermuis',
   'vlieg', 'vliegend hert', 'vliegende vis', 'vlinder', 'vos', 'vuurkever', 'walvis', 'warthog',
-  'wasbeer', 'waterbuffel', 'waterrat', 'wezel', 'wiesel', 'wild zwijn', 'wolf', 'wombat',
+  'wasbeer', 'waterbuffel', 'waterrat', 'wezel', 'wild zwijn', 'wolf', 'wombat',
   'worm', 'woudaap', 'zebra', 'zeehond', 'zeemeermin', 'zeeotter', 'zeepaardje', 'zeeschildpad',
   'zwaan', 'zwaluw', 'zwarte panter',
   
@@ -174,9 +174,9 @@ const WORDS = [
   'zeewind', 'zilt water', 'zomer', 'zon', 'zonsondergang', 'zonsopgang', 'zwaartekracht',
   
   // Vervoer & reizen
-  'aanhanger', 'achtbaan', 'ambulance', 'benzinestation', 'bindwagen', 'boeing', 'boot', 'brandweerauto',
+  'aanhanger', 'achtbaan', 'ambulance', 'benzine', 'benzinestation', 'bindwagen', 'boeing', 'boot', 'brandweerauto',
   'brandweerwagen', 'bromfiets', 'bus', 'camper', 'caravan', 'cargobike', 'catamaran', 'commandowagen',
-  'container', 'containerschip', 'deklift', 'diligence', 'draagstoel', 'dressuurschip', 'driewieler', 'drijvend hotel',
+  'container', 'containerschip', 'deklift', 'diesel', 'diligence', 'draagstoel', 'dressuurschip', 'driewieler', 'drijvend hotel',
   'dronepost', 'dubbeldekker', 'duikboot', 'elektrische auto', 'elektrische scooter', 'elektrische step', 'ferry', 'fietskar',
   'fietstaxi', 'forens', 'vrachtschip', 'gondel', 'gondelbaan', 'graafmachine', 'grensovergang', 'hangbrug',
   'hefschroefvliegtuig', 'helikopter', 'hoogspoortrein', 'hoverboard', 'hovercraft', 'hydrofoil', 'intercity', 'internationale trein',
