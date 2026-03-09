@@ -109,7 +109,7 @@ const WORDS = [
   'parkour', 'petanque', 'pilates', 'poedelen', 'polowedstrijd', 'polsstokhoogspringen', 'powerlifting', 'racketball',
   'rafting', 'ringsteken', 'rodeo', 'roeien', 'roeiwedstrijd', 'rolschaatsen', 'rots klimmen', 'rugby',
   'rugbyzevenens', 'sabelschermen', 'sauna', 'schaatsen', 'schaken', 'schansspringen', 'schermen', 'schieten',
-  'scrabble', 'shorttracksprint', 'sjoelen', 'skeeleren', 'skeleton', 'skiën', 'slalom',
+  'scrabble', 'shorttracksprint', 'sjoelen', 'skeeleren', 'skeleton', 'skiën', 'skislalom',
   'slipstream', 'snowboarden', 'softbal', 'speerwerpen', 'speerworp', 'spijkerpoepen', 'squash', 'stoeien',
   'stoepkrijten', 'stuntrijden', 'sumo worstelen', 'suppen', 'surfen', 'synchroonzwemmen', 'taekwondo', 'tafeltennis',
   'tafeltennissen', 'telemark', 'tennis', 'touwtrekken', 'trail running', 'trampolinespringen', 'trefbal', 'triatlon',
