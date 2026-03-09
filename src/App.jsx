@@ -17,7 +17,7 @@ const WORDS = [
   'luiaard', 'lynx', 'maanvis', 'mangoest', 'marmot', 'meerkat',
   'meerval', 'mier', 'miereneter', 'moeflon', 'mol', 'mug', 'muil',
   'muilezel', 'muskusrat', 'narwal', 'nerts', 'neusaap', 'neushoorn', 'nijlgans', 'nijlpaard',
-  'octopus', 'oehoe', 'okapi', 'olifant', 'ooievaar', 'orang-oetan', 'orca',
+  'octopus', 'oehoe', 'okapi', 'olifant', 'ooievaar', 'orang-oetan', 'orka',
   'otter', 'paard', 'panda', 'panther', 'papegaai', 'paradijsvogel', 'parkiet', 'pauw',
   'pelikaan', 'pijlgif kikker', 'pinguïn', 'platypus', 'poema', 'poolvos', 'prairiehond',
   'raaf', 'rat', 'reiger', 'rendier', 'reuzenoctopus', 'reuzenpanda', 'roofvogel', 'runderhaas',
@@ -27,8 +27,8 @@ const WORDS = [
   'toekan', 'tor', 'uil', 'valkparkiet', 'vampier', 'varaan', 'veelvraat', 'vleermuis',
   'vlieg', 'vliegend hert', 'vliegende vis', 'vlinder', 'vos', 'vuurkever', 'walvis',
   'wasbeer', 'waterbuffel', 'waterrat', 'wezel', 'wild zwijn', 'wolf', 'wombat',
-  'worm', 'woudaap', 'wrattenzwijn', 'zebra', 'zeehond', 'zeemeermin', 'zeeotter', 'zeepaardje', 'zeeschildpad',
-  'zwaan', 'zwaluw', 'zwarte mamba', 'zwarte panter',
+  'worm', 'woudaap', 'wrattenzwijn', 'zebra', 'zeehond', 'zeemeermin', 'zeeotter',
+  'zeepaardje', 'zeeschildpad', 'zwaan', 'zwaluw', 'zwarte mamba', 'zwarte panter',
   
   // Voedsel & drinken
   'aardappel', 'aardappelpuree', 'aardbei', 'abrikoos', 'amaretto', 'ananas', 'andijvie', 'appelmoes',
