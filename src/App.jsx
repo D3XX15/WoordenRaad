@@ -28,7 +28,7 @@ const WORDS = [
   'vlieg', 'vliegend hert', 'vliegende vis', 'vlinder', 'vos', 'vuurkever', 'walvis', 'warthog',
   'wasbeer', 'waterbuffel', 'waterrat', 'wezel', 'wild zwijn', 'wolf', 'wombat',
   'worm', 'woudaap', 'zebra', 'zeehond', 'zeemeermin', 'zeeotter', 'zeepaardje', 'zeeschildpad',
-  'zwaan', 'zwaluw', 'zwarte panter',
+  'zwaan', 'zwaluw', 'zwarte mamba', 'zwarte panter',
   
   // Voedsel & drinken
   'aardappel', 'aardappelpuree', 'aardbei', 'abrikoos', 'amaretto', 'ananas', 'andijvie', 'appelmoes',
@@ -182,7 +182,8 @@ const WORDS = [
   'hefschroefvliegtuig', 'helikopter', 'hoogspoortrein', 'hoverboard', 'hovercraft', 'hydrofoil', 'intercity', 'internationale trein',
   'jetpack', 'jetski', 'kabelbaan', 'kajak', 'kar', 'kolenschip', 'kruisvaarder', 'kustwacht',
   'lijnbus', 'lijnvliegtuig', 'locomotief', 'luchtschip', 'maanlander', 'metro', 'minicar', 'monorail',
-  'motorfiets', 'motorfietssidecar', 'nachttrein', 'onderzeeboot', 'oplegger', 'pantservoertuig', 'patrouilleboot', 'pick-uptruck', 'politieauto', 'postduif', 'postkoets', 'race fiets', 'racewagen', 'raket', 'reddingsboot',
+  'motorfiets', 'motorfietssidecar', 'nachttrein', 'onderzeeboot', 'oplegger', 'pantservoertuig', 'patrouilleboot', 'pick-uptruck',
+  'politieauto', 'postduif', 'postkoets', 'racefiets', 'racewagen', 'raket', 'reddingsboot',
   'rijtuig', 'riksja', 'robotaxi', 'roeiboot', 'ruimtecapsule', 'ruimteshuttle', 'schip',
   'scooterdeeldienst', 'segway', 'slee', 'sleepboot', 'sloep', 'sneltrein', 'snowcat',
   'space shuttle', 'speedboot', 'stadsbus', 'stadsfiets', 'step', 'stockcar', 'stoombaggermachine', 'stoomboot',
