@@ -363,76 +363,110 @@ function shuffle(arr) {
 }
 
 // ── Afbreekfunctie voor lange Nederlandse woorden ────────────────────────────
-// Voegt zachte koppeltekens (­) in op logische afbreekpunten.
-// Alleen actief voor woorden langer dan MIN_LEN tekens.
-const MIN_HYPHEN_LEN = 10;
+// Strategie: eerst morfologische woordgrenzen zoeken in samenstellingen,
+// daarna lettergreepregels toepassen op de resterende segmenten.
+const MIN_HYPHEN_LEN = 9;
+const SH = '\u00AD'; // zachte koppelteken (soft hyphen)
+
+// Veelvoorkomende Nederlandse woorddelen, gesorteerd van lang naar kort.
+const MORPHEMES = [
+  'organisator','organisatie','wetenschapper','wetenschap','onderzoeker',
+  'bescherming','beschermer','verantwoord','schouwburg','schildpad',
+  'bediening','beeldhouw','schrijver','werknemer','onderwijs',
+  'organiseren','organiseer',
+  'evenementen','evenement',
+  'behandeling','behandel',
+  'verbinding','verbind',
+  'stichting','verenig','beweging',
+  'bestuurder','chauffeur','verpleeg',
+  'leerkracht','medewerker','ambtenaar',
+  'inspecteur','producent','regisseur',
+  'instructeur','specialist','adviseur',
+  'assistent','officier','secretaris','president','minister',
+  'architect','ingenieur','chirurgie','chirurg',
+  'techniek','technieken','industrie','politiek',
+  'systeem','systemen','machine','machines',
+  'station','stations','centrum','centra',
+  'bedrijf','bedrijfs','gebouw','gebouwen',
+  'diensten','dienst','handel',
+  'vliegtuig','voertuig','rijwiel','scheepvaart',
+  'schutting','stelling','werking',
+  'bibliotheek',
+  'ingsge','eringen','erings','erende','erend',
+  'atieven','atieve','atief',
+  'isaties','isatie','iseren','iseert',
+  'iteiten','iteit',
+  'ichten','ischer','ische','isch',
+  'achtige','achtig','waardig','waardige',
+  'kundige','kundig','matige','matig',
+  'leidster','leider','makers','maker',
+  'werkers','werker','rijders','rijder',
+  'houders','houder','vangers','vanger',
+  'lopers','loper','voerder','voerders',
+  'trainer','trainers','manager','managers',
+  'directeur','directeurs',
+  'enten','ingen','etten','otten',
+  'kamer','zaal','huis','hof',
+  'molen','toren','poort','brug',
+  'boot','schip','wagen','fiets',
+].sort((a, b) => b.length - a.length);
+
+function findMorphBreaks(lower, minBefore = 4, minAfter = 3) {
+  const breaks = new Set();
+  for (const m of MORPHEMES) {
+    let pos = 0;
+    while ((pos = lower.indexOf(m, pos)) !== -1) {
+      if (pos >= minBefore && lower.length - pos >= minAfter) {
+        breaks.add(pos);
+      }
+      pos += 1;
+    }
+  }
+  return breaks;
+}
+
+function syllableBreaks(word) {
+  const VOWELS = new Set('aeiouáéíóúàèìòùäëïöüâêîôûy');
+  const isV = (c) => c && VOWELS.has(c.toLowerCase());
+  const chars = [...word];
+  const breaks = new Set();
+  for (let i = 1; i < chars.length - 2; i++) {
+    const [p, c, n, n2] = [chars[i-1], chars[i], chars[i+1], chars[i+2]];
+    if (isV(p) && !isV(c) && isV(n) && i >= 2) breaks.add(i);
+    if (isV(p) && !isV(c) && !isV(n) && isV(n2) && i + 1 >= 3) breaks.add(i + 1);
+  }
+  return breaks;
+}
 
 function hyphenate(word) {
-  // Woorden met spaties of bestaande koppeltekens: elk deel apart behandelen
   if (word.includes(' ') || word.includes('-')) {
-    return word
-      .split(/( |-)/g)
-      .map((part, i, arr) => {
-        // Spaties en koppeltekens zelf ongewijzigd laten
-        if (part === ' ' || part === '-') return part;
-        return hyphenate(part);
-      })
-      .join('');
+    return word.split(/( |-)/g).map((part) =>
+      (part === ' ' || part === '-') ? part : hyphenate(part)
+    ).join('');
   }
 
   if (word.length <= MIN_HYPHEN_LEN) return word;
 
-  const VOWELS = new Set('aeiouáéíóúàèìòùäëïöüâêîôûy');
-  const isVowel = (c) => VOWELS.has(c.toLowerCase());
+  const lower = word.toLowerCase();
+  const morphBreaks = findMorphBreaks(lower);
+  const sylBreaks = syllableBreaks(word);
 
-  const chars = [...word]; // unicode-safe
-  const breakPoints = new Set();
-
-  for (let i = 1; i < chars.length - 2; i++) {
-    const prev = chars[i - 1];
-    const curr = chars[i];
-    const next = chars[i + 1];
-
-    // Regel 1: klinker → medeklinker → klinker: breek vóór de medeklinker
-    // bv. "ka-me-len": na elke klinker gevolgd door medeklinker + klinker
-    if (isVowel(prev) && !isVowel(curr) && isVowel(next)) {
-      if (i >= 2) breakPoints.add(i);
-    }
-
-    // Regel 2: twee medeklinkers tussen klinkers: breek tussen de twee medeklinkers
-    // bv. "kam-pioën", "ham-ster"
-    if (
-      isVowel(prev) &&
-      !isVowel(curr) &&
-      !isVowel(next) &&
-      i + 2 < chars.length &&
-      isVowel(chars[i + 2])
-    ) {
-      if (i + 1 >= 3) breakPoints.add(i + 1);
-    }
-
-    // Regel 3: klinker na klinker (tweeklanken): breek na het tweede deel indien gevolgd door medeklinker
-    // bv. "groot-se" → niet ideaal, maar voorkomt lange stukken
-    if (
-      !isVowel(prev) &&
-      isVowel(curr) &&
-      isVowel(next) &&
-      i + 2 < chars.length &&
-      !isVowel(chars[i + 2])
-    ) {
-      // alleen als er al een redelijke voorzijde is
-      if (i >= 3) breakPoints.add(i + 2);
-    }
+  // Morfologische breken hebben prioriteit; voeg lettergreepbreekpunten toe
+  // alleen als ze niet vlak naast een morfologisch breekpunt liggen (±2)
+  const allBreaks = new Set(morphBreaks);
+  for (const sb of sylBreaks) {
+    const nearMorph = [...morphBreaks].some((mb) => Math.abs(mb - sb) <= 2);
+    if (!nearMorph) allBreaks.add(sb);
   }
 
-  // Zacht koppelteken invoegen; zorg dat segmenten minimaal 3 tekens lang zijn
+  const chars = [...word];
+  const sorted = [...allBreaks].sort((a, b) => a - b);
   let result = '';
   let segStart = 0;
-  const sortedBreaks = [...breakPoints].sort((a, b) => a - b);
 
-  for (const bp of sortedBreaks) {
+  for (const bp of sorted) {
     if (bp - segStart >= 3 && chars.length - bp >= 3) {
-      result += chars.slice(segStart, bp).join('') + '\u00AD'; // ­ = soft hyphen
+      result += chars.slice(segStart, bp).join('') + SH;
       segStart = bp;
     }
   }
@@ -1176,9 +1210,9 @@ export default function App() {
           animation: pulse 0.7s infinite alternate;
           min-height: 40px;
         }
-        .word-done-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .word-done-count { font-size: 15px; color: rgba(255,255,255,0.55); font-family: 'Righteous', cursive; letter-spacing: 0.03em; }
-        .word-done-msg { font-family: 'Righteous', cursive; font-size: clamp(24px, 7vw, 48px); text-align: center; word-break: break-word; }
+        .word-done-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+        .word-done-count { font-size: clamp(18px, 5vw, 26px); color: rgba(255,255,255,0.6); font-family: 'Righteous', cursive; letter-spacing: 0.03em; }
+        .word-done-msg { font-family: 'Righteous', cursive; font-size: clamp(36px, 10vw, 72px); text-align: center; word-break: break-word; line-height: 1.15; }
         .word-done-msg.tier-poor { color: #f87171; }
         .word-done-msg.tier-ok { color: #fbbf24; }
         .word-done-msg.tier-great { color: #4ade80; }
