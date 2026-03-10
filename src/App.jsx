@@ -28,7 +28,12 @@ const WORDS = [
   'vlieg', 'vliegend hert', 'vliegende vis', 'vlinder', 'vos', 'vuurkever', 'walvis',
   'wasbeer', 'waterbuffel', 'waterrat', 'wezel', 'wild zwijn', 'wolf', 'wombat',
   'worm', 'wrattenzwijn', 'zebra', 'zeehond', 'zeemeermin', 'zeeotter',
+  'krekel', 'mus', 'vuurvliegje',
   'zeepaardje', 'zeeschildpad', 'zwaan', 'zwaluw', 'zwarte mamba', 'zwarte panter',
+  'damhert', 'forel', 'goudhaan', 'heggenmus', 'hop', 'ijsvogel',
+  'kauw', 'knobbelzwaan', 'kwikstaart', 'nachtegaal', 'patrijs', 'pimpelmees',
+  'roodborst', 'scholekster', 'staartmees', 'steenuil', 'veldleeuwerik',
+  'wielewaal', 'wulp', 'zanglijster', 'zwarte kraai',
   
   // Voedsel & drinken
   'aardappel', 'aardappelpuree', 'aardbei', 'abrikoos', 'amaretto', 'ananas', 'andijvie', 'appelmoes',
@@ -63,6 +68,10 @@ const WORDS = [
   'toast', 'tomatensaus', 'tomatensoep', 'tompouce', 'tortilla', 'truffel', 'tzatziki', 'ui',
   'uiensoep', 'vanillepudding', 'wafel', 'walnoot', 'watermeloen', 'wijn', 'witlof',
   'witte wijn', 'wrap', 'yoghurt', 'zuurkool',
+  'appelstroop', 'beschuit', 'boontjes', 'erwten', 'flensje', 'gehakt', 'gevulde koek',
+  'hagelslag', 'hutspot', 'jenever', 'karnemelk', 'kokos', 'krentenbollen',
+  'kruidenboter', 'melk', 'muesli', 'ontbijtkoek', 'pap', 'peperkoek', 'rijst',
+  'rookworst', 'speculaas', 'stroopwafel', 'tosti', 'vla', 'wentelteefje', 'wittebrood',
   
   // Beroepen & mensen
   'accountant', 'acrobaat', 'acteur', 'advocaat', 'apotheker', 'archeoloog', 'architect', 'astroloog',
@@ -91,6 +100,10 @@ const WORDS = [
   'tuinier', 'tuinman', 'verpleegkundige', 'verzekeringsagent', 'vioolmaker', 'visser', 'vliegtuigbouwer',
   'voedingswetenschapper', 'volksmenner', 'vuilnisman', 'vuurwerkmaker', 'wetenschapper', 'wielrenner', 'wijnboer', 'winkelier',
   'wiskundige', 'woordvoerder', 'zanger', 'zeebioloog', 'zeiler', 'ziekenhuisdirecteur',
+  'aannemer', 'beeldhouwer', 'burgemeester', 'cabaretier', 'ijsverkoper',
+  'kaarsenmaker', 'kolenboer', 'koster', 'omroeper', 'organist',
+  'predikant', 'reddingswerker', 'smid', 'straatveger', 'taalkundige',
+  'trambestuurder', 'vrijwilliger', 'zeepmaker',
   
   // Sport & hobby's
   'aerobics', 'alpineskiën', 'american football', 'aquajogging', 'atletiek', 'badminton', 'badmintonnen', 'balletdansen',
@@ -116,6 +129,10 @@ const WORDS = [
   'turnen', 'varen', 'veldrijden', 'verspringen', 'vissen', 'vliegeren', 'vliegtuigmodelbouwen', 'vliegvissen',
   'voetbal', 'voetbalgolf', 'volleybal', 'wandelen', 'waterpolo', 'waterskiën', 'wakeboarden',
   'wcpotwerpen', 'wedstrijdvissen', 'wielrennen', 'worstelen', 'yoga', 'zeilen', 'zwemmen',
+  'aquarelleren', 'borduren', 'breien', 'calligrafie', 'escaperoom', 'filmen',
+  'fotograferen', 'gezelschapsspel', 'gitaarspelen', 'haakwerk', 'kaartspelen',
+  'kwartetten', 'lego', 'origami', 'pianospelen', 'pottendraaien', 'puzzelen',
+  'quilten', 'tekenen', 'tuinieren', 'vogelkijken', 'weven',
   
   // Objecten & thuis
   'aansteker', 'aardappelschiller', 'accordeon', 'actiefiguur', 'afstandsbediening', 'airfryer', 'alarmbel', 'albumhoes',
@@ -151,6 +168,12 @@ const WORDS = [
   'waaier', 'wapenschild', 'wasmachine', 'wastafel', 'waterklok', 'waterpas', 'waterpistool', 'weegschaal',
   'wekker', 'wiel', 'xylofoon', 'zaklamp', 'zandloper', 'zeepbel', 'zeeppomp', 'zeilboot',
   'zeis', 'zenderstation', 'zetel', 'zonnebloem', 'zonnebril', 'zonnewijzer', 'zweep',
+  'tandenstoker', 'kleerhanger', 'elastiekje', 'kurk',
+  'aanrecht', 'bank', 'beker', 'boodschappentas', 'broek', 'dekbed', 'deurmat', 'gordijn',
+  'handschoen', 'hark', 'hoed', 'jasje', 'knoop', 'koffiezetapparaat',
+  'krijtbord', 'lamp', 'mes', 'muts', 'pan', 'papier', 'pen',
+  'plantje', 'pollepel', 'portemonnee', 'riem', 'schoen', 'servet', 'soeplepel',
+  'spaarpot', 'stoel', 'stropdas', 'tafel', 'tas', 'theedoek', 'vork', 'wijnglas',
   
   // Natuur & weer
   'aardbeving', 'aardverschuiving', 'aardworm', 'algen', 'aurora', 'bamboe', 'bergtop', 'blad',
@@ -172,6 +195,9 @@ const WORDS = [
   'vlakte', 'vloed', 'vluchtheuvel', 'voorjaarswind', 'vulkaan', 'vulkaanuitbarsting', 'waterloop', 'waterval',
   'weide', 'windvlaag', 'woestijn', 'wolk', 'woud', 'zandstorm', 'zee',
   'zeewind', 'zilt water', 'zomer', 'zon', 'zonsondergang', 'zonsopgang', 'zwaartekracht',
+  'schelp', 'schaduw',
+  'berk', 'eik', 'graan', 'kastanjeboom', 'klaver', 'korenbloem',
+  'lavendel', 'linde', 'meidoorn', 'narcis', 'papaver', 'populier', 'wilg', 'viooltje',
   
   // Vervoer & reizen
   'aanhanger', 'achtbaan', 'ambulance', 'benzine', 'benzinestation', 'boeing', 'boot', 'brandweerauto',
@@ -200,7 +226,7 @@ const WORDS = [
   'fruitmarkt', 'galerie', 'gemeentehuis', 'gevangenis', 'gezondheidscentrum', 'grachtenpand', 'gymnasium', 'halfpipe',
   'haven', 'hectometerpaal', 'herberg', 'honkbalstadion', 'hostel', 'hotel', 'huis', 'iglo',
   'ijsbaan', 'ijsherberg', 'jachthaven', 'jungle', 'kapperszaak', 'kasteel', 'kathedraal', 'kazerne',
-  'kazerne', 'kerk', 'klimhal', 'klokkenspel', 'klokkentoren', 'klooster', 'koffieshop', 'kolenmijn',
+  'kerk', 'klimhal', 'klokkenspel', 'klokkentoren', 'klooster', 'koffieshop', 'kolenmijn',
   'krantenwinkel', 'kroeg', 'kunstmuseum', 'laadpaal', 'laboratorium', 'lagerhuis', 'landgoed',
   'loods', 'luchthaven', 'lunapark', 'manege', 'markt', 'megabioscoop', 'monument', 'moskee',
   'museum', 'observatorium', 'dolfinarium', 'ouderenhuis', 'paleis', 'parkbank', 'parkeergarage',
@@ -210,6 +236,10 @@ const WORDS = [
   'tempel', 'theater', 'toren', 'torentje', 'treinstation', 'universiteit', 'vakantiepark', 'vergaderzaal',
   'villa', 'vliegveld', 'voetgangerszone', 'vuurtoren', 'watertoren', 'wegrestaurant', 'wetenschapscentrum', 'wijkcentrum',
   'windmolen', 'winkelcentrum', 'ziekenhuis', 'zwembad',
+  'bakkerij', 'benzinepomp', 'bloemenwinkel', 'boekhandel', 'buurthuis', 'drogisterij',
+  'garage', 'ijssalon', 'kantine', 'kiosk', 'nachtwinkel',
+  'pannenkoekenhuis', 'parkeerplaats', 'slagerij', 'snackbar', 'sportschool',
+  'stomerij', 'viswinkel', 'warenhuis',
   
   // Acties & situaties
   'applaudisseren', 'fluisteren', 'gebaren', 'gooien', 'graven', 'huppelen',
@@ -234,9 +264,23 @@ const WORDS = [
   'twijfelen', 'uitleggen', 'uitpakken', 'verbergen', 'verdwalen', 'vergeten', 'verkopen',
   'verliezen', 'verrassen', 'verzorgen', 'vluchten', 'volgen', 'wachten', 'wassen',
   'weggooien', 'werken', 'winnen', 'wroeten', 'zingen', 'zoeken', 'zwaaien',
+  'niezen', 'sluipen',
   'brand blussen', 'eerste hulp verlenen', 'geblinddoekt', 'geheim bewaren',
   'iemand inhalen', 'iemand misleiden', 'in de rij staan', 'op de vlucht zijn',
   'rijbewijs halen', 'schipbreukeling', 'sleutels verliezen', 'verslikken',
+  'verstoppertje', 'hinkelen', 'touwtjespringen',
+  'bijna', 'stilte', 'angst', 'geluk', 'haast', 'verveeld',
+  'achtervolgen', 'bazelen', 'bedanken', 'begroeten', 'beschermen', 'bewonderen',
+  'boeren', 'controleren', 'debatteren', 'demonstreren', 'flirten',
+  'herkennen', 'hijgen', 'improviseren', 'jongleren', 'knijpen', 'krabben', 'kwispelen',
+  'mompelen', 'ontsnappen', 'overwinnen', 'piepen', 'prikken',
+  'rijden', 'schudden', 'slenteren', 'sluimeren', 'snuffelen', 'stampen',
+  'staren', 'steigeren', 'trillen', 'wentelen', 'woelen', 'zuchten',
+  'avontuur', 'bewijs', 'droom', 'gevaar', 'gewoonte', 'grens', 'herinnering',
+  'idee', 'kans', 'karakter', 'leugen', 'liefde', 'mening', 'mysterie',
+  'nieuws', 'ongeluk', 'oplossing', 'pech', 'plan', 'probleem', 'raadsel',
+  'roddel', 'rust', 'spanning', 'succes', 'toeval', 'traditie', 'trots', 'verrassing',
+  'vertrouwen', 'vreugde', 'waarheid', 'wonder',
   
   // Landen & gebieden
   'Afghanistan', 'Albanië', 'Amazone', 'Antarctica', 'Argentinië', 'Armenië', 'Australië', 'Azerbeidzjan',
