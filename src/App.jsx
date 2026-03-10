@@ -493,10 +493,72 @@ function HandoffScreen({ player, onReady }) {
   );
 }
 
+// Berichten op basis van prestatie: enthousiast (goed) vs bemoedigend (matig/slecht)
+// Tier wordt bepaald door: woorden per seconde t.o.v. een streefsnelheid van ~1 woord per 8s
+// ratio = correct / (roundTime / 8)  →  >= 0.75 = goed, < 0.4 = slecht, daartussen = aardig
+
+const MESSAGES_GREAT = [
+  (n) => `${n} woorden goed, wauw! 🎉`,
+  (n) => `Maar liefst ${n} woorden! Wat een prestatie! 🏆`,
+  (n) => `${n} woorden geraden — indrukwekkend! ⭐`,
+  (n) => `${n} woorden! De anderen zijn onder de indruk. 😎`,
+  (n) => `${n} woorden goed — lekker bezig! 🔥`,
+  (n) => `Wat een ronde! ${n} woorden geraden! 🥳`,
+  (n) => `${n} woorden! Jij weet hoe je het moet doen. 🌟`,
+  (n) => `${n} keer raak! Dat is ${n} punt${n === 1 ? "" : "en"}! 🎲`,
+  (n) => `Je hebt ${n} woorden goed — fantastisch! 🙌`,
+  (n) => `${n} woorden op het bord, niemand doet jou wat! 💥`,
+  (n) => `${n} woorden in de tijd — jij bent niet te stoppen! 🚀`,
+  (n) => `${n} woorden geraden, de rest kan inpakken! 😄`,
+  (n) => `Ronde voorbij met ${n} woorden — dat zijn er veel! 🎊`,
+  (n) => `${n} woorden! Heb jij dit geoefend of zo? 👏`,
+  (n) => `Waanzinnig! ${n} woorden goed in één ronde! 🤩`,
+];
+
+const MESSAGES_OK = [
+  (n) => `${n} woorden geraden — goed bezig! 🎯`,
+  (n) => `${n} op het bord! Niet slecht! 😄`,
+  (n) => `Klaar! ${n} woorden op de teller. ✅`,
+  (n) => n === 1 ? `1 woord goed — maar je hebt het geprobeerd! 😄` : `${n} woorden raak! Goed werk! 👏`,
+  (n) => `Tijd is om met ${n} woorden goed! ⏰`,
+  (n) => `${n} woorden geraden — de spanning zat er zeker in! 😅`,
+  (n) => `${n} woorden op het scorebord geschreven! ✍️`,
+  (n) => `Je hebt ${n} woorden goed! Blijf zo! 🙌`,
+];
+
+const MESSAGES_POOR = [
+  (n) => n === 0 ? `Nul woorden... dat kan beter! 😬` : `${n} woorden geraden, volgende keer beter! 😅`,
+  (n) => n === 0 ? `Geen woorden goed... er is altijd een volgende ronde! 🙈` : `${n} woorden — met wat meer tijd had je er meer gehad! ⏱️`,
+  (n) => `${n} woorden, dat ga je de volgende ronde verbeteren toch? 😉`,
+  (n) => n === 0 ? `Oei, nul woorden — de volgende ronde is jouw moment! 💪` : `${n} woorden... de volgende ronde ga je ervoor! 💪`,
+  (n) => `${n} woorden geraden — aardig geprobeerd! 👍`,
+  (n) => n <= 1 ? `Moeilijke ronde? Geeft niks, volgende keer beter! 😅` : `${n} woorden — er zit meer in, volgende ronde laten zien! 🎯`,
+  (n) => `${n} woorden... de anderen ruiken bloed! Ga ervoor! 😤`,
+];
+
+function getRandomEndMessage(correctCount, roundTime) {
+  // Streefsnelheid: 1 woord per 6 seconden
+  const target = roundTime / 6;
+  const ratio = target > 0 ? correctCount / target : 0;
+
+  let pool;
+  if (ratio >= 0.75) {
+    pool = MESSAGES_GREAT;
+  } else if (ratio >= 0.4) {
+    pool = MESSAGES_OK;
+  } else {
+    pool = MESSAGES_POOR;
+  }
+
+  const idx = Math.floor(Math.random() * pool.length);
+  return pool[idx](correctCount);
+}
+
 function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const [wordIndex, setWordIndex] = useState(0);
   const [scores, setScores] = useState({ correct: 0, skipped: 0 });
   const scoresRef = useRef({ correct: 0, skipped: 0 });
+  const endMessageRef = useRef(null);
   const [timeLeft, setTimeLeft] = useState(roundTime);
   const [flash, setFlash] = useState(null); // "correct" | "skip"
   const [timesUp, setTimesUp] = useState(false); // timer ran out, but current word can still be finished
@@ -531,9 +593,10 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const penaltyRef = useRef(null);
 
   const finishRound = useCallback((finalScores, finalWordIndex) => {
+    endMessageRef.current = getRandomEndMessage(finalScores.correct, roundTime);
     setDone(true);
-    setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex }), 800);
-  }, [onRoundEnd]);
+    setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex }), 1800);
+  }, [onRoundEnd, roundTime]);
 
   const correct = () => {
     if (done || skipPenalty > 0) return;
@@ -610,7 +673,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
 
       <div className="word-stage">
         {done ? (
-          <div className="word-done-msg">Tijd is om! ⏰</div>
+          <div className="word-done-msg">{endMessageRef.current || getRandomEndMessage(scores.correct, roundTime)}</div>
         ) : skipPenalty > 0 ? (
           <div className="penalty-wrap">
             <div className="penalty-label">Overgeslagen — wacht even</div>
