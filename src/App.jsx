@@ -33,7 +33,7 @@ const WORDS = [
   // Voedsel & drinken
   'aardappel', 'aardappelpuree', 'aardbei', 'abrikoos', 'amaretto', 'ananas', 'andijvie', 'appelmoes',
   'appelsap', 'appeltaart', 'asperges', 'avocado', 'bacon', 'bagel', 'baguette', 'balsamico',
-  'bami', 'banaan', 'bananenbread', 'bananenbrood', 'barbecue', 'basilicum', 'biefstuk', 'bier',
+  'bami', 'banaan', 'bananenbrood', 'barbecue', 'basilicum', 'biefstuk', 'bier',
   'bieslook', 'bietensalade', 'bitterbal', 'bitterkoekje', 'bladerdeeg', 'blauwe bes',
   'bloemkool', 'boerenkool', 'bolognese', 'bonbons', 'borrelplank', 'bosbessen', 'boterham', 'bouillon',
   'brandnetelsoep', 'broccoli', 'brood', 'brownie', 'bruine bonen', 'bruschetta', 'caesarsalade',
