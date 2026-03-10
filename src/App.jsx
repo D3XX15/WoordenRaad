@@ -282,7 +282,7 @@ const WORDS = [
   'sluipschutter', 'smokkel', 'soevereiniteit', 'spionage', 'sprookje', 'staking', 'stigma', 'stralingsvergiftiging',
   'surrogaatmoeder', 'taboe', 'terreurcel', 'tijdreizen', 'totalitarisme', 'transplantatie', 'tribunaal', 'tribune',
   'tunnelvisie', 'turbulentie', 'uitbuiting', 'uitzetting', 'undercoveragent', 'utopie', 'vaccinatie', 'verjaring',
-  'vervreemding', 'vetorecht', 'vigilante', 'vluchteling', 'volksopstand', 'vuurwerk', 'wapenhandel', 'wedergeboorte',
+  'vervreemding', 'vetorecht', 'burgerwacht', 'vluchteling', 'volksopstand', 'vuurwerk', 'wapenhandel', 'wedergeboorte',
   'xenofobie', 'zelfmoordaanslag', 'zielenknijper', 'zonsverduistering', 'zwarte markt',
   
   // Spreekwoorden & uitdrukkingen
