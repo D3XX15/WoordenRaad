@@ -129,7 +129,7 @@ const WORDS = [
   'wcpotwerpen', 'wedstrijdvissen', 'wielrennen', 'worstelen', 'yoga', 'zeilen', 'zwemmen',
   'aquarelleren', 'borduren', 'breien', 'calligrafie', 'escaperoom',
   'fotograferen', 'gezelschapsspel', 'haakwerk', 'kaartspelen',
-  'kwartetten', 'lego', 'origami', 'pianospelen', 'pottendraaien',
+  'kwartetten', 'lego', 'origami', 'pianospelen', 'pottenbakken',
   'quilten', 'tekenen', 'vogelkijken', 'weven',
   
   // Objecten & thuis
@@ -504,19 +504,19 @@ const dt = (n) => n === 1 ? "Dat is" : "Dat zijn";
 
 const MESSAGES_GREAT = [
   (n) => `${n} ${w(n)} goed, wauw! 🎉`,
-  (n) => `Maar liefst ${n} ${w(n)}! Wat een prestatie! 🏆`,
+  (n) => `Maar liefst ${n} ${w(n)}! Jij gaat sowieso winnen! 🏆`,
   (n) => `${n} ${w(n)} geraden — indrukwekkend! ⭐`,
   (n) => `${n} ${w(n)}! De anderen ${zn(n)} onder de indruk. 😎`,
   (n) => `${n} ${w(n)} goed — lekker bezig! 🔥`,
   (n) => `Wat een ronde! ${n} ${w(n)} geraden! 🥳`,
-  (n) => `${n} ${w(n)}! Jij weet hoe je het moet doen. 🌟`,
+  (n) => `${n} ${w(n)}! Jij weet hoe het moet! 🌟`,
   (n) => `${n} keer raak! ${dt(n)} ${n} ${pt(n)}! 🎲`,
   (n) => `Je hebt ${n} ${w(n)} goed — fantastisch! 🙌`,
   (n) => `${n} ${w(n)} op het bord, niemand doet jou wat! 💥`,
-  (n) => `${n} ${w(n)} in de tijd — jij bent niet te stoppen! 🚀`,
+  (n) => `${n} ${w(n)} binnen de tijd — jij bent niet te stoppen! 🚀`,
   (n) => `${n} ${w(n)} geraden, de rest kan inpakken! 😄`,
   (n) => `Ronde voorbij met ${n} ${w(n)} — dat ${zn(n)} er veel! 🎊`,
-  (n) => `${n} ${w(n)}! Heb jij dit geoefend of zo? 👏`,
+  (n) => `${n} ${w(n)}! Heb jij stiekem zitten oefenen of zo? 👀`,
   (n) => `Waanzinnig! ${n} ${w(n)} goed in één ronde! 🤩`,
 ];
 
