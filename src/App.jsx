@@ -527,7 +527,7 @@ const MESSAGES_POOR = [
   (n) => `Ik weet niet of dit goed komt! 😅`,
   (n) => `Volgende keer beter! 🙈`,
   (n) => `Haal even rustig adem! 😮‍💨`,
-  (n) => De volgende ronde gaat beter, toch? 😉`,
+  (n) => `De volgende ronde gaat beter, toch? 😉`,
   (n) => `De anderen ruiken bloed! 🩸`,
   (n) => `De spanning zat er zeker in! 😅`,
 ];
@@ -536,17 +536,20 @@ function getRandomEndMessage(correctCount, roundTime) {
   const target = roundTime / 6;
   const ratio = target > 0 ? correctCount / target : 0;
 
-  let pool;
+  let pool, tier;
   if (ratio >= 1.0) {
     pool = MESSAGES_GREAT;
+    tier = "great";
   } else if (ratio >= 0.6) {
     pool = MESSAGES_OK;
+    tier = "ok";
   } else {
     pool = MESSAGES_POOR;
+    tier = "poor";
   }
 
   const idx = Math.floor(Math.random() * pool.length);
-  return pool[idx](correctCount);
+  return { message: pool[idx](correctCount), tier, count: correctCount };
 }
 
 function RoundScreen({ player, words, onRoundEnd, roundTime }) {
@@ -668,7 +671,16 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
 
       <div className="word-stage">
         {done ? (
-          <div className="word-done-msg">{endMessageRef.current || getRandomEndMessage(scores.correct, roundTime)}</div>
+          (() => {
+            const result = endMessageRef.current || getRandomEndMessage(scores.correct, roundTime);
+            const n = result.count;
+            return (
+              <div className="word-done-wrap">
+                <div className="word-done-count">{n} {w(n)} goed geraden</div>
+                <div className={`word-done-msg tier-${result.tier}`}>{result.message}</div>
+              </div>
+            );
+          })()
         ) : skipPenalty > 0 ? (
           <div className="penalty-wrap">
             <div className="penalty-label">Overgeslagen — wacht even</div>
@@ -1083,7 +1095,12 @@ export default function App() {
           animation: pulse 0.7s infinite alternate;
           min-height: 40px;
         }
-        .word-done-msg { font-family: 'Righteous', cursive; font-size: 48px; color: #f87171; animation: pulse 0.6s infinite alternate; }
+        .word-done-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .word-done-count { font-size: 15px; color: rgba(255,255,255,0.55); font-family: 'Righteous', cursive; letter-spacing: 0.03em; }
+        .word-done-msg { font-family: 'Righteous', cursive; font-size: 48px; animation: pulse 0.6s infinite alternate; }
+        .word-done-msg.tier-poor { color: #f87171; }
+        .word-done-msg.tier-ok { color: #fb923c; }
+        .word-done-msg.tier-great { color: #4ade80; }
         @keyframes pulse { from{transform:scale(1)} to{transform:scale(1.06)} }
         .timer-ring { animation: ring 0.5s infinite; transform-origin: 50px 50px; }
         @keyframes ring {
