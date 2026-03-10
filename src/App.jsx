@@ -1025,7 +1025,7 @@ export default function App() {
           justify-content: space-between;
           width: 100%;
           max-width: 520px;
-          padding: 12px 0;
+          padding: 28px 0 12px;
           gap: 8px;
           flex-shrink: 0;
           position: relative;
