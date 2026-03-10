@@ -10,7 +10,7 @@ const WORDS = [
   'fret', 'galapagosschildpad', 'gecko', 'gibbon', 'giraffe',
   'gorilla', 'goudjakhals', 'goudvis', 'grizzlybeer', 'guppie', 'haai', 'haas',
   'hagedis', 'hamster', 'havik', 'hermelijn', 'hond', 'honingdas', 'hyena', 'ibis',
-  'ijsbeer', 'impala', 'inktvis', 'jaguar', 'jakhals', 'kakapo', 'kaketoe',
+  'ijsbeer', 'impala', 'inktvis', 'jaguar', 'jakhals', 'kaketoe',
   'kameel', 'kameleon', 'kangoeroe', 'kat', 'kever', 'kikker', 'kiwi', 'koala',
   'koe', 'komodovaraan', 'konijn', 'kraanvogel', 'krab', 'krokodil', 'kwal',
   'kwartel', 'lama', 'leeuw', 'leguaan', 'lemming', 'lepelaar', 'libel', 'lieveheersbeestje',
