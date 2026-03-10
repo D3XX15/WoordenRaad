@@ -501,35 +501,35 @@ const w = (n) => n === 1 ? "woord" : "woorden";
 const pt = (n) => n === 1 ? "punt" : "punten";
 
 const MESSAGES_GREAT = [
-  (n) => `Wat een mooie prestatie! 🏆`,
-  (n) => `Jij verdient een sticker! ⭐`,
-  (n) => `De rest is onder de indruk. 😎`,
-  (n) => `De anderen beven van angst. 🫨`,
-  (n) => `Jij staat in vuur en vlam! 🔥`,
+  () => `Wat een mooie prestatie! 🏆`,
+  () => `Jij verdient een sticker! ⭐`,
+  () => `De rest is onder de indruk. 😎`,
+  () => `De anderen beven van angst. 🫨`,
+  () => `Jij staat in vuur en vlam! 🔥`,
   (n) => `${n} ${w(n)} goed geraden! 🥳`,
   (n) => `${n} ${pt(n)} erbij geknalt! 💥`,
-  (n) => `Jij bent niet te stoppen! 🚀`,
-  (n) => `De rest kan wel inpakken! 😄`,
-  (n) => `Heb jij dit zitten oefen? 🤨`,
+  () => `Jij bent niet te stoppen! 🚀`,
+  () => `De rest kan wel inpakken! 😄`,
+  () => `Heb jij dit zitten oefen? 🤨`,
   (n) => `${n} ${w(n)} in één ronde! 🤩`,
 ];
 
 const MESSAGES_OK = [
-  (n) => `Lekker bezig! 🙌`,
+  () => `Lekker bezig! 🙌`,
   (n) => `${n} ${w(n)}, niet slecht! 👍`,
   (n) => `${n} ${pt(n)} op de teller. ✅`,
-  (n) => `De tijd is om! ⏰`,
+  () => `De tijd is om! ⏰`,
   (n) => `${n} ${pt(n)} bijgeschreven! ✍️`,
-  (n) => `Ga zo door! 💪`,
+  () => `Ga zo door! 💪`,
 ];
 
 const MESSAGES_POOR = [
-  (n) => `Ik weet niet of dit goed komt! 😅`,
-  (n) => `Volgende keer beter! 🙈`,
-  (n) => `Haal even rustig adem! 😮‍💨`,
-  (n) => `De volgende ronde gaat beter, toch? 😉`,
-  (n) => `De anderen ruiken bloed! 🩸`,
-  (n) => `De spanning zat er zeker in! 😅`,
+  () => `Ik weet niet of dit goed komt! 😅`,
+  () => `Volgende keer beter! 🙈`,
+  () => `Haal even rustig adem! 😮‍💨`,
+  () => `De volgende ronde gaat beter, toch? 😉`,
+  () => `De anderen ruiken bloed! 🩸`,
+  () => `De spanning zat er zeker in! 😅`,
 ];
 
 function getRandomEndMessage(correctCount, roundTime) {
@@ -1097,7 +1097,7 @@ export default function App() {
         }
         .word-done-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
         .word-done-count { font-size: 15px; color: rgba(255,255,255,0.55); font-family: 'Righteous', cursive; letter-spacing: 0.03em; }
-        .word-done-msg { font-family: 'Righteous', cursive; font-size: 48px; }
+        .word-done-msg { font-family: 'Righteous', cursive; font-size: clamp(24px, 7vw, 48px); text-align: center; word-break: break-word; }
         .word-done-msg.tier-poor { color: #f87171; }
         .word-done-msg.tier-ok { color: #fbbf24; }
         .word-done-msg.tier-great { color: #4ade80; }
@@ -1139,7 +1139,6 @@ export default function App() {
           min-width: 0;
         }
         .action-btn:focus { outline: none; }
-        .action-btn:focus-visible { outline: none; }
         .action-btn:active { transform: scale(0.93); }
         .btn-icon { font-size: 28px; }
         .btn-label { font-size: clamp(13px, 3.5vw, 16px); white-space: nowrap; }
