@@ -516,11 +516,11 @@ const MESSAGES_GREAT = [
 
 const MESSAGES_OK = [
   (n) => `Lekker bezig! 🙌`,
-  (n) => `${n} ${pt(n)}, niet slecht! 👍`,
+  (n) => `${n} ${w(n)}, niet slecht! 👍`,
   (n) => `${n} ${pt(n)} op de teller. ✅`,
   (n) => `De tijd is om! ⏰`,
   (n) => `${n} ${pt(n)} bijgeschreven! ✍️`,
-  (n) => `Blijf zo doorgaan! 💪`,
+  (n) => `Ga zo door! 💪`,
 ];
 
 const MESSAGES_POOR = [
