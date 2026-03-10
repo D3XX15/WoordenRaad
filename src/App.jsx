@@ -532,7 +532,7 @@ const MESSAGES_POOR = [
   (n) => n === 0 ? `Oei, nul woorden — de volgende ronde is jouw moment! 💪` : `${n} ${w(n)}... de volgende ronde ga je ervoor! 💪`,
   (n) => n <= 1 ? `Moeilijke ronde? Geeft niks, volgende keer beter! 😅` : `${n} ${w(n)} — er zit meer in, volgende ronde laten zien! 🎯`,
   (n) => n === 0 ? `Nul woorden... de anderen ruiken bloed! Ga ervoor! 😤` : `${n} ${w(n)}... de anderen ruiken bloed! Ga ervoor! 😤`,
-  (n) => n === 0 ? `Nul woorden... de spanning zat er zeker in! 😅` : `${n} ${w(n)} geraden — de spanning zat er zeker in! 😅`,,
+  (n) => n === 0 ? `Nul woorden... de spanning zat er zeker in! 😅` : `${n} ${w(n)} geraden — de spanning zat er zeker in! 😅`,
 ];
 
 function getRandomEndMessage(correctCount, roundTime) {
