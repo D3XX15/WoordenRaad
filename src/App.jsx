@@ -1145,10 +1145,12 @@ export default function App() {
         .btn-label { font-size: clamp(13px, 3.5vw, 16px); white-space: nowrap; }
 
         .skip-btn { background: rgba(251,191,36,0.15); color: #fbbf24; border: 2px solid rgba(251,191,36,0.3); }
-        .skip-btn:hover { background: rgba(251,191,36,0.25); }
-
         .correct-btn { background: rgba(74,222,128,0.2); color: #4ade80; border: 2px solid rgba(74,222,128,0.35); }
-        .correct-btn:hover { background: rgba(74,222,128,0.35); }
+
+        @media (hover: hover) {
+          .skip-btn:hover { background: rgba(251,191,36,0.25); }
+          .correct-btn:hover { background: rgba(74,222,128,0.35); }
+        }
 
         /* ── Scores ── */
         .score-card {
