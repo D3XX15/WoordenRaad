@@ -1066,6 +1066,7 @@ export default function App() {
           line-height: 1.15;
           animation: wordIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
           word-break: break-word;
+          overflow-wrap: break-word;
           max-width: 100%;
           padding: 0 8px;
         }
