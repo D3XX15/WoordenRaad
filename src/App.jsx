@@ -51,7 +51,7 @@ const WORDS = [
   'linzen', 'loempia', 'lychee', 'macaron', 'macaroni', 'mango', 'mangosteen', 'marshmallow',
   'mayonaise', 'meloensap', 'milkshake', 'miso', 'mochi', 'mosterd', 'moussaka', 'mozzarella',
   'mueslireep', 'muffin', 'nasi', 'nectarine', 'noedels', 'noten', 'nougat', 'olijf',
-  'olijfolie', 'omelet', 'pad thai', 'paella', 'pancake', 'pannenkoek', 'paprika', 'parmezaan',
+  'olijfolie', 'omelet', 'pad thai', 'paella', 'pannenkoek', 'paprika', 'parmezaan',
   'passievrucht', 'pasta', 'penne', 'perzik', 'pesto', 'piccalilly', 'pindakaas', 'pistache',
   'pitabrood', 'pizza', 'poffertjes', 'pommes frites', 'pompoen', 'popcorn', 'prei', 'pruim',
   'pulled pork', 'quiche', 'rabarber', 'radijs', 'ratatouille', 'ravioli', 'rendang', 'ricotta',
