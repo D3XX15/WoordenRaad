@@ -48,7 +48,7 @@ const WORDS = [
   'jus', 'kaas', 'kaasfondue', 'kaassoufflé', 'kaneelbroodje', 'kappertjes', 'kapsalon', 'kastanje',
   'kerrieworst', 'kersensap', 'kimchi', 'kip', 'kipnuggets', 'koffie', 'kokosmelk', 'komkommer',
   'koriander', 'kroket', 'kwark', 'kwarktaart', 'lamsvlees', 'lasagne', 'latte', 'limonade',
-  'linzen', 'loempia', 'lychee', 'macaron', 'macaroni', 'mango', 'mangosteen', 'marshmallow',
+  'linzen', 'loempia', 'lychee', 'macaron', 'macaroni', 'mango', 'marshmallow',
   'mayonaise', 'meloensap', 'milkshake', 'miso', 'mochi', 'mosterd', 'moussaka', 'mozzarella',
   'mueslireep', 'muffin', 'nasi', 'nectarine', 'noedels', 'noten', 'nougat', 'olijf',
   'olijfolie', 'omelet', 'pad thai', 'paella', 'pannenkoek', 'paprika', 'parmezaan',
