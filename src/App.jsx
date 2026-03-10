@@ -1059,7 +1059,7 @@ export default function App() {
 
         .current-word {
           font-family: 'Righteous', cursive;
-          font-size: clamp(32px, 9vw, 68px);
+          font-size: clamp(38px, 11vw, 80px);
           background: linear-gradient(135deg, #f9fafb, #a78bfa);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
