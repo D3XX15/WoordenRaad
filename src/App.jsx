@@ -157,7 +157,7 @@ const WORDS = [
   'ratelen', 'reddingsvest', 'regenjas', 'rekenmachine', 'robot', 'rode kaart', 'rolluik', 'rolstoel',
   'rubberen eend', 'rugzak', 'sarcofaag', 'satelliet', 'scalpel', 'schaakbord', 'schaar', 'scheepsschroef',
   'scheermessen', 'schijf van vijf', 'schilderij', 'schommel', 'schroefsleutel', 'scooter', 'sigaardoos', 'sitar',
-  'sleutel', 'slinger', 'smeedijzer', 'snijplank', 'sok', 'speelgoed', 'speelkaart', 'sphinx',
+  'sleutel', 'slingeren', 'smeedijzer', 'snijplank', 'sok', 'speelgoed', 'speelkaart', 'sphinx',
   'spiegel', 'spijker', 'spijkerbroek', 'spionagesatelliet', 'springveer', 'stethoscoop', 'stoommachine', 'stopwatch', 'strijkijzer',
   'stroomgenerator', 'suikerspin', 'tandenborstel', 'tandpasta', 'tarotkaart', 'telescoop', 'telraam', 'tent',
   'theekan', 'theemuts', 'thermometer', 'tijdmachine', 'toorts', 'touwladder', 'trampoline', 'transistor',
