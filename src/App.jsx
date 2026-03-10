@@ -262,7 +262,7 @@ const WORDS = [
   'revolutie', 'reïncarnatie', 'sabotage', 'sancties', 'schandaal', 'schizofrenie', 'seconde', 'slavernij',
   'sluipschutter', 'smokkel', 'soevereiniteit', 'spionage', 'sprookje', 'staking', 'stigma', 'stralingsvergiftiging',
   'surrogaatmoeder', 'taboe', 'terreurcel', 'tijdreizen', 'totalitarisme', 'transplantatie', 'tribunal',
-  'tunnelvisie', 'turbulentie', 'uitbuiting', 'uitzetting', 'undercover', 'utopie', 'vaccinatie', 'verjaring',
+  'tunnelvisie', 'turbulentie', 'uitbuiting', 'uitzetting', 'undercoveragent', 'utopie', 'vaccinatie', 'verjaring',
   'vervreemding', 'vetorecht', 'vigilante', 'vluchteling', 'volksopstand', 'vuurwerk', 'wapenhandel', 'wedergeboorte',
   'xenofobie', 'zelfmoordaanslag', 'zielenknijper', 'zonsverduistering', 'zwarte markt',
   
