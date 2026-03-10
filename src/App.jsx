@@ -168,7 +168,7 @@ const WORDS = [
   'zeis', 'zenderstation', 'zetel', 'zonnebloem', 'zonnebril', 'zonnewijzer', 'zweep',
   'tandenstoker', 'kleerhanger', 'elastiekje', 'kurk',
   'aanrecht', 'bank', 'beker', 'boodschappentas', 'broek', 'dekbed', 'deurmat', 'gordijn',
-  'handschoen', 'hark', 'hoed', 'jas', 'knoop', 'koffiezetapparaat',
+  'handschoen', 'hark', 'hoed', 'jasje', 'knoop', 'koffiezetapparaat',
   'krijtbord', 'lamp', 'mes', 'muts', 'pan', 'papier', 'pen',
   'plantje', 'pollepel', 'portemonnee', 'riem', 'schoen', 'servet', 'soeplepel',
   'spaarpot', 'stoel', 'stropdas', 'tafel', 'tas', 'theedoek', 'vork', 'wijnglas',
@@ -596,7 +596,8 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
               transform="rotate(-90 50 50)"
               style={{ transition: "stroke 0.5s" }}
             />
-            <text x="50" y="56" textAnchor="middle" fill="white" fontSize="22" fontWeight="700" fontFamily="inherit">
+            <text x="50" y="56" textAnchor="middle" fill="white" fontSize="22" fontWeight="700" fontFamily="inherit"
+              className={timesUp ? "timer-ring" : ""}>
               {timesUp ? "⏰" : timeLeft}
             </text>
           </svg>
@@ -617,12 +618,13 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
           </div>
         ) : (
           <>
-            {timesUp && (
-              <div className="times-up-banner">⏰ Tijd is om — maak dit woord nog af!</div>
-            )}
             <div className="word-counter">woord {wordIndex + 1}</div>
             <div className="current-word">{words[wordIndex]}</div>
-            <div className="word-hint">Beeld of leg uit — maar zeg het woord niet!</div>
+            {timesUp ? (
+              <div className="times-up-banner">⏰ Tijd is om — maak dit woord nog af!</div>
+            ) : (
+              <div className="word-hint">Beeld of leg uit — maar zeg het woord niet!</div>
+            )}
           </>
         )}
       </div>
@@ -999,7 +1001,7 @@ export default function App() {
         }
         @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
 
-        .word-hint { font-size: 13px; color: rgba(255,255,255,0.35); }
+        .word-hint { font-size: 13px; color: rgba(255,255,255,0.35); min-height: 40px; display: flex; align-items: center; justify-content: center; }
 
         .penalty-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
         .penalty-label { font-size: clamp(13px, 3.5vw, 16px); color: #fbbf24; opacity: 0.8; }
@@ -1021,9 +1023,21 @@ export default function App() {
           padding: 8px 16px;
           text-align: center;
           animation: pulse 0.7s infinite alternate;
+          min-height: 40px;
         }
         .word-done-msg { font-family: 'Righteous', cursive; font-size: 48px; color: #f87171; animation: pulse 0.6s infinite alternate; }
         @keyframes pulse { from{transform:scale(1)} to{transform:scale(1.06)} }
+        .timer-ring { animation: ring 0.5s infinite; transform-origin: 50px 50px; }
+        @keyframes ring {
+          0%   { transform: rotate(0deg); }
+          15%  { transform: rotate(18deg); }
+          30%  { transform: rotate(-16deg); }
+          45%  { transform: rotate(14deg); }
+          60%  { transform: rotate(-10deg); }
+          75%  { transform: rotate(6deg); }
+          90%  { transform: rotate(-3deg); }
+          100% { transform: rotate(0deg); }
+        }
 
         .action-row {
           display: flex;
