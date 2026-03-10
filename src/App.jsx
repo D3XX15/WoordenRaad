@@ -129,7 +129,7 @@ const WORDS = [
   'wcpotwerpen', 'wedstrijdvissen', 'wielrennen', 'worstelen', 'yoga', 'zeilen', 'zwemmen',
   'aquarelleren', 'borduren', 'breien', 'calligrafie', 'escaperoom',
   'fotograferen', 'gezelschapsspel', 'haakwerk', 'kaartspelen',
-  'kwartetten', 'lego', 'origami', 'pianospelen', 'pottenbakken',
+  'kwartetten', 'lego', 'origami', 'pianospelen', 'pottendraaien',
   'quilten', 'tekenen', 'vogelkijken', 'weven',
   
   // Objecten & thuis
@@ -498,25 +498,23 @@ function HandoffScreen({ player, onReady }) {
 // ratio = correct / (roundTime / 6)  →  >= 0.75 = goed, < 0.4 = slecht, daartussen = aardig
 
 const w = (n) => n === 1 ? "woord" : "woorden";
-const zn = (n) => n === 1 ? "is" : "zijn";
 const pt = (n) => n === 1 ? "punt" : "punten";
-const dt = (n) => n === 1 ? "Dat is" : "Dat zijn";
 
 const MESSAGES_GREAT = [
   (n) => `${n} ${w(n)} goed, wauw! 🎉`,
-  (n) => `Maar liefst ${n} ${w(n)}! Jij gaat sowieso winnen! 🏆`,
+  (n) => `Maar liefst ${n} ${w(n)}! Wat een prestatie! 🏆`,
   (n) => `${n} ${w(n)} geraden — indrukwekkend! ⭐`,
-  (n) => `${n} ${w(n)}! De anderen ${zn(n)} onder de indruk. 😎`,
+  (n) => `${n} ${w(n)}! De anderen zijn onder de indruk. 😎`,
   (n) => `${n} ${w(n)} goed — lekker bezig! 🔥`,
   (n) => `Wat een ronde! ${n} ${w(n)} geraden! 🥳`,
-  (n) => `${n} ${w(n)}! Jij weet hoe het moet! 🌟`,
-  (n) => `${n} keer raak! ${dt(n)} ${n} ${pt(n)}! 🎲`,
+  (n) => `${n} ${w(n)}! Jij weet hoe je het moet doen. 🌟`,
+  (n) => `${n} keer raak! Dat ${n === 1 ? "is" : "zijn"} ${n} ${pt(n)}! 🎲`,
   (n) => `Je hebt ${n} ${w(n)} goed — fantastisch! 🙌`,
   (n) => `${n} ${w(n)} op het bord, niemand doet jou wat! 💥`,
-  (n) => `${n} ${w(n)} binnen de tijd — jij bent niet te stoppen! 🚀`,
+  (n) => `${n} ${w(n)} in de tijd — jij bent niet te stoppen! 🚀`,
   (n) => `${n} ${w(n)} geraden, de rest kan inpakken! 😄`,
-  (n) => `Ronde voorbij met ${n} ${w(n)} — dat ${zn(n)} er veel! 🎊`,
-  (n) => `${n} ${w(n)}! Heb jij stiekem zitten oefenen of zo? 👀`,
+  (n) => n === 1 ? `Ronde voorbij met 1 woord — maar je hebt het geprobeerd! 🎊` : `Ronde voorbij met ${n} woorden — dat zijn er veel! 🎊`,
+  (n) => `${n} ${w(n)}! Heb jij dit geoefend of zo? 👏`,
   (n) => `Waanzinnig! ${n} ${w(n)} goed in één ronde! 🤩`,
 ];
 
@@ -524,7 +522,7 @@ const MESSAGES_OK = [
   (n) => `${n} ${w(n)} geraden — goed bezig! 🎯`,
   (n) => `${n} ${w(n)} op het bord! Niet slecht! 😄`,
   (n) => `Klaar! ${n} ${w(n)} op de teller. ✅`,
-  (n) => `${n} ${w(n)} raak! Goed werk! 👏`,
+  (n) => n === 1 ? `1 woord raak! Goed werk! 👏` : `${n} woorden raak! Goed werk! 👏`,
   (n) => `Tijd is om met ${n} ${w(n)} goed! ⏰`,
   (n) => `${n} ${w(n)} geraden — de spanning zat er zeker in! 😅`,
   (n) => `${n} ${w(n)} op het scorebord geschreven! ✍️`,
