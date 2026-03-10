@@ -535,13 +535,13 @@ const MESSAGES_POOR = [
 ];
 
 function getRandomEndMessage(correctCount, roundTime) {
-  const target = roundTime / 5;
+  const target = roundTime / 6;
   const ratio = target > 0 ? correctCount / target : 0;
 
   let pool;
-  if (ratio >= 0.8) {
+  if (ratio >= 1.0) {
     pool = MESSAGES_GREAT;
-  } else if (ratio >= 0.5) {
+  } else if (ratio >= 0.6) {
     pool = MESSAGES_OK;
   } else {
     pool = MESSAGES_POOR;
