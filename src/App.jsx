@@ -329,11 +329,12 @@ function SetupScreen({ onStart }) {
   const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
 
   const updateCount = (n) => {
-    setCount(n);
+    const clamped = Math.min(20, Math.max(2, n));
+    setCount(clamped);
     setNames((prev) => {
       const next = [...prev];
-      while (next.length < n) next.push("");
-      return next.slice(0, n);
+      while (next.length < clamped) next.push("");
+      return next.slice(0, clamped);
     });
   };
 
@@ -369,16 +370,18 @@ function SetupScreen({ onStart }) {
 
         <div className="setup-section">
           <label className="setup-label">Aantal spelers</label>
-          <div className="player-count-row">
-            {[2,3,4,5,6,7,8,9,10].map((n) => (
-              <button
-                key={n}
-                className={`count-btn ${count === n ? "active" : ""}`}
-                onClick={() => updateCount(n)}
-              >
-                {n}
-              </button>
-            ))}
+          <div className="time-control">
+            <button
+              className="time-btn"
+              onClick={() => updateCount(count - 1)}
+              disabled={count <= 2}
+            >−</button>
+            <span className="time-display">{count}</span>
+            <button
+              className="time-btn"
+              onClick={() => updateCount(count + 1)}
+              disabled={count >= 20}
+            >+</button>
           </div>
         </div>
 
