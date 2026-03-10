@@ -1077,7 +1077,7 @@ export default function App() {
 
         .word-hint { font-size: 13px; color: rgba(255,255,255,0.35); min-height: 40px; display: flex; align-items: center; justify-content: center; }
 
-        .penalty-wrap { display: flex; flex-direction: column; align-items: center; gap: 30px; }
+        .penalty-wrap { display: flex; flex-direction: column; align-items: center; gap: 300px; }
         .penalty-label { font-size: clamp(13px, 3.5vw, 16px); color: #fbbf24; opacity: 0.8; }
         .penalty-countdown {
           font-family: 'Righteous', cursive;
