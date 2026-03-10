@@ -593,7 +593,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const finishRound = useCallback((finalScores, finalWordIndex) => {
     endMessageRef.current = getRandomEndMessage(finalScores.correct, roundTime);
     setDone(true);
-    setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex }), 2500);
+    setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex }), 1800);
   }, [onRoundEnd, roundTime]);
 
   const correct = () => {
@@ -1099,8 +1099,8 @@ export default function App() {
         .word-done-count { font-size: 15px; color: rgba(255,255,255,0.55); font-family: 'Righteous', cursive; letter-spacing: 0.03em; }
         .word-done-msg { font-family: 'Righteous', cursive; font-size: 48px; animation: pulse 0.6s infinite alternate; }
         .word-done-msg.tier-poor { color: #f87171; }
-        .word-done-msg.tier-ok { color: #fb923c; }
-        .word-done-msg.tier-great { color: #4ade80; }
+        .word-done-msg.tier-ok { color: #fcd34d; }
+        .word-done-msg.tier-great { color: #34d399; }
         @keyframes pulse { from{transform:scale(1)} to{transform:scale(1.06)} }
         .timer-ring { animation: ring 0.5s infinite; transform-origin: 50px 50px; }
         @keyframes ring {
