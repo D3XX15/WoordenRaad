@@ -362,6 +362,84 @@ function shuffle(arr) {
   return a;
 }
 
+// ── Afbreekfunctie voor lange Nederlandse woorden ────────────────────────────
+// Voegt zachte koppeltekens (­) in op logische afbreekpunten.
+// Alleen actief voor woorden langer dan MIN_LEN tekens.
+const MIN_HYPHEN_LEN = 10;
+
+function hyphenate(word) {
+  // Woorden met spaties of bestaande koppeltekens: elk deel apart behandelen
+  if (word.includes(' ') || word.includes('-')) {
+    return word
+      .split(/( |-)/g)
+      .map((part, i, arr) => {
+        // Spaties en koppeltekens zelf ongewijzigd laten
+        if (part === ' ' || part === '-') return part;
+        return hyphenate(part);
+      })
+      .join('');
+  }
+
+  if (word.length <= MIN_HYPHEN_LEN) return word;
+
+  const VOWELS = new Set('aeiouáéíóúàèìòùäëïöüâêîôûy');
+  const isVowel = (c) => VOWELS.has(c.toLowerCase());
+
+  const chars = [...word]; // unicode-safe
+  const breakPoints = new Set();
+
+  for (let i = 1; i < chars.length - 2; i++) {
+    const prev = chars[i - 1];
+    const curr = chars[i];
+    const next = chars[i + 1];
+
+    // Regel 1: klinker → medeklinker → klinker: breek vóór de medeklinker
+    // bv. "ka-me-len": na elke klinker gevolgd door medeklinker + klinker
+    if (isVowel(prev) && !isVowel(curr) && isVowel(next)) {
+      if (i >= 2) breakPoints.add(i);
+    }
+
+    // Regel 2: twee medeklinkers tussen klinkers: breek tussen de twee medeklinkers
+    // bv. "kam-pioën", "ham-ster"
+    if (
+      isVowel(prev) &&
+      !isVowel(curr) &&
+      !isVowel(next) &&
+      i + 2 < chars.length &&
+      isVowel(chars[i + 2])
+    ) {
+      if (i + 1 >= 3) breakPoints.add(i + 1);
+    }
+
+    // Regel 3: klinker na klinker (tweeklanken): breek na het tweede deel indien gevolgd door medeklinker
+    // bv. "groot-se" → niet ideaal, maar voorkomt lange stukken
+    if (
+      !isVowel(prev) &&
+      isVowel(curr) &&
+      isVowel(next) &&
+      i + 2 < chars.length &&
+      !isVowel(chars[i + 2])
+    ) {
+      // alleen als er al een redelijke voorzijde is
+      if (i >= 3) breakPoints.add(i + 2);
+    }
+  }
+
+  // Zacht koppelteken invoegen; zorg dat segmenten minimaal 3 tekens lang zijn
+  let result = '';
+  let segStart = 0;
+  const sortedBreaks = [...breakPoints].sort((a, b) => a - b);
+
+  for (const bp of sortedBreaks) {
+    if (bp - segStart >= 3 && chars.length - bp >= 3) {
+      result += chars.slice(segStart, bp).join('') + '\u00AD'; // ­ = soft hyphen
+      segStart = bp;
+    }
+  }
+  result += chars.slice(segStart).join('');
+  return result;
+}
+
 // ── Screens ──────────────────────────────────────────────────────────────────
 
 function SetupScreen({ onStart }) {
@@ -689,7 +767,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
         ) : (
           <>
             <div className="word-counter">woord {wordIndex + 1}</div>
-            <div className="current-word">{words[wordIndex]}</div>
+            <div className="current-word">{hyphenate(words[wordIndex])}</div>
             {timesUp ? (
               <div className="times-up-banner">⏰ Tijd is om — maak dit woord nog af!</div>
             ) : (
@@ -1067,6 +1145,8 @@ export default function App() {
           animation: wordIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
           word-break: break-word;
           overflow-wrap: break-word;
+          hyphens: manual;
+          -webkit-hyphens: manual;
           max-width: 100%;
           padding: 0 8px;
         }
