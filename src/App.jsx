@@ -7,13 +7,13 @@ const WORDS = [
   'buffel', 'buizerd', 'buldog', 'cheetah', 'chihuahua', 'cobra', 'condor', 'das',
   'dingo', 'dinosaurus', 'dolfijn', 'draak', 'dromedaris', 'duif', 'dwergpinguïn', 'eekhoorn',
   'egel', 'ekster', 'eland', 'elektrische paling', 'emoe', 'fazant', 'flamingo',
-  'fret', 'galapagos­schildpad', 'gecko', 'gibbon', 'giraffe',
+  'fret', 'galapagosschildpad', 'gecko', 'gibbon', 'giraffe',
   'gorilla', 'goudjakhals', 'goudvis', 'grizzlybeer', 'guppie', 'haai', 'haas',
   'hagedis', 'hamster', 'havik', 'hermelijn', 'hond', 'honingdas', 'hyena', 'ibis',
   'ijsbeer', 'impala', 'inktvis', 'jaguar', 'jakhals', 'kaketoe',
   'kameel', 'kameleon', 'kangoeroe', 'kat', 'kever', 'kikker', 'kiwi', 'koala',
   'koe', 'komodovaraan', 'konijn', 'kraanvogel', 'krab', 'krokodil', 'kwal',
-  'kwartel', 'lama', 'leeuw', 'leguaan', 'lemming', 'lepelaar', 'libel', 'lieve­heersbeestje',
+  'kwartel', 'lama', 'leeuw', 'leguaan', 'lemming', 'lepelaar', 'libel', 'lieveheersbeestje',
   'luiaard', 'lynx', 'maanvis', 'marmot', 'meerkat',
   'meerval', 'mier', 'miereneter', 'moeflon', 'mol', 'mug',
   'muilezel', 'muskusrat', 'narwal', 'nerts', 'neusaap', 'neushoorn', 'nijlgans', 'nijlpaard',
@@ -79,27 +79,27 @@ const WORDS = [
   'boekhoudster', 'botanicus', 'brandweer', 'brandweerman', 'buschauffeur', 'cardioloog', 'casinodealer', 'chef-kok',
   'chiropractor', 'chirurg', 'circusdirecteur', 'clown', 'coach', 'cowboy', 'croupier',
   'danser', 'dansleraar', 'dataanalist', 'dermatoloog', 'detective', 'dierenarts', 'dierentrainer', 'diplomaat',
-  'dirigent', 'dj', 'documentaire­maker', 'dokter', 'dronepiloot', 'duikinstructeur', 'econoom',
-  'ethisch hacker', 'evenementen­organisator', 'examinator', 'farmaceut', 'filosoof',
-  'fotograaf', 'fysiotherapeut', 'game­ontwikkelaar', 'gastronoom', 'geneesheer', 'geograaf', 'geoloog', 'gids',
+  'dirigent', 'dj', 'documentairemaker', 'dokter', 'dronepiloot', 'duikinstructeur', 'econoom',
+  'ethisch hacker', 'evenementenorganisator', 'examinator', 'farmaceut', 'filosoof',
+  'fotograaf', 'fysiotherapeut', 'gameontwikkelaar', 'gastronoom', 'geneesheer', 'geograaf', 'geoloog', 'gids',
   'glazenwasser', 'goochelaar', 'grafisch ontwerper', 'gynaecoloog', 'handelaar', 'heks', 'hersenchirurg', 'hovenier',
   'hypnotherapeut', 'ijsbeeldhouwer', 'illustrator', 'immunoloog', 'informaticus', 'ingenieur', 'inspecteur', 'instrumentmaker',
   'jager', 'jongleur', 'journalist', 'juwelier', 'kaartenmaker', 'kapitein', 'kapper',
-  'kassamedewerker', 'kinderarts', 'klimaatoloog', 'klokken­hersteller', 'klusjesman', 'kok', 'kostuum­ontwerper', 'kraamverzorger',
+  'kassamedewerker', 'kinderarts', 'klimaatoloog', 'klokkenhersteller', 'klusjesman', 'kok', 'kostuumontwerper', 'kraamverzorger',
   'kruidenier', 'kunstcriticus', 'kunstenaar', 'kweker', 'laborant', 'landmeter', 'lasser', 'leraar',
-  'levensmiddelen', 'loodgieter', 'lucht­verkeersleider', 'magiër', 'makelaar', 'marionette­speler', 'matroos', 'meteoroloog',
-  'microbioloog', 'modeontwerper', 'moleculair bioloog', 'monteur', 'museum­conservator', 'musicus',
+  'levensmiddelen', 'loodgieter', 'luchtverkeersleider', 'magiër', 'makelaar', 'marionettespeler', 'matroos', 'meteoroloog',
+  'microbioloog', 'modeontwerper', 'moleculair bioloog', 'monteur', 'museumconservator', 'musicus',
   'neuroloog', 'notaris', 'ontwerper', 'oogarts', 'operazanger', 'opticien',
   'orthopeed', 'parasiet', 'parfum', 'piloot',
   'piraat', 'politicoloog', 'politieagent', 'postbode', 'primaat', 'producent',
   'profvoetballer', 'psychiater', 'psycholoog', 'radioloog', 'rechercheur', 'revalidatiearts', 'ridder', 'roboticus',
-  'ruimtevaarder', 'ruimte­wetenschapper', 'scenario­schrijver', 'schappenvuller', 'scheikundige', 'schilder', 'schildwacht', 'schoonmaker',
-  'schrijver', 'sheriff', 'skateboarder', 'slager', 'socioloog', 'soldaat', 'sommelier', 'stadsplanner', 'stand-up­comedian',
-  'steward', 'stoker', 'strateeg', 'stratenmaker', 'stuntman', 'sumo', 'systeem­beheerder', 'tatoeëerder',
-  'taxichauffeur', 'taxidermist', 'textiel­ontwerper', 'timmerman', 'tolk', 'tovenaar', 'toxicoloog', 'trainer',
-  'tuinieren', 'tuinman', 'verpleegkundige', 'verzekerings­agent', 'vioolmaker', 'visser', 'vliegtuigbouwer',
-  'voedings­wetenschapper', 'volksmenner', 'vuilnisman', 'vuurwerkmaker', 'wetenschapper', 'wijnboer', 'winkelier',
-  'wiskundige', 'woordvoerder', 'zanger', 'zeebioloog', 'zeiler', 'ziekenhuis­directeur',
+  'ruimtevaarder', 'ruimtewetenschapper', 'scenarioschrijver', 'schappenvuller', 'scheikundige', 'schilder', 'schildwacht', 'schoonmaker',
+  'schrijver', 'sheriff', 'skateboarder', 'slager', 'socioloog', 'soldaat', 'sommelier', 'stadsplanner', 'stand-upcomedian',
+  'steward', 'stoker', 'strateeg', 'stratenmaker', 'stuntman', 'sumo', 'systeembeheerder', 'tatoeëerder',
+  'taxichauffeur', 'taxidermist', 'textielontwerper', 'timmerman', 'tolk', 'tovenaar', 'toxicoloog', 'trainer',
+  'tuinieren', 'tuinman', 'verpleegkundige', 'verzekeringsagent', 'vioolmaker', 'visser', 'vliegtuigbouwer',
+  'voedingswetenschapper', 'volksmenner', 'vuilnisman', 'vuurwerkmaker', 'wetenschapper', 'wijnboer', 'winkelier',
+  'wiskundige', 'woordvoerder', 'zanger', 'zeebioloog', 'zeiler', 'ziekenhuisdirecteur',
   'aannemer', 'beeldhouwer', 'burgemeester', 'cabaretier', 'ijsverkoper',
   'kaarsenmaker', 'kolenboer', 'koster', 'omroeper', 'organist',
   'predikant', 'reddingswerker', 'smid', 'straatveger', 'taalkundige',
@@ -115,16 +115,16 @@ const WORDS = [
   'hoogspringen', 'hordelopen', 'ijshockey', 'jiu-jitsu', 'joggen',
   'judo', 'kaatsen', 'kanoën', 'karate', 'karting', 'kegelen',
   'kegelspel', 'kitesurfen', 'klimmen', 'klimwand', 'knikkeren', 'kogelstoten', 'korfbal', 'krachttraining',
-  'kunstrijden', 'lacrosse', 'lange­baanschaatsen', 'lasergame', 'lijnvissen', 'longboarden', 'magisch goochelen',
+  'kunstrijden', 'lacrosse', 'langebaanschaatsen', 'lasergame', 'lijnvissen', 'longboarden', 'magisch goochelen',
   'marathon', 'minigolf', 'modelbouwen', 'motorcross', 'motorsport', 'mountainbiken', 'netbal', 'ninjaparcours',
-  'nordic walking', 'obstakelloop', 'oriëntatie­lopen', 'paardrijden', 'padel', 'paintball', 'parachute­springen',
-  'parkour', 'pétanque', 'pilates', 'poedelen', 'polowedstrijd', 'polsstok­hoogspringen', 'powerlifting', 'racketball',
+  'nordic walking', 'obstakelloop', 'oriëntatielopen', 'paardrijden', 'padel', 'paintball', 'parachutespringen',
+  'parkour', 'pétanque', 'pilates', 'poedelen', 'polowedstrijd', 'polsstokhoogspringen', 'powerlifting', 'racketball',
   'rafting', 'ringsteken', 'rodeo', 'roeien', 'rolschaatsen', 'rots klimmen', 'rugby',
   'sauna', 'schaatsen', 'schaken', 'schansspringen', 'schermen', 'schieten',
-  'scrabble', 'short­tracksprint', 'sjoelen', 'skeeleren', 'skeleton', 'skiën', 'skislalom',
+  'scrabble', 'shorttracksprint', 'sjoelen', 'skeeleren', 'skeleton', 'skiën', 'skislalom',
   'slipstream', 'snowboarden', 'softbal', 'speerwerpen', 'spijkerpoepen', 'squash', 'stoeien',
-  'stoepkrijten', 'stuntrijden', 'suppen', 'surfen', 'synchroon­zwemmen', 'taekwondo', 'tafeltennis', 'telemarketeer', 'tennis', 'touwtrekken', 'trail running', 'trampoline­springen', 'trefbal', 'triatlon',
-  'turnen', 'varen', 'veldrijden', 'verspringen', 'vissen', 'vliegeren', 'vliegtuig­modelbouwen', 'vliegvissen',
+  'stoepkrijten', 'stuntrijden', 'suppen', 'surfen', 'synchroonzwemmen', 'taekwondo', 'tafeltennis', 'telemarketeer', 'tennis', 'touwtrekken', 'trail running', 'trampolinespringen', 'trefbal', 'triatlon',
+  'turnen', 'varen', 'veldrijden', 'verspringen', 'vissen', 'vliegeren', 'vliegtuigmodelbouwen', 'vliegvissen',
   'voetbal', 'volleybal', 'wandelen', 'waterpolo', 'waterskiën', 'wakeboarden',
   'wcpotwerpen', 'wedstrijdvissen', 'wielrennen', 'worstelen', 'yoga', 'zeilen', 'zwemmen',
   'aquarelleren', 'borduren', 'breien', 'calligrafie', 'escaperoom',
@@ -133,7 +133,7 @@ const WORDS = [
   'quilten', 'tekenen', 'vogelkijken', 'weven',
   
   // Objecten & thuis
-  'aansteker', 'aardappel­schiller', 'accordeon', 'actiefiguur', 'afstands­bediening', 'airfryer', 'alarmbel', 'albumhoes',
+  'aansteker', 'aardappelschiller', 'accordeon', 'actiefiguur', 'afstandsbediening', 'airfryer', 'alarmbel', 'albumhoes',
   'anker', 'ansichtkaart', 'antiek', 'armbandhorloge', 'asbak', 'atlas', 'atoomklok', 'avondjurk',
   'bajonet', 'ballon', 'balustrade', 'banjo', 'barbecuetang', 'barometer', 'beeldhouwwerk', 'bezem',
   'biljartbal', 'blender', 'bloesem', 'blokfluit', 'bodycam', 'boekenkast', 'boekenlegger', 'boog',
@@ -141,7 +141,7 @@ const WORDS = [
   'cadeautje', 'camera', 'catapult', 'cello', 'clarinet', 'computer', 'contrabas', 'cornetto',
   'dakpan', 'dartpijl', 'defibrillator', 'deurbel', 'didgeridoo', 'dopje', 'drietand', 'dwarsfluit',
   'dynamo', 'elektrische fiets', 'elpee', 'emmer', 'escalator', 'fagot', 'fakkel', 'fanfare',
-  'fiets', 'film', 'föhn', 'ganzenbord', 'gasmasker', 'geigerteller', 'gele kaart', 'gereedschaps­kist',
+  'fiets', 'film', 'föhn', 'ganzenbord', 'gasmasker', 'geigerteller', 'gele kaart', 'gereedschapskist',
   'gieter', 'gietijzer', 'gitaar', 'glaasje', 'glazen bol', 'gloeilamp', 'goudstaaf', 'gps-tracker',
   'gramofoon', 'guillotine', 'haardroger', 'hamer', 'handboeien', 'handgranaat', 'handtas', 'hangmat',
   'harp', 'harpoen', 'hartje', 'heksenketel', 'hooivork', 'horloge', 'ijsje', 'koelkast',
@@ -158,31 +158,31 @@ const WORDS = [
   'rubberen eend', 'rugzak', 'sarcofaag', 'satelliet', 'scalpel', 'schaakbord', 'schaar', 'scheepsschroef',
   'scheermessen', 'schijf van vijf', 'schilderij', 'schommel', 'schroefsleutel', 'scooter', 'sigaardoos', 'sitar',
   'sleutel', 'slingeren', 'smeedijzer', 'snijplank', 'sok', 'speelgoed', 'speelkaart', 'sphinx',
-  'spiegel', 'spijker', 'spijkerbroek', 'spionage­satelliet', 'springveer', 'stethoscoop', 'stoommachine', 'stopwatch', 'strijkijzer',
+  'spiegel', 'spijker', 'spijkerbroek', 'spionagesatelliet', 'springveer', 'stethoscoop', 'stoommachine', 'stopwatch', 'strijkijzer',
   'stroomgenerator', 'suikerspin', 'tandenborstel', 'tandpasta', 'tarotkaart', 'telescoop', 'telraam', 'tent',
   'theekan', 'theemuts', 'thermometer', 'tijdmachine', 'toorts', 'touwladder', 'trampoline', 'transistor',
   'trap', 'trein', 'trombone', 'trommel', 'trompet', 'tuba', 'tuimelaar', 'tuinkabouter', 'tunnel',
-  'turbine', 'ukelele', 'veiligheids­speld', 'verfkwast', 'vergrootglas', 'vloeistof', 'vloerkleed', 'vriezer', 'vuurpijl',
+  'turbine', 'ukelele', 'veiligheidsspeld', 'verfkwast', 'vergrootglas', 'vloeistof', 'vloerkleed', 'vriezer', 'vuurpijl',
   'waaier', 'wapenschild', 'wasmachine', 'wastafel', 'waterklok', 'waterpas', 'waterpistool', 'weegschaal',
   'wekker', 'wiel', 'xylofoon', 'zaklamp', 'zandloper', 'zeepbel', 'zeeppomp', 'zeilboot',
   'zeis', 'zenderstation', 'zetel', 'zonnebloem', 'zonnebril', 'zonnewijzer', 'zweep',
   'tandenstoker', 'kleerhanger', 'elastiekje', 'kurk',
   'aanrecht', 'bank', 'beker', 'boodschappentas', 'broek', 'dekbed', 'deurmat', 'gordijn',
-  'handschoen', 'hark', 'hoed', 'jasje', 'knoop', 'koffiezet­apparaat',
+  'handschoen', 'hark', 'hoed', 'jasje', 'knoop', 'koffiezetapparaat',
   'krijtbord', 'lamp', 'mes', 'muts', 'pan', 'papier', 'pen',
   'plantje', 'pollepel', 'portemonnee', 'riem', 'schoen', 'servet', 'soeplepel',
   'spaarpot', 'stoel', 'stropdas', 'tafel', 'tas', 'theedoek', 'vork', 'wijnglas',
   
   // Natuur & weer
-  'aardbeving', 'aard­verschuiving', 'aardworm', 'algen', 'aurora', 'bamboe', 'bergtop', 'blad',
+  'aardbeving', 'aardverschuiving', 'aardworm', 'algen', 'aurora', 'bamboe', 'bergtop', 'blad',
   'bliksem', 'bloem', 'boom', 'bos', 'branding', 'brandnetels', 'bronwater', 'bui',
   'cactus', 'compost', 'dageraad', 'dageraadslicht', 'dauw', 'delta',
   'dennennaald', 'dijk', 'droogte', 'duin', 'eb', 'ecosysteem',
   'fjord', 'fossiel', 'getijden', 'geiser', 'greppel', 'hagel',
   'hagelstorm', 'herfst', 'herfstblad', 'heuvel', 'hittegolf', 'ijsberg', 'ijspegel', 'ijsschots',
   'ijsvorming', 'inham', 'kapen', 'keien', 'kiezel', 'klif', 'kliffen', 'knop',
-  'komeet', 'koraal', 'koraalrif', 'lavastroom', 'lente', 'lucht­vochtigheid',
-  'maan', 'maans­verduistering', 'mangrovebos', 'maretak', 'meander', 'mist', 'modder',
+  'komeet', 'koraal', 'koraalrif', 'lavastroom', 'lente', 'luchtvochtigheid',
+  'maan', 'maansverduistering', 'mangrovebos', 'maretak', 'meander', 'mist', 'modder',
   'moeras', 'monsoen', 'morgenrood', 'mos', 'naaldboom', 'nevel', 'noorderlicht', 'oase',
   'oceaan', 'onweer', 'orkaan', 'paddenstoel', 'paddenvijver', 'planeet', 'plas', 'poel',
   'pool', 'poollicht', 'regen', 'regenboog', 'regenbui', 'regenwoud', 'rivier', 'riviermonding',
@@ -190,7 +190,7 @@ const WORDS = [
   'schimmelsporen', 'sneeuw', 'sneeuwvlok', 'sneeuwstorm', 'steengroeve', 'ster',
   'stikstof', 'stofwolk', 'storm', 'strand', 'stromend water', 'tij', 'toendra', 'tornado', 'tropische regen',
   'tsunami', 'tulp', 'uiterwaard', 'uitzicht', 'vallei', 'veen', 'veld', 'vijver',
-  'vlakte', 'vloed', 'vluchtheuvel', 'voorjaarswind', 'vulkaan', 'vulkaan­uitbarsting', 'waterloop', 'waterval',
+  'vlakte', 'vloed', 'vluchtheuvel', 'voorjaarswind', 'vulkaan', 'vulkaanuitbarsting', 'waterloop', 'waterval',
   'weide', 'windvlaag', 'woestijn', 'wolk', 'woud', 'zandstorm', 'zee',
   'zeewind', 'zilt water', 'zomer', 'zon', 'zonsondergang', 'zonsopgang', 'zwaartekracht',
   'schelp', 'schaduw',
@@ -206,10 +206,10 @@ const WORDS = [
   'helikopter', 'hoogspoortrein', 'hoverboard', 'hovercraft', 'intercity', 'internationale trein',
   'jetpack', 'jetski', 'kabelbaan', 'kajak', 'kar', 'kolenschip', 'kruisvaarder', 'kustwacht',
   'lijnbus', 'locomotief', 'luchtschip', 'maanlander', 'metro', 'minicar', 'monorail',
-  'motorfiets', 'motorfiets­sidecar', 'nachttrein', 'onderzeeboot', 'oplegger', 'pantservoertuig', 'patrouilleboot', 'pick-uptruck',
+  'motorfiets', 'motorfietssidecar', 'nachttrein', 'onderzeeboot', 'oplegger', 'pantservoertuig', 'patrouilleboot', 'pick-uptruck',
   'politieauto', 'postduif', 'postkoets', 'racefiets', 'racewagen', 'raket', 'reddingsboot',
   'rijtuig', 'riksja', 'robotaxi', 'roeiboot', 'schip',
-  'scooter­deeldienst', 'segway', 'slee', 'sleepboot', 'sloep', 'sneltrein',
+  'scooterdeeldienst', 'segway', 'slee', 'sleepboot', 'sloep', 'sneltrein',
   'space shuttle', 'speedboot', 'stadsbus', 'stadsfiets', 'step', 'stoomboot',
   'stoomlocomotief', 'suv', 'taxiboot', 'touringcar', 'tractor', 'tram', 'trolleybus',
   'tuk-tuk', 'veerboot', 'veerfiets', 'vierwieler', 'vliegdekschip', 'vliegende schotel', 'vliegtuig', 'vrachtwagen',
@@ -218,10 +218,10 @@ const WORDS = [
   // Gebouwen & plaatsen
   'abdij', 'amfiteater', 'apotheek', 'aquaduct', 'aquarium', 'badhuis', 'balie', 'bankgebouw',
   'begraafplaats', 'bibliotheek', 'bioscoop', 'bloemenmarkt', 'boekenwinkel', 'boerderij', 'boogbrug', 'bouwplaats',
-  'bowlingbaan', 'brandweer­kazerne', 'brouwerij', 'brug', 'bunker', 'café', 'camping', 'campingterrein',
+  'bowlingbaan', 'brandweerkazerne', 'brouwerij', 'brug', 'bunker', 'café', 'camping', 'campingterrein',
   'casino', 'centrum', 'circus', 'consulaat', 'crematorium', 'cultureel centrum', 'dak', 'dambord',
-  'dierentuin', 'discotheek', 'drie­sterrenhotel', 'duiventoren', 'fabriek', 'fietsenwinkel', 'fontein', 'fort',
-  'fruitmarkt', 'galerie', 'gemeentehuis', 'gevangenis', 'gezondheids­centrum', 'grachtenpand', 'gymnasium', 'halfpipe',
+  'dierentuin', 'discotheek', 'driesterrenhotel', 'duiventoren', 'fabriek', 'fietsenwinkel', 'fontein', 'fort',
+  'fruitmarkt', 'galerie', 'gemeentehuis', 'gevangenis', 'gezondheidscentrum', 'grachtenpand', 'gymnasium', 'halfpipe',
   'haven', 'hectometerpaal', 'herberg', 'honkbalstadion', 'hostel', 'hotel', 'huis', 'iglo',
   'ijsbaan', 'ijsherberg', 'jachthaven', 'jungle', 'kapperszaak', 'kasteel', 'kathedraal', 'kazerne',
   'kerk', 'klimhal', 'klokkenspel', 'klokkentoren', 'klooster', 'koffieshop', 'kolenmijn',
@@ -230,13 +230,13 @@ const WORDS = [
   'museum', 'observatorium', 'dolfinarium', 'ouderenhuis', 'paleis', 'parkbank', 'parkeergarage',
   'pier', 'pleintje', 'politiebureau', 'poppenkast', 'postkantoor', 'pretpark', 'pyramide', 'racebaan', 'rechtbank', 'recreatiegebied', 'renbaan', 'restaurant', 'rioolstelsel', 'ruïne',
   'schaatsbaan', 'school', 'silo', 'sluis', 'speeltuin', 'sporthal', 'stad', 'stadion',
-  'stadshuis', 'standbeeld', 'sterrenwacht', 'strandtent', 'supermarkt', 'synagoge', 'tandarts­praktijk', 'tankstation',
+  'stadshuis', 'standbeeld', 'sterrenwacht', 'strandtent', 'supermarkt', 'synagoge', 'tandartspraktijk', 'tankstation',
   'tempel', 'theater', 'toren', 'torentje', 'treinstation', 'universiteit', 'vakantiepark', 'vergaderzaal',
-  'villa', 'vliegveld', 'voetgangerszone', 'vuurtoren', 'watertoren', 'wegrestaurant', 'wetenschaps­centrum', 'wijkcentrum',
+  'villa', 'vliegveld', 'voetgangerszone', 'vuurtoren', 'watertoren', 'wegrestaurant', 'wetenschapscentrum', 'wijkcentrum',
   'windmolen', 'winkelcentrum', 'ziekenhuis', 'zwembad',
   'bakkerij', 'benzinepomp', 'bloemenwinkel', 'boekhandel', 'buurthuis', 'drogisterij',
   'garage', 'ijssalon', 'kantine', 'kiosk', 'nachtwinkel',
-  'pannen­koekenhuis', 'parkeerplaats', 'slagerij', 'snackbar', 'sportschool',
+  'pannenkoekenhuis', 'parkeerplaats', 'slagerij', 'snackbar', 'sportschool',
   'stomerij', 'viswinkel', 'warenhuis',
   
   // Acties & situaties
@@ -302,7 +302,7 @@ const WORDS = [
   'atoomkern', 'auteursrecht', 'autopsie', 'avondklok', 'baksteen', 'bankroet', 'begrafenis', 'belasting',
   'beroerte', 'beschaving', 'bewusteloos', 'bijtanken', 'stroomuitval', 'bloedarmoede', 'boeddhisme', 'brainstorm',
   'hersenspoeling', 'brandstichting', 'bureaucratie', 'camouflagepak', 'celsius', 'censuur', 'chantage', 'cholesterol',
-  'claustrofobie', 'cliffhanger', 'cocaïne', 'coma', 'concentratie­kamp', 'confrontatie', 'corruptie', 'crisis',
+  'claustrofobie', 'cliffhanger', 'cocaïne', 'coma', 'concentratiekamp', 'confrontatie', 'corruptie', 'crisis',
   'cyberpesten', 'dagvaarding', 'dementie', 'democratie', 'depressie', 'desinfecteren', 'dialyse', 'dictator',
   'dilemma', 'diplomatie', 'discriminatie', 'doofstom', 'doping', 'draaikolk',
   'dwangbuis', 'eclips', 'embargo', 'epidemie', 'erfenis', 'evacuatie', 'evolutie', 'executie',
@@ -315,16 +315,16 @@ const WORDS = [
   'klokkenluider', 'kluizenaar', 'kwantumfysica', 'lawine', 'legitimiteit', 'lobbyist', 'lockdown',
   'manipulatie', 'martelaar', 'massamoord', 'meditatie', 'migraine', 'militaire coup', 'misogynie', 'monopolie',
   'mutatie', 'muziek', 'narcisme', 'nationalisme', 'nepnieuws', 'nihilisme', 'nucleaire reactor', 'obsessie',
-  'oligarchie', 'onderbewustzijn', 'ondergrondse beweging', 'onteigening', 'oorlogsmisdaad', 'orkest', 'overdosis', 'overlevings­drang',
-  'pandemie', 'paradox', 'paranoia', 'parlementaire democratie', 'persoonlijkheids­stoornis', 'pesticide', 'pionier', 'plagiaat',
+  'oligarchie', 'onderbewustzijn', 'ondergrondse beweging', 'onteigening', 'oorlogsmisdaad', 'orkest', 'overdosis', 'overlevingsdrang',
+  'pandemie', 'paradox', 'paranoia', 'parlementaire democratie', 'persoonlijkheidsstoornis', 'pesticide', 'pionier', 'plagiaat',
   'polarisatie', 'populisme', 'posttraumatische stress', 'propaganda', 'protocolbreuk', 'psychiatrie', 'quarantaine', 'radicalisering',
   'radioactiviteit', 'rebellie', 'recessie', 'referendum', 'reflectie', 'rehabilitatie', 'relatief', 'repatriëring',
   'revolutie', 'reïncarnatie', 'sabotage', 'sancties', 'schandaal', 'schijnheilig', 'schizofrenie', 'seconde', 'slavernij',
-  'sluipschutter', 'smokkel', 'soevereiniteit', 'spionage', 'sprookje', 'staking', 'stigma', 'stralings­vergiftiging',
+  'sluipschutter', 'smokkel', 'soevereiniteit', 'spionage', 'sprookje', 'staking', 'stigma', 'stralingsvergiftiging',
   'surrogaatmoeder', 'taboe', 'terreurcel', 'tijdreizen', 'totalitarisme', 'transplantatie', 'tribunaal', 'tribune',
   'tunnelvisie', 'turbulentie', 'uitbuiting', 'uitzetting', 'undercoveragent', 'utopie', 'vaccinatie', 'verjaring',
   'vervreemding', 'vetorecht', 'burgerwacht', 'vluchteling', 'volksopstand', 'vuurwerk', 'wapenhandel', 'wedergeboorte',
-  'xenofobie', 'zelfmoord­aanslag', 'zielenknijper', 'zons­verduistering', 'zwarte markt',
+  'xenofobie', 'zelfmoordaanslag', 'zielenknijper', 'zonsverduistering', 'zwarte markt',
   
   // Spreekwoorden & uitdrukkingen
   'alle hens aan dek', 'als de kat van huis is dansen de muizen', 'al doende leert men', 'beter laat dan nooit', 'de appel valt niet ver van de boom', 'door de zure appel heen bijten', 'een gewaarschuwd man telt voor twee', 'van een koude kermis thuiskomen',
@@ -362,117 +362,6 @@ function shuffle(arr) {
   return a;
 }
 
-// ── Afbreekfunctie voor lange Nederlandse woorden ────────────────────────────
-// Strategie: eerst morfologische woordgrenzen zoeken in samenstellingen,
-// daarna lettergreepregels toepassen op de resterende segmenten.
-const MIN_HYPHEN_LEN = 9;
-const SH = '\u00AD'; // zachte koppelteken (soft hyphen)
-
-// Veelvoorkomende Nederlandse woorddelen, gesorteerd van lang naar kort.
-const MORPHEMES = [
-  'organisator','organisatie','wetenschapper','wetenschap','onderzoeker',
-  'bescherming','beschermer','verantwoord','schouwburg','schildpad',
-  'bediening','beeldhouw','schrijver','werknemer','onderwijs',
-  'organiseren','organiseer',
-  'evenementen','evenement',
-  'behandeling','behandel',
-  'verbinding','verbind',
-  'stichting','verenig','beweging',
-  'bestuurder','chauffeur','verpleeg',
-  'leerkracht','medewerker','ambtenaar',
-  'inspecteur','producent','regisseur',
-  'instructeur','specialist','adviseur',
-  'assistent','officier','secretaris','president','minister',
-  'architect','ingenieur','chirurgie','chirurg',
-  'techniek','technieken','industrie','politiek',
-  'systeem','systemen','machine','machines',
-  'station','stations','centrum','centra',
-  'bedrijf','bedrijfs','gebouw','gebouwen',
-  'diensten','dienst','handel',
-  'vliegtuig','voertuig','rijwiel','scheepvaart',
-  'schutting','stelling','werking',
-  'bibliotheek',
-  'ingsge','eringen','erings','erende','erend',
-  'atieven','atieve','atief',
-  'isaties','isatie','iseren','iseert',
-  'iteiten','iteit',
-  'ichten','ischer','ische','isch',
-  'achtige','achtig','waardig','waardige',
-  'kundige','kundig','matige','matig',
-  'leidster','leider','makers','maker',
-  'werkers','werker','rijders','rijder',
-  'houders','houder','vangers','vanger',
-  'lopers','loper','voerder','voerders',
-  'trainer','trainers','manager','managers',
-  'directeur','directeurs',
-  'enten','ingen','etten','otten',
-  'kamer','zaal','huis','hof',
-  'molen','toren','poort','brug',
-  'boot','schip','wagen','fiets',
-].sort((a, b) => b.length - a.length);
-
-function findMorphBreaks(lower, minBefore = 4, minAfter = 3) {
-  const breaks = new Set();
-  for (const m of MORPHEMES) {
-    let pos = 0;
-    while ((pos = lower.indexOf(m, pos)) !== -1) {
-      if (pos >= minBefore && lower.length - pos >= minAfter) {
-        breaks.add(pos);
-      }
-      pos += 1;
-    }
-  }
-  return breaks;
-}
-
-function syllableBreaks(word) {
-  const VOWELS = new Set('aeiouáéíóúàèìòùäëïöüâêîôûy');
-  const isV = (c) => c && VOWELS.has(c.toLowerCase());
-  const chars = [...word];
-  const breaks = new Set();
-  for (let i = 1; i < chars.length - 2; i++) {
-    const [p, c, n, n2] = [chars[i-1], chars[i], chars[i+1], chars[i+2]];
-    if (isV(p) && !isV(c) && isV(n) && i >= 2) breaks.add(i);
-    if (isV(p) && !isV(c) && !isV(n) && isV(n2) && i + 1 >= 3) breaks.add(i + 1);
-  }
-  return breaks;
-}
-
-function hyphenate(word) {
-  if (word.includes(' ') || word.includes('-')) {
-    return word.split(/( |-)/g).map((part) =>
-      (part === ' ' || part === '-') ? part : hyphenate(part)
-    ).join('');
-  }
-
-  if (word.length <= MIN_HYPHEN_LEN) return word;
-
-  const lower = word.toLowerCase();
-  const morphBreaks = findMorphBreaks(lower);
-  const sylBreaks = syllableBreaks(word);
-
-  // Morfologische breken hebben prioriteit; voeg lettergreepbreekpunten toe
-  // alleen als ze niet vlak naast een morfologisch breekpunt liggen (±2)
-  const allBreaks = new Set(morphBreaks);
-  for (const sb of sylBreaks) {
-    const nearMorph = [...morphBreaks].some((mb) => Math.abs(mb - sb) <= 2);
-    if (!nearMorph) allBreaks.add(sb);
-  }
-
-  const chars = [...word];
-  const sorted = [...allBreaks].sort((a, b) => a - b);
-  let result = '';
-  let segStart = 0;
-
-  for (const bp of sorted) {
-    if (bp - segStart >= 3 && chars.length - bp >= 3) {
-      result += chars.slice(segStart, bp).join('') + SH;
-      segStart = bp;
-    }
-  }
-  result += chars.slice(segStart).join('');
-  return result;
-}
 
 // ── Screens ──────────────────────────────────────────────────────────────────
 
@@ -801,7 +690,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
         ) : (
           <>
             <div className="word-counter">woord {wordIndex + 1}</div>
-            <div className="current-word">{hyphenate(words[wordIndex])}</div>
+            <div className="current-word">{words[wordIndex]}</div>
             {timesUp ? (
               <div className="times-up-banner">⏰ Tijd is om — maak dit woord nog af!</div>
             ) : (
