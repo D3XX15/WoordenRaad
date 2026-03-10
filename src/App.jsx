@@ -234,9 +234,9 @@ const WORDS = [
   'twijfelen', 'uitleggen', 'uitpakken', 'verbergen', 'verdwalen', 'vergeten', 'verkopen',
   'verliezen', 'verrassen', 'verzorgen', 'vluchten', 'volgen', 'wachten', 'wassen',
   'weggooien', 'werken', 'winnen', 'wroeten', 'zingen', 'zoeken', 'zwaaien',
-  'brand blussen', 'eerste hulp verlenen', 'geblinddoekt lopen', 'geheim bewaren',
+  'brand blussen', 'eerste hulp verlenen', 'geblinddoekt', 'geheim bewaren',
   'iemand inhalen', 'iemand misleiden', 'in de rij staan', 'op de vlucht zijn',
-  'rijbewijs halen', 'schipbreuk lijden', 'verloren lopen', 'zich verslikken',
+  'rijbewijs halen', 'schipbreukeling', 'sleutels verliezen', 'verslikken',
   
   // Landen & gebieden
   'Afghanistan', 'Albanië', 'Amazone', 'Antarctica', 'Argentinië', 'Armenië', 'Australië', 'Azerbeidzjan',
