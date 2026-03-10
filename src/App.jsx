@@ -125,7 +125,7 @@ const WORDS = [
   'scrabble', 'shorttracksprint', 'sjoelen', 'skeeleren', 'skeleton', 'skiën', 'skislalom',
   'slipstream', 'snowboarden', 'softbal', 'speerwerpen', 'speerworp', 'spijkerpoepen', 'squash', 'stoeien',
   'stoepkrijten', 'stuntrijden', 'sumo worstelen', 'suppen', 'surfen', 'synchroonzwemmen', 'taekwondo', 'tafeltennis',
-  'tafeltennissen', 'telemarketeer', 'tennis', 'touwtrekken', 'trail running', 'trampolinespringen', 'trefbal', 'triatlon',
+  'telemarketeer', 'tennis', 'touwtrekken', 'trail running', 'trampolinespringen', 'trefbal', 'triatlon',
   'turnen', 'varen', 'veldrijden', 'verspringen', 'vissen', 'vliegeren', 'vliegtuigmodelbouwen', 'vliegvissen',
   'voetbal', 'voetbalgolf', 'volleybal', 'wandelen', 'waterpolo', 'waterskiën', 'wakeboarden',
   'wcpotwerpen', 'wedstrijdvissen', 'wielrennen', 'worstelen', 'yoga', 'zeilen', 'zwemmen',
