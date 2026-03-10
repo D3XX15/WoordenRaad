@@ -1097,7 +1097,7 @@ export default function App() {
         }
         .word-done-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
         .word-done-count { font-size: 15px; color: rgba(255,255,255,0.55); font-family: 'Righteous', cursive; letter-spacing: 0.03em; }
-        .word-done-msg { font-family: 'Righteous', cursive; font-size: 48px; animation: pulse 0.6s infinite alternate; }
+        .word-done-msg { font-family: 'Righteous', cursive; font-size: 48px; }
         .word-done-msg.tier-poor { color: hsl(0, 100%, 70%); }
         .word-done-msg.tier-ok { color: hsl(40, 100%, 65%); }
         .word-done-msg.tier-great { color: hsl(145, 80%, 58%); }
