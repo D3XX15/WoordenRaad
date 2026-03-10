@@ -6,7 +6,7 @@ const WORDS = [
   'bever', 'bijenkoningin', 'bizon', 'blauwe vinvis', 'blauwvintonijn', 'boomkikker', 'boomslang',
   'buffel', 'buizerd', 'buldog', 'cheetah', 'chihuahua', 'cobra', 'condor', 'das',
   'dingo', 'dinosaurus', 'dolfijn', 'draak', 'dromedaris', 'duif', 'dwergpinguïn', 'eekhoorn',
-  'egel', 'ekster', 'eland', 'elektrische paling', 'emoe', 'fazant', 'fennek', 'flamingo',
+  'egel', 'ekster', 'eland', 'elektrische paling', 'emoe', 'fazant', 'flamingo',
   'fret', 'galapagosschildpad', 'gecko', 'gibbon', 'giraffe',
   'gorilla', 'goudjakhals', 'goudvis', 'grizzlybeer', 'guppie', 'haai', 'haas',
   'hagedis', 'hamster', 'havik', 'hermelijn', 'hond', 'honingdas', 'hyena', 'ibis',
@@ -212,12 +212,31 @@ const WORDS = [
   'windmolen', 'winkelcentrum', 'ziekenhuis', 'zwembad',
   
   // Acties & situaties
-  'applaudisseren', 'duiken', 'fluisteren', 'gaaien', 'gebaren', 'gooien', 'graven', 'huppelen',
-  'ijsberen', 'klimmen', 'klunen', 'knuffelen', 'koken', 'kruipen', 'lachen', 'lopen',
+  'applaudisseren', 'fluisteren', 'gebaren', 'gooien', 'graven', 'huppelen',
+  'ijsberen', 'klunen', 'knuffelen', 'koken', 'kruipen', 'lachen', 'lopen',
   'maaien', 'naaien', 'omhelzen', 'pesten', 'rennen', 'rollen', 'schilderen',
-  'schommelen', 'skiën', 'slapen', 'slingeren', 'snurken', 'springen', 'stoeien', 'struikelen',
-  'tikken', 'trampolinespringen', 'vallen', 'vangen', 'verstoppen', 'vliegen', 'vouwen',
-  'waggelen', 'wiebelen', 'zeilen',
+  'schommelen', 'slapen', 'slingeren', 'snurken', 'springen', 'struikelen',
+  'tikken', 'vallen', 'vangen', 'verstoppen', 'vliegen', 'vouwen',
+  'waggelen', 'wiebelen',
+  'afrekenen', 'afscheid nemen', 'bakken', 'bellen', 'betalen',
+  'bewaken', 'bidden', 'blozen', 'branden', 'breken',
+  'buigen', 'dagdromen', 'dansen', 'delen', 'douchen', 'dreigen', 'drinken',
+  'duwen', 'eten', 'fluiten', 'gapen', 'geven', 'giechelen',
+  'gillen', 'gluren', 'groeten', 'hangen', 'helpen', 'hijsen',
+  'huilen', 'inschenken', 'inslapen', 'jagen', 'juichen', 'kijken',
+  'klagen', 'kloppen', 'knipogen', 'kopen', 'kussen', 'leren', 'lezen',
+  'liegen', 'luisteren', 'meten', 'nabootsen', 'nadenken', 'omvallen',
+  'onderhandelen', 'ophangen', 'opruimen', 'opstaan', 'oversteken', 'pakken', 'plannen',
+  'plassen', 'plukken', 'praten', 'proberen', 'roepen', 'ruiken',
+  'ruilen', 'schelden', 'schminken', 'schrijven', 'schuilen', 'schuiven',
+  'slepen', 'smeken', 'snijden', 'sparen', 'speuren',
+  'stelen', 'stoppen', 'strelen', 'studeren', 'telefoneren',
+  'twijfelen', 'uitleggen', 'uitpakken', 'verbergen', 'verdwalen', 'vergeten', 'verkopen',
+  'verliezen', 'verrassen', 'verzorgen', 'vluchten', 'volgen', 'wachten', 'wassen',
+  'weggooien', 'werken', 'winnen', 'wroeten', 'zingen', 'zoeken', 'zwaaien',
+  'brand blussen', 'eerste hulp verlenen', 'geblinddoekt lopen', 'geheim bewaren',
+  'iemand inhalen', 'iemand misleiden', 'in de rij staan', 'op de vlucht zijn',
+  'rijbewijs halen', 'schipbreuk lijden', 'verloren lopen', 'zich verslikken',
   
   // Landen & gebieden
   'Afghanistan', 'Albanië', 'Amazone', 'Antarctica', 'Argentinië', 'Armenië', 'Australië', 'Azerbeidzjan',
@@ -306,7 +325,7 @@ function shuffle(arr) {
 
 function SetupScreen({ onStart }) {
   const [count, setCount] = useState(3);
-  const [names, setNames] = useState(Array(3).fill(""));
+  const [names, setNames] = useState(["T", "M", "D"]);
   const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
 
   const updateCount = (n) => {
@@ -324,6 +343,10 @@ function SetupScreen({ onStart }) {
       next[i] = v;
       return next;
     });
+  };
+
+  const randomizeNames = () => {
+    setNames((prev) => shuffle([...prev]));
   };
 
   const canStart = names.every((n) => n.trim().length > 0);
@@ -353,7 +376,12 @@ function SetupScreen({ onStart }) {
         </div>
 
         <div className="setup-section">
-          <label className="setup-label">Namen van spelers</label>
+          <div className="names-label-row">
+            <label className="setup-label">Namen van spelers</label>
+            <button className="randomize-btn" onClick={randomizeNames} title="Volgorde door elkaar gooien">
+              🔀 Willekeurig
+            </button>
+          </div>
           <div className="names-grid">
             {names.map((name, i) => (
               <div key={i} className="name-input-wrap">
@@ -760,6 +788,21 @@ export default function App() {
         .count-btn.active { background: #a78bfa; border-color: #a78bfa; color: #0f0a1e; }
 
         .names-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .names-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .names-label-row .setup-label { margin-bottom: 0; }
+        .randomize-btn {
+          background: rgba(167,139,250,0.15);
+          color: #a78bfa;
+          border: 1.5px solid rgba(167,139,250,0.35);
+          border-radius: 10px;
+          padding: 6px 12px;
+          font-size: 13px;
+          font-family: 'Righteous', cursive;
+          cursor: pointer;
+          transition: all 0.18s;
+          white-space: nowrap;
+        }
+        .randomize-btn:hover { background: rgba(167,139,250,0.28); transform: scale(1.04); }
         .name-input-wrap { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 12px; transition: border-color 0.2s; }
         .name-input-wrap:focus-within { border-color: #a78bfa; }
         .name-num { font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.3); min-width: 14px; }
