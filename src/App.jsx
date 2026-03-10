@@ -689,13 +689,11 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
           </div>
         ) : (
           <>
-            <div className="word-counter">woord {wordIndex + 1}</div>
-            <div className="current-word">{words[wordIndex]}</div>
-            {timesUp ? (
-              <div className="times-up-banner">⏰ Tijd is om — maak dit woord nog af!</div>
-            ) : (
-              <div className="word-hint">Beeld of leg uit — maar zeg het woord niet!</div>
-            )}
+            <div className="word-anchor">
+              <div className="word-counter">woord {wordIndex + 1}</div>
+              <div className="current-word">{words[wordIndex]}</div>
+              <div className="times-up-banner" style={{visibility: timesUp ? 'visible' : 'hidden'}}>⏰ Tijd is om — maak dit woord nog af!</div>
+            </div>
           </>
         )}
       </div>
@@ -1051,11 +1049,17 @@ export default function App() {
           text-align: center;
           max-width: 520px;
           width: 100%;
-          gap: 10px;
+          gap: 0;
           padding: 20px;
         }
 
-        .word-counter { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+        .word-anchor {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .word-counter { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 10px; }
 
         .current-word {
           font-family: 'Righteous', cursive;
@@ -1075,7 +1079,6 @@ export default function App() {
         }
         @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
 
-        .word-hint { font-size: 13px; color: rgba(255,255,255,0.35); min-height: 40px; display: flex; align-items: center; justify-content: center; }
 
         .penalty-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
         .penalty-label { font-size: clamp(13px, 3.5vw, 16px); color: #fbbf24; opacity: 0.8; }
@@ -1097,6 +1100,7 @@ export default function App() {
           padding: 8px 16px;
           text-align: center;
           min-height: 40px;
+          margin-top: 20px;
         }
         .word-done-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: -80px; }
         .word-done-count { font-size: clamp(18px, 5vw, 26px); color: rgba(255,255,255,0.6); font-family: 'Righteous', cursive; letter-spacing: 0.03em; }
