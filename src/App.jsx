@@ -1051,7 +1051,7 @@ export default function App() {
           text-align: center;
           max-width: 520px;
           width: 100%;
-          gap: 16px;
+          gap: 1px;
           padding: 20px;
         }
 
