@@ -8,7 +8,7 @@ const WORDS = [
   'dingo', 'dinosaurus', 'dolfijn', 'draak', 'dromedaris', 'duif', 'dwergpinguïn', 'eekhoorn',
   'egel', 'ekster', 'eland', 'elektrische paling', 'emoe', 'fazant', 'fennek', 'flamingo',
   'flesvleermuis', 'fluweelkrab', 'fret', 'galapagosschildpad', 'gecko', 'gibbon', 'giraffe',
-  'gorilla', 'goudjakhalzen', 'goudvis', 'grizzlybeer', 'guppie', 'haai', 'haas',
+  'gorilla', 'goudvis', 'grizzlybeer', 'guppie', 'haai', 'haas',
   'hagedis', 'hamster', 'havik', 'hermelijn', 'hond', 'honingdas', 'hyena', 'ibis',
   'ijsbeer', 'impala', 'inktvis', 'jaguar', 'jakhals', 'kakapo', 'kaketoe',
   'kameel', 'kameleon', 'kangoeroe', 'kat', 'kever', 'kikker', 'kiwi', 'koala',
