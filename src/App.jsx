@@ -593,7 +593,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const finishRound = useCallback((finalScores, finalWordIndex) => {
     endMessageRef.current = getRandomEndMessage(finalScores.correct, roundTime);
     setDone(true);
-    setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex }), 2500);
+    setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex }), 1800);
   }, [onRoundEnd, roundTime]);
 
   const correct = () => {
@@ -701,11 +701,11 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
 
       {!done && (
         <div className="action-row">
-          <button className={`action-btn skip-btn ${skipPenalty > 0 ? "btn-disabled" : ""}`} onClick={skip}>
+          <button className={`action-btn skip-btn ${skipPenalty > 0 ? "btn-disabled" : ""}`} onClick={(e) => { e.currentTarget.blur(); skip(); }}>
             <span className="btn-icon">↷</span>
             <span className="btn-label">Sla over</span>
           </button>
-          <button className={`action-btn correct-btn ${skipPenalty > 0 ? "btn-disabled" : ""}`} onClick={correct}>
+          <button className={`action-btn correct-btn ${skipPenalty > 0 ? "btn-disabled" : ""}`} onClick={(e) => { e.currentTarget.blur(); correct(); }}>
             <span className="btn-icon">✓</span>
             <span className="btn-label">Goed geraden!</span>
           </button>
