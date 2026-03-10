@@ -88,7 +88,7 @@ const WORDS = [
   'kassamedewerker', 'kinderarts', 'klimaatoloog', 'klokkenhersteller', 'klusjesman', 'kok', 'kostuumontwerper', 'kraamverzorger',
   'kruidenier', 'kunstcriticus', 'kunstenaar', 'kweker', 'laborant', 'landmeter', 'lasser', 'leraar',
   'levensmiddelen', 'loodgieter', 'luchtverkeersleider', 'magiër', 'makelaar', 'marionettespeler', 'matroos', 'meteoroloog',
-  'microbioloog', 'mijningenieur', 'modeontwerper', 'moleculair bioloog', 'monteur', 'museumconservator', 'musicus',
+  'microbioloog', 'modeontwerper', 'moleculair bioloog', 'monteur', 'museumconservator', 'musicus',
   'neuroloog', 'notaris', 'ontwerper', 'oogarts', 'operazanger', 'opticien',
   'orthopeed', 'parasiet', 'parfum', 'piloot',
   'piraat', 'politicoloog', 'politieagent', 'postbode', 'primaat', 'producent',
