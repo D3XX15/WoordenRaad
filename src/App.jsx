@@ -593,7 +593,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const finishRound = useCallback((finalScores, finalWordIndex) => {
     endMessageRef.current = getRandomEndMessage(finalScores.correct, roundTime);
     setDone(true);
-    setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex }), 1800);
+    setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex }), 2500);
   }, [onRoundEnd, roundTime]);
 
   const correct = () => {
