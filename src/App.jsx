@@ -701,11 +701,11 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
 
       {!done && (
         <div className="action-row">
-          <button className={`action-btn skip-btn ${skipPenalty > 0 ? "btn-disabled" : ""}`} onClick={(e) => { e.currentTarget.blur(); skip(); }}>
+          <button className={`action-btn skip-btn ${skipPenalty > 0 ? "btn-disabled" : ""}`} onClick={skip}>
             <span className="btn-icon">↷</span>
             <span className="btn-label">Sla over</span>
           </button>
-          <button className={`action-btn correct-btn ${skipPenalty > 0 ? "btn-disabled" : ""}`} onClick={(e) => { e.currentTarget.blur(); correct(); }}>
+          <button className={`action-btn correct-btn ${skipPenalty > 0 ? "btn-disabled" : ""}`} onClick={correct}>
             <span className="btn-icon">✓</span>
             <span className="btn-label">Goed geraden!</span>
           </button>
@@ -1138,6 +1138,8 @@ export default function App() {
           -webkit-tap-highlight-color: transparent;
           min-width: 0;
         }
+        .action-btn:focus { outline: none; }
+        .action-btn:focus-visible { outline: none; }
         .action-btn:active { transform: scale(0.93); }
         .btn-icon { font-size: 28px; }
         .btn-label { font-size: clamp(13px, 3.5vw, 16px); white-space: nowrap; }
