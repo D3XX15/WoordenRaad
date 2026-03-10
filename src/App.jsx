@@ -15,7 +15,7 @@ const WORDS = [
   'koe', 'komodovaraan', 'konijn', 'kraanvogel', 'krab', 'krokodil', 'kwal',
   'kwartel', 'lama', 'leeuw', 'leguaan', 'lemming', 'lepelaar', 'libel', 'lieveheersbeestje',
   'luiaard', 'lynx', 'maanvis', 'mangoest', 'marmot', 'meerkat',
-  'meerval', 'mier', 'miereneter', 'moeflon', 'mol', 'mug', 'muil',
+  'meerval', 'mier', 'miereneter', 'moeflon', 'mol', 'mug',
   'muilezel', 'muskusrat', 'narwal', 'nerts', 'neusaap', 'neushoorn', 'nijlgans', 'nijlpaard',
   'octopus', 'oehoe', 'okapi', 'olifant', 'ooievaar', 'orang-oetan', 'orka',
   'otter', 'paard', 'panda', 'panther', 'papegaai', 'paradijsvogel', 'parkiet', 'pauw',
