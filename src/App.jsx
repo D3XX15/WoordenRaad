@@ -106,7 +106,7 @@ const WORDS = [
   'kunstrijden', 'lacrosse', 'langebaanschaatsen', 'lasergame', 'lijnvissen', 'longboarden', 'magisch goochelen',
   'marathon', 'minigolf', 'modelbouwen', 'motorcross', 'motorsport', 'mountainbiken', 'netbal', 'ninjaparcours',
   'nordic walking', 'obstakelloop', 'oriëntatielopen', 'paardrijden', 'padel', 'paintball', 'parachutespringen', 'parapente',
-  'parkour', 'petanque', 'pilates', 'poedelen', 'polowedstrijd', 'polsstokhoogspringen', 'powerlifting', 'racketball',
+  'parkour', 'pétanque', 'pilates', 'poedelen', 'polowedstrijd', 'polsstokhoogspringen', 'powerlifting', 'racketball',
   'rafting', 'ringsteken', 'rodeo', 'roeien', 'roeiwedstrijd', 'rolschaatsen', 'rots klimmen', 'rugby',
   'rugbyzevenens', 'sabelschermen', 'sauna', 'schaatsen', 'schaken', 'schansspringen', 'schermen', 'schieten',
   'scrabble', 'shorttracksprint', 'sjoelen', 'skeeleren', 'skeleton', 'skiën', 'skislalom',
