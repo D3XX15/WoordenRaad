@@ -536,14 +536,13 @@ const MESSAGES_POOR = [
 ];
 
 function getRandomEndMessage(correctCount, roundTime) {
-  // Streefsnelheid: 1 woord per 6 seconden
-  const target = roundTime / 6;
+  const target = roundTime / 5;
   const ratio = target > 0 ? correctCount / target : 0;
 
   let pool;
-  if (ratio >= 0.75) {
+  if (ratio >= 0.8) {
     pool = MESSAGES_GREAT;
-  } else if (ratio >= 0.4) {
+  } else if (ratio >= 0.5) {
     pool = MESSAGES_OK;
   } else {
     pool = MESSAGES_POOR;
