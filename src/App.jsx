@@ -325,7 +325,7 @@ function shuffle(arr) {
 
 function SetupScreen({ onStart }) {
   const [count, setCount] = useState(3);
-  const [names, setNames] = useState(["T", "M", "D"]);
+  const [names, setNames] = useState(["Dennis", "Marion", "Theo"]);
   const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
 
   const updateCount = (n) => {
@@ -386,7 +386,7 @@ function SetupScreen({ onStart }) {
           <div className="names-label-row">
             <label className="setup-label">Namen van spelers</label>
             <button className="randomize-btn" onClick={randomizeNames} title="Volgorde door elkaar gooien">
-              🔀 Willekeurig
+              Andere volgorde
             </button>
           </div>
           <div className="names-grid">
