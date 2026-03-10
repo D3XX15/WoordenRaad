@@ -82,7 +82,7 @@ const WORDS = [
   'microbioloog', 'mijningenieur', 'modeontwerper', 'moleculair bioloog', 'monteur', 'museumconservator', 'musicus',
   'neuroloog', 'notaris', 'oceanograaf', 'ontwerper', 'oogarts', 'operazanger', 'opticien',
   'ornitholoog', 'orthopeed', 'paleontoloog', 'parasiet', 'parfumeur', 'patholoog', 'pedagoog', 'piloot',
-  'piraat', 'planoloog', 'podoloog', 'politicoloog', 'politieagent', 'postbode', 'primatoloog', 'producent',
+  'piraat', 'planoloog', 'podoloog', 'politicoloog', 'politieagent', 'postbode', 'primaat', 'producent',
   'profvoetballer', 'psychiater', 'psycholoog', 'radioloog', 'rechercheur', 'revalidatiearts', 'ridder', 'roboticus',
   'ruimtevaarder', 'ruimtewetenschapper', 'scenarioschrijver', 'schappenvuller', 'scheikundige', 'schilder', 'schildwacht', 'schoonmaker',
   'schrijver', 'sheriff', 'skateboarder', 'slager', 'socioloog', 'soldaat', 'sommelier', 'stadsplanner', 'stand-upcomedian',
