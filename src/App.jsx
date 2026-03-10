@@ -1099,7 +1099,7 @@ export default function App() {
           animation: pulse 0.7s infinite alternate;
           min-height: 40px;
         }
-        .word-done-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+        .word-done-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: -80px; }
         .word-done-count { font-size: clamp(18px, 5vw, 26px); color: rgba(255,255,255,0.6); font-family: 'Righteous', cursive; letter-spacing: 0.03em; }
         .word-done-msg { font-family: 'Righteous', cursive; font-size: clamp(36px, 10vw, 72px); text-align: center; word-break: break-word; line-height: 1.15; }
         .word-done-msg.tier-poor { color: #f87171; }
