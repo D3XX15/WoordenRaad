@@ -12,7 +12,7 @@ const WORDS = [
   'hagedis', 'hamster', 'havik', 'hermelijn', 'hond', 'honingdas', 'hyena', 'ibis',
   'ijsbeer', 'impala', 'inktvis', 'jaguar', 'jakhals', 'kakapo', 'kaketoe',
   'kameel', 'kameleon', 'kangoeroe', 'kat', 'kever', 'kikker', 'kiwi', 'koala',
-  'koe', 'komodovaraan', 'konijn', 'koperwiek', 'kraanvogel', 'krab', 'krokodil', 'kwallen',
+  'koe', 'komodovaraan', 'konijn', 'koperwiek', 'kraanvogel', 'krab', 'krokodil', 'kwal',
   'kwartel', 'lama', 'leeuw', 'leguaan', 'lemming', 'lepelaar', 'libel', 'lieveheersbeestje',
   'luiaard', 'lynx', 'maanvis', 'mangoest', 'marmot', 'meerkat',
   'meerval', 'mier', 'miereneter', 'moeflon', 'mol', 'mug', 'muil',
