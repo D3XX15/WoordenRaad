@@ -168,7 +168,7 @@ const WORDS = [
   'zeis', 'zenderstation', 'zetel', 'zonnebloem', 'zonnebril', 'zonnewijzer', 'zweep',
   'tandenstoker', 'kleerhanger', 'elastiekje', 'kurk',
   'aanrecht', 'bank', 'beker', 'boodschappentas', 'broek', 'dekbed', 'deurmat', 'gordijn',
-  'handschoen', 'hark', 'hoed', 'jasje', 'knoop', 'koffiezetapparaat',
+  'handschoen', 'hark', 'hoed', 'jas', 'knoop', 'koffiezetapparaat',
   'krijtbord', 'lamp', 'mes', 'muts', 'pan', 'papier', 'pen',
   'plantje', 'pollepel', 'portemonnee', 'riem', 'schoen', 'servet', 'soeplepel',
   'spaarpot', 'stoel', 'stropdas', 'tafel', 'tas', 'theedoek', 'vork', 'wijnglas',
