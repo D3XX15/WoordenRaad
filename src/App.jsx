@@ -2,17 +2,17 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 const WORDS = [
   // Dieren
-  'aardvarken', 'adelaar', 'albatros', 'alpaca', 'anakonda', 'axolotl', 'baviaan', 'beer',
+  'aardvarken', 'adelaar', 'albatros', 'alpaca', 'anakonda', 'baviaan', 'beer',
   'bever', 'bijenkoningin', 'bizon', 'blauwe vinvis', 'blauwvintonijn', 'boomkikker', 'boomslang',
   'buffel', 'buizerd', 'buldog', 'cheetah', 'chihuahua', 'cobra', 'condor', 'das',
   'dingo', 'dinosaurus', 'dolfijn', 'draak', 'dromedaris', 'duif', 'dwergpinguïn', 'eekhoorn',
   'egel', 'ekster', 'eland', 'elektrische paling', 'emoe', 'fazant', 'fennek', 'flamingo',
-  'flesvleermuis', 'fluweelkrab', 'fret', 'galapagosschildpad', 'gecko', 'gibbon', 'giraffe',
+  'fret', 'galapagosschildpad', 'gecko', 'gibbon', 'giraffe',
   'gorilla', 'goudjakhals', 'goudvis', 'grizzlybeer', 'guppie', 'haai', 'haas',
   'hagedis', 'hamster', 'havik', 'hermelijn', 'hond', 'honingdas', 'hyena', 'ibis',
   'ijsbeer', 'impala', 'inktvis', 'jaguar', 'jakhals', 'kakapo', 'kaketoe',
   'kameel', 'kameleon', 'kangoeroe', 'kat', 'kever', 'kikker', 'kiwi', 'koala',
-  'koe', 'komodovaraan', 'konijn', 'koperwiek', 'kraanvogel', 'krab', 'krokodil', 'kwal',
+  'koe', 'komodovaraan', 'konijn', 'kraanvogel', 'krab', 'krokodil', 'kwal',
   'kwartel', 'lama', 'leeuw', 'leguaan', 'lemming', 'lepelaar', 'libel', 'lieveheersbeestje',
   'luiaard', 'lynx', 'maanvis', 'mangoest', 'marmot', 'meerkat',
   'meerval', 'mier', 'miereneter', 'moeflon', 'mol', 'mug', 'muil',
@@ -27,7 +27,7 @@ const WORDS = [
   'toekan', 'tor', 'uil', 'valkparkiet', 'vampier', 'varaan', 'veelvraat', 'vleermuis',
   'vlieg', 'vliegend hert', 'vliegende vis', 'vlinder', 'vos', 'vuurkever', 'walvis',
   'wasbeer', 'waterbuffel', 'waterrat', 'wezel', 'wild zwijn', 'wolf', 'wombat',
-  'worm', 'woudaap', 'wrattenzwijn', 'zebra', 'zeehond', 'zeemeermin', 'zeeotter',
+  'worm', 'wrattenzwijn', 'zebra', 'zeehond', 'zeemeermin', 'zeeotter',
   'zeepaardje', 'zeeschildpad', 'zwaan', 'zwaluw', 'zwarte mamba', 'zwarte panter',
   
   // Voedsel & drinken
@@ -71,7 +71,7 @@ const WORDS = [
   'chiropractor', 'chirurg', 'circusdirecteur', 'clown', 'coach', 'cowboy', 'croupier', 'cryptograaf',
   'danser', 'dansleraar', 'dataanalist', 'dermatoloog', 'detective', 'dierenarts', 'dierentrainer', 'diplomaat',
   'dirigent', 'dj', 'documentairemaker', 'dokter', 'dronepiloot', 'duikinstructeur', 'econoom', 'entomoloog',
-  'ethisch hacker', 'etholoog', 'evenementenorganisator', 'examinator', 'exploratiegeoloog', 'extinctiebioloog', 'farmacoloog', 'filosoof',
+  'ethisch hacker', 'etholoog', 'evenementenorganisator', 'examinator', 'exploratiegeoloog', 'farmacoloog', 'filosoof',
   'fotograaf', 'fysiotherapeut', 'gameontwikkelaar', 'gastronoom', 'geneesheer', 'geograaf', 'geoloog', 'gids',
   'glazenwasser', 'goochelaar', 'grafisch ontwerper', 'gynaecoloog', 'handelaar', 'heks', 'hersenchirurg', 'hovenier',
   'hypnotherapeut', 'ijsbeeldhouwer', 'illustrator', 'immunoloog', 'informaticus', 'ingenieur', 'inspecteur', 'instrumentmaker',
