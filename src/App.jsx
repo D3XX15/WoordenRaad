@@ -503,17 +503,15 @@ const pt = (n) => n === 1 ? "punt" : "punten";
 const MESSAGES_GREAT = [
   (n) => `${n} ${w(n)} goed, wauw! 🎉`,
   (n) => `Maar liefst ${n} ${w(n)}! Wat een prestatie! 🏆`,
-  (n) => `${n} ${w(n)} geraden — indrukwekkend! ⭐`,
+  (n) => `${n} ${w(n)} geraden — jij verdient een sticker! ⭐`,
   (n) => `${n} ${w(n)}! De anderen zijn onder de indruk. 😎`,
   (n) => `${n} ${w(n)} goed — lekker bezig! 🔥`,
-  (n) => `Wat een ronde! ${n} ${w(n)} geraden! 🥳`,
+  (n) => `Wat een ronde! ${n} ${w(n)} goed geraden! 🥳`,
   (n) => `${n} ${w(n)}! Jij weet hoe je het moet doen. 🌟`,
-  (n) => `${n} keer raak! Dat ${n === 1 ? "is" : "zijn"} ${n} ${pt(n)}! 🎲`,
   (n) => `Je hebt ${n} ${w(n)} goed — fantastisch! 🙌`,
   (n) => `${n} ${w(n)} op het bord, niemand doet jou wat! 💥`,
   (n) => `${n} ${w(n)} in de tijd — jij bent niet te stoppen! 🚀`,
   (n) => `${n} ${w(n)} geraden, de rest kan inpakken! 😄`,
-  (n) => n === 1 ? `Ronde voorbij met 1 woord — maar je hebt het geprobeerd! 🎊` : `Ronde voorbij met ${n} woorden — dat zijn er veel! 🎊`,
   (n) => `${n} ${w(n)}! Heb jij dit geoefend of zo? 👏`,
   (n) => `Waanzinnig! ${n} ${w(n)} goed in één ronde! 🤩`,
 ];
@@ -522,7 +520,6 @@ const MESSAGES_OK = [
   (n) => `${n} ${w(n)} geraden — goed bezig! 🎯`,
   (n) => `${n} ${w(n)} op het bord! Niet slecht! 😄`,
   (n) => `Klaar! ${n} ${w(n)} op de teller. ✅`,
-  (n) => n === 1 ? `1 woord raak! Goed werk! 👏` : `${n} woorden raak! Goed werk! 👏`,
   (n) => `Tijd is om met ${n} ${w(n)} goed! ⏰`,
   (n) => `${n} ${w(n)} geraden — de spanning zat er zeker in! 😅`,
   (n) => `${n} ${w(n)} op het scorebord geschreven! ✍️`,
@@ -534,9 +531,9 @@ const MESSAGES_POOR = [
   (n) => n === 0 ? `Geen woorden goed... er is altijd een volgende ronde! 🙈` : `${n} ${w(n)} — met wat meer tijd had je er meer gehad! ⏱️`,
   (n) => n === 0 ? `Nul woorden, dat ga je de volgende ronde verbeteren toch? 😉` : `${n} ${w(n)}, dat ga je de volgende ronde verbeteren toch? 😉`,
   (n) => n === 0 ? `Oei, nul woorden — de volgende ronde is jouw moment! 💪` : `${n} ${w(n)}... de volgende ronde ga je ervoor! 💪`,
-  (n) => n === 0 ? `Nul woorden geraden — aardig geprobeerd! 👍` : `${n} ${w(n)} geraden — aardig geprobeerd! 👍`,
   (n) => n <= 1 ? `Moeilijke ronde? Geeft niks, volgende keer beter! 😅` : `${n} ${w(n)} — er zit meer in, volgende ronde laten zien! 🎯`,
   (n) => n === 0 ? `Nul woorden... de anderen ruiken bloed! Ga ervoor! 😤` : `${n} ${w(n)}... de anderen ruiken bloed! Ga ervoor! 😤`,
+  (n) => n === 0 ? `Nul woorden... de spanning zat er zeker in! 😅` : `${n} ${w(n)} geraden — de spanning zat er zeker in! 😅`,,
 ];
 
 function getRandomEndMessage(correctCount, roundTime) {
