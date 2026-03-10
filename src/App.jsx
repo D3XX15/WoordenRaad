@@ -539,9 +539,9 @@ function getRandomEndMessage(correctCount, roundTime) {
   const ratio = target > 0 ? correctCount / target : 0;
 
   let pool;
-  if (ratio >= 1.25) {
+  if (ratio >= 1.0) {
     pool = MESSAGES_GREAT;
-  } else if (ratio >= 0.75) {
+  } else if (ratio >= 0.6) {
     pool = MESSAGES_OK;
   } else {
     pool = MESSAGES_POOR;
