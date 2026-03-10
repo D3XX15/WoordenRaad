@@ -176,7 +176,7 @@ const WORDS = [
   // Natuur & weer
   'aardbeving', 'aard­verschuiving', 'aardworm', 'algen', 'aurora', 'bamboe', 'bergtop', 'blad',
   'bliksem', 'bloem', 'boom', 'bos', 'branding', 'brandnetels', 'bronwater', 'bui',
-  'cactus', 'compost', 'dageraad', 'dageraads­licht', 'dauw', 'delta',
+  'cactus', 'compost', 'dauw', 'delta',
   'dennennaald', 'dijk', 'droogte', 'duin', 'eb', 'ecosysteem',
   'fjord', 'fossiel', 'getijden', 'geiser', 'greppel', 'hagel',
   'hagelstorm', 'herfst', 'herfstblad', 'heuvel', 'hittegolf', 'ijsberg', 'ijspegel', 'ijsschots',
