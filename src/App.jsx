@@ -1097,7 +1097,6 @@ export default function App() {
           padding: 8px 16px;
           text-align: center;
           min-height: 40px;
-          margin-top: 5px;
         }
         .word-done-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: -80px; }
         .word-done-count { font-size: clamp(18px, 5vw, 26px); color: rgba(255,255,255,0.6); font-family: 'Righteous', cursive; letter-spacing: 0.03em; }
