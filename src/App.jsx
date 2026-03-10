@@ -501,29 +501,28 @@ const w = (n) => n === 1 ? "woord" : "woorden";
 const pt = (n) => n === 1 ? "punt" : "punten";
 
 const MESSAGES_GREAT = [
-  (n) => `${n} ${w(n)} goed, wauw! 🎉`,
-  (n) => `Maar liefst ${n} ${w(n)}! Wat een prestatie! 🏆`,
+  (n) => `${n} ${w(n)} goed geraden, wauw! 🎉`,
+  (n) => `Maar liefst ${n} ${w(n)} goed! Wat een prestatie! 🏆`,
   (n) => `${n} ${w(n)} geraden — jij verdient een sticker! ⭐`,
   (n) => `${n} ${w(n)}! De anderen zijn onder de indruk. 😎`,
-  (n) => `${n} ${w(n)} goed — lekker bezig! 🔥`,
+  (n) => `${n} ${w(n)} goed geraden — lekker bezig! 🔥`,
   (n) => `Wat een ronde! ${n} ${w(n)} goed geraden! 🥳`,
-  (n) => `${n} ${w(n)}! Jij weet hoe je het moet doen. 🌟`,
+  (n) => `${n} ${w(n)} goed! Jij weet hoe het moet! 🌟`,
   (n) => `Je hebt ${n} ${w(n)} goed — fantastisch! 🙌`,
-  (n) => `${n} ${w(n)} op het bord, niemand doet jou wat! 💥`,
-  (n) => `${n} ${w(n)} in de tijd — jij bent niet te stoppen! 🚀`,
-  (n) => `${n} ${w(n)} geraden, de rest kan inpakken! 😄`,
-  (n) => `${n} ${w(n)}! Heb jij dit geoefend of zo? 👏`,
+  (n) => `${n} ${pt(n)} op het bord, niemand doet jou wat! 💥`,
+  (n) => `${n} ${w(n)} goed — jij bent niet te stoppen! 🚀`,
+  (n) => `${n} ${w(n)} goed, de rest kan wel inpakken! 😄`,
+  (n) => `${n} ${w(n)} goed! Heb jij dit geoefend of zo? 👏`,
   (n) => `Waanzinnig! ${n} ${w(n)} goed in één ronde! 🤩`,
 ];
 
 const MESSAGES_OK = [
-  (n) => `${n} ${w(n)} geraden — goed bezig! 🎯`,
-  (n) => `${n} ${w(n)} op het bord! Niet slecht! 😄`,
-  (n) => `Klaar! ${n} ${w(n)} op de teller. ✅`,
-  (n) => `Tijd is om met ${n} ${w(n)} goed! ⏰`,
-  (n) => `${n} ${w(n)} geraden — de spanning zat er zeker in! 😅`,
-  (n) => `${n} ${w(n)} op het scorebord geschreven! ✍️`,
-  (n) => `Je hebt ${n} ${w(n)} goed! Blijf zo! 🙌`,
+  (n) => `${n} ${w(n)} goed geraden — lekker bezig! 🎯`,
+  (n) => `${n} ${pt(n)} op het bord! Niet slecht! 👍`,
+  (n) => `Klaar met ${n} ${pt(n)} op de teller. ✅`,
+  (n) => `De tijd is om — je hebt ${n} ${w(n)} goed! ⏰`,
+  (n) => `${n} ${pt(n)} op het scorebord bijgeschreven! ✍️`,
+  (n) => `Je hebt ${n} ${w(n)} goed! Blijf zo doorgaan! 💪`,
 ];
 
 const MESSAGES_POOR = [
