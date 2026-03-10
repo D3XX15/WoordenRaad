@@ -501,17 +501,16 @@ const w = (n) => n === 1 ? "woord" : "woorden";
 const pt = (n) => n === 1 ? "punt" : "punten";
 
 const MESSAGES_GREAT = [
-  (n) => `Maar liefst ${n} ${w(n)} goed! Wat een prestatie! 🏆`,
-  (n) => `${n} ${w(n)} geraden — jij verdient een sticker! ⭐`,
+  (n) => `Maar liefst ${n} ${w(n)}! Wat een prestatie! 🏆`,
+  (n) => `${n} ${w(n)} geraden — jij krijgt een sticker! ⭐`,
   (n) => `${n} ${w(n)} goed! De rest is onder de indruk. 😎`,
-  (n) => `${n} ${pt(n)}! De anderen beven van angst. 🫨`,
+  (n) => `${n} ${w(n)} goed! De anderen beven van angst. 🫨`,
   (n) => `${n} ${w(n)} goed! Jij staat in vuur en vlam! 🔥`,
   (n) => `Wat een ronde! ${n} ${w(n)} goed geraden! 🥳`,
-  (n) => `Je hebt ${n} ${w(n)} goed — fantastisch! 🙌`,
-  (n) => `${n} ${pt(n)} op het bord! Niemand doet jou wat! 💥`,
+  (n) => `${n} ${pt(n)} op het bord! Wat een ronde! 💥`,
   (n) => `${n} ${w(n)} goed! Jij bent niet te stoppen! 🚀`,
-  (n) => `${n} ${w(n)} goed, de rest kan wel inpakken! 😄`,
-  (n) => `${n} ${w(n)} goed! Heb jij dit zitten oefen of zo? 🤨`,
+  (n) => `${n} ${w(n)} goed! De rest kan wel inpakken! 😄`,
+  (n) => `${n} ${w(n)} goed! Heb jij dit zitten oefen? 🤨`,
   (n) => `Waanzinnig! ${n} ${w(n)} goed in één ronde! 🤩`,
 ];
 
