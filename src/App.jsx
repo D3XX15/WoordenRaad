@@ -328,7 +328,7 @@ const WORDS = [
   
   // Spreekwoorden & uitdrukkingen
   'alle hens aan dek', 'als de kat van huis is dansen de muizen', 'al doende leert men', 'beter laat dan nooit', 'de appel valt niet ver van de boom', 'door de zure appel heen bijten', 'een gewaarschuwd man telt voor twee', 'van een koude kermis thuiskomen',
-  'een oogie dichtknijpen', 'een storm in een glas water', 'ergens de brui aan geven', 'goede raad is duur', 'het kind met het badwater weggooien', 'het roer omgooien', 'hoge bomen vangen veel wind', 'iemand een hak zetten',
+  'een oogie dichtknijpen', 'een storm in een glas water', 'ergens de brui aan geven', 'goede raad is goud waard', 'het kind met het badwater weggooien', 'het roer omgooien', 'hoge bomen vangen veel wind', 'iemand een hak zetten',
   'iemand in de maling nemen', 'iemand op de kast jagen', 'in de wolken zijn', 'in het nauw gedreven', 'je kunt niet op twee paarden tegelijk wedden', 'je huid duur verkopen', 'zoals het klokje thuis tikt tikt het nergens',
   'langs de neus weg', 'met de deur in huis vallen', 'met lege handen staan', 'met zijn rug tegen de muur staan', 'met stomheid geslagen zijn', 'nieuwe bezems vegen schoon', 'niet alle dagen zondag', 'olie op het vuur gooien',
   'om de hete brij heen draaien', 'onder de duim houden', 'op zijn lauweren rusten', 'over de rooie gaan', 'over één kam scheren', 'roet in het eten gooien',
