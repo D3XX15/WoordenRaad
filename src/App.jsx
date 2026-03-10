@@ -184,7 +184,7 @@ const WORDS = [
   'lijnbus', 'lijnvliegtuig', 'locomotief', 'luchtschip', 'maanlander', 'metro', 'minicar', 'monorail',
   'motorfiets', 'motorfietssidecar', 'nachttrein', 'onderzeeboot', 'oplegger', 'pantservoertuig', 'patrouilleboot', 'pick-uptruck',
   'politieauto', 'postduif', 'postkoets', 'racefiets', 'racewagen', 'raket', 'reddingsboot',
-  'rijtuig', 'riksja', 'robotaxi', 'roeiboot', 'ruimtecapsule', 'ruimteshuttle', 'schip',
+  'rijtuig', 'riksja', 'robotaxi', 'roeiboot', 'schip',
   'scooterdeeldienst', 'segway', 'slee', 'sleepboot', 'sloep', 'sneltrein', 'snowcat',
   'space shuttle', 'speedboot', 'stadsbus', 'stadsfiets', 'step', 'stockcar', 'stoombaggermachine', 'stoomboot',
   'stoomlocomotief', 'suv', 'taxiboot', 'touringcar', 'tractor', 'tram', 'trolleybus',
