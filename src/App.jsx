@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 const WORDS = [
   // Dieren
   'aardvarken', 'adelaar', 'albatros', 'alpaca', 'anakonda', 'baviaan', 'beer',
-  'bever', 'bijen koningin', 'bizon', 'blauwe vinvis', 'blauwvin tonijn', 'boomkikker', 'boomslang',
+  'bever', 'bijenkoningin', 'bizon', 'blauwevinvis', 'blauwvin tonijn', 'boomkikker', 'boomslang',
   'buffel', 'buizerd', 'buldog', 'cheetah', 'chihuahua', 'cobra', 'condor', 'das',
   'dingo', 'dinosaurus', 'dolfijn', 'draak', 'dromedaris', 'duif', 'dwerg pinguïn', 'eekhoorn',
   'egel', 'ekster', 'eland', 'elektrische paling', 'emoe', 'fazant', 'flamingo',
@@ -13,7 +13,7 @@ const WORDS = [
   'ijsbeer', 'impala', 'inktvis', 'jaguar', 'jakhals', 'kaketoe',
   'kameel', 'kameleon', 'kangoeroe', 'kat', 'kever', 'kikker', 'kiwi', 'koala',
   'koe', 'komodovaraan', 'konijn', 'kraanvogel', 'krab', 'krokodil', 'kwal',
-  'kwartel', 'lama', 'leeuw', 'leguaan', 'lemming', 'lepelaar', 'libel', 'lieveheers beestje',
+  'kwartel', 'lama', 'leeuw', 'leguaan', 'lemming', 'lepelaar', 'libel', 'lieveheersbeestje',
   'luiaard', 'lynx', 'maanvis', 'marmot', 'meerkat',
   'meerval', 'mier', 'miereneter', 'moeflon', 'mol', 'mug',
   'muilezel', 'muskusrat', 'narwal', 'nerts', 'neusaap', 'neushoorn', 'nijlgans', 'nijlpaard',
@@ -21,7 +21,7 @@ const WORDS = [
   'otter', 'paard', 'panda', 'panther', 'papegaai', 'paradijsvogel', 'parkiet', 'pauw',
   'pelikaan', 'pijlgif kikker', 'pinguïn', 'platypus', 'poema', 'poolvos', 'prairiehond',
   'raaf', 'rat', 'reiger', 'rendier', 'reuzen octopus', 'reuzenpanda', 'roofvogel', 'varkenshaas',
-  'salamander', 'schaap', 'schildpad', 'schildwants', 'schorpioen', 'slak', 'slang', 'sneeuw luipaard',
+  'salamander', 'schaap', 'schildpad', 'schildwants', 'schorpioen', 'slak', 'slang', 'sneeuwluipaard',
   'snoek', 'specht', 'sperwer', 'spin', 'springbok', 'sprinkhaan', 'stekelvarken', 'steur',
   'stier', 'stinkdier', 'stokstaartje', 'struisvogel', 'tapir', 'tarantula', 'tijger',
   'toekan', 'tor', 'uil', 'valkparkiet', 'vampier', 'varaan', 'veelvraat', 'vleermuis',
