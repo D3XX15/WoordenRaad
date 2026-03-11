@@ -318,7 +318,7 @@ const WORDS = [
   'oligarchie', 'onder­bewustzijn', 'ondergrondse beweging', 'onteigening', 'oorlogs­misdaad', 'orkest', 'overdosis', 'overlevings­drang',
   'pandemie', 'paradox', 'paranoia', 'parlementaire democratie', 'persoonlijkheids­stoornis', 'pesticide', 'pionier', 'plagiaat',
   'polarisatie', 'populisme', 'posttraumatische stress', 'propaganda', 'protocolbreuk', 'psychiatrie', 'quarantaine', 'radicali­sering',
-  'radio­activiteit', 'rebellie', 'recessie', 'referendum', 'reflectie', 'rehabilitatie', 'relatief', 'repatriëring',
+  'radio­activiteit', 'rebellen', 'recessie', 'referendum', 'reflectie', 'rehabilitatie', 'relatief', 'repatriëring',
   'revolutie', 'reïncarnatie', 'sabotage', 'sancties', 'schandaal', 'schijnheilig', 'schizofrenie', 'seconde', 'slavernij',
   'sluipschutter', 'smokkel', 'soevereini­teit', 'spionage', 'sprookje', 'staking', 'stigma', 'stralings­vergiftiging',
   'surrogaat­moeder', 'taboe', 'terreurcel', 'tijdreizen', 'totalitarisme', 'trans­plantatie', 'tribunaal', 'tribune',
