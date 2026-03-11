@@ -534,7 +534,7 @@ function SetupScreen({ onStart }) {
               onClick={toggleTeamMode}
               title="Schakel team-modus in of uit"
             >
-              {teamMode ? "👥 Team modus aan" : "👥 Team modus"}
+              {teamMode ? "Team modus aan" : "Team modus"}
             </button>
           </div>
           <div className="time-control">
