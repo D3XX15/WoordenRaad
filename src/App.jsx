@@ -85,7 +85,7 @@ const WORDS = [
   'glazenwasser', 'goochelaar', 'grafisch ontwerper', 'gynaecoloog', 'handelaar', 'heks', 'hersenchirurg', 'hovenier',
   'hypno­therapeut', 'ijs­beeldhouwer', 'illustrator', 'immunoloog', 'informaticus', 'ingenieur', 'inspecteur', 'instrument­maker',
   'jager', 'jongleur', 'journalist', 'juwelier', 'kaartenmaker', 'kapitein', 'kapper',
-  'kassa­medewerker', 'kinderarts', 'klimaatoloog', 'klokken­hersteller', 'klusjesman', 'kok', 'kostuum­ontwerper', 'kraam­verzorger',
+  'kassa­medewerker', 'kinderarts', 'klimaatoloog', 'klusjesman', 'kok', 'kostuum­ontwerper', 'kraam­verzorger',
   'kruidenier', 'kunstcriticus', 'kunstenaar', 'kweker', 'laborant', 'landmeter', 'lasser', 'leraar',
   'levens­middelen', 'loodgieter', 'lucht­verkeersleider', 'magiër', 'makelaar', 'marionette­speler', 'matroos', 'meteoroloog',
   'microbioloog', 'modeontwerper', 'moleculair bioloog', 'monteur', 'museum­conservator', 'musicus',
