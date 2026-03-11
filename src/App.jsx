@@ -3,17 +3,17 @@ import { useState, useEffect, useRef, useCallback } from "react";
 const WORDS = [
   // Dieren
   'aardvarken', 'adelaar', 'albatros', 'alpaca', 'anakonda', 'baviaan', 'beer',
-  'bever', 'bijenkoningin', 'bizon', 'blauwvin­tonijn', 'boomkikker', 'boomslang',
+  'bever', 'bijenkoningin', 'bizon', 'blauwvintonijn', 'boomkikker', 'boomslang',
   'buffel', 'buizerd', 'buldog', 'cheetah', 'chihuahua', 'cobra', 'condor', 'das',
   'dingo', 'dinosaurus', 'dolfijn', 'draak', 'dromedaris', 'duif', 'dwergpinguïn', 'eekhoorn',
   'egel', 'ekster', 'eland', 'elektrische paling', 'emoe', 'fazant', 'flamingo',
-  'fret', 'galapagos­schildpad', 'gecko', 'gibbon', 'giraffe',
+  'fret', 'galapagosschildpad', 'gecko', 'gibbon', 'giraffe',
   'gorilla', 'goudjakhals', 'goudvis', 'grizzlybeer', 'guppie', 'haai', 'haas',
   'hagedis', 'hamster', 'havik', 'hermelijn', 'hond', 'honingdas', 'hyena', 'ibis',
   'ijsbeer', 'impala', 'inktvis', 'jaguar', 'jakhals', 'kaketoe',
   'kameel', 'kameleon', 'kangoeroe', 'kat', 'kever', 'kikker', 'kiwi', 'koala',
   'koe', 'komodovaraan', 'konijn', 'kraanvogel', 'krab', 'krokodil', 'kwal',
-  'kwartel', 'lama', 'leeuw', 'leguaan', 'lemming', 'lepelaar', 'libel', 'lieve­heersbeestje',
+  'kwartel', 'lama', 'leeuw', 'leguaan', 'lemming', 'lepelaar', 'libel', 'lieveheersbeestje',
   'luiaard', 'lynx', 'maanvis', 'marmot', 'meerkat',
   'meerval', 'mier', 'miereneter', 'moeflon', 'mol', 'mug',
   'muilezel', 'muskusrat', 'narwal', 'nerts', 'neusaap', 'neushoorn', 'nijlgans', 'nijlpaard',
@@ -21,7 +21,7 @@ const WORDS = [
   'otter', 'paard', 'panda', 'panther', 'papegaai', 'paradijsvogel', 'parkiet', 'pauw',
   'pelikaan', 'pijlgif kikker', 'pinguïn', 'platypus', 'poema', 'poolvos', 'prairiehond',
   'raaf', 'rat', 'reiger', 'rendier', 'reuzenoctopus', 'reuzenpanda', 'roofvogel', 'varkenshaas',
-  'salamander', 'schaap', 'schildpad', 'schildwants', 'schorpioen', 'slak', 'slang', 'sneeuw­luipaard',
+  'salamander', 'schaap', 'schildpad', 'schildwants', 'schorpioen', 'slak', 'slang', 'sneeuwluipaard',
   'snoek', 'specht', 'sperwer', 'spin', 'springbok', 'sprinkhaan', 'stekelvarken', 'steur',
   'stier', 'stinkdier', 'stokstaartje', 'struisvogel', 'tapir', 'tarantula', 'tijger',
   'toekan', 'tor', 'uil', 'valkparkiet', 'vampier', 'varaan', 'veelvraat', 'vleermuis',
@@ -36,12 +36,12 @@ const WORDS = [
   'wielewaal', 'wulp', 'zanglijster', 'zwarte kraai',
   
   // Voedsel & drinken
-  'aardappel', 'aardappel­puree', 'aardbei', 'abrikoos', 'amaretto', 'ananas', 'andijvie', 'appelmoes',
+  'aardappel', 'aardappelpuree', 'aardbei', 'abrikoos', 'amaretto', 'ananas', 'andijvie', 'appelmoes',
   'appelsap', 'appeltaart', 'asperges', 'avocado', 'bacon', 'bagel', 'baguette', 'balsamico',
   'bami', 'banaan', 'bananenbrood', 'barbecue', 'basilicum', 'biefstuk', 'bier',
   'bieslook', 'bietensalade', 'bitterbal', 'bitterkoekje', 'bladerdeeg', 'blauwe bes',
   'bloemkool', 'boerenkool', 'bolognese', 'bonbons', 'borrelplank', 'bosbessen', 'boterham', 'bouillon',
-  'brandnetel­soep', 'broccoli', 'brood', 'brownie', 'bruine bonen', 'bruschetta', 'caesarsalade',
+  'brandnetelsoep', 'broccoli', 'brood', 'brownie', 'bruine bonen', 'bruschetta', 'caesarsalade',
   'cannelloni', 'karamel', 'carpaccio', 'cashewnoot', 'champignon',
   'cheesecake', 'chipolata', 'chips', 'chocolade', 'churros', 'ciabatta', 'citroen', 'citroentaart',
   'cola', 'corndog', 'couscous', 'cranberrysap', 'croissant', 'crème brûlée', 'curry', 'dadel',
@@ -66,7 +66,7 @@ const WORDS = [
   'soufflé', 'spaghetti', 'spek', 'spinazie', 'stampot', 'stoofpot', 'strudel', 'suiker',
   'sushi', 'taart', 'taco', 'tapenade', 'tartaar', 'teriyaki', 'thee', 'tiramisu',
   'toast', 'tomatensaus', 'tomatensoep', 'tompouce', 'tortilla', 'truffel', 'tzatziki', 'ui',
-  'uiensoep', 'vanille­pudding', 'wafel', 'walnoot', 'watermeloen', 'wijn', 'witlof',
+  'uiensoep', 'vanillepudding', 'wafel', 'walnoot', 'watermeloen', 'wijn', 'witlof',
   'witte wijn', 'wrap', 'yoghurt', 'zuurkool',
   'appelstroop', 'beschuit', 'boontjes', 'erwten', 'flensje', 'gehakt', 'gevulde koek',
   'hagelslag', 'hutspot', 'jenever', 'karnemelk', 'kokos', 'krentenbollen',
@@ -75,122 +75,122 @@ const WORDS = [
   
   // Beroepen & mensen
   'accountant', 'acrobaat', 'acteur', 'advocaat', 'apotheker', 'archeoloog', 'architect', 'astroloog',
-  'astronaut', 'automonteur', 'bakker', 'barista', 'beveiliger', 'biblio­thecaris', 'blogger',
+  'astronaut', 'automonteur', 'bakker', 'barista', 'beveiliger', 'bibliothecaris', 'blogger',
   'boekhoudster', 'botanicus', 'brandweer', 'brandweerman', 'buschauffeur', 'cardioloog', 'casinodealer', 'chef-kok',
-  'chiropractor', 'chirurg', 'circus­directeur', 'clown', 'coach', 'cowboy', 'croupier',
+  'chiropractor', 'chirurg', 'circusdirecteur', 'clown', 'coach', 'cowboy', 'croupier',
   'danser', 'dansleraar', 'dataanalist', 'dermatoloog', 'detective', 'dierenarts', 'dierentrainer', 'diplomaat',
-  'dirigent', 'dj', 'documentaire­maker', 'dokter', 'dronepiloot', 'duik­instructeur', 'econoom',
-  'ethisch hacker', 'evenementen­organisator', 'examinator', 'farmaceut', 'filosoof',
-  'fotograaf', 'fysio­therapeut', 'game­ontwikkelaar', 'gastronoom', 'geneesheer', 'geograaf', 'geoloog', 'gids',
+  'dirigent', 'dj', 'documentairemaker', 'dokter', 'dronepiloot', 'duikinstructeur', 'econoom',
+  'ethisch hacker', 'evenementenorganisator', 'examinator', 'farmaceut', 'filosoof',
+  'fotograaf', 'fysiotherapeut', 'gameontwikkelaar', 'gastronoom', 'geneesheer', 'geograaf', 'geoloog', 'gids',
   'glazenwasser', 'goochelaar', 'grafisch ontwerper', 'gynaecoloog', 'handelaar', 'heks', 'hersenchirurg', 'hovenier',
-  'hypno­therapeut', 'ijs­beeldhouwer', 'illustrator', 'immunoloog', 'informaticus', 'ingenieur', 'inspecteur', 'instrument­maker',
+  'hypnotherapeut', 'ijsbeeldhouwer', 'illustrator', 'immunoloog', 'informaticus', 'ingenieur', 'inspecteur', 'instrumentmaker',
   'jager', 'jongleur', 'journalist', 'juwelier', 'kaartenmaker', 'kapitein', 'kapper',
-  'kassa­medewerker', 'kinderarts', 'klimaatoloog', 'klusjesman', 'kok', 'kostuum­ontwerper', 'kraam­verzorger',
+  'kassamedewerker', 'kinderarts', 'klimaatoloog', 'klusjesman', 'kok', 'kostuumontwerper', 'kraamverzorger',
   'kruidenier', 'kunstcriticus', 'kunstenaar', 'kweker', 'laborant', 'landmeter', 'lasser', 'leraar',
-  'levens­middelen', 'loodgieter', 'lucht­verkeersleider', 'magiër', 'makelaar', 'marionette­speler', 'matroos', 'meteoroloog',
-  'microbioloog', 'modeontwerper', 'moleculair bioloog', 'monteur', 'museum­conservator', 'musicus',
+  'levensmiddelen', 'loodgieter', 'luchtverkeersleider', 'magiër', 'makelaar', 'marionettespeler', 'matroos', 'meteoroloog',
+  'microbioloog', 'modeontwerper', 'moleculair bioloog', 'monteur', 'museumconservator', 'musicus',
   'neuroloog', 'notaris', 'ontwerper', 'oogarts', 'operazanger', 'opticien',
   'orthopeed', 'parasiet', 'parfum', 'piloot',
   'piraat', 'politicoloog', 'politieagent', 'postbode', 'primaat', 'producent',
-  'prof­voetballer', 'psychiater', 'psycholoog', 'radioloog', 'rechercheur', 'revalidatie­arts', 'ridder', 'roboticus',
-  'ruimtevaarder', 'ruimte­wetenschapper', 'scenario­schrijver', 'schappen­vuller', 'scheikundige', 'schilder', 'schildwacht', 'schoonmaker',
-  'schrijver', 'sheriff', 'skateboarder', 'slager', 'socioloog', 'soldaat', 'sommelier', 'stadsplanner', 'stand-up­comedian',
-  'steward', 'stoker', 'strateeg', 'stratenmaker', 'stuntman', 'sumo', 'systeem­beheerder', 'tatoeëerder',
-  'taxichauffeur', 'taxidermist', 'textiel­ontwerper', 'timmerman', 'tolk', 'tovenaar', 'toxicoloog', 'trainer',
-  'tuinieren', 'tuinman', 'verpleeg­kundige', 'verzekerings­agent', 'vioolmaker', 'visser', 'vliegtuig­bouwer',
-  'voedings­wetenschapper', 'volksmenner', 'vuilnisman', 'vuurwerkmaker', 'wetenschapper', 'wijnboer', 'winkelier',
-  'wiskundige', 'woordvoerder', 'zanger', 'zeebioloog', 'zeiler', 'ziekenhuis­directeur',
+  'profvoetballer', 'psychiater', 'psycholoog', 'radioloog', 'rechercheur', 'revalidatiearts', 'ridder', 'roboticus',
+  'ruimtevaarder', 'ruimtewetenschapper', 'scenarioschrijver', 'schappenvuller', 'scheikundige', 'schilder', 'schildwacht', 'schoonmaker',
+  'schrijver', 'sheriff', 'skateboarder', 'slager', 'socioloog', 'soldaat', 'sommelier', 'stadsplanner', 'stand-upcomedian',
+  'steward', 'stoker', 'strateeg', 'stratenmaker', 'stuntman', 'sumo', 'systeembeheerder', 'tatoeëerder',
+  'taxichauffeur', 'taxidermist', 'textielontwerper', 'timmerman', 'tolk', 'tovenaar', 'toxicoloog', 'trainer',
+  'tuinieren', 'tuinman', 'verpleegkundige', 'verzekeringsagent', 'vioolmaker', 'visser', 'vliegtuigbouwer',
+  'voedingswetenschapper', 'volksmenner', 'vuilnisman', 'vuurwerkmaker', 'wetenschapper', 'wijnboer', 'winkelier',
+  'wiskundige', 'woordvoerder', 'zanger', 'zeebioloog', 'zeiler', 'ziekenhuisdirecteur',
   'aannemer', 'beeldhouwer', 'burgemeester', 'cabaretier', 'ijsverkoper',
   'kaarsenmaker', 'kolenboer', 'koster', 'omroeper', 'organist',
-  'predikant', 'reddings­werker', 'smid', 'straatveger', 'taalkundige',
-  'tram­bestuurder', 'vrijwilliger', 'zeepmaker',
+  'predikant', 'reddingswerker', 'smid', 'straatveger', 'taalkundige',
+  'trambestuurder', 'vrijwilliger', 'zeepmaker',
   
   // Sport & hobby's
   'aerobics', 'alpineskiën', 'american football', 'aquajogging', 'atletiek', 'badminton', 'balletdansen',
-  'bankschieten', 'basketbal', 'beach­volleybal', 'bergsport', 'biatlon', 'biljarten', 'BMX', 'bobslee',
+  'bankschieten', 'basketbal', 'beachvolleybal', 'bergsport', 'biatlon', 'biljarten', 'BMX', 'bobslee',
   'boksen', 'boogschieten', 'boogsport', 'boulderen', 'bowling', 'breakdance',
   'cricket', 'curling', 'dammen', 'diepzeeduiken', 'discgolf', 'discuswerpen', 'djembé spelen', 'dressuur',
   'driedaagse', 'duiken', 'e-sporten', 'estafette', 'fietsen',
-  'fitness­training', 'freerunning', 'frisbee', 'gewichtheffen', 'gokken', 'golfen', 'gymnastiek', 'handbal', 'handwerken', 'hardlopen', 'hengelen', 'hindernisloop', 'hip-hop dansen', 'hockey',
+  'fitnesstraining', 'freerunning', 'frisbee', 'gewichtheffen', 'gokken', 'golfen', 'gymnastiek', 'handbal', 'handwerken', 'hardlopen', 'hengelen', 'hindernisloop', 'hip-hop dansen', 'hockey',
   'hoogspringen', 'hordelopen', 'ijshockey', 'jiu-jitsu', 'joggen',
   'judo', 'kaatsen', 'kanoën', 'karate', 'karting', 'kegelen',
-  'kegelspel', 'kitesurfen', 'klimmen', 'klimwand', 'knikkeren', 'kogelstoten', 'korfbal', 'kracht­training',
-  'kunstrijden', 'lacrosse', 'langebaan­schaatsen', 'lasergame', 'lijnvissen', 'longboarden', 'magisch goochelen',
+  'kegelspel', 'kitesurfen', 'klimmen', 'klimwand', 'knikkeren', 'kogelstoten', 'korfbal', 'krachttraining',
+  'kunstrijden', 'lacrosse', 'langebaanschaatsen', 'lasergame', 'lijnvissen', 'longboarden', 'magisch goochelen',
   'marathon', 'minigolf', 'modelbouwen', 'motorcross', 'motorsport', 'mountainbiken', 'netbal', 'ninjaparcours',
-  'nordic walking', 'obstakelloop', 'oriëntatie­lopen', 'paardrijden', 'padel', 'paintball', 'parachute­springen',
-  'parkour', 'pétanque', 'pilates', 'poedelen', 'polowedstrijd', 'polsstok­hoogspringen', 'powerlifting', 'racketball',
+  'nordic walking', 'obstakelloop', 'oriëntatielopen', 'paardrijden', 'padel', 'paintball', 'parachutespringen',
+  'parkour', 'pétanque', 'pilates', 'poedelen', 'polowedstrijd', 'polsstokhoogspringen', 'powerlifting', 'racketball',
   'rafting', 'ringsteken', 'rodeo', 'roeien', 'rolschaatsen', 'rots klimmen', 'rugby',
-  'sauna', 'schaatsen', 'schaken', 'schans­springen', 'schermen', 'schieten',
-  'scrabble', 'shorttrack­sprint', 'sjoelen', 'skeeleren', 'skeleton', 'skiën', 'skislalom',
+  'sauna', 'schaatsen', 'schaken', 'schansspringen', 'schermen', 'schieten',
+  'scrabble', 'shorttracksprint', 'sjoelen', 'skeeleren', 'skeleton', 'skiën', 'skislalom',
   'slipstream', 'snowboarden', 'softbal', 'speerwerpen', 'spijkerpoepen', 'squash', 'stoeien',
-  'stoepkrijten', 'stuntrijden', 'suppen', 'surfen', 'synchroon­zwemmen', 'taekwondo', 'tafeltennis', 'telemarketeer', 'tennis', 'touwtrekken', 'trail running', 'trampoline­springen', 'trefbal', 'triatlon',
-  'turnen', 'varen', 'veldrijden', 'verspringen', 'vissen', 'vliegeren', 'vliegtuig­modelbouwen', 'vliegvissen',
+  'stoepkrijten', 'stuntrijden', 'suppen', 'surfen', 'synchroonzwemmen', 'taekwondo', 'tafeltennis', 'telemarketeer', 'tennis', 'touwtrekken', 'trail running', 'trampolinespringen', 'trefbal', 'triatlon',
+  'turnen', 'varen', 'veldrijden', 'verspringen', 'vissen', 'vliegeren', 'vliegtuigmodelbouwen', 'vliegvissen',
   'voetbal', 'volleybal', 'wandelen', 'waterpolo', 'waterskiën', 'wakeboarden',
-  'wcpotwerpen', 'wedstrijd­vissen', 'wielrennen', 'worstelen', 'yoga', 'zeilen', 'zwemmen',
+  'wcpotwerpen', 'wedstrijdvissen', 'wielrennen', 'worstelen', 'yoga', 'zeilen', 'zwemmen',
   'aquarelleren', 'borduren', 'breien', 'calligrafie', 'escaperoom',
-  'fotograferen', 'gezelschaps­spel', 'haakwerk', 'kaartspelen',
+  'fotograferen', 'gezelschapsspel', 'haakwerk', 'kaartspelen',
   'kwartetten', 'lego', 'origami', 'pianospelen', 'pottendraaien',
   'quilten', 'tekenen', 'vogelkijken', 'weven',
   
   // Objecten & thuis
-  'aansteker', 'aardappel­schiller', 'accordeon', 'actiefiguur', 'afstands­bediening', 'airfryer', 'alarmbel', 'albumhoes',
-  'anker', 'ansichtkaart', 'antiek', 'armband­horloge', 'asbak', 'atlas', 'atoomklok', 'avondjurk',
+  'aansteker', 'aardappelschiller', 'accordeon', 'actiefiguur', 'afstandsbediening', 'airfryer', 'alarmbel', 'albumhoes',
+  'anker', 'ansichtkaart', 'antiek', 'armbandhorloge', 'asbak', 'atlas', 'atoomklok', 'avondjurk',
   'bajonet', 'ballon', 'balustrade', 'banjo', 'barbecuetang', 'barometer', 'beeldhouwwerk', 'bezem',
   'biljartbal', 'blender', 'bloesem', 'blokfluit', 'bodycam', 'boekenkast', 'boekenlegger', 'boog',
   'boomerang', 'boormachine', 'borstel', 'briefopener', 'brievenbus', 'bronzen beeld', 'bureau', 'cadeaus',
   'cadeautje', 'camera', 'catapult', 'cello', 'clarinet', 'computer', 'contrabas', 'cornetto',
   'dakpan', 'dartpijl', 'defibrillator', 'deurbel', 'didgeridoo', 'dopje', 'drietand', 'dwarsfluit',
   'dynamo', 'elektrische fiets', 'elpee', 'emmer', 'escalator', 'fagot', 'fakkel', 'fanfare',
-  'fiets', 'film', 'föhn', 'ganzenbord', 'gasmasker', 'geigerteller', 'gele kaart', 'gereedschaps­kist',
+  'fiets', 'film', 'föhn', 'ganzenbord', 'gasmasker', 'geigerteller', 'gele kaart', 'gereedschapskist',
   'gieter', 'gietijzer', 'gitaar', 'glaasje', 'glazen bol', 'gloeilamp', 'goudstaaf', 'gps-tracker',
   'gramofoon', 'guillotine', 'haardroger', 'hamer', 'handboeien', 'handgranaat', 'handtas', 'hangmat',
   'harp', 'harpoen', 'hartje', 'heksenketel', 'hooivork', 'horloge', 'ijsje', 'koelkast',
-  'ijsklontje', 'kaars', 'kaarsenhouder', 'kampioens­beker', 'kanon', 'kanonskogel', 'kapsel',
+  'ijsklontje', 'kaars', 'kaarsenhouder', 'kampioensbeker', 'kanon', 'kanonskogel', 'kapsel',
   'katapult', 'ketting', 'kettingzaag', 'keukenrol', 'kleedhanger', 'klok', 'koekenpan', 'koffer',
   'kompas', 'kookwekker', 'kraan', 'kroon', 'kruisboog', 'krukje', 'kubus', 'kurketrekker',
-  'kwik­thermometer', 'ladder', 'lampion', 'lantaarn', 'laserpointer', 'lasso', 'leidraad', 'lepel',
-  'leugen­detector', 'liniaal', 'loep', 'luchtballon', 'luidspreker', 'magneet', 'magnetron', 'maillot',
+  'kwikthermometer', 'ladder', 'lampion', 'lantaarn', 'laserpointer', 'lasso', 'leidraad', 'lepel',
+  'leugendetector', 'liniaal', 'loep', 'luchtballon', 'luidspreker', 'magneet', 'magnetron', 'maillot',
   'manchetknoop', 'mand', 'marionet', 'masker', 'medaille', 'megafoon', 'meubelstuk', 'microfoon',
   'moersleutel', 'molen', 'morse', 'muziekdoos', 'naaimachine', 'naaldhak', 'neonlamp', 'notenbalk',
-  'orgelpijp', 'papiermolen', 'parachute', 'paraplu', 'penseel', 'pikhouweel', 'flipperkast', 'pistool­holster',
+  'orgelpijp', 'papiermolen', 'parachute', 'paraplu', 'penseel', 'pikhouweel', 'flipperkast', 'pistoolholster',
   'plantenpot', 'poederdoos', 'potloodventer', 'printer', 'projector', 'puzzel', 'puzzeldoos', 'radarscherm',
   'ratelen', 'reddingsvest', 'regenjas', 'rekenmachine', 'robot', 'rode kaart', 'rolluik', 'rolstoel',
-  'rubberen eend', 'rugzak', 'sarcofaag', 'satelliet', 'scalpel', 'schaakbord', 'schaar', 'scheeps­schroef',
-  'scheermessen', 'schijf van vijf', 'schilderij', 'schommel', 'schroef­sleutel', 'scooter', 'sigaardoos', 'sitar',
+  'rubberen eend', 'rugzak', 'sarcofaag', 'satelliet', 'scalpel', 'schaakbord', 'schaar', 'scheepsschroef',
+  'scheermessen', 'schijf van vijf', 'schilderij', 'schommel', 'schroefsleutel', 'scooter', 'sigaardoos', 'sitar',
   'sleutel', 'slingeren', 'smeedijzer', 'snijplank', 'sok', 'speelgoed', 'speelkaart', 'sphinx',
-  'spiegel', 'spijker', 'spijkerbroek', 'spionage­satelliet', 'springveer', 'stethoscoop', 'stoommachine', 'stopwatch', 'strijkijzer',
-  'stroom­generator', 'suikerspin', 'tandenborstel', 'tandpasta', 'tarotkaart', 'telescoop', 'telraam', 'tent',
+  'spiegel', 'spijker', 'spijkerbroek', 'spionagesatelliet', 'springveer', 'stethoscoop', 'stoommachine', 'stopwatch', 'strijkijzer',
+  'stroomgenerator', 'suikerspin', 'tandenborstel', 'tandpasta', 'tarotkaart', 'telescoop', 'telraam', 'tent',
   'theekan', 'theemuts', 'thermometer', 'tijdmachine', 'toorts', 'touwladder', 'trampoline', 'transistor',
   'trap', 'trein', 'trombone', 'trommel', 'trompet', 'tuba', 'tuimelaar', 'tuinkabouter', 'tunnel',
-  'turbine', 'ukelele', 'veiligheids­speld', 'verfkwast', 'vergrootglas', 'vloeistof', 'vloerkleed', 'vriezer', 'vuurpijl',
+  'turbine', 'ukelele', 'veiligheidsspeld', 'verfkwast', 'vergrootglas', 'vloeistof', 'vloerkleed', 'vriezer', 'vuurpijl',
   'waaier', 'wapenschild', 'wasmachine', 'wastafel', 'waterklok', 'waterpas', 'waterpistool', 'weegschaal',
   'wekker', 'wiel', 'xylofoon', 'zaklamp', 'zandloper', 'zeepbel', 'zeeppomp', 'zeilboot',
   'zeis', 'zenderstation', 'zetel', 'zonnebloem', 'zonnebril', 'zonnewijzer', 'zweep',
   'tandenstoker', 'kleerhanger', 'elastiekje', 'kurk',
-  'aanrecht', 'bank', 'beker', 'boodschappen­tas', 'broek', 'dekbed', 'deurmat', 'gordijn',
-  'handschoen', 'hark', 'hoed', 'jasje', 'knoop', 'koffiezet­apparaat',
+  'aanrecht', 'bank', 'beker', 'boodschappentas', 'broek', 'dekbed', 'deurmat', 'gordijn',
+  'handschoen', 'hark', 'hoed', 'jasje', 'knoop', 'koffiezetapparaat',
   'krijtbord', 'lamp', 'mes', 'muts', 'pan', 'papier', 'pen',
   'plantje', 'pollepel', 'portemonnee', 'riem', 'schoen', 'servet', 'soeplepel',
   'spaarpot', 'stoel', 'stropdas', 'tafel', 'tas', 'theedoek', 'vork', 'wijnglas',
   
   // Natuur & weer
-  'aardbeving', 'aard­verschuiving', 'aardworm', 'algen', 'aurora', 'bamboe', 'bergtop', 'blad',
+  'aardbeving', 'aardverschuiving', 'aardworm', 'algen', 'aurora', 'bamboe', 'bergtop', 'blad',
   'bliksem', 'bloem', 'boom', 'bos', 'branding', 'brandnetels', 'bronwater', 'bui',
   'cactus', 'compost', 'dauw', 'delta',
   'dennennaald', 'dijk', 'droogte', 'duin', 'eb', 'ecosysteem',
   'fjord', 'fossiel', 'getijden', 'geiser', 'greppel', 'hagel',
   'hagelstorm', 'herfst', 'herfstblad', 'heuvel', 'hittegolf', 'ijsberg', 'ijspegel', 'ijsschots',
   'ijsvorming', 'inham', 'kapen', 'keien', 'kiezel', 'klif', 'kliffen', 'knop',
-  'komeet', 'koraal', 'koraalrif', 'lavastroom', 'lente', 'lucht­vochtigheid',
-  'maan', 'maans­verduistering', 'mangrovebos', 'maretak', 'meander', 'mist', 'modder',
+  'komeet', 'koraal', 'koraalrif', 'lavastroom', 'lente', 'luchtvochtigheid',
+  'maan', 'maansverduistering', 'mangrovebos', 'maretak', 'meander', 'mist', 'modder',
   'moeras', 'monsoen', 'morgenrood', 'mos', 'naaldboom', 'nevel', 'noorderlicht', 'oase',
   'oceaan', 'onweer', 'orkaan', 'paddenstoel', 'paddenvijver', 'planeet', 'plas', 'poel',
   'pool', 'poollicht', 'regen', 'regenboog', 'regenbui', 'regenwoud', 'rivier', 'riviermonding',
   'roos', 'rots', 'rotsbodem', 'ruimte', 'savanne', 'schemering', 'schemerlicht', 'schimmel',
-  'schimmel­sporen', 'sneeuw', 'sneeuwvlok', 'sneeuwstorm', 'steengroeve', 'ster',
+  'schimmelsporen', 'sneeuw', 'sneeuwvlok', 'sneeuwstorm', 'steengroeve', 'ster',
   'stikstof', 'stofwolk', 'storm', 'strand', 'stromend water', 'tij', 'toendra', 'tornado', 'tropische regen',
   'tsunami', 'tulp', 'uiterwaard', 'uitzicht', 'vallei', 'veen', 'veld', 'vijver',
-  'vlakte', 'vloed', 'vluchtheuvel', 'voorjaarswind', 'vulkaan', 'vulkaan­uitbarsting', 'waterloop', 'waterval',
+  'vlakte', 'vloed', 'vluchtheuvel', 'voorjaarswind', 'vulkaan', 'vulkaanuitbarsting', 'waterloop', 'waterval',
   'weide', 'windvlaag', 'woestijn', 'wolk', 'woud', 'zandstorm', 'zee',
   'zeewind', 'zilt water', 'zomer', 'zon', 'zonsondergang', 'zonsopgang', 'zwaartekracht',
   'schelp', 'schaduw',
@@ -198,49 +198,49 @@ const WORDS = [
   'lavendel', 'linde', 'meidoorn', 'narcis', 'papaver', 'populier', 'wilg', 'viooltje',
   
   // Vervoer & reizen
-  'aanhanger', 'achtbaan', 'ambulance', 'benzine', 'benzine­station', 'boeing', 'boot', 'brandweerauto',
-  'brandweer­wagen', 'bromfiets', 'bus', 'camper', 'caravan', 'catamaran', 'commandowagen',
-  'container', 'container­schip', 'deklift', 'diesel', 'driewieler', 'drijvend hotel',
+  'aanhanger', 'achtbaan', 'ambulance', 'benzine', 'benzinestation', 'boeing', 'boot', 'brandweerauto',
+  'brandweerwagen', 'bromfiets', 'bus', 'camper', 'caravan', 'catamaran', 'commandowagen',
+  'container', 'containerschip', 'deklift', 'diesel', 'driewieler', 'drijvend hotel',
   'dronepost', 'dubbeldekker', 'duikboot', 'elektrische auto', 'elektrische scooter', 'elektrische step', 'ferry', 'fietsendrager',
   'fietstaxi', 'forens', 'vrachtschip', 'gondel', 'gondelbaan', 'graafmachine', 'grensovergang', 'hangbrug',
-  'helikopter', 'hoogspoor­trein', 'hoverboard', 'hovercraft', 'intercity', 'internationale trein',
+  'helikopter', 'hoogspoortrein', 'hoverboard', 'hovercraft', 'intercity', 'internationale trein',
   'jetpack', 'jetski', 'kabelbaan', 'kajak', 'kar', 'kolenschip', 'kruisvaarder', 'kustwacht',
   'lijnbus', 'locomotief', 'luchtschip', 'maanlander', 'metro', 'minicar', 'monorail',
-  'motorfiets', 'motorfiets­sidecar', 'nachttrein', 'onderzeeboot', 'oplegger', 'pantser­voertuig', 'patrouille­boot', 'pick-uptruck',
+  'motorfiets', 'motorfietssidecar', 'nachttrein', 'onderzeeboot', 'oplegger', 'pantservoertuig', 'patrouilleboot', 'pick-uptruck',
   'politieauto', 'postduif', 'postkoets', 'racefiets', 'racewagen', 'raket', 'reddingsboot',
   'rijtuig', 'riksja', 'robotaxi', 'roeiboot', 'schip',
-  'scooter­deeldienst', 'segway', 'slee', 'sleepboot', 'sloep', 'sneltrein',
+  'scooterdeeldienst', 'segway', 'slee', 'sleepboot', 'sloep', 'sneltrein',
   'space shuttle', 'speedboot', 'stadsbus', 'stadsfiets', 'step', 'stoomboot',
-  'stoom­locomotief', 'suv', 'taxiboot', 'touringcar', 'tractor', 'tram', 'trolleybus',
+  'stoomlocomotief', 'suv', 'taxiboot', 'touringcar', 'tractor', 'tram', 'trolleybus',
   'tuk-tuk', 'veerboot', 'veerfiets', 'vierwieler', 'vliegdekschip', 'vliegende schotel', 'vliegtuig', 'vrachtwagen',
-  'waterbus', 'waterfiets', 'water­vliegtuig', 'wielerbaan', 'zeilschip', 'zeilvliegtuig', 'zijspan', 'zonneauto', 'zweef­vliegtuig',
+  'waterbus', 'waterfiets', 'watervliegtuig', 'wielerbaan', 'zeilschip', 'zeilvliegtuig', 'zijspan', 'zonneauto', 'zweefvliegtuig',
   
   // Gebouwen & plaatsen
   'abdij', 'amfiteater', 'apotheek', 'aquaduct', 'aquarium', 'badhuis', 'balie', 'bankgebouw',
   'begraafplaats', 'bibliotheek', 'bioscoop', 'bloemenmarkt', 'boekenwinkel', 'boerderij', 'boogbrug', 'bouwplaats',
-  'bowlingbaan', 'brandweer­kazerne', 'brouwerij', 'brug', 'bunker', 'café', 'camping', 'camping­terrein',
+  'bowlingbaan', 'brandweerkazerne', 'brouwerij', 'brug', 'bunker', 'café', 'camping', 'campingterrein',
   'casino', 'centrum', 'circus', 'consulaat', 'crematorium', 'cultureel centrum', 'dak', 'dambord',
-  'dierentuin', 'discotheek', 'driesterren­hotel', 'duiventoren', 'fabriek', 'fietsenwinkel', 'fontein', 'fort',
-  'fruitmarkt', 'galerie', 'gemeentehuis', 'gevangenis', 'gezondheids­centrum', 'grachtenpand', 'gymnasium', 'halfpipe',
-  'haven', 'hectometer­paal', 'herberg', 'honkbal­stadion', 'hostel', 'hotel', 'huis', 'iglo',
+  'dierentuin', 'discotheek', 'driesterrenhotel', 'duiventoren', 'fabriek', 'fietsenwinkel', 'fontein', 'fort',
+  'fruitmarkt', 'galerie', 'gemeentehuis', 'gevangenis', 'gezondheidscentrum', 'grachtenpand', 'gymnasium', 'halfpipe',
+  'haven', 'hectometerpaal', 'herberg', 'honkbalstadion', 'hostel', 'hotel', 'huis', 'iglo',
   'ijsbaan', 'ijsherberg', 'jachthaven', 'jungle', 'kapperszaak', 'kasteel', 'kathedraal', 'kazerne',
   'kerk', 'klimhal', 'klokkenspel', 'klokkentoren', 'klooster', 'koffieshop', 'kolenmijn',
   'krantenwinkel', 'kroeg', 'kunstmuseum', 'laadpaal', 'laboratorium', 'lagerhuis', 'landgoed',
   'loods', 'luchthaven', 'lunapark', 'manege', 'markt', 'megabioscoop', 'monument', 'moskee',
   'museum', 'observatorium', 'dolfinarium', 'ouderenhuis', 'paleis', 'parkbank', 'parkeergarage',
-  'pier', 'pleintje', 'politiebureau', 'poppenkast', 'postkantoor', 'pretpark', 'pyramide', 'racebaan', 'rechtbank', 'recreatie­gebied', 'renbaan', 'restaurant', 'rioolstelsel', 'ruïne',
+  'pier', 'pleintje', 'politiebureau', 'poppenkast', 'postkantoor', 'pretpark', 'pyramide', 'racebaan', 'rechtbank', 'recreatiegebied', 'renbaan', 'restaurant', 'rioolstelsel', 'ruïne',
   'schaatsbaan', 'school', 'silo', 'sluis', 'speeltuin', 'sporthal', 'stad', 'stadion',
-  'stadshuis', 'standbeeld', 'sterrenwacht', 'strandtent', 'supermarkt', 'synagoge', 'tandarts­praktijk', 'tankstation',
+  'stadshuis', 'standbeeld', 'sterrenwacht', 'strandtent', 'supermarkt', 'synagoge', 'tandartspraktijk', 'tankstation',
   'tempel', 'theater', 'toren', 'torentje', 'treinstation', 'universiteit', 'vakantiepark', 'vergaderzaal',
-  'villa', 'vliegveld', 'voetgangers­zone', 'vuurtoren', 'watertoren', 'wegrestaurant', 'wetenschaps­centrum', 'wijkcentrum',
+  'villa', 'vliegveld', 'voetgangerszone', 'vuurtoren', 'watertoren', 'wegrestaurant', 'wetenschapscentrum', 'wijkcentrum',
   'windmolen', 'winkelcentrum', 'ziekenhuis', 'zwembad',
   'bakkerij', 'benzinepomp', 'bloemenwinkel', 'boekhandel', 'buurthuis', 'drogisterij',
   'garage', 'ijssalon', 'kantine', 'kiosk', 'nachtwinkel',
-  'pannenkoeken­huis', 'parkeerplaats', 'slagerij', 'snackbar', 'sportschool',
+  'pannenkoekenhuis', 'parkeerplaats', 'slagerij', 'snackbar', 'sportschool',
   'stomerij', 'viswinkel', 'warenhuis',
   
   // Acties & situaties
-  'ap­plaudisseren', 'fluisteren', 'gebaren', 'gooien', 'graven', 'huppelen',
+  'applaudisseren', 'fluisteren', 'gebaren', 'gooien', 'graven', 'huppelen',
   'ijsberen', 'klunen', 'knuffelen', 'koken', 'kruipen', 'lachen', 'lopen',
   'maaien', 'naaien', 'omhelzen', 'pesten', 'rennen', 'rollen', 'schilderen', 'slapen', 'snurken', 'springen', 'struikelen',
   'tikken', 'vallen', 'vangen', 'verstoppen', 'vliegen', 'vouwen',
@@ -264,8 +264,8 @@ const WORDS = [
   'niezen', 'sluipen',
   'brand blussen', 'eerste hulp verlenen', 'geblinddoekt', 'geheim bewaren',
   'inhalen', 'misleiden', 'in de rij staan', 'op de vlucht zijn',
-  'rijbewijs halen', 'schipbreuk­eling', 'sleutels verliezen', 'verslikken',
-  'verstoppertje', 'hinkelen', 'touwtjes­springen',
+  'rijbewijs halen', 'schipbreukeling', 'sleutels verliezen', 'verslikken',
+  'verstoppertje', 'hinkelen', 'touwtjesspringen',
   'bijna', 'stilte', 'angst', 'geluk', 'haast', 'verveeld',
   'achtervolgen', 'bazelen', 'bedanken', 'begroeten', 'beschermen', 'bewonderen',
   'boeren', 'controleren', 'debatteren', 'demonstreren', 'flirten',
@@ -301,30 +301,30 @@ const WORDS = [
   'allergie', 'amputatie', 'anarchie', 'anesthesie', 'antenne', 'archeologie', 'assertief', 'astronoom',
   'atoomkern', 'auteursrecht', 'autopsie', 'avondklok', 'baksteen', 'bankroet', 'begrafenis', 'belasting',
   'beroerte', 'beschaving', 'bewusteloos', 'bijtanken', 'stroomuitval', 'bloedarmoede', 'boeddhisme', 'brainstorm',
-  'hersens­poeling', 'brand­stichting', 'bureaucratie', 'camouflagepak', 'celsius', 'censuur', 'chantage', 'cholesterol',
-  'claustrofobie', 'cliffhanger', 'cocaïne', 'coma', 'concentratie­kamp', 'confrontatie', 'corruptie', 'crisis',
+  'hersenspoeling', 'brandstichting', 'bureaucratie', 'camouflagepak', 'celsius', 'censuur', 'chantage', 'cholesterol',
+  'claustrofobie', 'cliffhanger', 'cocaïne', 'coma', 'concentratiekamp', 'confrontatie', 'corruptie', 'crisis',
   'cyberpesten', 'dagvaarding', 'dementie', 'democratie', 'depressie', 'desinfecteren', 'dialyse', 'dictator',
   'dilemma', 'diplomatie', 'discriminatie', 'doofstom', 'doping', 'draaikolk',
   'dwangbuis', 'eclips', 'embargo', 'epidemie', 'erfenis', 'evacuatie', 'evolutie', 'executie',
   'explosief', 'faillissement', 'fascisme', 'flitspaal', 'forensisch onderzoek', 'fraude', 'frictie',
-  'fundament', 'fusie', 'geheugen­verlies', 'genocide', 'gerechtshof', 'getuige', 'gijzeling', 'gletsjer',
+  'fundament', 'fusie', 'geheugenverlies', 'genocide', 'gerechtshof', 'getuige', 'gijzeling', 'gletsjer',
   'globalisering', 'goud', 'grafiek', 'guerrilla oorlog', 'hallucinatie', 'hartstilstand', 'hersenletsel', 'herverdeling',
-  'vliegtuig­kaping', 'hiërarchie', 'holocaust', 'homeopathie', 'hoogtevrees', 'hormoon', 'hypnose', 'hypotheek',
+  'vliegtuigkaping', 'hiërarchie', 'holocaust', 'homeopathie', 'hoogtevrees', 'hormoon', 'hypnose', 'hypotheek',
   'hysterie', 'illusie', 'immigratie', 'immuunsysteem', 'imperialisme', 'implosie', 'inflatie', 'injectie',
   'inquisitie', 'intimidatie', 'invasie', 'isolatie', 'jaloezie', 'keizersnede', 'kidnapping', 'klimaatcrisis',
   'klokkenluider', 'kluizenaar', 'kwantumfysica', 'lawine', 'legitimiteit', 'lobbyist', 'lockdown',
   'manipulatie', 'martelaar', 'massamoord', 'meditatie', 'migraine', 'militaire coup', 'misogynie', 'monopolie',
   'mutatie', 'muziek', 'narcisme', 'nationalisme', 'nepnieuws', 'nihilisme', 'nucleaire reactor', 'obsessie',
-  'oligarchie', 'onder­bewustzijn', 'ondergrondse beweging', 'onteigening', 'oorlogs­misdaad', 'orkest', 'overdosis', 'overlevings­drang',
-  'pandemie', 'paradox', 'paranoia', 'parlementaire democratie', 'persoonlijkheids­stoornis', 'pesticide', 'pionier', 'plagiaat',
-  'polarisatie', 'populisme', 'posttraumatische stress', 'propaganda', 'protocolbreuk', 'psychiatrie', 'quarantaine', 'radicali­sering',
-  'radio­activiteit', 'rebellen', 'recessie', 'referendum', 'reflectie', 'rehabilitatie', 'relatief', 'repatriëring',
+  'oligarchie', 'onderbewustzijn', 'ondergrondse beweging', 'onteigening', 'oorlogsmisdaad', 'orkest', 'overdosis', 'overlevingsdrang',
+  'pandemie', 'paradox', 'paranoia', 'parlementaire democratie', 'persoonlijkheidsstoornis', 'pesticide', 'pionier', 'plagiaat',
+  'polarisatie', 'populisme', 'posttraumatische stress', 'propaganda', 'protocolbreuk', 'psychiatrie', 'quarantaine', 'radicalisering',
+  'radioactiviteit', 'rebellie', 'recessie', 'referendum', 'reflectie', 'rehabilitatie', 'relatief', 'repatriëring',
   'revolutie', 'reïncarnatie', 'sabotage', 'sancties', 'schandaal', 'schijnheilig', 'schizofrenie', 'seconde', 'slavernij',
-  'sluipschutter', 'smokkel', 'soevereini­teit', 'spionage', 'sprookje', 'staking', 'stigma', 'stralings­vergiftiging',
-  'surrogaat­moeder', 'taboe', 'terreurcel', 'tijdreizen', 'totalitarisme', 'trans­plantatie', 'tribunaal', 'tribune',
-  'tunnelvisie', 'turbulentie', 'uitbuiting', 'uitzetting', 'undercover­agent', 'utopie', 'vaccinatie', 'verjaring',
+  'sluipschutter', 'smokkel', 'soevereiniteit', 'spionage', 'sprookje', 'staking', 'stigma', 'stralingsvergiftiging',
+  'surrogaatmoeder', 'taboe', 'terreurcel', 'tijdreizen', 'totalitarisme', 'transplantatie', 'tribunaal', 'tribune',
+  'tunnelvisie', 'turbulentie', 'uitbuiting', 'uitzetting', 'undercoveragent', 'utopie', 'vaccinatie', 'verjaring',
   'vervreemding', 'vetorecht', 'burgerwacht', 'vluchteling', 'volksopstand', 'vuurwerk', 'wapenhandel', 'wedergeboorte',
-  'xenofobie', 'zelfmoord­aanslag', 'zielenknijper', 'zons­verduistering', 'zwarte markt',
+  'xenofobie', 'zelfmoordaanslag', 'zielenknijper', 'zonsverduistering', 'zwarte markt',
   
   // Spreekwoorden & uitdrukkingen
   'alle hens aan dek', 'als de kat van huis is dansen de muizen', 'al doende leert men', 'beter laat dan nooit', 'de appel valt niet ver van de boom', 'door de zure appel heen bijten', 'een gewaarschuwd man telt voor twee', 'van een koude kermis thuiskomen',
@@ -369,14 +369,89 @@ function SetupScreen({ onStart }) {
   const [count, setCount] = useState(3);
   const [names, setNames] = useState(["Dennis", "Marion", "Theo"]);
   const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
+  const [teamMode, setTeamMode] = useState(false);
+  // In team mode: teamSizes[t] = aantal spelers in team t
+  const [teamSizes, setTeamSizes] = useState([2, 2]);
+
+  const toggleTeamMode = () => {
+    setTeamMode((prev) => {
+      const next = !prev;
+      if (next) {
+        // Schakel over naar 2 teams van elk 2 spelers
+        setCount(2);
+        setTeamSizes([2, 2]);
+        setNames(Array(4).fill(""));
+      } else {
+        setCount(3);
+        setNames(["Dennis", "Marion", "Theo"]);
+      }
+      return next;
+    });
+  };
 
   const updateCount = (n) => {
-    const clamped = Math.min(20, Math.max(2, n));
+    const clamped = Math.min(teamMode ? 10 : 20, Math.max(2, n));
     setCount(clamped);
+    if (teamMode) {
+      setTeamSizes((prev) => {
+        const next = [...prev];
+        while (next.length < clamped) next.push(2);
+        return next.slice(0, clamped);
+      });
+      setNames((prev) => {
+        // Herbereken totaal op basis van nieuwe teamSizes
+        const newSizes = teamSizes.slice(0, clamped);
+        while (newSizes.length < clamped) newSizes.push(2);
+        const total = newSizes.reduce((a, b) => a + b, 0);
+        const next = [...prev];
+        while (next.length < total) next.push("");
+        // Trim achteraan op basis van nieuwe teamSizes
+        let result = [];
+        let offset = 0;
+        for (let t = 0; t < clamped; t++) {
+          result.push(...next.slice(offset, offset + newSizes[t]));
+          offset += (prev.length > offset ? newSizes[t] : newSizes[t]);
+        }
+        return result.slice(0, total);
+      });
+    } else {
+      setNames((prev) => {
+        const next = [...prev];
+        while (next.length < clamped) next.push("");
+        return next.slice(0, clamped);
+      });
+    }
+  };
+
+  // Voeg een speler toe aan team t
+  const addPlayerToTeam = (t) => {
+    // Gebruik huidige teamSizes direct voor offset-berekening
+    const offset = teamSizes.slice(0, t + 1).reduce((a, b) => a + b, 0);
+    setTeamSizes((prev) => {
+      const next = [...prev];
+      next[t] = next[t] + 1;
+      return next;
+    });
     setNames((prev) => {
       const next = [...prev];
-      while (next.length < clamped) next.push("");
-      return next.slice(0, clamped);
+      next.splice(offset, 0, "");
+      return next;
+    });
+  };
+
+  // Verwijder laatste speler uit team t (minimaal 2)
+  const removePlayerFromTeam = (t) => {
+    if (teamSizes[t] <= 2) return;
+    const offset = teamSizes.slice(0, t + 1).reduce((a, b) => a + b, 0);
+    setTeamSizes((prev) => {
+      const next = [...prev];
+      next[t] = next[t] - 1;
+      return next;
+    });
+    setNames((prev) => {
+      const next = [...prev];
+      next.splice(offset - 1, 1);
+      return next;
     });
   };
 
@@ -389,17 +464,58 @@ function SetupScreen({ onStart }) {
   };
 
   const randomizeNames = () => {
-    setNames((prev) => {
-      if (prev.length <= 1) return prev;
-      let next;
-      do {
-        next = shuffle([...prev]);
-      } while (next.every((n, i) => n === prev[i]));
-      return next;
-    });
+    if (teamMode) {
+      setNames((prev) => {
+        const next = [];
+        let offset = 0;
+        for (let t = 0; t < count; t++) {
+          const size = teamSizes[t];
+          const slice = prev.slice(offset, offset + size);
+          let shuffled;
+          do { shuffled = shuffle([...slice]); }
+          while (slice.length > 1 && shuffled.every((n, i) => n === slice[i]));
+          next.push(...shuffled);
+          offset += size;
+        }
+        return next;
+      });
+    } else {
+      setNames((prev) => {
+        if (prev.length <= 1) return prev;
+        let next;
+        do { next = shuffle([...prev]); }
+        while (next.every((n, i) => n === prev[i]));
+        return next;
+      });
+    }
   };
 
   const canStart = names.every((n) => n.trim().length > 0);
+
+  // Bouw teams array: [{ name: "Team 1", players: [...] }, ...]
+  const buildTeams = () => {
+    if (!teamMode) return null;
+    const trimmed = names.map((n) => n.trim());
+    const teams = [];
+    let offset = 0;
+    for (let t = 0; t < count; t++) {
+      teams.push({
+        name: `Team ${t + 1}`,
+        players: trimmed.slice(offset, offset + teamSizes[t]),
+      });
+      offset += teamSizes[t];
+    }
+    return teams;
+  };
+
+  const handleStart = () => {
+    if (!canStart) return;
+    const trimmed = names.map((n) => n.trim());
+    onStart(trimmed, roundTime, buildTeams());
+  };
+
+  // Bereken naam-offset per team
+  const getTeamOffset = (t) => teamSizes.slice(0, t).reduce((a, b) => a + b, 0);
 
   return (
     <div className="screen setup-screen">
@@ -411,19 +527,20 @@ function SetupScreen({ onStart }) {
         </div>
 
         <div className="setup-section">
-          <label className="setup-label">Aantal spelers</label>
+          <div className="names-label-row">
+            <label className="setup-label">{teamMode ? "Aantal teams" : "Aantal spelers"}</label>
+            <button
+              className={`randomize-btn${teamMode ? " randomize-btn-active" : ""}`}
+              onClick={toggleTeamMode}
+              title="Schakel team-modus in of uit"
+            >
+              {teamMode ? "👥 Team modus aan" : "👥 Team modus"}
+            </button>
+          </div>
           <div className="time-control">
-            <button
-              className="time-btn"
-              onClick={() => updateCount(count - 1)}
-              disabled={count <= 2}
-            >−</button>
+            <button className="time-btn" onClick={() => updateCount(count - 1)} disabled={count <= 2}>−</button>
             <span className="time-display">{count}</span>
-            <button
-              className="time-btn"
-              onClick={() => updateCount(count + 1)}
-              disabled={count >= 20}
-            >+</button>
+            <button className="time-btn" onClick={() => updateCount(count + 1)} disabled={teamMode ? count >= 10 : count >= 20}>+</button>
           </div>
         </div>
 
@@ -434,20 +551,57 @@ function SetupScreen({ onStart }) {
               Andere volgorde
             </button>
           </div>
-          <div className="names-grid">
-            {names.map((name, i) => (
-              <div key={i} className="name-input-wrap">
-                <span className="name-num">{i + 1}</span>
-                <input
-                  className="name-input"
-                  placeholder={`Speler ${i + 1}`}
-                  value={name}
-                  onChange={(e) => updateName(i, e.target.value)}
-                  maxLength={16}
-                />
-              </div>
-            ))}
-          </div>
+          {teamMode ? (
+            <div className="teams-grid">
+              {Array.from({ length: count }, (_, t) => {
+                const offset = getTeamOffset(t);
+                const size = teamSizes[t];
+                return (
+                  <div key={t} className="team-block">
+                    <div className="team-block-header">
+                      <span>Team {t + 1}</span>
+                      <div className="team-size-controls">
+                        {size > 2 && (
+                          <button className="team-size-btn team-size-remove" onClick={() => removePlayerFromTeam(t)} title="Speler verwijderen">−1</button>
+                        )}
+                        <button className="team-size-btn team-size-add" onClick={() => addPlayerToTeam(t)} title="Speler toevoegen">+1</button>
+                      </div>
+                    </div>
+                    {Array.from({ length: size }, (_, p) => {
+                      const idx = offset + p;
+                      return (
+                        <div key={idx} className="name-input-wrap">
+                          <span className="name-num">{p + 1}</span>
+                          <input
+                            className="name-input"
+                            placeholder={`Speler ${p + 1}`}
+                            value={names[idx] ?? ""}
+                            onChange={(e) => updateName(idx, e.target.value)}
+                            maxLength={16}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="names-grid">
+              {names.map((name, i) => (
+                <div key={i} className="name-input-wrap">
+                  <span className="name-num">{i + 1}</span>
+                  <input
+                    className="name-input"
+                    placeholder={`Speler ${i + 1}`}
+                    value={name}
+                    onChange={(e) => updateName(i, e.target.value)}
+                    maxLength={16}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="setup-section">
@@ -468,7 +622,7 @@ function SetupScreen({ onStart }) {
 
         <button
           className={`start-btn ${canStart ? "ready" : ""}`}
-          onClick={() => canStart && onStart(names.map((n) => n.trim()), roundTime)}
+          onClick={handleStart}
           disabled={!canStart}
         >
           Spel starten →
@@ -478,13 +632,14 @@ function SetupScreen({ onStart }) {
   );
 }
 
-function HandoffScreen({ player, onReady }) {
+function HandoffScreen({ player, teamName, onReady }) {
   return (
     <div className="screen handoff-screen">
       <div className="handoff-card">
         <div className="handoff-icon">📱</div>
         <p className="handoff-sub">Geef de telefoon aan</p>
         <h2 className="handoff-name">{player}</h2>
+        {teamName && <p className="handoff-team">{teamName}</p>}
         <p className="handoff-tip">De andere spelers kijken weg!</p>
         <button className="handoff-btn" onClick={onReady}>
           Ik ben klaar — start ronde!
@@ -580,7 +735,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
       }
     }, 50);
     return () => clearInterval(timerRef.current);
-  }, []); // eslint-disable-line
+  }, []); // roundTime verandert nooit na mount — bewust leeg
 
   const triggerFlash = (type) => {
     setFlash(type);
@@ -691,7 +846,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
           <>
             <div className="word-anchor">
               <div className="word-counter">woord {wordIndex + 1}</div>
-              <div className="current-word">{words[wordIndex]}</div>
+              <div className="current-word">{words[wordIndex] ?? "— geen woorden meer —"}</div>
               <div className="times-up-banner" style={{visibility: timesUp ? 'visible' : 'hidden'}}>⏰ Tijd is om — maak dit woord nog af!</div>
             </div>
           </>
@@ -714,25 +869,45 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   );
 }
 
-function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRestart, onContinue }) {
-  const sorted = [...players]
-    .map((p, i) => ({ name: p, score: scores[i] }))
-    .sort((a, b) => b.score - a.score);
-
+function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRestart, onContinue, teams, teamScores }) {
   const isLast = currentRound >= totalRounds;
+
+  // Team mode: sorteer teams op score
+  const sortedTeams = teams
+    ? [...teams]
+        .map((t, i) => ({ ...t, score: teamScores[i] }))
+        .sort((a, b) => b.score - a.score)
+    : null;
+
+  // Individueel: sorteer spelers op score
+  const sortedPlayers = !teams
+    ? [...players].map((p, i) => ({ name: p, score: scores[i] })).sort((a, b) => b.score - a.score)
+    : null;
 
   return (
     <div className="screen score-screen">
       <div className="score-card">
         <h2 className="score-title">{isLast ? "🏆 Eindstand" : `Stand na ronde ${currentRound}`}</h2>
         <div className="scores-list">
-          {sorted.map((p, i) => (
-            <div key={p.name} className={`score-row rank-${i + 1}`}>
-              <span className="rank-badge">{i === 0 ? "👑" : i + 1}</span>
-              <span className="score-name">{p.name}</span>
-              <span className="score-pts">{p.score} pt</span>
-            </div>
-          ))}
+          {sortedTeams
+            ? sortedTeams.map((team, i) => (
+                <div key={team.name} className={`score-row rank-${i + 1}`}>
+                  <span className="rank-badge">{i === 0 ? "👑" : i + 1}</span>
+                  <div className="score-name-block">
+                    <span className="score-name">{team.name}</span>
+                    <span className="score-members">{team.players.join(", ")}</span>
+                  </div>
+                  <span className="score-pts">{team.score} pt</span>
+                </div>
+              ))
+            : sortedPlayers.map((p, i) => (
+                <div key={p.name} className={`score-row rank-${i + 1}`}>
+                  <span className="rank-badge">{i === 0 ? "👑" : i + 1}</span>
+                  <span className="score-name">{p.name}</span>
+                  <span className="score-pts">{p.score} pt</span>
+                </div>
+              ))
+          }
         </div>
         {isLast ? (
           <div className="final-btns">
@@ -745,7 +920,7 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
           </div>
         ) : (
           <button className="score-btn next-btn" onClick={onNext}>
-            Volgende speler →
+            {teams ? "Volgende speler →" : "Volgende speler →"}
           </button>
         )}
       </div>
@@ -765,10 +940,14 @@ export default function App() {
   const [wordDeck, setWordDeck] = useState([]);
   const [usedWords, setUsedWords] = useState(new Set());
   const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
+  // Team mode: teams = [{ name, players }] or null for individual mode
+  const [teams, setTeams] = useState(null);
+  // teamScores: array of scores parallel to teams array
+  const [teamScores, setTeamScores] = useState([]);
 
   const totalRounds = players.length; // each player plays once = 1 full round
 
-  const startGame = (names, time) => {
+  const startGame = (names, time, teamsData) => {
     const empty = Array(names.length).fill(0);
     setPlayers(names);
     setScores(empty);
@@ -778,16 +957,39 @@ export default function App() {
     setUsedWords(new Set());
     setRoundTime(time);
     setWordDeck(shuffle(WORDS));
+    setTeams(teamsData);
+    setTeamScores(teamsData ? Array(teamsData.length).fill(0) : []);
     setPhase("handoff");
   };
 
   const onRoundReady = () => setPhase("round");
+
+  // Helper: given a player index, find which team they belong to
+  const getTeamIdxForPlayer = (playerIdx) => {
+    if (!teams) return null;
+    let offset = 0;
+    for (let t = 0; t < teams.length; t++) {
+      if (playerIdx < offset + teams[t].players.length) return t;
+      offset += teams[t].players.length;
+    }
+    return null;
+  };
 
   const onRoundEnd = ({ correct, wordsUsed }) => {
     const newScores = [...scores];
     newScores[currentPlayerIdx] += correct;
     setScores(newScores);
     setDisplayScores(newScores);
+
+    if (teams) {
+      const teamIdx = getTeamIdxForPlayer(currentPlayerIdx);
+      if (teamIdx !== null) {
+        const newTeamScores = [...teamScores];
+        newTeamScores[teamIdx] += correct;
+        setTeamScores(newTeamScores);
+      }
+    }
+
     // Mark the words shown this round as used
     const newUsed = new Set(usedWords);
     wordDeck.slice(0, wordsUsed).forEach(w => newUsed.add(w));
@@ -817,6 +1019,8 @@ export default function App() {
     setPhase("setup");
     setPlayers([]);
     setScores([]);
+    setTeams(null);
+    setTeamScores([]);
   };
 
   const currentWords = wordDeck;
@@ -991,6 +1195,7 @@ export default function App() {
         @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
         .handoff-sub { font-size: 12px; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; margin-bottom: 10px; }
         .handoff-name { font-family: 'Righteous', cursive; font-size: clamp(28px, 8vw, 42px); color: #a78bfa; margin-bottom: 16px; word-break: break-word; }
+        .handoff-team { font-size: 13px; color: #34d399; font-weight: 800; letter-spacing: 0.06em; margin-top: -10px; margin-bottom: 16px; }
         .handoff-tip { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
         .handoff-btn {
           padding: 16px 32px;
@@ -1158,7 +1363,56 @@ export default function App() {
           .correct-btn:hover { background: rgba(74,222,128,0.35); }
         }
 
-        /* ── Scores ── */
+        .randomize-btn-active {
+          background: rgba(52,211,153,0.2);
+          color: #34d399;
+          border-color: rgba(52,211,153,0.45);
+        }
+        .randomize-btn-active:hover { background: rgba(52,211,153,0.32) !important; }
+
+        .teams-grid { display: flex; flex-direction: column; gap: 14px; }
+        .team-block {
+          background: rgba(255,255,255,0.04);
+          border: 1.5px solid rgba(255,255,255,0.1);
+          border-radius: 16px;
+          padding: 12px 14px;
+        }
+        .team-block-header {
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #a78bfa;
+          margin-bottom: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .team-size-controls { display: flex; gap: 6px; }
+        .team-size-btn {
+          padding: 3px 10px;
+          border-radius: 8px;
+          border: 1.5px solid rgba(167,139,250,0.35);
+          background: rgba(167,139,250,0.12);
+          color: #a78bfa;
+          font-size: 12px;
+          font-weight: 800;
+          font-family: inherit;
+          cursor: pointer;
+          transition: all 0.15s;
+          line-height: 1.4;
+        }
+        .team-size-btn:hover { background: rgba(167,139,250,0.25); }
+        .team-size-remove { border-color: rgba(251,191,36,0.35); background: rgba(251,191,36,0.1); color: #fbbf24; }
+        .team-size-remove:hover { background: rgba(251,191,36,0.22); }
+
+        .team-block .name-input-wrap { margin-bottom: 6px; }
+        .team-block .name-input-wrap:last-child { margin-bottom: 0; }
+
+        .score-name-block { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
+        .score-members { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        
         .score-card {
           background: rgba(255,255,255,0.06);
           border: 1px solid rgba(255,255,255,0.12);
@@ -1229,6 +1483,7 @@ export default function App() {
       {phase === "handoff" && (
         <HandoffScreen
           player={players[currentPlayerIdx]}
+          teamName={teams ? teams[getTeamIdxForPlayer(currentPlayerIdx)]?.name : null}
           onReady={onRoundReady}
         />
       )}
@@ -1252,6 +1507,8 @@ export default function App() {
           onNext={() => onNext(usedWords)}
           onRestart={onRestart}
           onContinue={onContinue}
+          teams={teams}
+          teamScores={teamScores}
         />
       )}
     </>
