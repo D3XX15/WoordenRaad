@@ -1411,7 +1411,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
           <>
             <div className="word-anchor">
               <div className="word-counter">woord {wordIndex + 1}</div>
-              <div className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ?? "— geen woorden meer —"}</div>
+              <div key={wordIndex} className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ?? "— geen woorden meer —"}</div>
               <div className={`times-up-banner${isCurrentBonus && !timesUp ? ' bonus-banner' : ''}`} style={{visibility: (timesUp || isCurrentBonus) ? 'visible' : 'hidden'}}>
                 {timesUp ? '⏰ Tijd is om — maak dit woord nog af!' : `⭐ BONUSGEZEGDE — 3 punten!`}
               </div>
@@ -2105,7 +2105,7 @@ export default function App() {
 
         html, body {
           font-family: 'Nunito', sans-serif;
-          background: #0f0a1e;
+          background: #060d1a;
           min-height: 100vh;
           min-height: 100dvh;
           color: white;
@@ -2128,15 +2128,24 @@ export default function App() {
           width: 100%;
         }
 
-        /* ── Background noise/grain ── */
+        /* ── Background ── */
         .screen::before {
           content: '';
           position: fixed; inset: 0;
-          background:
-            radial-gradient(ellipse 80% 60% at 20% 10%, #3b1a6b 0%, transparent 60%),
-            radial-gradient(ellipse 60% 70% at 80% 80%, #1a3a6b 0%, transparent 60%),
-            radial-gradient(ellipse 50% 50% at 50% 50%, #0f0a1e 0%, #0f0a1e 100%);
+          background: #060d1a;
           z-index: 0;
+        }
+        .screen::after {
+          content: '';
+          position: fixed; inset: 0;
+          z-index: 0;
+          pointer-events: none;
+          background-image:
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.4' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)'/%3E%3C/svg%3E");
+          background-size: 180px 180px, 340px 340px;
+          opacity: 0.07;
+          mix-blend-mode: overlay;
         }
 
         .screen > * { position: relative; z-index: 1; }
@@ -2183,7 +2192,7 @@ export default function App() {
           transition: all 0.18s;
           white-space: nowrap;
         }
-        .randomize-btn:hover { background: rgba(167,139,250,0.28); transform: scale(1.04); }
+        .randomize-btn:hover { background: rgba(167,139,250,0.28); }
         .name-input-wrap { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 12px; transition: border-color 0.2s; }
         .name-input-wrap:focus-within { border-color: #a78bfa; }
         .name-num { font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.3); min-width: 14px; }
@@ -2231,7 +2240,7 @@ export default function App() {
           background: linear-gradient(135deg, #a78bfa, #60a5fa);
           color: white;
         }
-        .start-btn.ready:hover { transform: translateY(-2px); }
+        .start-btn.ready:hover { filter: brightness(1.1); }
 
         /* ── Handoff ── */
         .handoff-screen { background: none; }
@@ -2262,7 +2271,7 @@ export default function App() {
           cursor: pointer;
           transition: all 0.2s;
         }
-        .handoff-btn:hover { transform: translateY(-2px); }
+        .handoff-btn:hover { filter: brightness(1.1); }
 
         /* ── Round ── */
         .round-screen {
@@ -2525,7 +2534,9 @@ export default function App() {
           border: 1.5px solid rgba(255,255,255,0.07);
           animation: slideIn 0.4s ease both;
         }
-        .score-row.rank-1 { background: rgba(167,139,250,0.15); border-color: rgba(167,139,250,0.4); }
+        .score-row.rank-1 { background: rgba(167,139,250,0.18); border-color: rgba(167,139,250,0.5); }
+        .score-row.rank-2 { background: rgba(148,163,184,0.12); border-color: rgba(148,163,184,0.3); }
+        .score-row.rank-3 { background: rgba(180,120,60,0.12); border-color: rgba(180,120,60,0.3); }
         @keyframes slideIn { from{transform:translateX(-20px);opacity:0} to{transform:translateX(0);opacity:1} }
         .score-row:nth-child(1){animation-delay:0.05s}
         .score-row:nth-child(2){animation-delay:0.1s}
@@ -2534,9 +2545,12 @@ export default function App() {
         .score-row:nth-child(5){animation-delay:0.25s}
         .score-row:nth-child(6){animation-delay:0.3s}
 
-        .rank-badge { font-size: 18px; min-width: 26px; text-align: center; flex-shrink: 0; }
+        .rank-badge { font-size: 20px; min-width: 28px; text-align: center; flex-shrink: 0; }
         .score-name { flex: 1; font-size: clamp(14px, 4vw, 18px); font-weight: 700; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .score-pts { font-family: 'Righteous', cursive; font-size: clamp(16px, 4vw, 20px); color: #a78bfa; flex-shrink: 0; }
+        .score-row.rank-1 .score-pts { color: #c4b5fd; }
+        .score-row.rank-2 .score-pts { color: #cbd5e1; }
+        .score-row.rank-3 .score-pts { color: #d49b60; }
 
         .score-btn {
           width: 100%;
@@ -2546,39 +2560,40 @@ export default function App() {
           font-family: 'Righteous', cursive;
           font-size: 20px;
           cursor: pointer;
-          transition: all 0.2s;
+          transition: filter 0.18s;
         }
         .next-btn { background: linear-gradient(135deg, #a78bfa, #60a5fa); color: white; }
-        .next-btn:hover { }
+        .next-btn:hover { filter: brightness(1.1); }
         .restart-btn { background: rgba(255,255,255,0.1); color: white; border: 1.5px solid rgba(255,255,255,0.2); }
         .restart-btn:hover { background: rgba(255,255,255,0.15); }
         .continue-btn { background: linear-gradient(135deg, #34d399, #60a5fa); color: white; margin-bottom: 10px; }
-        .continue-btn:hover { }
+        .continue-btn:hover { filter: brightness(1.1); }
         .stats-btn { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1a1a1a; margin-bottom: 10px; }
-        .stats-btn:hover { }
+        .stats-btn:hover { filter: brightness(1.08); }
         .final-btns { display: flex; flex-direction: column; }
 
         /* ── Category picker ── */
         .category-grid {
-          display: flex; flex-wrap: wrap; gap: 6px;
+          display: flex; flex-wrap: wrap; gap: 8px;
         }
         .category-btn {
-          padding: 6px 12px; border-radius: 20px;
+          padding: 8px 14px; border-radius: 20px;
           border: 1.5px solid rgba(255,255,255,0.15);
           background: rgba(255,255,255,0.06);
-          color: rgba(255,255,255,0.7);
-          font-size: 12px; font-weight: 700; font-family: inherit;
-          cursor: pointer; transition: all 0.15s;
+          color: rgba(255,255,255,0.75);
+          font-size: 13px; font-weight: 700; font-family: inherit;
+          cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s;
           user-select: none;
         }
-        .category-btn:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.3); }
+        .category-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.35); color: white; }
         .category-btn-active {
-          background: rgba(167,139,250,0.28);
-          border-color: rgba(167,139,250,0.75);
+          background: rgba(167,139,250,0.22);
+          border-color: rgba(167,139,250,0.65);
           color: #c4b5fd;
         }
         .category-btn-active:hover {
-          background: rgba(167,139,250,0.38);
+          background: rgba(167,139,250,0.32);
+          border-color: rgba(167,139,250,0.85);
         }
 
         /* ── Bonus word ── */
