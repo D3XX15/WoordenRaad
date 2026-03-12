@@ -974,16 +974,6 @@ function SetupScreen({ onStart }) {
   const updateName = (i, v) =>
     setNames((prev) => prev.map((n, j) => j === i ? v : n));
 
-  const randomizeNames = () => {
-    setNames((prev) => {
-      if (prev.length <= 1) return prev;
-      let next;
-      do { next = shuffle([...prev]); }
-      while (prev.length > 1 && next.every((n, i) => n === prev[i]));
-      return next;
-    });
-  };
-
   const canStart = names.every((n) => n.trim().length > 0) && selectedCategories.size > 0;
 
   // Bouw teams array: [{ name: "Team 1", players: [...] }, ...]
@@ -1036,32 +1026,20 @@ function SetupScreen({ onStart }) {
           <p className="logo-sub">Het raad- en uitbeeldspel</p>
         </div>
 
-        <div className="setup-section">
-          <div className="names-label-row">
-            <label className="setup-label">{teamMode ? "Aantal teams" : "Aantal spelers"}</label>
-            <button
-              className={`randomize-btn${teamMode ? " randomize-btn-active" : ""}`}
-              onClick={toggleTeamMode}
-              title="Schakel team-modus in of uit"
-            >
-              {teamMode ? "👥 Teams" : "👤 Singles"}
-            </button>
-          </div>
-          <div className="time-control">
-            <button className="time-btn" onClick={() => updateCount(count - 1)} disabled={count <= 2}>−</button>
-            <span className="time-display">{count}</span>
-            <button className="time-btn" onClick={() => updateCount(count + 1)} disabled={teamMode ? count >= 10 : count >= 20}>+</button>
-          </div>
-        </div>
+        <button
+          className={`start-btn mode-toggle-btn${teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
+          onClick={toggleTeamMode}
+        >
+          {teamMode ? "👥 Teams" : "👤 Singles"}
+        </button>
 
         <div className="setup-section">
           <div className="names-label-row">
-            <label className="setup-label">Namen van spelers</label>
-            {!teamMode && (
-              <button className="randomize-btn" onClick={randomizeNames} title="Volgorde door elkaar gooien">
-                Andere volgorde
-              </button>
-            )}
+            <label className="setup-label" style={{marginBottom:0}}>{teamMode ? "Teams" : "Spelers"}</label>
+            <div style={{display:'flex', alignItems:'center', gap:'8px'}}>
+              <button className="team-size-btn team-size-remove" onClick={() => updateCount(count - 1)} disabled={count <= 2}>−1</button>
+              <button className="team-size-btn team-size-add" onClick={() => updateCount(count + 1)} disabled={teamMode ? count >= 10 : count >= 20}>+1</button>
+            </div>
           </div>
           {teamMode ? (
             <div className="teams-grid">
@@ -1505,30 +1483,52 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
             ? (() => {
                 const topAvg = sortedTeams[0]?.avgScore;
                 const medals = ["🥇","🥈","🥉"];
-                return sortedTeams.map((team, i) => (
-                  <div key={team.name} className={`score-row rank-${i + 1} ${isLast ? "rank-final" : "rank-interim"}`}>
-                    <span className="rank-badge">{isLast ? (medals[i] ?? i + 1) : (team.avgScore === topAvg ? "👑" : i + 1)}</span>
-                    <div className="score-name-block">
-                      <span className="score-name">{team.name}</span>
-                      <span className="score-members">{team.players.join(", ")}</span>
+                // Gelijkspel alleen bij de eerste plek
+                const firstPlaceTied = isLast && sortedTeams.filter(t => t.avgScore === topAvg).length > 1;
+                const interimFirstPlaceTied = !isLast && sortedTeams.filter(t => t.avgScore === topAvg).length > 1;
+                return sortedTeams.map((team, i) => {
+                  const isTiedFinal = firstPlaceTied && team.avgScore === topAvg;
+                  const isTiedInterim = interimFirstPlaceTied && team.avgScore === topAvg;
+                  const badge = isLast
+                    ? (isTiedFinal ? "👑" : (medals[i] ?? i + 1))
+                    : (team.avgScore === topAvg ? "👑" : i + 1);
+                  const rowClass = `score-row rank-${i + 1} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : (isTiedInterim ? "rank-interim-tied" : "rank-interim")}`;
+                  return (
+                    <div key={team.name} className={rowClass}>
+                      <span className="rank-badge">{badge}</span>
+                      <div className="score-name-block">
+                        <span className="score-name">{team.name}</span>
+                        <span className="score-members">{team.players.join(", ")}</span>
+                      </div>
+                      <div style={{textAlign:'right'}}>
+                        <span className="score-pts">{team.avgScore} pt</span>
+                        <div style={{fontSize:'11px', opacity:0.5, marginTop:'2px'}}>gem. per speler · totaal {team.totalScore}</div>
+                      </div>
                     </div>
-                    <div style={{textAlign:'right'}}>
-                      <span className="score-pts">{team.avgScore} pt</span>
-                      <div style={{fontSize:'11px', opacity:0.5, marginTop:'2px'}}>gem. per speler · totaal {team.totalScore}</div>
-                    </div>
-                  </div>
-                ));
+                  );
+                });
               })()
             : (() => {
                 const topScore = sortedPlayers[0]?.score;
                 const medals = ["🥇","🥈","🥉"];
-                return sortedPlayers.map((p, i) => (
-                  <div key={p.name} className={`score-row rank-${i + 1} ${isLast ? "rank-final" : "rank-interim"}`}>
-                    <span className="rank-badge">{isLast ? (medals[i] ?? i + 1) : (p.score === topScore ? "👑" : i + 1)}</span>
-                    <span className="score-name">{p.name}</span>
-                    <span className="score-pts">{p.score} pt</span>
-                  </div>
-                ));
+                // Gelijkspel alleen bij de eerste plek
+                const firstPlaceTied = isLast && sortedPlayers.filter(p => p.score === topScore).length > 1;
+                const interimFirstPlaceTied = !isLast && sortedPlayers.filter(p => p.score === topScore).length > 1;
+                return sortedPlayers.map((p, i) => {
+                  const isTiedFinal = firstPlaceTied && p.score === topScore;
+                  const isTiedInterim = interimFirstPlaceTied && p.score === topScore;
+                  const badge = isLast
+                    ? (isTiedFinal ? "👑" : (medals[i] ?? i + 1))
+                    : (p.score === topScore ? "👑" : i + 1);
+                  const rowClass = `score-row rank-${i + 1} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : (isTiedInterim ? "rank-interim-tied" : "rank-interim")}`;
+                  return (
+                    <div key={p.name} className={rowClass}>
+                      <span className="rank-badge">{badge}</span>
+                      <span className="score-name">{p.name}</span>
+                      <span className="score-pts">{p.score} pt</span>
+                    </div>
+                  );
+                });
               })()
           }
         </div>
@@ -1756,25 +1756,8 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
       <div className="screen score-screen">
         <div className="score-card">
           <h2 className="score-title">⚡ Tie-breaker resultaten</h2>
-          <div style={{fontSize:'13px', color:'rgba(255,255,255,0.45)', marginBottom:'16px', textAlign:'center'}}>
-            Categorie: {categoryLabel}
-          </div>
-          <div className="scores-list">
-            {results.map((r, i) => {
-              const isWinner = r.time === winnerTime;
-              return (
-                <div key={r.name} className={`score-row rank-${i + 1}`}>
-                  <span className="rank-badge">{isWinner ? "🏆" : i + 1}</span>
-                  <span className="score-name">{r.name}</span>
-                  <span className="score-pts" style={{fontSize:'17px'}}>
-                    {r.time.toFixed(1)}s
-                  </span>
-                </div>
-              );
-            })}
-          </div>
           <div style={{
-            margin:'20px 0 8px',
+            margin:'0 0 16px',
             padding:'16px',
             borderRadius:'16px',
             background: hasJointWinner ? 'rgba(251,191,36,0.08)' : 'rgba(74,222,128,0.08)',
@@ -1790,6 +1773,21 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
                 🏆 {results[0].name} wint de tie-breaker!
               </span>
             )}
+          </div>
+          <div className="scores-list">
+            {results.map((r, i) => {
+              const isWinner = r.time === winnerTime;
+              const tieBadges = ["🏆", "🥈", "🥉"];
+              return (
+                <div key={r.name} className={`score-row rank-${i + 1} rank-final`}>
+                  <span className="rank-badge">{isWinner ? "🏆" : (tieBadges[i] ?? i + 1)}</span>
+                  <span className="score-name">{r.name}</span>
+                  <span className="score-pts" style={{fontSize:'17px'}}>
+                    {r.time.toFixed(1)}s
+                  </span>
+                </div>
+              );
+            })}
           </div>
           <div className="final-btns">
             <button className="score-btn continue-btn" onClick={onContinue}>Nog een ronde! →</button>
@@ -2239,6 +2237,22 @@ export default function App() {
           border: 3px solid #a78bfa;
         }
         .start-btn.ready:hover { background: rgba(167,139,250,0.15); }
+        .mode-toggle-btn {
+          margin-bottom: 20px;
+          border: 3px solid rgba(255,255,255,0.2);
+        }
+        .mode-toggle-singles {
+          background: rgba(255,255,255,0.06);
+          color: rgba(255,255,255,0.7);
+          border-color: rgba(255,255,255,0.2);
+        }
+        .mode-toggle-singles:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.35); }
+        .mode-toggle-teams {
+          background: rgba(52,211,153,0.08);
+          color: #34d399;
+          border-color: #34d399;
+        }
+        .mode-toggle-teams:hover { background: rgba(52,211,153,0.15); }
 
         /* ── Handoff ── */
         .handoff-screen { background: none; }
@@ -2540,11 +2554,17 @@ export default function App() {
         .score-row.rank-1.rank-interim { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
         .score-row.rank-2.rank-interim { background: rgba(255,255,255,0.05); border: 3px solid rgba(255,255,255,0.14); }
         .score-row.rank-3.rank-interim { background: rgba(255,255,255,0.05); border: 3px solid rgba(255,255,255,0.14); }
+        /* Tussenstand gelijkspel: alle gedeelde eersten groen */
+        .score-row.rank-interim-tied { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
+        .score-row.rank-interim-tied .score-pts { color: #4ade80; }
 
         /* Eindstand: goud / zilver / brons */
         .score-row.rank-1.rank-final { background: rgba(251,191,36,0.08); border: 3px solid #fbbf24; }
         .score-row.rank-2.rank-final { background: rgba(148,163,184,0.08); border: 3px solid #94a3b8; }
         .score-row.rank-3.rank-final { background: rgba(205,127,50,0.08); border: 3px solid #cd7f32; }
+        .score-row.rank-tied { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
+        .score-row.rank-tied .score-pts { color: #4ade80; }
+        .score-row.rank-tied .score-name { color: #4ade80; }
         @keyframes slideIn { from{transform:translateX(-20px);opacity:0} to{transform:translateX(0);opacity:1} }
         .score-row:nth-child(1){animation-delay:0.05s}
         .score-row:nth-child(2){animation-delay:0.1s}
