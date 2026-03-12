@@ -1103,7 +1103,7 @@ function SetupScreen({ onStart }) {
               onClick={toggleTeamMode}
               title="Schakel team-modus in of uit"
             >
-              {teamMode ? "👥 Team modus aan" : "👥 Team modus"}
+              {teamMode ? "👥 Teams" : "👤 Singles"}
             </button>
           </div>
           <div className="time-control">
@@ -1476,11 +1476,15 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
 function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRestart, onContinue, onShowStats, teams, teamScores }) {
   const isLast = currentRound >= totalRounds;
 
-  // Team mode: sorteer teams op score
+  // Team mode: sorteer teams op gemiddelde score per speler
   const sortedTeams = teams
     ? [...teams]
-        .map((t, i) => ({ ...t, score: teamScores[i] }))
-        .sort((a, b) => b.score - a.score)
+        .map((t, i) => ({
+          ...t,
+          totalScore: teamScores[i],
+          avgScore: Math.round((teamScores[i] / t.players.length) * 10) / 10,
+        }))
+        .sort((a, b) => b.avgScore - a.avgScore)
     : null;
 
   // Individueel: sorteer spelers op score
@@ -1501,7 +1505,10 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
                     <span className="score-name">{team.name}</span>
                     <span className="score-members">{team.players.join(", ")}</span>
                   </div>
-                  <span className="score-pts">{team.score} pt</span>
+                  <div style={{textAlign:'right'}}>
+                    <span className="score-pts">{team.avgScore} pt</span>
+                    <div style={{fontSize:'11px', opacity:0.5, marginTop:'2px'}}>gem. per speler · totaal {team.totalScore}</div>
+                  </div>
                 </div>
               ))
             : sortedPlayers.map((p, i) => (
