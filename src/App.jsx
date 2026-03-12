@@ -1830,19 +1830,13 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
   const secs = Math.floor(elapsed);
   const tenths = Math.floor((elapsed % 1) * 10);
 
-  // Fill circle: 0→full over 60s. After 60s a red overlay continues filling over the yellow base.
+  // Fill circle: 0→full over 30s (yellow), then red overlay grows over the next 30s
   const circumference = 2 * Math.PI * 44;
   const over30 = elapsed > 30;
   const yellowFill = over30 ? 1 : elapsed / 30;
   const redFill = over30 ? Math.min((elapsed - 30) / 30, 1) : 0;
-  // dashoffset: full circle = circumference (empty), 0 = full
   const yellowOffset = circumference * (1 - yellowFill);
   const redOffset = circumference * (1 - redFill);
-  // Interpolate stroke from yellow (#fbbf24) → dark red (#b91c1c) as redFill grows
-  const ri = Math.round(251 + (185 - 251) * redFill);
-  const gi = Math.round(191 + (28  - 191) * redFill);
-  const bi = Math.round(36  + (28  - 36)  * redFill);
-  const redStroke = `rgb(${ri},${gi},${bi})`;
 
   return (
     <div className="screen round-screen">
@@ -1860,9 +1854,9 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
               transform="rotate(-90 50 50)"
               style={{transition:'stroke-dashoffset 0.05s linear'}}
             />
-            {/* Red overlay — grows from 0 to full over the next 30s */}
+            {/* Red overlay — grows from 0 to full over the next 30s, direct red (no interpolation) */}
             {over30 && (
-              <circle cx="50" cy="50" r="44" fill="none" stroke={redStroke} strokeWidth="8"
+              <circle cx="50" cy="50" r="44" fill="none" stroke="#ef4444" strokeWidth="8"
                 strokeDasharray={circumference}
                 strokeDashoffset={redOffset}
                 strokeLinecap="round"
