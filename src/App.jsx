@@ -1,355 +1,914 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-const WORDS = [
-  // Dieren
-  'aardvarken', 'adelaar', 'albatros', 'alpaca', 'anakonda', 'baviaan', 'beer',
-  'bever', 'bijenkoningin', 'bizon', 'blauwvintonijn', 'boomkikker', 'boomslang',
-  'buffel', 'buizerd', 'buldog', 'cheetah', 'chihuahua', 'cobra', 'condor', 'das',
-  'dingo', 'dinosaurus', 'dolfijn', 'draak', 'dromedaris', 'duif', 'dwergpinguïn', 'eekhoorn',
-  'egel', 'ekster', 'eland', 'elektrische paling', 'emoe', 'fazant', 'flamingo',
-  'fret', 'galapagosschildpad', 'gecko', 'gibbon', 'giraffe',
-  'gorilla', 'goudjakhals', 'goudvis', 'grizzlybeer', 'guppie', 'haai', 'haas',
-  'hagedis', 'hamster', 'havik', 'hermelijn', 'hond', 'honingdas', 'hyena', 'ibis',
-  'ijsbeer', 'impala', 'inktvis', 'jaguar', 'jakhals', 'kaketoe',
-  'kameel', 'kameleon', 'kangoeroe', 'kat', 'kever', 'kikker', 'kiwi', 'koala',
-  'koe', 'komodovaraan', 'konijn', 'kraanvogel', 'krab', 'krokodil', 'kwal',
-  'kwartel', 'lama', 'leeuw', 'leguaan', 'lemming', 'lepelaar', 'libel', 'lieveheersbeestje',
-  'luiaard', 'lynx', 'maanvis', 'marmot', 'meerkat',
-  'meerval', 'mier', 'miereneter', 'moeflon', 'mol', 'mug',
-  'muilezel', 'muskusrat', 'narwal', 'nerts', 'neusaap', 'neushoorn', 'nijlgans', 'nijlpaard',
-  'octopus', 'oehoe', 'okapi', 'olifant', 'ooievaar', 'orang-oetan', 'orka',
-  'otter', 'paard', 'panda', 'panther', 'papegaai', 'paradijsvogel', 'parkiet', 'pauw',
-  'pelikaan', 'pijlgif kikker', 'pinguïn', 'platypus', 'poema', 'poolvos', 'prairiehond',
-  'raaf', 'rat', 'reiger', 'rendier', 'reuzenoctopus', 'reuzenpanda', 'roofvogel', 'varkenshaas',
-  'salamander', 'schaap', 'schildpad', 'schildwants', 'schorpioen', 'slak', 'slang', 'sneeuwluipaard',
-  'snoek', 'specht', 'sperwer', 'spin', 'springbok', 'sprinkhaan', 'stekelvarken', 'steur',
-  'stier', 'stinkdier', 'stokstaartje', 'struisvogel', 'tapir', 'tarantula', 'tijger',
-  'toekan', 'tor', 'uil', 'valkparkiet', 'vampier', 'varaan', 'veelvraat', 'vleermuis',
-  'vlieg', 'vliegend hert', 'vliegende vis', 'vlinder', 'vos', 'vuurkever', 'walvis',
-  'wasbeer', 'waterbuffel', 'waterrat', 'wezel', 'wild zwijn', 'wolf', 'wombat',
-  'worm', 'wrattenzwijn', 'zebra', 'zeehond', 'zeemeermin', 'zeeotter',
-  'krekel', 'mus', 'vuurvliegje',
-  'zeepaardje', 'zeeschildpad', 'zwaan', 'zwaluw', 'zwarte mamba', 'zwarte panter',
-  'damhert', 'forel', 'goudhaan', 'heggenmus', 'hop', 'ijsvogel',
-  'kauw', 'knobbelzwaan', 'kwikstaart', 'nachtegaal', 'patrijs', 'pimpelmees',
-  'roodborst', 'scholekster', 'staartmees', 'steenuil', 'veldleeuwerik',
-  'wielewaal', 'wulp', 'zanglijster', 'zwarte kraai',
-  
-  // Voedsel & drinken
-  'aardappel', 'aardappelpuree', 'aardbei', 'abrikoos', 'amaretto', 'ananas', 'andijvie', 'appelmoes',
-  'appelsap', 'appeltaart', 'asperges', 'avocado', 'bacon', 'bagel', 'baguette', 'balsamico',
-  'bami', 'banaan', 'bananenbrood', 'barbecue', 'basilicum', 'biefstuk', 'bier',
-  'bieslook', 'bietensalade', 'bitterbal', 'bitterkoekje', 'bladerdeeg', 'blauwe bes',
-  'bloemkool', 'boerenkool', 'bolognese', 'bonbons', 'borrelplank', 'bosbessen', 'boterham', 'bouillon',
-  'brandnetelsoep', 'broccoli', 'brood', 'brownie', 'bruine bonen', 'bruschetta', 'caesarsalade',
-  'cannelloni', 'karamel', 'carpaccio', 'cashewnoot', 'champignon',
-  'cheesecake', 'chipolata', 'chips', 'chocolade', 'churros', 'ciabatta', 'citroen', 'citroentaart',
-  'cola', 'corndog', 'couscous', 'cranberrysap', 'croissant', 'crème brûlée', 'curry', 'dadel',
-  'dim sum', 'donut', 'doperwt', 'drakenvrucht', 'druiven', 'eclairs', 'ei',
-  'enchilada', 'energiedrank', 'erwtensoep', 'espresso', 'falafel', 'feta', 'fondue', 'friet',
-  'frikandel', 'frisdrank', 'fruitsalade', 'garnaal', 'gazpacho', 'gehaktbal', 'geitenkaas', 'gelato',
-  'gerst', 'gin-tonic', 'gnocchi', 'goulash', 'granaatappel', 'groenten', 'groentesoep', 'gyros',
-  'hamburger', 'hazelnoot', 'honing', 'hotdog', 'hummus', 'ijs', 'jalapeno',
-  'jus', 'kaas', 'kaasfondue', 'kaassoufflé', 'kaneelbroodje', 'kappertjes', 'kapsalon', 'kastanje',
-  'kerrieworst', 'kersensap', 'kip', 'kipnuggets', 'koffie', 'kokosmelk', 'komkommer',
-  'koriander', 'kroket', 'kwark', 'kwarktaart', 'lamsvlees', 'lasagne', 'latte', 'limonade',
-  'linzen', 'loempia', 'lychee', 'macaron', 'macaroni', 'mango', 'marshmallow',
-  'mayonaise', 'meloensap', 'milkshake', 'miso', 'mosterd', 'moussaka', 'mozzarella',
-  'mueslireep', 'muffin', 'nasi', 'nectarine', 'noedels', 'noten', 'nougat', 'olijf',
-  'olijfolie', 'omelet', 'pad thai', 'paella', 'pannenkoek', 'paprika', 'parmezaan',
-  'passievrucht', 'pasta', 'penne', 'perzik', 'pesto', 'piccalilly', 'pindakaas', 'pistache',
-  'pitabrood', 'pizza', 'poffertjes', 'pommes frites', 'pompoen', 'popcorn', 'prei', 'pruim',
-  'pulled pork', 'quiche', 'rabarber', 'radijs', 'ratatouille', 'ravioli', 'ricotta',
-  'rijstpap', 'rijsttafel', 'risotto', 'rode wijn', 'roggebrood', 'rolmops', 'roomijs', 'rozijnen',
-  'rucola', 'rum', 'salade', 'sandwich', 'sap', 'sashimi', 'satésaus', 'scones',
-  'selderij', 'sinaasappel', 'slagroom', 'smoothie', 'snoep', 'soep', 'sojasaus',
-  'soufflé', 'spaghetti', 'spek', 'spinazie', 'stampot', 'stoofpot', 'strudel', 'suiker',
-  'sushi', 'taart', 'taco', 'tapenade', 'tartaar', 'teriyaki', 'thee', 'tiramisu',
-  'toast', 'tomatensaus', 'tomatensoep', 'tompouce', 'tortilla', 'truffel', 'tzatziki', 'ui',
-  'uiensoep', 'vanillepudding', 'wafel', 'walnoot', 'watermeloen', 'wijn', 'witlof',
-  'witte wijn', 'wrap', 'yoghurt', 'zuurkool',
-  'appelstroop', 'beschuit', 'boontjes', 'erwten', 'flensje', 'gehakt', 'gevulde koek',
-  'hagelslag', 'hutspot', 'jenever', 'karnemelk', 'kokos', 'krentenbollen',
-  'kruidenboter', 'melk', 'muesli', 'ontbijtkoek', 'pap', 'peperkoek', 'rijst',
-  'rookworst', 'speculaas', 'stroopwafel', 'tosti', 'vla', 'wentelteefje', 'wittebrood',
-  
-  // Beroepen & mensen
-  'accountant', 'acrobaat', 'acteur', 'advocaat', 'apotheker', 'archeoloog', 'architect', 'astroloog',
-  'astronaut', 'automonteur', 'bakker', 'barista', 'beveiliger', 'bibliothecaris', 'blogger',
-  'boekhoudster', 'botanicus', 'brandweer', 'brandweerman', 'buschauffeur', 'cardioloog', 'casinodealer', 'chef-kok',
-  'chiropractor', 'chirurg', 'circusdirecteur', 'clown', 'coach', 'cowboy', 'croupier',
-  'danser', 'dansleraar', 'dataanalist', 'dermatoloog', 'detective', 'dierenarts', 'dierentrainer', 'diplomaat',
-  'dirigent', 'dj', 'documentairemaker', 'dokter', 'dronepiloot', 'duikinstructeur', 'econoom',
-  'ethisch hacker', 'evenementenorganisator', 'examinator', 'farmaceut', 'filosoof',
-  'fotograaf', 'fysiotherapeut', 'gameontwikkelaar', 'gastronoom', 'geneesheer', 'geograaf', 'geoloog', 'gids',
-  'glazenwasser', 'goochelaar', 'grafisch ontwerper', 'gynaecoloog', 'handelaar', 'heks', 'hersenchirurg', 'hovenier',
-  'hypnotherapeut', 'ijsbeeldhouwer', 'illustrator', 'immunoloog', 'informaticus', 'ingenieur', 'inspecteur', 'instrumentmaker',
-  'jager', 'jongleur', 'journalist', 'juwelier', 'kaartenmaker', 'kapitein', 'kapper',
-  'kassamedewerker', 'kinderarts', 'klimaatoloog', 'klusjesman', 'kok', 'kostuumontwerper', 'kraamverzorger',
-  'kruidenier', 'kunstcriticus', 'kunstenaar', 'kweker', 'laborant', 'landmeter', 'lasser', 'leraar',
-  'levensmiddelen', 'loodgieter', 'luchtverkeersleider', 'magiër', 'makelaar', 'marionettespeler', 'matroos', 'meteoroloog',
-  'microbioloog', 'modeontwerper', 'moleculair bioloog', 'monteur', 'museumconservator', 'musicus',
-  'neuroloog', 'notaris', 'ontwerper', 'oogarts', 'operazanger', 'opticien',
-  'orthopeed', 'parasiet', 'parfum', 'piloot',
-  'piraat', 'politicoloog', 'politieagent', 'postbode', 'primaat', 'producent',
-  'profvoetballer', 'psychiater', 'psycholoog', 'radioloog', 'rechercheur', 'revalidatiearts', 'ridder', 'roboticus',
-  'ruimtevaarder', 'ruimtewetenschapper', 'scenarioschrijver', 'schappenvuller', 'scheikundige', 'schilder', 'schildwacht', 'schoonmaker',
-  'schrijver', 'sheriff', 'skateboarder', 'slager', 'socioloog', 'soldaat', 'sommelier', 'stadsplanner', 'stand-upcomedian',
-  'steward', 'stoker', 'strateeg', 'stratenmaker', 'stuntman', 'sumo', 'systeembeheerder', 'tatoeëerder',
-  'taxichauffeur', 'taxidermist', 'textielontwerper', 'timmerman', 'tolk', 'tovenaar', 'toxicoloog', 'trainer',
-  'tuinieren', 'tuinman', 'verpleegkundige', 'verzekeringsagent', 'vioolmaker', 'visser', 'vliegtuigbouwer',
-  'voedingswetenschapper', 'volksmenner', 'vuilnisman', 'vuurwerkmaker', 'wetenschapper', 'wijnboer', 'winkelier',
-  'wiskundige', 'woordvoerder', 'zanger', 'zeebioloog', 'zeiler', 'ziekenhuisdirecteur',
-  'aannemer', 'beeldhouwer', 'burgemeester', 'cabaretier', 'ijsverkoper',
-  'kaarsenmaker', 'kolenboer', 'koster', 'omroeper', 'organist',
-  'predikant', 'reddingswerker', 'smid', 'straatveger', 'taalkundige',
-  'trambestuurder', 'vrijwilliger', 'zeepmaker',
-  
-  // Sport & hobby's
-  'aerobics', 'alpineskiën', 'american football', 'aquajogging', 'atletiek', 'badminton', 'balletdansen',
-  'bankschieten', 'basketbal', 'beachvolleybal', 'bergsport', 'biatlon', 'biljarten', 'BMX', 'bobslee',
-  'boksen', 'boogschieten', 'boogsport', 'boulderen', 'bowling', 'breakdance',
-  'cricket', 'curling', 'dammen', 'diepzeeduiken', 'discgolf', 'discuswerpen', 'djembé spelen', 'dressuur',
-  'driedaagse', 'duiken', 'e-sporten', 'estafette', 'fietsen',
-  'fitnesstraining', 'freerunning', 'frisbee', 'gewichtheffen', 'gokken', 'golfen', 'gymnastiek', 'handbal', 'handwerken', 'hardlopen', 'hengelen', 'hindernisloop', 'hip-hop dansen', 'hockey',
-  'hoogspringen', 'hordelopen', 'ijshockey', 'jiu-jitsu', 'joggen',
-  'judo', 'kaatsen', 'kanoën', 'karate', 'karting', 'kegelen',
-  'kegelspel', 'kitesurfen', 'klimmen', 'klimwand', 'knikkeren', 'kogelstoten', 'korfbal', 'krachttraining',
-  'kunstrijden', 'lacrosse', 'langebaanschaatsen', 'lasergame', 'lijnvissen', 'longboarden', 'magisch goochelen',
-  'marathon', 'minigolf', 'modelbouwen', 'motorcross', 'motorsport', 'mountainbiken', 'netbal', 'ninjaparcours',
-  'nordic walking', 'obstakelloop', 'oriëntatielopen', 'paardrijden', 'padel', 'paintball', 'parachutespringen',
-  'parkour', 'pétanque', 'pilates', 'poedelen', 'polowedstrijd', 'polsstokhoogspringen', 'powerlifting', 'racketball',
-  'rafting', 'ringsteken', 'rodeo', 'roeien', 'rolschaatsen', 'rots klimmen', 'rugby',
-  'sauna', 'schaatsen', 'schaken', 'schansspringen', 'schermen', 'schieten',
-  'scrabble', 'shorttracksprint', 'sjoelen', 'skeeleren', 'skeleton', 'skiën', 'skislalom',
-  'slipstream', 'snowboarden', 'softbal', 'speerwerpen', 'spijkerpoepen', 'squash', 'stoeien',
-  'stoepkrijten', 'stuntrijden', 'suppen', 'surfen', 'synchroonzwemmen', 'taekwondo', 'tafeltennis', 'telemarketeer', 'tennis', 'touwtrekken', 'trail running', 'trampolinespringen', 'trefbal', 'triatlon',
-  'turnen', 'varen', 'veldrijden', 'verspringen', 'vissen', 'vliegeren', 'vliegtuigmodelbouwen', 'vliegvissen',
-  'voetbal', 'volleybal', 'wandelen', 'waterpolo', 'waterskiën', 'wakeboarden',
-  'wcpotwerpen', 'wedstrijdvissen', 'wielrennen', 'worstelen', 'yoga', 'zeilen', 'zwemmen',
-  'aquarelleren', 'borduren', 'breien', 'calligrafie', 'escaperoom',
-  'fotograferen', 'gezelschapsspel', 'haakwerk', 'kaartspelen',
-  'kwartetten', 'lego', 'origami', 'pianospelen', 'pottendraaien',
-  'quilten', 'tekenen', 'vogelkijken', 'weven',
-  
-  // Objecten & thuis
-  'aansteker', 'aardappelschiller', 'accordeon', 'actiefiguur', 'afstandsbediening', 'airfryer', 'alarmbel', 'albumhoes',
-  'anker', 'ansichtkaart', 'antiek', 'armbandhorloge', 'asbak', 'atlas', 'atoomklok', 'avondjurk',
-  'bajonet', 'ballon', 'balustrade', 'banjo', 'barbecuetang', 'barometer', 'beeldhouwwerk', 'bezem',
-  'biljartbal', 'blender', 'bloesem', 'blokfluit', 'bodycam', 'boekenkast', 'boekenlegger', 'boog',
-  'boomerang', 'boormachine', 'borstel', 'briefopener', 'brievenbus', 'bronzen beeld', 'bureau', 'cadeaus',
-  'cadeautje', 'camera', 'catapult', 'cello', 'clarinet', 'computer', 'contrabas', 'cornetto',
-  'dakpan', 'dartpijl', 'defibrillator', 'deurbel', 'didgeridoo', 'dopje', 'drietand', 'dwarsfluit',
-  'dynamo', 'elektrische fiets', 'elpee', 'emmer', 'escalator', 'fagot', 'fakkel', 'fanfare',
-  'fiets', 'film', 'föhn', 'ganzenbord', 'gasmasker', 'geigerteller', 'gele kaart', 'gereedschapskist',
-  'gieter', 'gietijzer', 'gitaar', 'glaasje', 'glazen bol', 'gloeilamp', 'goudstaaf', 'gps-tracker',
-  'gramofoon', 'guillotine', 'haardroger', 'hamer', 'handboeien', 'handgranaat', 'handtas', 'hangmat',
-  'harp', 'harpoen', 'hartje', 'heksenketel', 'hooivork', 'horloge', 'ijsje', 'koelkast',
-  'ijsklontje', 'kaars', 'kaarsenhouder', 'kampioensbeker', 'kanon', 'kanonskogel', 'kapsel',
-  'katapult', 'ketting', 'kettingzaag', 'keukenrol', 'kleedhanger', 'klok', 'koekenpan', 'koffer',
-  'kompas', 'kookwekker', 'kraan', 'kroon', 'kruisboog', 'krukje', 'kubus', 'kurketrekker',
-  'kwikthermometer', 'ladder', 'lampion', 'lantaarn', 'laserpointer', 'lasso', 'leidraad', 'lepel',
-  'leugendetector', 'liniaal', 'loep', 'luchtballon', 'luidspreker', 'magneet', 'magnetron', 'maillot',
-  'manchetknoop', 'mand', 'marionet', 'masker', 'medaille', 'megafoon', 'meubelstuk', 'microfoon',
-  'moersleutel', 'molen', 'morse', 'muziekdoos', 'naaimachine', 'naaldhak', 'neonlamp', 'notenbalk',
-  'orgelpijp', 'papiermolen', 'parachute', 'paraplu', 'penseel', 'pikhouweel', 'flipperkast', 'pistoolholster',
-  'plantenpot', 'poederdoos', 'potloodventer', 'printer', 'projector', 'puzzel', 'puzzeldoos', 'radarscherm',
-  'ratelen', 'reddingsvest', 'regenjas', 'rekenmachine', 'robot', 'rode kaart', 'rolluik', 'rolstoel',
-  'rubberen eend', 'rugzak', 'sarcofaag', 'satelliet', 'scalpel', 'schaakbord', 'schaar', 'scheepsschroef',
-  'scheermessen', 'schijf van vijf', 'schilderij', 'schommel', 'schroefsleutel', 'scooter', 'sigaardoos', 'sitar',
-  'sleutel', 'slingeren', 'smeedijzer', 'snijplank', 'sok', 'speelgoed', 'speelkaart', 'sphinx',
-  'spiegel', 'spijker', 'spijkerbroek', 'spionagesatelliet', 'springveer', 'stethoscoop', 'stoommachine', 'stopwatch', 'strijkijzer',
-  'stroomgenerator', 'suikerspin', 'tandenborstel', 'tandpasta', 'tarotkaart', 'telescoop', 'telraam', 'tent',
-  'theekan', 'theemuts', 'thermometer', 'tijdmachine', 'toorts', 'touwladder', 'trampoline', 'transistor',
-  'trap', 'trein', 'trombone', 'trommel', 'trompet', 'tuba', 'tuimelaar', 'tuinkabouter', 'tunnel',
-  'turbine', 'ukelele', 'veiligheidsspeld', 'verfkwast', 'vergrootglas', 'vloeistof', 'vloerkleed', 'vriezer', 'vuurpijl',
-  'waaier', 'wapenschild', 'wasmachine', 'wastafel', 'waterklok', 'waterpas', 'waterpistool', 'weegschaal',
-  'wekker', 'wiel', 'xylofoon', 'zaklamp', 'zandloper', 'zeepbel', 'zeeppomp', 'zeilboot',
-  'zeis', 'zenderstation', 'zetel', 'zonnebloem', 'zonnebril', 'zonnewijzer', 'zweep',
-  'tandenstoker', 'kleerhanger', 'elastiekje', 'kurk',
-  'aanrecht', 'bank', 'beker', 'boodschappentas', 'broek', 'dekbed', 'deurmat', 'gordijn',
-  'handschoen', 'hark', 'hoed', 'jasje', 'knoop', 'koffiezetapparaat',
-  'krijtbord', 'lamp', 'mes', 'muts', 'pan', 'papier', 'pen',
-  'plantje', 'pollepel', 'portemonnee', 'riem', 'schoen', 'servet', 'soeplepel',
-  'spaarpot', 'stoel', 'stropdas', 'tafel', 'tas', 'theedoek', 'vork', 'wijnglas',
-  
-  // Natuur & weer
-  'aardbeving', 'aardverschuiving', 'aardworm', 'algen', 'aurora', 'bamboe', 'bergtop', 'blad',
-  'bliksem', 'bloem', 'boom', 'bos', 'branding', 'brandnetels', 'bronwater', 'bui',
-  'cactus', 'compost', 'dauw', 'delta',
-  'dennennaald', 'dijk', 'droogte', 'duin', 'eb', 'ecosysteem',
-  'fjord', 'fossiel', 'getijden', 'geiser', 'greppel', 'hagel',
-  'hagelstorm', 'herfst', 'herfstblad', 'heuvel', 'hittegolf', 'ijsberg', 'ijspegel', 'ijsschots',
-  'ijsvorming', 'inham', 'kapen', 'keien', 'kiezel', 'klif', 'kliffen', 'knop',
-  'komeet', 'koraal', 'koraalrif', 'lavastroom', 'lente', 'luchtvochtigheid',
-  'maan', 'maansverduistering', 'mangrovebos', 'maretak', 'meander', 'mist', 'modder',
-  'moeras', 'monsoen', 'morgenrood', 'mos', 'naaldboom', 'nevel', 'noorderlicht', 'oase',
-  'oceaan', 'onweer', 'orkaan', 'paddenstoel', 'paddenvijver', 'planeet', 'plas', 'poel',
-  'pool', 'poollicht', 'regen', 'regenboog', 'regenbui', 'regenwoud', 'rivier', 'riviermonding',
-  'roos', 'rots', 'rotsbodem', 'ruimte', 'savanne', 'schemering', 'schemerlicht', 'schimmel',
-  'schimmelsporen', 'sneeuw', 'sneeuwvlok', 'sneeuwstorm', 'steengroeve', 'ster',
-  'stikstof', 'stofwolk', 'storm', 'strand', 'stromend water', 'tij', 'toendra', 'tornado', 'tropische regen',
-  'tsunami', 'tulp', 'uiterwaard', 'uitzicht', 'vallei', 'veen', 'veld', 'vijver',
-  'vlakte', 'vloed', 'vluchtheuvel', 'voorjaarswind', 'vulkaan', 'vulkaanuitbarsting', 'waterloop', 'waterval',
-  'weide', 'windvlaag', 'woestijn', 'wolk', 'woud', 'zandstorm', 'zee',
-  'zeewind', 'zilt water', 'zomer', 'zon', 'zonsondergang', 'zonsopgang', 'zwaartekracht',
-  'schelp', 'schaduw',
-  'berk', 'eik', 'graan', 'kastanjeboom', 'klaver', 'korenbloem',
-  'lavendel', 'linde', 'meidoorn', 'narcis', 'papaver', 'populier', 'wilg', 'viooltje',
-  
-  // Vervoer & reizen
-  'aanhanger', 'achtbaan', 'ambulance', 'benzine', 'benzinestation', 'boeing', 'boot', 'brandweerauto',
-  'brandweerwagen', 'bromfiets', 'bus', 'camper', 'caravan', 'catamaran', 'commandowagen',
-  'container', 'containerschip', 'deklift', 'diesel', 'driewieler', 'drijvend hotel',
-  'dronepost', 'dubbeldekker', 'duikboot', 'elektrische auto', 'elektrische scooter', 'elektrische step', 'ferry', 'fietsendrager',
-  'fietstaxi', 'forens', 'vrachtschip', 'gondel', 'gondelbaan', 'graafmachine', 'grensovergang', 'hangbrug',
-  'helikopter', 'hoogspoortrein', 'hoverboard', 'hovercraft', 'intercity', 'internationale trein',
-  'jetpack', 'jetski', 'kabelbaan', 'kajak', 'kar', 'kolenschip', 'kruisvaarder', 'kustwacht',
-  'lijnbus', 'locomotief', 'luchtschip', 'maanlander', 'metro', 'minicar', 'monorail',
-  'motorfiets', 'motorfietssidecar', 'nachttrein', 'onderzeeboot', 'oplegger', 'pantservoertuig', 'patrouilleboot', 'pick-uptruck',
-  'politieauto', 'postduif', 'postkoets', 'racefiets', 'racewagen', 'raket', 'reddingsboot',
-  'rijtuig', 'riksja', 'robotaxi', 'roeiboot', 'schip',
-  'scooterdeeldienst', 'segway', 'slee', 'sleepboot', 'sloep', 'sneltrein',
-  'space shuttle', 'speedboot', 'stadsbus', 'stadsfiets', 'step', 'stoomboot',
-  'stoomlocomotief', 'suv', 'taxiboot', 'touringcar', 'tractor', 'tram', 'trolleybus',
-  'tuk-tuk', 'veerboot', 'veerfiets', 'vierwieler', 'vliegdekschip', 'vliegende schotel', 'vliegtuig', 'vrachtwagen',
-  'waterbus', 'waterfiets', 'watervliegtuig', 'wielerbaan', 'zeilschip', 'zeilvliegtuig', 'zijspan', 'zonneauto', 'zweefvliegtuig',
-  
-  // Gebouwen & plaatsen
-  'abdij', 'amfiteater', 'apotheek', 'aquaduct', 'aquarium', 'badhuis', 'balie', 'bankgebouw',
-  'begraafplaats', 'bibliotheek', 'bioscoop', 'bloemenmarkt', 'boekenwinkel', 'boerderij', 'boogbrug', 'bouwplaats',
-  'bowlingbaan', 'brandweerkazerne', 'brouwerij', 'brug', 'bunker', 'café', 'camping', 'campingterrein',
-  'casino', 'centrum', 'circus', 'consulaat', 'crematorium', 'cultureel centrum', 'dak', 'dambord',
-  'dierentuin', 'discotheek', 'driesterrenhotel', 'duiventoren', 'fabriek', 'fietsenwinkel', 'fontein', 'fort',
-  'fruitmarkt', 'galerie', 'gemeentehuis', 'gevangenis', 'gezondheidscentrum', 'grachtenpand', 'gymnasium', 'halfpipe',
-  'haven', 'hectometerpaal', 'herberg', 'honkbalstadion', 'hostel', 'hotel', 'huis', 'iglo',
-  'ijsbaan', 'ijsherberg', 'jachthaven', 'jungle', 'kapperszaak', 'kasteel', 'kathedraal', 'kazerne',
-  'kerk', 'klimhal', 'klokkenspel', 'klokkentoren', 'klooster', 'koffieshop', 'kolenmijn',
-  'krantenwinkel', 'kroeg', 'kunstmuseum', 'laadpaal', 'laboratorium', 'lagerhuis', 'landgoed',
-  'loods', 'luchthaven', 'lunapark', 'manege', 'markt', 'megabioscoop', 'monument', 'moskee',
-  'museum', 'observatorium', 'dolfinarium', 'ouderenhuis', 'paleis', 'parkbank', 'parkeergarage',
-  'pier', 'pleintje', 'politiebureau', 'poppenkast', 'postkantoor', 'pretpark', 'pyramide', 'racebaan', 'rechtbank', 'recreatiegebied', 'renbaan', 'restaurant', 'rioolstelsel', 'ruïne',
-  'schaatsbaan', 'school', 'silo', 'sluis', 'speeltuin', 'sporthal', 'stad', 'stadion',
-  'stadshuis', 'standbeeld', 'sterrenwacht', 'strandtent', 'supermarkt', 'synagoge', 'tandartspraktijk', 'tankstation',
-  'tempel', 'theater', 'toren', 'torentje', 'treinstation', 'universiteit', 'vakantiepark', 'vergaderzaal',
-  'villa', 'vliegveld', 'voetgangerszone', 'vuurtoren', 'watertoren', 'wegrestaurant', 'wetenschapscentrum', 'wijkcentrum',
-  'windmolen', 'winkelcentrum', 'ziekenhuis', 'zwembad',
-  'bakkerij', 'benzinepomp', 'bloemenwinkel', 'boekhandel', 'buurthuis', 'drogisterij',
-  'garage', 'ijssalon', 'kantine', 'kiosk', 'nachtwinkel',
-  'pannenkoekenhuis', 'parkeerplaats', 'slagerij', 'snackbar', 'sportschool',
-  'stomerij', 'viswinkel', 'warenhuis',
-  
-  // Acties & situaties
-  'applaudisseren', 'fluisteren', 'gebaren', 'gooien', 'graven', 'huppelen',
-  'ijsberen', 'klunen', 'knuffelen', 'koken', 'kruipen', 'lachen', 'lopen',
-  'maaien', 'naaien', 'omhelzen', 'pesten', 'rennen', 'rollen', 'schilderen', 'slapen', 'snurken', 'springen', 'struikelen',
-  'tikken', 'vallen', 'vangen', 'verstoppen', 'vliegen', 'vouwen',
-  'waggelen', 'wiebelen',
-  'afrekenen', 'afscheid nemen', 'bakken', 'bellen', 'betalen',
-  'bewaken', 'bidden', 'blozen', 'branden', 'breken',
-  'buigen', 'dagdromen', 'dansen', 'delen', 'douchen', 'dreigen', 'drinken',
-  'duwen', 'eten', 'fluiten', 'gapen', 'geven', 'giechelen',
-  'gillen', 'gluren', 'groeten', 'hangen', 'helpen', 'hijsen',
-  'huilen', 'inschenken', 'inslapen', 'jagen', 'juichen', 'kijken',
-  'klagen', 'kloppen', 'knipogen', 'kopen', 'kussen', 'leren', 'lezen',
-  'liegen', 'luisteren', 'meten', 'nabootsen', 'nadenken', 'omvallen',
-  'onderhandelen', 'ophangen', 'opruimen', 'opstaan', 'oversteken', 'pakken', 'plannen',
-  'plassen', 'plukken', 'praten', 'proberen', 'roepen', 'ruiken',
-  'ruilen', 'schelden', 'schminken', 'schrijven', 'schuilen', 'schuiven',
-  'slepen', 'smeken', 'snijden', 'sparen', 'speuren',
-  'stelen', 'stoppen', 'strelen', 'studeren', 'telefoneren',
-  'twijfelen', 'uitleggen', 'uitpakken', 'verbergen', 'verdwalen', 'vergeten', 'verkopen',
-  'verliezen', 'verrassen', 'verzorgen', 'vluchten', 'volgen', 'wachten', 'wassen',
-  'weggooien', 'werken', 'winnen', 'wroeten', 'zingen', 'zoeken', 'zwaaien',
-  'niezen', 'sluipen',
-  'brand blussen', 'eerste hulp verlenen', 'geblinddoekt', 'geheim bewaren',
-  'inhalen', 'misleiden', 'in de rij staan', 'op de vlucht zijn',
-  'rijbewijs halen', 'schipbreukeling', 'sleutels verliezen', 'verslikken',
-  'verstoppertje', 'hinkelen', 'touwtjesspringen',
-  'bijna', 'stilte', 'angst', 'geluk', 'haast', 'verveeld',
-  'achtervolgen', 'bazelen', 'bedanken', 'begroeten', 'beschermen', 'bewonderen',
-  'boeren', 'controleren', 'debatteren', 'demonstreren', 'flirten',
-  'herkennen', 'hijgen', 'improviseren', 'jongleren', 'knijpen', 'krabben', 'kwispelen',
-  'mompelen', 'ontsnappen', 'overwinnen', 'piepen', 'prikken',
-  'rijden', 'schudden', 'slenteren', 'sluimeren', 'snuffelen', 'stampen',
-  'staren', 'steigeren', 'trillen', 'wentelen', 'woelen', 'zuchten',
-  'avontuur', 'bewijs', 'droom', 'gevaar', 'gewoonte', 'grens', 'herinnering',
-  'idee', 'kans', 'karakter', 'leugen', 'liefde', 'mening', 'mysterie',
-  'nieuws', 'ongeluk', 'oplossing', 'pech', 'plan', 'probleem', 'raadsel',
-  'roddel', 'rust', 'spanning', 'succes', 'toeval', 'traditie', 'trots', 'verrassing',
-  'vertrouwen', 'vreugde', 'waarheid', 'wonder',
-  
-  // Landen & gebieden
-  'Afghanistan', 'Albanië', 'Amazone', 'Antarctica', 'Argentinië', 'Armenië', 'Australië', 'Azerbeidzjan',
-  'Bahrein', 'Bangladesh', 'Barbados', 'Bhutan', 'Bolivia', 'Botswana', 'Brazilië', 'Brunei',
-  'Bulgarije', 'Cambodja', 'Canada', 'Chili', 'Colombia', 'Comoren', 'Congo', 'Cuba',
-  'Denemarken', 'Ecuador', 'Egypte', 'Ethiopië', 'Fiji', 'Filippijnen', 'Finland', 'Georgië',
-  'Ghana', 'Griekenland', 'Guatemala', 'Haïti', 'Honduras', 'Hongarije', 'Ierland', 'IJsland',
-  'Indonesië', 'Irak', 'Iran', 'Israël', 'Italië', 'Jamaica', 'Japan', 'Jemen',
-  'Jordanië', 'Kazachstan', 'Kenia', 'Kosovo', 'Kroatië', 'Laos', 'Letland', 'Libanon',
-  'Liberia', 'Libië', 'Litouwen', 'Luxemburg', 'Madagascar', 'Maldiven', 'Maleisië', 'Mali',
-  'Malta', 'Mexico', 'Moldavië', 'Monaco', 'Mongolië', 'Montenegro', 'Mozambique', 'Myanmar',
-  'Namibië', 'Nepal', 'Nicaragua', 'Niger', 'Nigeria', 'Noorwegen', 'Oekraïne', 'Oezbekistan',
-  'Oman', 'Oostenrijk', 'Pakistan', 'Panama', 'Paraguay', 'Peru', 'Polen', 'Portugal',
-  'Qatar', 'Roemenië', 'Rusland', 'Rwanda', 'Saudi-Arabië', 'Senegal', 'Servië', 'Singapore',
-  'Slovenië', 'Soedan', 'Somalië', 'Spanje', 'Sri Lanka', 'Suriname', 'Syrië', 'Tanzania',
-  'Thailand', 'Tsjechië', 'Tunesië', 'Turkije', 'Uganda', 'Uruguay', 'Venezuela', 'Vietnam',
-  'Zambia', 'Zimbabwe', 'Zweden', 'Zwitserland',
-
-  // Moeilijkere woorden
-  'abseilen', 'acupunctuur', 'ader', 'adrenaline', 'afgrond', 'afpersen', 'agressor', 'algoritme',
-  'allergie', 'amputatie', 'anarchie', 'anesthesie', 'antenne', 'archeologie', 'assertief', 'astronoom',
-  'atoomkern', 'auteursrecht', 'autopsie', 'avondklok', 'baksteen', 'bankroet', 'begrafenis', 'belasting',
-  'beroerte', 'beschaving', 'bewusteloos', 'bijtanken', 'stroomuitval', 'bloedarmoede', 'boeddhisme', 'brainstorm',
-  'hersenspoeling', 'brandstichting', 'bureaucratie', 'camouflagepak', 'celsius', 'censuur', 'chantage', 'cholesterol',
-  'claustrofobie', 'cliffhanger', 'cocaïne', 'coma', 'concentratiekamp', 'confrontatie', 'corruptie', 'crisis',
-  'cyberpesten', 'dagvaarding', 'dementie', 'democratie', 'depressie', 'desinfecteren', 'dialyse', 'dictator',
-  'dilemma', 'diplomatie', 'discriminatie', 'doofstom', 'doping', 'draaikolk',
-  'dwangbuis', 'eclips', 'embargo', 'epidemie', 'erfenis', 'evacuatie', 'evolutie', 'executie',
-  'explosief', 'faillissement', 'fascisme', 'flitspaal', 'forensisch onderzoek', 'fraude', 'frictie',
-  'fundament', 'fusie', 'geheugenverlies', 'genocide', 'gerechtshof', 'getuige', 'gijzeling', 'gletsjer',
-  'globalisering', 'goud', 'grafiek', 'guerrilla oorlog', 'hallucinatie', 'hartstilstand', 'hersenletsel', 'herverdeling',
-  'vliegtuigkaping', 'hiërarchie', 'holocaust', 'homeopathie', 'hoogtevrees', 'hormoon', 'hypnose', 'hypotheek',
-  'hysterie', 'illusie', 'immigratie', 'immuunsysteem', 'imperialisme', 'implosie', 'inflatie', 'injectie',
-  'inquisitie', 'intimidatie', 'invasie', 'isolatie', 'jaloezie', 'keizersnede', 'kidnapping', 'klimaatcrisis',
-  'klokkenluider', 'kluizenaar', 'kwantumfysica', 'lawine', 'legitimiteit', 'lobbyist', 'lockdown',
-  'manipulatie', 'martelaar', 'massamoord', 'meditatie', 'migraine', 'militaire coup', 'misogynie', 'monopolie',
-  'mutatie', 'muziek', 'narcisme', 'nationalisme', 'nepnieuws', 'nihilisme', 'nucleaire reactor', 'obsessie',
-  'oligarchie', 'onderbewustzijn', 'ondergrondse beweging', 'onteigening', 'oorlogsmisdaad', 'orkest', 'overdosis', 'overlevingsdrang',
-  'pandemie', 'paradox', 'paranoia', 'parlementaire democratie', 'persoonlijkheidsstoornis', 'pesticide', 'pionier', 'plagiaat',
-  'polarisatie', 'populisme', 'posttraumatische stress', 'propaganda', 'protocolbreuk', 'psychiatrie', 'quarantaine', 'radicalisering',
-  'radioactiviteit', 'rebellie', 'recessie', 'referendum', 'reflectie', 'rehabilitatie', 'relatief', 'repatriëring',
-  'revolutie', 'reïncarnatie', 'sabotage', 'sancties', 'schandaal', 'schijnheilig', 'schizofrenie', 'seconde', 'slavernij',
-  'sluipschutter', 'smokkel', 'soevereiniteit', 'spionage', 'sprookje', 'staking', 'stigma', 'stralingsvergiftiging',
-  'surrogaatmoeder', 'taboe', 'terreurcel', 'tijdreizen', 'totalitarisme', 'transplantatie', 'tribunaal', 'tribune',
-  'tunnelvisie', 'turbulentie', 'uitbuiting', 'uitzetting', 'undercoveragent', 'utopie', 'vaccinatie', 'verjaring',
-  'vervreemding', 'vetorecht', 'burgerwacht', 'vluchteling', 'volksopstand', 'vuurwerk', 'wapenhandel', 'wedergeboorte',
-  'xenofobie', 'zelfmoordaanslag', 'zielenknijper', 'zonsverduistering', 'zwarte markt',
-  
-  // Spreekwoorden & uitdrukkingen
-  'alle hens aan dek', 'als de kat van huis is dansen de muizen', 'al doende leert men', 'beter laat dan nooit', 'de appel valt niet ver van de boom', 'door de zure appel heen bijten', 'een gewaarschuwd man telt voor twee', 'van een koude kermis thuiskomen',
-  'een oogie dichtknijpen', 'een storm in een glas water', 'ergens de brui aan geven', 'het kind met het badwater weggooien', 'het roer omgooien', 'hoge bomen vangen veel wind', 'iemand een hak zetten',
-  'iemand in de maling nemen', 'iemand op de kast jagen', 'in de wolken zijn', 'in het nauw gedreven', 'je kunt niet op twee paarden tegelijk wedden', 'je huid duur verkopen', 'zoals het klokje thuis tikt tikt het nergens',
-  'langs de neus weg', 'met de deur in huis vallen', 'met lege handen staan', 'met zijn rug tegen de muur staan', 'met stomheid geslagen zijn', 'nieuwe bezems vegen schoon', 'niet alle dagen zondag', 'olie op het vuur gooien',
-  'om de hete brij heen draaien', 'onder de duim houden', 'op zijn lauweren rusten', 'over de rooie gaan', 'over één kam scheren', 'roet in het eten gooien',
-  'slapende honden wakker maken', 'muggenziften', 'tegen de stroom ingaan', 'twee honden vechten om een been', 'uit de school klappen', 'van een mug een olifant maken', 'van het kastje naar de muur sturen', 'ver van mijn bed show',
-  'vuur met vuur bestrijden', 'water naar de zee dragen', 'wie niet waagt wie niet wint', 'nieuwe wijn in oude zakken', 'wolf in schaapskleren', 'zijn hand overspelen', 'zijn tanden laten zien',
-  'zijn vingers branden aan iets', 'zo vader zo zoon', 'broodje aap verhaal', 'door de mand vallen', 'met de gebakken peren zitten', 'de koe bij de horens vatten', 'iemand de wind uit de zeilen nemen', 'met alle winden meedraaien',
-  'geen haar op zijn hoofd', 'uit zijn vel springen', 'de hand in eigen boezem steken', 'achter het net vissen', 'iets op zijn beloop laten', 'twee vliegen in één klap', 'als twee druppels water', 'de wind in de zeilen hebben',
-  'met de neus in de boter vallen', 'de pineut zijn', 'in de aap gelogeerd zijn', 'al is de leugen nog zo snel de waarheid achterhaalt haar wel', 'beter één vogel in de hand dan tien in de lucht', 'een ezel stoot zich geen twee keer aan dezelfde steen', 'oost west thuis best', 'zoals de waard is vertrouwt hij zijn gasten',
-  'wie goed doet goed ontmoet', 'leugens hebben korte benen', 'in het land der blinden is eenoog koning', 'van uitstel komt afstel', 'de eerste klap is een daalder waard', 'eigen haard is goud waard', 'achteraf is iedereen wijs',
-  'als het kalf verdronken is dempt men de put', 'gedeelde smart is halve smart', 'gedeelde vreugde is dubbele vreugde', 'geld maakt niet gelukkig', 'het gras is altijd groener aan de andere kant', 'honger is de beste saus', 'ieder huisje heeft zijn kruisje', 'jong geleerd oud gedaan',
-  'liefde maakt blind', 'met geduld en vlijt komt men wijd', 'na regen komt zonneschijn', 'nooit te oud om te leren', 'onbekend maakt onbemind', 'oude liefde roest niet', 'praten is zilver zwijgen is goud', 'Rome is niet in één dag gebouwd',
-  'schone schijn bedriegt', 'stille wateren hebben diepe gronden', 'tijd is geld', 'uit het oog uit het hart', 'vele handen maken licht werk', 'vertrouwen komt te voet en gaat te paard', 'waar rook is is vuur',
-  'wat men niet weet wat men niet deert', 'wie de schoen past trekt hem aan', 'wie het kleine niet eert is het grote niet weerd', 'wie kaatst moet de bal verwachten', 'wie zwijgt stemt toe', 'men moet het ijzer smeden als het heet is',
-  'een goed begin is het halve werk', 'aan een half woord genoeg hebben', 'hoe meer zielen hoe meer vreugd', 'het doel heiligt de middelen', 'de pen is machtiger dan het zwaard', 'beter voorkomen dan genezen', 'eind goed al goed',
-  'er is geen roos zonder doornen', 'wie het laatst lacht lacht het best', 'in de nood leert men zijn vrienden kennen', 'met één zwaluw is het nog geen zomer', 'over smaak valt niet te twisten', 'wat de boer niet kent dat eet hij niet',
-  'een wit voetje halen', 'iets voor zoete koek slikken', 'op de vingers tikken', 'over de schreef gaan', 'er met de pet naar gooien', 'iemand het hoofd op hol brengen', 'hard aan de weg timmeren',
-  'ergens geen gat in zien', 'met de neus op de feiten drukken', 'op zijn dooie gemakje', 'schouders ergens onder zetten', 'iemand een loer draaien', 'met fluwelen handschoen aanpakken', 'niet alles is goud wat er blinkt', 'het achter de ellebogen hebben',
-  'de knoop doorhakken', 'ergens geen doekjes omwinden', 'iets door de vingers zien', 'iemand naar de mond praten', 'zijn hart op de tong dragen', 'de boot missen', 'er een nachtje over slapen',
-  'met de billen bloot', 'niet van gisteren zijn', 'op de hoogte zijn', 'zijn mond voorbij praten', 'tegen beter weten in', 'uit de hand lopen', 'van geen ophouden weten', 'het bijltje erbij neerleggen',
-  'met een kluitje in het riet sturen', 'zijn hart ophalen', 'uit de toon vallen', 'de kat uit de boom kijken',
+// ── Categorieën ──────────────────────────────────────────────────────────────
+const CATEGORIES = [
+  { id: "all",              label: "🎲 Alles",                   emoji: "🎲" },
+  { id: "dieren",           label: "🐾 Dieren",                  emoji: "🐾" },
+  { id: "voedsel",          label: "🍕 Voedsel",                 emoji: "🍕" },
+  { id: "beroepen",         label: "👷 Beroepen",                emoji: "👷" },
+  { id: "sport",            label: "⚽ Sport & Hobby",           emoji: "⚽" },
+  { id: "huishouden",       label: "🏠 Huishouden",              emoji: "🏠" },
+  { id: "objecten",         label: "📦 Objecten",                emoji: "📦" },
+  { id: "natuur",           label: "🌿 Natuur",                  emoji: "🌿" },
+  { id: "vervoer",          label: "🚗 Vervoer",                 emoji: "🚗" },
+  { id: "plaatsen",         label: "🏛️ Plaatsen",                emoji: "🏛️" },
+  { id: "acties",           label: "🏃 Acties",                  emoji: "🏃" },
+  { id: "landen",           label: "🌍 Landen",                  emoji: "🌍" },
+  { id: "gereedschap",      label: "🔧 Gereedschap",             emoji: "🔧" },
+  { id: "muziek",           label: "🎤 Muziek",                  emoji: "🎤" },
+  { id: "militair",         label: "🪖 Militair",                emoji: "🪖" },
+  { id: "ruimte",           label: "🚀 Ruimte",                  emoji: "🚀" },
+  { id: "wetenschap",       label: "🔬 Wetenschap",              emoji: "🔬" },
+  { id: "politiek",         label: "🏛 Politiek",                emoji: "🏛" },
+  { id: "spreekwoorden",    label: "💬 Spreekwoorden",           emoji: "💬", bonus: true },
 ];
+
+
+
+// WORDS_BY_CATEGORY maps category id → word array
+const WORDS_BY_CATEGORY = {};
+
+// Build category buckets
+(function buildCategories() {
+  const dieren = [
+    'aardvarken', 'adelaar', 'albatros', 'alpaca', 'anakonda', 'baviaan',
+    'beer', 'bever', 'bijenkoningin', 'bizon', 'boomkikker', 'boomslang',
+    'buffel', 'buizerd', 'buldog', 'cheetah', 'chihuahua', 'cobra',
+    'condor', 'das', 'dingo', 'dinosaurus', 'dolfijn', 'dromedaris',
+    'duif', 'dwergpinguïn', 'eekhoorn', 'egel', 'ekster', 'eland',
+    'emoe', 'fazant', 'flamingo', 'fret', 'galapagosschildpad', 'gecko',
+    'gibbon', 'giraffe', 'gorilla', 'goudjakhals', 'goudvis', 'grizzlybeer',
+    'guppie', 'haai', 'haas', 'hagedis', 'hamster', 'havik',
+    'hermelijn', 'hond', 'honingdas', 'hyena', 'ibis', 'ijsbeer',
+    'impala', 'inktvis', 'jaguar', 'jakhals', 'kaketoe', 'kameel',
+    'kameleon', 'kangoeroe', 'kat', 'kever', 'kikker', 'kiwi',
+    'koala', 'koe', 'komodovaraan', 'konijn', 'kraanvogel', 'krab',
+    'krokodil', 'kwal', 'kwartel', 'lama', 'leeuw', 'leguaan',
+    'lemming', 'lepelaar', 'libel', 'lieveheersbeestje', 'luiaard', 'lynx',
+    'maanvis', 'marmot', 'meerkat', 'meerval', 'mier', 'miereneter',
+    'mol', 'mug', 'muilezel', 'muskusrat', 'narwal',
+    'nerts', 'neusaap', 'neushoorn', 'nijlgans', 'nijlpaard', 'octopus',
+    'oehoe', 'olifant', 'ooievaar', 'orang-oetan', 'orka', 'otter',
+    'paard', 'panda', 'panther', 'papegaai', 'paradijsvogel', 'parkiet',
+    'pauw', 'pelikaan', 'pinguïn', 'vogelbekdier', 'poema', 'poolvos',
+    'prairiehond', 'raaf', 'rat', 'reiger', 'rendier', 'reuzenoctopus',
+    'reuzenpanda', 'roofvogel', 'salamander', 'schaap', 'schildpad', 'schorpioen',
+    'slak', 'slang', 'snoek', 'specht', 'sperwer', 'spin',
+    'bidsprinkhaan', 'stekelvarken', 'steur', 'stier', 'stinkdier', 'stokstaartje',
+    'struisvogel', 'tapir', 'tarantula', 'tijger', 'toekan', 'tor',
+    'uil', 'varaan', 'veelvraat', 'vleermuis', 'vlieg', 'vliegend hert',
+    'vliegende vis', 'vlinder', 'vos', 'wants', 'walvis', 'wasbeer',
+    'waterbuffel', 'waterrat', 'wezel', 'wild zwijn', 'wolf', 'wombat',
+    'worm', 'wrattenzwijn', 'zebra', 'zeehond', 'zeemeermin', 'zeeotter',
+    'krekel', 'mus', 'vuurvliegje', 'zeepaardje', 'zeeschildpad', 'zwaan',
+    'zwaluw', 'zwarte mamba', 'zwarte panter', 'damhert', 'forel', 'goudhaan',
+    'heggenmus', 'hop', 'ijsvogel', 'kauw', 'knobbelzwaan', 'nachtegaal',
+    'paradijsvogel', 'pimpelmees', 'roodborst', 'steenuil', 'zanglijster', 'kraai',
+    'walrus', 'zeeleeuw', 'bruinvis', 'potvis', 'bultrug', 'zeebaars',
+    'tonijn', 'zalm', 'haring', 'makreel', 'kabeljauw', 'paling',
+    'karper', 'baars', 'rog', 'zwaardvis', 'clownvis', 'zeester',
+    'kreeft', 'mossel', 'oester', 'pijlinktvis', 'bij', 'wesp',
+    'hommel', 'vlooien', 'pissebed', 'glimworm', 'meikever', 'kakkerlak',
+    'mot', 'haan', 'eend', 'gans', 'kalkoen', 'geit',
+    'varken', 'ezel', 'pony', 'lam', 'reuzenhaai',
+    'spookdier', 'vis'
+  ];
+
+  const voedsel = [
+    'aardappel', 'aardappelpuree', 'aardbei', 'abrikoos', 'amaretto', 'ananas',
+    'andijvie', 'appelmoes', 'appelsap', 'appeltaart', 'asperges', 'avocado',
+    'bacon', 'bagel', 'baguette', 'balsamico', 'bami', 'banaan',
+    'bananenbrood', 'basilicum', 'biefstuk', 'bier', 'bieslook', 'bietensalade',
+    'bitterbal', 'bitterkoekje', 'bladerdeeg', 'blauwe bes', 'bloemkool', 'boerenkool',
+    'bolognese', 'bonbons', 'bosbessen', 'boterham', 'bouillon', 'brandnetelsoep',
+    'broccoli', 'brood', 'brownie', 'bruine bonen', 'caesarsalade', 'karamel',
+    'carpaccio', 'cashewnoot', 'champignon', 'cheesecake', 'chipolata', 'chips',
+    'chocolade', 'churros', 'ciabatta', 'citroen', 'citroentaart', 'cola',
+    'corndog', 'couscous', 'cranberrysap', 'croissant', 'crème brûlée', 'curry',
+    'dadel', 'donut', 'doperwt', 'drakenvrucht', 'druiven', 'eclairs',
+    'ei', 'enchilada', 'energiedrank', 'erwtensoep', 'espresso', 'falafel',
+    'feta', 'fondue', 'friet', 'frikandel', 'frisdrank', 'fruitsalade',
+    'garnaal', 'gazpacho', 'gehaktbal', 'geitenkaas', 'gelato', 'gerst',
+    'gin-tonic', 'goulash', 'granaatappel', 'groenten', 'groentesoep', 'gyros',
+    'hamburger', 'hazelnoot', 'honing', 'hotdog', 'hummus', 'ijs',
+    'jalapeno', 'jus', 'kaas', 'kaasfondue', 'kaassoufflé', 'kaneelbroodje',
+    'kappertjes', 'kapsalon', 'kastanje', 'kerrieworst', 'kersensap', 'kip',
+    'kipnuggets', 'koffie', 'kokosmelk', 'komkommer', 'koriander', 'kroket',
+    'kwark', 'kwarktaart', 'lamsvlees', 'lasagne', 'latte', 'limonade',
+    'linzen', 'loempia', 'lychee', 'macaron', 'macaroni', 'mango',
+    'marshmallow', 'mayonaise', 'meloensap', 'milkshake', 'miso', 'mosterd',
+    'mozzarella', 'mueslireep', 'muffin', 'nasi', 'nectarine', 'noedels',
+    'noten', 'nougat', 'olijf', 'olijfolie', 'omelet', 'paella',
+    'pannenkoek', 'paprika', 'parmezaan', 'passievrucht', 'pasta', 'penne',
+    'perzik', 'pesto', 'piccalilly', 'pindakaas', 'pistache', 'pitabrood',
+    'pizza', 'poffertjes', 'pommes frites', 'pompoen', 'popcorn', 'prei',
+    'pruim', 'pulled pork', 'quiche', 'rabarber', 'radijs', 'ratatouille',
+    'ravioli', 'ricotta', 'rijstpap', 'rijsttafel', 'risotto', 'rode wijn',
+    'roggebrood', 'rolmops', 'roomijs', 'rozijnen', 'rucola', 'rum',
+    'salade', 'sandwich', 'sap', 'satésaus', 'scones', 'selderij',
+    'sinaasappel', 'slagroom', 'smoothie', 'snoep', 'soep', 'sojasaus',
+    'soufflé', 'spaghetti', 'spek', 'spinazie', 'stampot', 'stoofpot',
+    'strudel', 'suiker', 'sushi', 'taart', 'taco', 'tapenade',
+    'tartaar', 'teriyaki', 'thee', 'tiramisu', 'toast', 'tomatensaus',
+    'tomatensoep', 'tompouce', 'tortilla', 'truffel', 'tzatziki', 'ui',
+    'uiensoep', 'vanillepudding', 'wafel', 'walnoot', 'watermeloen', 'wijn',
+    'witlof', 'witte wijn', 'wrap', 'yoghurt', 'zuurkool', 'appelstroop',
+    'beschuit', 'boontjes', 'erwten', 'flensje', 'gehakt', 'gevulde koek',
+    'hagelslag', 'hutspot', 'jenever', 'karnemelk', 'kokos', 'krentenbollen',
+    'kruidenboter', 'melk', 'muesli', 'ontbijtkoek', 'pap', 'peperkoek',
+    'rijst', 'rookworst', 'speculaas', 'stroopwafel', 'tosti', 'vla',
+    'wentelteefje', 'wittebrood', 'suikerspin'
+  ];
+
+  const beroepen = [
+    'accountant', 'acrobaat', 'acteur', 'advocaat', 'apotheker', 'archeoloog',
+    'architect', 'automonteur', 'bakker', 'barista', 'beveiliger', 'bibliothecaris',
+    'blogger', 'boekhoudster', 'botanicus', 'brandweerman', 'buschauffeur', 'cardioloog',
+    'casinodealer', 'chef-kok', 'chiropractor', 'chirurg', 'circusdirecteur', 'clown',
+    'coach', 'cowboy', 'croupier', 'danser', 'dansleraar', 'data-analist',
+    'dermatoloog', 'detective', 'dierenarts', 'dierentrainer', 'diplomaat', 'documentairemaker',
+    'dokter', 'dronepiloot', 'duikinstructeur', 'econoom', 'ethisch hacker', 'examinator',
+    'farmaceut', 'filosoof', 'fotograaf', 'fysiotherapeut', 'gameontwikkelaar', 'gastronoom',
+    'geograaf', 'geoloog', 'gids', 'glazenwasser', 'goochelaar', 'grafisch ontwerper',
+    'gynaecoloog', 'handelaar', 'heks', 'hersenchirurg', 'hovenier', 'hypnotherapeut',
+    'ijsbeeldhouwer', 'illustrator', 'immunoloog', 'informaticus', 'ingenieur', 'inspecteur',
+    'instrumentmaker', 'jager', 'jongleur', 'journalist', 'juwelier',
+    'kapitein', 'kapper', 'kassamedewerker', 'kinderarts', 'klusjesman', 'kok',
+    'kostuumontwerper', 'kraamverzorger', 'kruidenier', 'kunstcriticus', 'kunstenaar', 'kweker',
+    'laborant', 'lasser', 'leraar', 'loodgieter', 'luchtverkeersleider', 'magiër',
+    'makelaar', 'matroos', 'meteoroloog', 'microbioloog', 'modeontwerper',
+    'moleculair bioloog', 'monteur', 'museumconservator', 'neuroloog', 'notaris', 'ontwerper',
+    'oogarts', 'opticien', 'orthopeed', 'piloot', 'piraat', 'politicoloog',
+    'politieagent', 'postbode', 'producent', 'profvoetballer', 'psychiater', 'psycholoog',
+    'radioloog', 'rechercheur', 'revalidatiearts', 'scenarioschrijver', 'schappenvuller',
+    'scheikundige', 'schilder', 'schildwacht', 'schoonmaker', 'schrijver', 'sheriff',
+    'skateboarder', 'slager', 'socioloog', 'sommelier', 'stadsplanner', 'stand-upcomedian',
+    'steward', 'stoker', 'strateeg', 'stratenmaker', 'stuntman', 'systeembeheerder',
+    'tatoeëerder', 'taxichauffeur', 'taxidermist', 'timmerman', 'tolk', 'tovenaar',
+    'toxicoloog', 'trainer', 'tuinman', 'verpleegkundige', 'verzekeringsagent', 'vioolmaker',
+    'visser', 'vliegtuigbouwer', 'voedingswetenschapper', 'vuilnisman', 'wetenschapper', 'wijnboer',
+    'winkelier', 'wiskundige', 'woordvoerder', 'zeebioloog', 'zeiler', 'ziekenhuisdirecteur',
+    'aannemer', 'beeldhouwer', 'burgemeester', 'cabaretier', 'ijsverkoper', 'kaarsenmaker',
+    'kolenboer', 'predikant', 'reddingswerker', 'straatveger', 'trambestuurder', 'vrijwilliger',
+    'lobbyist', 'undercoveragent', 'pionier', 'kluizenaar', 'kustwacht', 'manager',
+    'ambtenaar', 'animator', 'auteur', 'bankier', 'belastingadviseur', 'bioloog',
+    'boswachter', 'columnist', 'copywriter', 'criminoloog', 'dichter', 'diëtist',
+    'directeur', 'drogist', 'elektricien', 'forensisch arts', 'huisarts', 'marechaussee',
+    'marketeer', 'masseur', 'muziekleraar', 'ondernemer', 'pedagoog', 'penningmeester',
+    'politiecommissaris', 'rechter', 'redacteur', 'regisseur', 'rijinstructeur', 'secretaris',
+    'coach', 'stadsgids', 'stewardess', 'therapeut', 'verloskundige', 'vertaler',
+    'vrachtwagenchauffeur', 'zorgverlener', 'zwemleraar', 'fietsenmaker', 'glazenmaker', 'hoefsmid',
+    'schoenmaker', 'stoffeerder', 'tegelzetter', 'verzorger', 'begeleider', 'ober'
+  ];
+
+  const sport = [
+    'aerobics', 'alpineskiën', 'american football', 'atletiek', 'badminton',
+    'balletdansen', 'basketbal', 'beachvolleybal', 'bergsport', 'biatlon', 'bingo',
+    'biljarten', 'BMX', 'bobslee', 'boksen', 'bowling', 'breakdance',
+    'cricket', 'curling', 'dammen', 'diepzeeduiken', 'discgolf', 'discuswerpen',
+    'dressuur', 'duiken', 'e-sporten', 'estafette', 'fietsen', 'freerunning',
+    'frisbee', 'gewichtheffen', 'gokken', 'golfen', 'gymnastiek', 'handbal',
+    'hardlopen', 'hengelen', 'hindernisloop', 'hockey', 'hoogspringen', 'hordelopen',
+    'ijshockey', 'jiu-jitsu', 'joggen', 'judo', 'kaatsen', 'kanoën',
+    'karate', 'karting', 'kegelen', 'kitesurfen', 'klimmen', 'klimwand',
+    'knikkeren', 'kogelstoten', 'korfbal', 'krachttraining', 'kunstrijden', 'lacrosse',
+    'langebaanschaatsen', 'longboarden', 'marathon', 'minigolf', 'motorcross', 'motorsport',
+    'mountainbiken', 'netbal', 'nordic walking', 'paardrijden', 'padel', 'paintball',
+    'parachutespringen', 'parcours', 'pétanque', 'polo', 'polsstokhoogspringen', 'powerlifting',
+    'rafting', 'ringsteken', 'rodeo', 'roeien', 'rolschaatsen', 'rugby',
+    'schaatsen', 'schaken', 'schansspringen', 'scrabble', 'sjoelen', 'skeeleren',
+    'skeleton', 'skiën', 'skislalom', 'snowboarden', 'softbal', 'speerwerpen',
+    'spijkerpoepen', 'squash', 'stoeien', 'suppen', 'surfen', 'synchroonzwemmen',
+    'taekwondo', 'tafeltennis', 'tennis', 'touwtrekken', 'trail running', 'trampolinespringen',
+    'trefbal', 'triatlon', 'turnen', 'varen', 'veldrijden', 'verspringen',
+    'vissen', 'vliegeren', 'vliegvissen', 'voetbal', 'volleybal', 'wandelen',
+    'waterpolo', 'waterskiën', 'wakeboarden', 'wedstrijdvissen', 'wielrennen', 'worstelen',
+    'yoga', 'zeilen', 'zwemmen', 'schermen', 'kaartspelen', 'kwartetten',
+    'tekenen', 'abseilen', 'biljartbal', 'kampioensbeker', 'medaille', 'stopwatch',
+    'dartpijl', 'flipperkast', 'gele kaart', 'rode kaart', 'schaakbord', 'speelkaart',
+    'trampoline', 'waterpistool', 'fotograferen', 'vogelkijken', 'stoepkrijten',
+    'borduren', 'breien', 'haakwerk', 'handwerken', 'origami',
+    'pottenbakken', 'weven', 'lego', 'gezelschapsspel', 'escaperoom',
+    'lasergame', 'beachtennis', 'langlaufen', 'kleiduivenschieten',
+    'halfpipe', 'rolstoelbasketbal', 'dansen', 'salsadansen', 'linedance', 'volksdansen',
+    'kampvuur maken', 'boogschieten', 'survivallen', 'kajakken', 'raften', 'skateboarden',
+    'windsurfen', 'roei', 'jagen', 'springen', 'polo', 'snorkelen',
+    'puzzelen', 'bordspel', 'videospellen', 'kamperen', 'crossfit', 'boot camp',
+    'spinning', 'kickboksen', 'speedklimmen', 'zaalvoetbal', 'rolstoeltennis', 'paragliding',
+    'estafettelopen', 'polsstokverspringen', 'kogelslingeren',
+    'tafeltennistafel', 'voetbalnet', 'basketbalring', 'hockeystick', 'tennisracket'
+  ];
+
+  const objecten = [
+    'aansteker', 'actiefiguur', 'afstandsbediening', 'alarmbel', 'anker', 'ansichtkaart',
+    'antiek', 'armbandhorloge', 'avondjurk', 'ballon', 'balustrade', 'beeldhouwwerk',
+    'bodycam', 'boekenlegger', 'boomerang', 'briefopener', 'brievenbus', 'camera',
+    'computer', 'dakpan', 'roltrap', 'fakkel', 'film', 'föhn',
+    'ganzenbord', 'glazen bol', 'haardroger', 'handtas', 'hangmat', 'heksenketel',
+    'horloge', 'ijsklontje', 'kaars', 'kaarsenhouder', 'ketting', 'kleedhanger',
+    'koffer', 'kompas', 'kroon', 'krukje', 'kubus', 'kurketrekker',
+    'lampion', 'lantaarn', 'laserpointer', 'luchtballon', 'maillot', 'manchetknoop',
+    'masker', 'megafoon', 'molen', 'naaldhak', 'neonlamp', 'paraplu',
+    'penseel', 'printer', 'projector', 'puzzel', 'reddingsvest', 'regenjas',
+    'robot', 'rubberen eend', 'rugzak', 'sarcofaag', 'scheepsschroef', 'scheermessen',
+    'schijf van vijf', 'schilderij', 'schommel', 'speelgoed', 'sphinx', 'spijkerbroek',
+    'springveer', 'stoommachine', 'tandenborstel', 'tandpasta', 'tent', 'tijdmachine',
+    'toorts', 'tuinkabouter', 'tunnel', 'veiligheidsspeld', 'waaier', 'waterklok',
+    'wiel', 'zaklamp', 'zandloper', 'zeepbel', 'zeeppomp', 'zenderstation',
+    'zetel', 'zonnebril', 'zonnewijzer', 'zweep', 'tandenstoker', 'kleerhanger',
+    'elastiekje', 'kurk', 'boodschappentas', 'broek', 'handschoen', 'hoed',
+    'jasje', 'knoop', 'krijtbord', 'muts', 'papier', 'pen',
+    'portemonnee', 'riem', 'schoen', 'spaarpot', 'stropdas', 'tas',
+    'antenne', 'smartphone', 'tablet', 'laptop', 'toetsenbord', 'muis',
+    'monitor', 'usb-stick', 'harde schijf', 'powerbank', 'oplader', 'oortjes',
+    'smartwatch', 'drone', 'spelcomputer', 'potlood', 'gum', 'schrift',
+    'map', 'ordner', 'plakband', 'paperclip', 'nieter', 'perforator',
+    'whiteboard', 'Post-it', 'agenda', 'envelop', 'postzegel', 'sjaal',
+    'handschoenen', 'pet', 'bril', 'jas', 'vest', 'trui',
+    'shirt', 'fles', 'blik', 'zak', 'doos', 'krat',
+    'sleutelring', 'kaartje', 'briefje', 'pakketje', 'cadeau', 'dobbelsteen',
+    'tol', 'jojo', 'vlieger', 'blokken', 'knuffelbeer', 'pop',
+    'modeltrein', 'legoblokje', 'puzzelstuk', 'kaarten', 'dobbelstenen', 'monopoly',
+    'domino', 'memory', 'verfpalet', 'schildersezel', 'kleurpotlood', 'viltstift',
+    'pastelkrijt', 'aquarelverf', 'boetseerklei', 'origamipapier', 'naald', 'draad',
+    'wol', 'haaknaald', 'breinaald', 'grammofoonplaat', 'cassette', 'cd',
+    'dvd', 'blu-ray', 'lenzen', 'gehoorapparaat', 'kruk', 'wandelstok',
+    'aktetas', 'shopper', 'heuptas', 'zonnescherm', 'vouwstoel', 'campingstoel',
+    'trechter', 'pomp', 'kabel', 'snoer', 'stekker', 'verlengsnoer',
+    'schakelaar', 'zekering', 'batterij', 'rits', 'gesp', 'klem',
+    'muurschildering', 'beeldje', 'vaasje', 'schaal', 'kom', 'kan',
+    'kruik', 'theeglas', 'shotglas', 'bierglas', 'champagneglas', 'trofee',
+    'urn', 'relikwie', 'scepter', 'wapenrusting', 'lans', 'pijl en boog',
+    'olielamp', 'gasbrander', 'kalender', 'dagboek', 'fotoalbum', 'poster',
+    'kaart', 'woordenboek', 'encyclopedie', 'roman', 'tijdschrift', 'krant'
+  ];
+
+  const natuur = [
+    'aardbeving', 'aardverschuiving', 'algen', 'atlas', 'bamboe', 'bergtop',
+    'blad', 'bliksem', 'bloem', 'boom', 'bos', 'branding',
+    'brandnetels', 'bronwater', 'bui', 'cactus', 'compost', 'dauw',
+    'delta', 'dennennaald', 'dijk', 'droogte', 'duin', 'eb',
+    'ecosysteem', 'fjord', 'fossiel', 'getijden', 'geiser', 'goud',
+    'greppel', 'hagel', 'herfst', 'herfstblad', 'heuvel', 'hittegolf',
+    'ijsberg', 'ijspegel', 'ijsschots', 'ijsvorming', 'inham', 'keien',
+    'kiezel', 'klif', 'koraal', 'koraalrif', 'lavastroom', 'lente',
+    'luchtvochtigheid', 'mangrovebos', 'maretak', 'meander', 'mist', 'modder',
+    'moeras', 'monsoen', 'morgenrood', 'mos', 'naaldboom', 'nevel',
+    'oase', 'oceaan', 'onweer', 'orkaan', 'paddenstoel', 'paddenvijver',
+    'plas', 'poollicht', 'regen', 'regenboog', 'regenbui', 'regenwoud',
+    'rivier', 'riviermonding', 'roos', 'rots', 'rotsbodem', 'savanne',
+    'schemering', 'schimmel', 'sneeuw', 'sneeuwvlok', 'sneeuwstorm', 'steengroeve',
+    'stikstof', 'stofwolk', 'storm', 'strand', 'stromend water', 'tij',
+    'toendra', 'tornado', 'tropische regen', 'tsunami', 'tulp', 'uiterwaard',
+    'vallei', 'veen', 'veld', 'vijver', 'vlakte', 'vloed',
+    'vulkaan', 'vulkaanuitbarsting', 'waterval', 'weide', 'windvlaag', 'woestijn',
+    'wolk', 'woud', 'zandstorm', 'zee', 'zeewind', 'zomer',
+    'zonsondergang', 'zonsopgang', 'schelp', 'schaduw', 'berk', 'eik',
+    'graan', 'kastanjeboom', 'klaver', 'korenbloem', 'lavendel', 'meidoorn',
+    'narcis', 'populier', 'wilg', 'viooltje', 'afgrond', 'gletsjer',
+    'lawine', 'draaikolk', 'turbulentie', 'akker', 'beek', 'bergpas',
+    'bloemenveld', 'bosbrand', 'bospad', 'bron', 'dode boom', 'eiland',
+    'erosie', 'grasland', 'grot', 'jungle', 'kustlijn', 'natuur',
+    'volle maan', 'onweersbui', 'oerbos', 'permafrost', 'polder', 'prooi',
+    'rivieroever', 'rotsklif', 'schors', 'slikken', 'steentijd', 'steppegras',
+    'stroomgebied', 'stuifzand', 'terp', 'tundra', 'waterput', 'wildernis',
+    'windstil', 'zandbank', 'zandvlakte', 'zeebodem', 'zeestroming', 'zeewier',
+    'zilt', 'zoetwatermeer', 'zonnestraling', 'zonsverduistering', 'zoutvlakte', 'zwerfkei',
+    'zonnebloem', 'koolzaad', 'heide', 'waterlelie', 'riet', 'stroompje',
+    'bosrand', 'bosje', 'struikgewas', 'braamstruik', 'vlierbes',
+    'es', 'iep', 'beuk', 'hulst', 'klimop', 'varens',
+    'mossen', 'winter', 'getij', 'wind', 'zon', 'sloot',
+    'steen', 'zeegras', 'braam', 'eikel', 'dennenappel', 'framboos',
+    'boomgaard', 'botanische tuin'
+  ];
+
+  const vervoer = [
+    'aanhanger', 'achtbaan', 'ambulance', 'benzine', 'benzinestation', 'boeing',
+    'boot', 'brandweerauto', 'brandweerwagen', 'bromfiets', 'bus', 'camper',
+    'caravan', 'catamaran', 'containerschip', 'diesel', 'driewieler',
+    'dronepost', 'dubbeldekker', 'duikboot', 'elektrische auto', 'elektrische scooter', 'fatbike',
+    'fietsendrager', 'fietstaxi', 'forens', 'vrachtschip', 'gondel', 'gondelbaan',
+    'graafmachine', 'grensovergang', 'hangbrug', 'helikopter', 'hoogspoortrein', 'hoverboard',
+    'hovercraft', 'intercity', 'internationale trein', 'jetpack', 'jetski', 'kabelbaan',
+    'kajak', 'kar', 'lijnbus', 'locomotief', 'metro', 'mini',
+    'monorail', 'motorfiets', 'nachttrein', 'oplegger', 'pick-uptruck', 'politieauto',
+    'postduif', 'postkoets', 'racefiets', 'racewagen', 'reddingsboot', 'rijtuig',
+    'riksja', 'robotaxi', 'roeiboot', 'schip', 'scooterdeeldienst', 'segway',
+    'slee', 'sleepboot', 'sloep', 'sneltrein', 'speedboot', 'stadsbus',
+    'stadsfiets', 'step', 'stoomboot', 'stoomlocomotief', 'suv', 'taxi',
+    'touringcar', 'tractor', 'tram', 'trolleybus', 'tuk-tuk', 'veerboot',
+    'vierwieler', 'vrachtwagen', 'waterbus', 'waterfiets', 'bushalte', 'watervliegtuig',
+    'wielerbaan', 'zeilschip', 'zijspan', 'zonneauto', 'zweefvliegtuig', 'vliegtuigkaping',
+    'fiets', 'elektrische fiets', 'scooter', 'trein', 'zeilboot', 'bijtanken',
+    'tankwagen', 'brandstoftanker', 'jacht', 'rubberboot',
+    'kano', 'vlot', 'waterscooter', 'reddingsvlot', 'trimaran', 'onderzeeër',
+    'stoomtram', 'toeristentrein', 'zweeftrein', 'kampeerbus', 'politiemotor', 'ziekenwagen',
+    'brandweerboot', 'politiehelikopter', 'traumahelikopter', 'zeppelin', 'bakfiets', 'ligfiets',
+    'tandemfiets', 'bromscooter', 'quad', 'buggy', 'golfkarretje', 'stadsauto',
+    'cabrio', 'stationwagen', 'terreinwagen', 'minivan', 'camionette',
+    'kraanwagen', 'betonmixer', 'vorkheftruck', 'shovel', 'bulldozer', 'sloopkogel',
+    'sleepwagen', 'deelfiets', 'deelscooter', 'deelstep', 'snelweg', 'ringweg',
+    'afritten', 'invoegstrook', 'viaduct', 'perron', 'spoorwegovergang', 'bagageband',
+    'paspoortcontrole', 'vertrekhal', 'aankomsthal', 'landingsbaan', 'vliegtuigtrap', 'jetway',
+    'bagage', 'handbagage', 'reistas', 'reiskaart', 'ov-chipkaart', 'treinkaartje',
+    'vliegticket', 'overstap', 'rijbewijs', 'kentekenplaat', 'autopech', 'lekke band',
+    'rijstrook', 'fietspad', 'kruispunt', 'stoplicht', 'parkeerbon', 'elektrisch rijden',
+    'waterstofauto', 'carpoolen', 'pendelen', 'woon-werkverkeer', 'NS', 'sprinter',
+    'nachtbus', 'pendelbusje', 'rolstoelbus', 'baggerschip', 'cruiseschip', 'laad- en losplaats',
+    'distributiecentrum', 'koelwagen', 'voetpad', 'wandelroute', 'aanlegsteiger', 'privéjet',
+    'helipad', 'auto', 'motor', 'wagen', 'kruiwagen', 'huifkar',
+    'schoolbus', 'rolstoel', 'skateboard', 'vouwfiets', 'laadpaal'
+  ];
+
+  const plaatsen = [
+    'abdij', 'amfiteater', 'apotheek', 'aquaduct', 'aquarium', 'badhuis',
+    'balie', 'begraafplaats', 'bibliotheek', 'bioscoop', 'bloemenmarkt', 'boekenwinkel',
+    'boerderij', 'bouwplaats', 'bowlingbaan', 'brandweerkazerne', 'brouwerij', 'brug',
+    'café', 'camping', 'campingterrein', 'casino', 'centrum', 'circus',
+    'consulaat', 'crematorium', 'dierentuin', 'discotheek', 'fabriek', 'fietsenwinkel',
+    'fontein', 'fruitmarkt', 'galerie', 'gemeentehuis', 'gevangenis', 'grachtenpand',
+    'gymnasium', 'haven', 'herberg', 'honkbalstadion', 'hostel', 'hotel',
+    'huis', 'iglo', 'ijsbaan', 'jachthaven', 'kapperszaak', 'kasteel',
+    'kathedraal', 'kerk', 'klooster', 'koffieshop', 'kolenmijn', 'kroeg',
+    'kunstmuseum', 'landgoed', 'loods', 'luchthaven', 'manege', 'markt',
+    'megabioscoop', 'monument', 'moskee', 'museum', 'observatorium', 'dolfinarium',
+    'paleis', 'parkeergarage', 'pier', 'plein', 'politiebureau', 'poppenkast',
+    'postkantoor', 'pretpark', 'pyramide', 'racebaan', 'rechtbank', 'recreatiegebied',
+    'restaurant', 'ruïne', 'sauna', 'schaatsbaan', 'school', 'silo',
+    'sluis', 'speeltuin', 'sporthal', 'stad', 'stadion', 'stadshuis',
+    'standbeeld', 'strandtent', 'supermarkt', 'synagoge', 'tandartspraktijk', 'tankstation',
+    'tempel', 'theater', 'toren', 'treinstation', 'universiteit', 'vakantiepark',
+    'vergaderzaal', 'villa', 'vliegveld', 'voetgangersgebied', 'vuurtoren', 'watertoren',
+    'wegrestaurant', 'windmolen', 'winkelcentrum', 'ziekenhuis', 'zwembad', 'bakkerij',
+    'benzinepomp', 'bloemenwinkel', 'boekhandel', 'buurthuis', 'drogisterij', 'garage',
+    'ijssalon', 'kantine', 'kiosk', 'nachtwinkel', 'pannenkoekenhuis', 'parkeerplaats',
+    'slagerij', 'snackbar', 'sportschool', 'stomerij', 'viswinkel', 'warenhuis',
+    'gerechtshof', 'tribune', 'Afrika', 'Azië', 'Europa', 'Noord-Amerika',
+    'Zuid-Amerika', 'Himalaya', 'Kaspische Zee', 'Mississippi', 'Nijl', 'Noordzee',
+    'Sahara', 'Thames', 'Corsica', 'Hawaï', 'Kaukasus', 'Siberië',
+    'Sicilië', 'Steppe', 'boomhut', 'brandtrap', 'carwash', 'dierenasiel',
+    'fietsbrug', 'gemaal', 'graftombe', 'hertenkamp', 'ijsbaantje', 'kasteelgracht',
+    'kerkhof', 'kinderdagverblijf', 'klimrek', 'klimbos', 'lantaarnpaal', 'markthal',
+    'meubelboulevard', 'recreatiegebied', 'ophaalbrug', 'plattegrond', 'riolering', 'rotonde',
+    'schaapskooi', 'sportpark', 'stadspark', 'steiger', 'stoep', 'uitkijktoren',
+    'visvijver', 'voetbalveld', 'volkstuin', 'wijngaard', 'windpark', 'zonnepark',
+    'hutje', 'bungalow', 'studentenhuis', 'flat', 'appartement', 'studio',
+    'boerenschuur', 'stal', 'kapel'
+  ];
+
+  const acties = [
+    'applaudisseren', 'fluisteren', 'gebaren', 'gooien', 'graven', 'huppelen',
+    'ijsberen', 'klunen', 'knuffelen', 'koken', 'kruipen', 'lachen',
+    'lopen', 'maaien', 'naaien', 'omhelzen', 'pesten', 'rennen',
+    'rollen', 'schilderen', 'slapen', 'snurken', 'struikelen', 'tikken',
+    'vallen', 'vangen', 'verstoppen', 'vliegen', 'vouwen', 'waggelen',
+    'wiebelen', 'afrekenen', 'afscheid nemen', 'bakken', 'bellen', 'betalen',
+    'bewaken', 'bidden', 'blozen', 'branden', 'breken', 'buigen',
+    'dagdromen', 'delen', 'douchen', 'dreigen', 'drinken', 'duwen',
+    'eten', 'fluiten', 'gapen', 'geven', 'giechelen', 'gillen',
+    'gluren', 'groeten', 'hangen', 'helpen', 'hijsen', 'huilen',
+    'inschenken', 'inslapen', 'juichen', 'kijken', 'klagen', 'kloppen',
+    'knipogen', 'kopen', 'leren', 'lezen', 'liegen', 'luisteren',
+    'meten', 'nabootsen', 'nadenken', 'omvallen', 'onderhandelen', 'ophangen',
+    'opruimen', 'opstaan', 'oversteken', 'pakken', 'plannen', 'plassen',
+    'plukken', 'praten', 'proberen', 'roepen', 'ruiken', 'ruilen',
+    'schelden', 'schminken', 'schrijven', 'schuilen', 'schuiven', 'slepen',
+    'smeken', 'snijden', 'sparen', 'speuren', 'stelen', 'stoppen',
+    'strelen', 'studeren', 'telefoneren', 'twijfelen', 'uitleggen', 'uitpakken',
+    'verbergen', 'verdwalen', 'vergeten', 'verkopen', 'verliezen', 'verrassen',
+    'verzorgen', 'vluchten', 'volgen', 'wachten', 'wassen', 'weggooien',
+    'werken', 'winnen', 'wroeten', 'zoeken', 'zwaaien', 'niezen',
+    'sluipen', 'brand blussen', 'eerste hulp verlenen', 'geblinddoekt', 'geheim bewaren', 'inhalen',
+    'misleiden', 'in de rij staan', 'op de vlucht zijn', 'rijbewijs halen', 'schipbreukeling', 'sleutels verliezen',
+    'verslikken', 'verstoppertje', 'hinkelen', 'touwtjesspringen', 'bijna', 'stilte',
+    'angst', 'geluk', 'haast', 'verveeld', 'achtervolgen', 'bazelen',
+    'bedanken', 'begroeten', 'beschermen', 'bewonderen', 'boeren', 'controleren',
+    'debatteren', 'demonstreren', 'flirten', 'herkennen', 'hijgen', 'improviseren',
+    'jongleren', 'knijpen', 'krabben', 'kwispelen', 'mompelen', 'ontsnappen',
+    'overwinnen', 'piepen', 'prikken', 'rijden', 'schudden', 'slenteren',
+    'sluimeren', 'snuffelen', 'stampen', 'staren', 'steigeren', 'trillen',
+    'wentelen', 'woelen', 'zuchten', 'avontuur', 'bewijs', 'droom',
+    'gevaar', 'gewoonte', 'grens', 'herinnering', 'idee', 'kans',
+    'karakter', 'leugen', 'liefde', 'mening', 'mysterie', 'nieuws',
+    'ongeluk', 'oplossing', 'pech', 'plan', 'probleem', 'raadsel',
+    'roddel', 'rust', 'succes', 'takelen', 'toeval', 'traditie', 'trots',
+    'verrassing', 'vertrouwen', 'vreugde', 'waarheid', 'wonder', 'confrontatie',
+    'intimidatie', 'manipulatie', 'afpersen', 'kidnapping', 'gijzeling', 'brandstichting',
+    'smokkel', 'sms-en', 'appen', 'mailen', 'posten', 'liken',
+    'googelen', 'typen', 'kopiëren', 'plakken', 'opslaan', 'printen',
+    'filmen', 'livestreamen', 'opnemen', 'afspelen', 'pauzeren', 'openen',
+    'sluiten', 'vergrendelen', 'ontgrendelen', 'instellen', 'bestellen', 'pinnen',
+    'aftekenen', 'bezorgen', 'inpakken', 'sjouwen', 'tillen', 'dragen',
+    'timmeren', 'zagen', 'boren', 'schroeven', 'metselen', 'zingen',
+    'spelen', 'stampvoet', 'dansen'
+  ];
+
+  const landen = [
+    'Afghanistan', 'Albanië', 'Algerije', 'Argentinië', 'Armenië', 'Australië',
+    'Azerbeidzjan', 'Bahrein', 'Bangladesh', 'Barbados', 'België', 'Bhutan',
+    'Bolivia', 'Botswana', 'Brazilië', 'Brunei', 'Bulgarije', 'Cambodja',
+    'Canada', 'Chili', 'China', 'Colombia', 'Comoren', 'Congo',
+    'Cuba', 'Denemarken', 'Duitsland', 'Ecuador', 'Egypte', 'Ethiopië',
+    'Fiji', 'Filippijnen', 'Finland', 'Frankrijk', 'Georgië', 'Ghana',
+    'Griekenland', 'Guatemala', 'Haïti', 'Honduras', 'Hongarije', 'Ierland',
+    'IJsland', 'Indonesië', 'Irak', 'Iran', 'Israël', 'Italië',
+    'Jamaica', 'Japan', 'Jemen', 'Jordanië', 'Kazachstan', 'Kenia',
+    'Kosovo', 'Kroatië', 'Laos', 'Letland', 'Libanon', 'Liberia',
+    'Libië', 'Litouwen', 'Luxemburg', 'Madagascar', 'Maldiven', 'Maleisië',
+    'Mali', 'Malta', 'Mexico', 'Moldavië', 'Monaco', 'Mongolië',
+    'Montenegro', 'Mozambique', 'Myanmar', 'Namibië', 'Nederland', 'Nepal',
+    'Nicaragua', 'Niger', 'Nigeria', 'Noorwegen', 'Oekraïne', 'Oezbekistan',
+    'Oman', 'Oostenrijk', 'Pakistan', 'Panama', 'Paraguay', 'Peru',
+    'Polen', 'Portugal', 'Qatar', 'Roemenië', 'Rusland', 'Rwanda',
+    'Saudi-Arabië', 'Senegal', 'Servië', 'Singapore', 'Slovenië', 'Soedan',
+    'Somalië', 'Spanje', 'Sri Lanka', 'Suriname', 'Syrië', 'Tanzania',
+    'Thailand', 'Tsjechië', 'Tunesië', 'Turkije', 'Uganda', 'Uruguay',
+    'Venezuela', 'Vietnam', 'Zambia', 'Zimbabwe', 'Zweden', 'Zwitserland',
+    'Andorra', 'Angola', 'Burkina Faso', 'Costa Rica', 'Cyprus', 'Djibouti',
+    'Dominicaanse Republiek', 'El Salvador', 'Eritrea', 'Estland', 'Gambia', 'Guyana',
+    'Ivoorkust', 'Kameroen', 'Kirgizië', 'Koeweit', 'Liechtenstein', 'Madagaskar',
+    'Mauritius', 'Nieuw-Zeeland', 'Noord-Korea', 'Oost-Timor', 'Papua Nieuw-Guinea', 'Filipijnen',
+    'San Marino', 'Sierra Leone', 'Taiwan', 'Tadzjikistan', 'Tsjaad', 'Turkmenistan',
+    'Vaticaanstad', 'Wit-Rusland', 'Centraal-Afrikaanse Republiek', 'Trinidad en Tobago', 'Bosnië-Herzegovina', 'Libië',
+    'Kaapverdië', 'Dominica', 'Palestina', 'Schotland', 'Wales', 'Catalonië',
+    'Koerdistan', 'Tibet', 'Puerto Rico', 'Groenland', 'Aruba', 'Curaçao',
+    'Bermuda', 'Gibraltar', 'Frans-Guyana', 'Tahiti', 'Sint Maarten'
+  ];
+
+  const wetenschap = [
+    'acupunctuur', 'ader', 'adrenaline', 'allergie', 'amputatie', 'anesthesie',
+    'autopsie', 'bewusteloos', 'bloedarmoede', 'beroerte', 'celsius', 'cholesterol',
+    'claustrofobie', 'coma', 'dementie', 'depressie', 'desinfecteren', 'dialyse',
+    'doofstom', 'doping', 'epidemie', 'forensisch onderzoek', 'geheugenverlies', 'hallucinatie',
+    'hartstilstand', 'hersenletsel', 'homeopathie', 'hoogtevrees', 'hormoon', 'hypnose',
+    'hysterie', 'illusie', 'immuunsysteem', 'injectie', 'jaloezie', 'keizersnede',
+    'meditatie', 'migraine', 'narcisme', 'obsessie', 'onderbewustzijn', 'overdosis',
+    'overlevingsdrang', 'pandemie', 'paranoia', 'persoonlijkheidsstoornis', 'posttraumatische stress', 'psychiatrie',
+    'quarantaine', 'reflectie', 'rehabilitatie', 'reïncarnatie', 'schizofrenie', 'stigma',
+    'surrogaatmoeder', 'transplantatie', 'tunnelvisie', 'vaccinatie', 'wedergeboorte', 'begrafenis',
+    'laboratorium', 'algoritme', 'brainstorm', 'evolutie', 'frictie', 'grafiek',
+    'hypotheek', 'implosie', 'mutatie', 'nihilisme', 'paradox', 'pesticide',
+    'relatief', 'stralingsvergiftiging', 'tijdreizen', 'utopie', 'stroomuitval', 'hersenspoeling',
+    'isolatie', 'sprookje', 'plagiaat', 'archeologie', 'barometer', 'geigerteller',
+    'kwikthermometer', 'stethoscoop', 'thermometer', 'vergrootglas', 'loep', 'magneet',
+    'transistor', 'dwangbuis', 'scalpel', 'defibrillator', 'rolstoel', 'atoomkern',
+    'nucleaire reactor', 'radioactiviteit', 'biologie', 'scheikunde', 'natuurkunde', 'wiskunde',
+    'informatica', 'geologie', 'meteorologie', 'genetica', 'microbiologie', 'ecologie',
+    'antropologie', 'hypothese', 'theorie', 'experiment', 'observatie', 'controlegroep',
+    'steekproef', 'statistiek', 'variabele', 'correlatie', 'causaliteit', 'replica',
+    'publicatie', 'operatie', 'diagnose', 'symptoom', 'behandeling', 'medicijn',
+    'vaccin', 'antibiotica', 'pijnstiller', 'bloeddruk', 'pols', 'ECG',
+    'MRI', 'röntgenfoto', 'echo', 'bloedonderzoek', 'besmetting', 'infectie',
+    'virus', 'bacterie', 'microscoop', 'centrifuge', 'reageerbuisje', 'pipet',
+    'bunsenbrander', 'onderzoeksinstituut', 'promotie', 'wetenschappelijk artikel', 'peer review',
+    'citatie', 'bibliografie', 'laboratoriumjas', 'proefopstelling', 'meting', 'fout',
+    'nauwkeurigheid', 'precisie', 'kalibratie', 'ijking', 'standaard', 'kilogram',
+    'meter', 'ampere', 'kelvin', 'joule', 'watt',
+    'frequentie', 'golflengte', 'trilling', 'geluid', 'licht', 'kleur',
+    'spectrum', 'breking', 'spiegeling', 'elektriciteit', 'magnetisme', 'stroom',
+    'spanning', 'weerstand', 'geleider', 'supergeleider',
+    'chromosoom', 'DNA', 'RNA', 'gen', 'eiwit', 'cel',
+    'celkern', 'mitochondriën', 'fotosynthese', 'ademhaling', 'reactie', 'verbinding',
+    'element', 'molecuul', 'atoom', 'elektron', 'proton', 'neutron',
+    'foutmarge', 'gemiddelde', 'mediaan', 'modus', 'histogram', 'staafdiagram',
+    'taartdiagram', 'pH-waarde', 'zuurgraad', 'base', 'zuur', 'zout',
+    'oxidatie', 'reductie', 'straling', 'kernfusie', 'kernsplijting', 'deeltjesversneller',
+    'supergeluid', 'ondertoon', 'boventoon', 'ultrageluid', 'infrarood', 'ultraviolet',
+    'röntgen', 'hologram', 'laser', 'bloedgroep', 'plasma', 'enzym',
+    'receptor', 'reflex', 'metabolisme'
+  ];
+
+  const politiek = [
+    'anarchie', 'democratie', 'dictator', 'fascisme', 'imperialisme', 'nationalisme',
+    'oligarchie', 'parlementaire democratie', 'totalitarisme', 'soevereiniteit', 'bureaucratie', 'hiërarchie',
+    'diplomatie', 'legitimiteit', 'genocide', 'holocaust', 'rebellie', 'revolutie',
+    'slavernij', 'staking', 'terreurcel', 'volksopstand', 'vluchteling', 'martelaar',
+    'inquisitie', 'executie', 'avondklok', 'bankroet', 'belasting', 'beschaving',
+    'boeddhisme', 'censuur', 'corruptie', 'crisis', 'cyberpesten', 'dagvaarding',
+    'dilemma', 'discriminatie', 'erfenis', 'faillissement', 'fraude', 'fusie',
+    'getuige', 'globalisering', 'herverdeling', 'immigratie', 'lockdown', 'misogynie',
+    'monopolie', 'nepnieuws', 'onteigening', 'polarisatie', 'populisme', 'propaganda',
+    'protocolbreuk', 'radicalisering', 'recessie', 'referendum', 'sancties', 'schandaal',
+    'schijnheilig', 'taboe', 'uitbuiting', 'uitzetting', 'verjaring', 'vervreemding',
+    'vetorecht', 'xenofobie', 'zwarte markt', 'chantage', 'klokkenluider', 'assertief',
+    'klimaatcrisis', 'coalitie', 'oppositie', 'verkiezingen', 'stemmen', 'partij',
+    'minister', 'staatssecretaris', 'premier', 'president', 'koning', 'parlement',
+    'senaat', 'grondwet', 'wet', 'amendement', 'motie', 'debat',
+    'lobby', 'fractie', 'kamerlid', 'wethouder', 'gemeenteraad', 'provincie',
+    'beleid', 'maatregel', 'subsidie', 'bezuiniging', 'begroting', 'nationalisatie',
+    'privatisering', 'verdrag', 'VN', 'NAVO', 'EU',
+    'ambassade', 'consul', 'staatshoofd', 'topontmoeting', 'vredesakkoord', 'veto',
+    'resolutie', 'sanctie', 'handelsoorlog', 'mensenrechten', 'vrijheid van meningsuiting', 'persvrijheid',
+    'gelijkheid', 'rechtvaardigheid', 'solidariteit', 'integratie', 'asielzoeker', 'statushouder',
+    'paspoort', 'douane', 'belastingdienst', 'sociale zekerheid', 'werkloosheid', 'armoede',
+    'welvaart', 'inkomensverdeling', 'stembureau', 'kiesdrempel', 'lijsttrekker', 'kandidaat',
+    'campagne', 'verkiezingsprogramma', 'coalitieakkoord', 'formatiegesprekken', 'informateur', 'formateur',
+    'kabinetsformatie', 'demissionair', 'regeerakkoord', 'troonrede', 'prinsjesdag', 'miljoenennota',
+    'rijksbegroting', 'belastingaangifte', 'toeslagen', 'uitkering', 'pensioen', 'zorgverzekering',
+    'hypotheekrenteaftrek', 'minimumloon', 'cao', 'vakbond', 'werkgeversorganisatie', 'stakingsrecht',
+    'collectieve actie', 'petitie', 'demonstratie', 'burgerrechten', 'grondrechten', 'privacywet',
+    'vrije pers', 'desinformatie', 'transparantie', 'integriteit', 'gedragscode', 'pressiegroep',
+    'denktank', 'adviesraad', 'raad van state', 'nationale ombudsman', 'rekenkamer', 'hoge raad',
+    'constitutioneel hof', 'europees hof', 'internationaal strafhof', 'arbitrage', 'mediation', 'rechtsstaat',
+    'scheiding der machten', 'checks en balances', 'stemrecht', 'kiesrecht', 'formatiegesprek', 'demissionair kabinet',
+    'raadslid', 'gedeputeerde', 'volksvertegenwoordiger', 'staatsschuld', 'btw', 'inkomstenbelasting',
+    'vermogensbelasting', 'accijns', 'handelsakkoord', 'handelspartner', 'economische unie', 'vrijhandel',
+    'consumentenbescherming', 'milieubeleid', 'klimaatbeleid', 'energiebeleid', 'woningbeleid', 'onderwijsbeleid',
+    'gezondheidszorg', 'pensioenstelsel', 'politieke partij', 'handelsverdrag', 'gelijkwaardigheid', 'algemene staking',
+    'verkiezingscampagne', 'staatsbegroting', 'belasting over toegevoegde waarde', 'vrijhandelszone', 'klimaatwet', 'woningmarkt',
+    'volksgezondheid', 'pensioenfonds', 'arbeidsongeschiktheid', 'uitkeringsinstantie', 'vice-premier', 'fractievoorzitter',
+    'partijcongres', 'ledenraadpleging', 'coalitiekabinet', 'minderheidskabinet', 'vertrouwensstemming', 'hoorzitting',
+    'kamerdebat', 'burgemeester', 'fractieleider', 'provinciebestuur', 'kabinetscrisis', 'motie van wantrouwen',
+    'tweede kamer', 'eerste kamer'
+  ];
+
+  const muziek = [
+    'gitaar', 'basgitaar', 'elektrische gitaar', 'akoestische gitaar', 'ukelele', 'banjo',
+    'viool', 'altviool', 'cello', 'contrabas', 'harp',
+    'luit', 'sitar', 'trompet', 'trombone', 'tuba', 'hoorn',
+    'saxofoon', 'klarinet', 'clarinet', 'fluit', 'dwarsfluit', 'blokfluit',
+    'fagot', 'hobo', 'didgeridoo', 'piano', 'vleugel', 'orgel',
+    'accordeon', 'synthesizer', 'keyboard', 'trommel', 'xylofoon', 'djembé',
+    'microfoon', 'luidspreker', 'versterker', 'mengpaneel', 'gramofoon', 'elpee',
+    'platenspeler', 'koptelefoon', 'muziekdoos', 'notenbalk', 'orgelpijp', 'albumhoes',
+    'muziek', 'orkest', 'koor', 'symfonie', 'opera', 'jazz',
+    'blues', 'rock', 'pop', 'rap', 'hiphop', 'klassiek',
+    'reggae', 'soul', 'folk', 'punk', 'metal', 'elektronische muziek',
+    'akkoord', 'melodie', 'ritme', 'beat', 'refrein', 'solo',
+    'concert', 'festival', 'repetitie', 'songtekst', 'opname', 'album',
+    'single', 'live optreden', 'dirigent', 'dj', 'musicus', 'zanger',
+    'operazanger', 'componist', 'gitarist', 'drummer', 'pianist', 'violist',
+    'kapelmeester', 'bandlid', 'producer', 'pianospelen', 'djembé spelen', 'componeren',
+    'dirigeren', 'optreden', 'country', 'gospel', 'latin', 'afrobeat',
+    'disco', 'techno', 'house', 'trance', 'drum and bass', 'ambient',
+    'new wave', 'indie', 'grunge', 'hardrock', 'heavy metal', 'r&b',
+    'toonladder', 'noot', 'maat', 'tempo', 'dynamiek', 'harmonie',
+    'octaaf', 'interval', 'crescendo', 'panfluit', 'doedelzak',
+    'mondharmonica', 'kazoo', 'tamboerijn', 'steeldrum',
+    'songwriter', 'geluidstechnicus', 'lichtontwerper', 'tourmanager',
+    'groupie', 'danseres', 'choreograaf', 'geluidsinstallatie', 'podium',
+    'theaterzaal', 'akoestisch', 'repetitieruimte', 'muziekschool', 'conservatorium', 'songcontest',
+    'muziekfestival', 'gitaarsolo', 'drumritme', 'baspartij', 'zangpartij', 'koorpartij',
+    'strijkorkest', 'fanfare', 'jazzband', 'rockband',
+    'popgroep', 'duo', 'trio', 'kwartet', 'solist',
+    'tenor', 'sopraan', 'alt', 'koorzanger',
+    'koorlid', 'koordirigent', 'muziekvideo', 'platenlabel',
+    'muziekuitgever', 'auteursrecht', 'royalties', 'streaming', 'muziekapp',
+    'discjockey', 'turntable', 'beatmaker', 'sample',
+    'remix', 'mashup', 'cover', 'liveband',
+    'openluchtconcert', 'jamsessie', 'nachtclub', 'poppodium', 'muziekzaal',
+    'operahuis', 'concertgebouw', 'festivalterrein', 'backstage',
+    'soundcheck', 'trekharmonika', 'oud', 'strijkkwartet',
+    'volkslied', 'kinderlied', 'slaapliedje', 'kerstlied', 'hymne', 'psalm',
+    'serenade', 'wals', 'polka', 'tango', 'samba', 'rumba',
+    'cha-cha-cha', 'foxtrot', 'quickstep', 'slowfox'
+  ];
+
+  const militair = [
+    'soldaat', 'generaal', 'luitenant', 'sergeant', 'korporaal', 'officier',
+    'commandant', 'ridder', 'sluipschutter', 'marinier', 'luchtmachtpiloot', 'onderofficier',
+    'geweer', 'pistool', 'machinegeweer', 'zwaard',
+    'speer', 'boog', 'kruisboog', 'bajonet', 'drietand', 'lasso',
+    'kanon', 'kanonskogel', 'katapult', 'handgranaat', 'explosief',
+    'munitie', 'torpedo', 'landmijn', 'bom', 'nucleaire bom', 'harnas',
+    'schild', 'wapenschild', 'helm', 'kogelvrij vest', 'gasmasker', 'camouflagepak',
+    'bazooka', 'leugendetector', 'handboeien', 'morse', 'vuurpijl', 'harpoen',
+    'guillotine', 'tank', 'pantservoertuig', 'onderzeeboot', 'vliegdekschip', 'oorlogsschip',
+    'gevechtsvliegtuig', 'militaire helikopter', 'kazerne', 'bunker', 'fort', 'vesting',
+    'commandopost', 'militaire basis', 'loopgraaf', 'mijnenveld', 'patrouilleboot', 'schieten',
+    'invasie', 'guerrilla oorlog', 'coup', 'oorlogsmisdaad', 'wapenhandel', 'burgerwacht',
+    'agressor', 'militaire oefening', 'belegering', 'geheime operatie', 'spionage', 'sabotage',
+    'capitulatie', 'wapenstilstand', 'tribunaal', 'krijgsraad', 'massamoord', 'evacuatie',
+    'parachute', 'radarscherm', 'infanterie', 'cavalerie', 'artillerie', 'marine',
+    'luchtmacht', 'landmacht', 'commando', 'parachutist', 'verkenner',
+    'majoor', 'kolonel', 'admiraal', 'veldslag', 'hinderlaag', 'frontlinie',
+    'achterhoede', 'vliegbasis', 'militaire begraafplaats', 'marinebasis', 'grenspost', 'checkpoint',
+    'mijnenveger', 'verkenningsvliegtuig', 'bommenwerper', 'jachtvliegtuig', 'transportvliegtuig', 'gevechtshelikopter',
+    'raketschild', 'luchtafweer', 'radar', 'sonar',
+    'nachtkijker', 'verrekijker', 'veldtent', 'veldhospitaal', 'verbandpost', 'ziekenauto',
+    'wapenopslag', 'munitiedepot', 'kruitkamer', 'schietbaan', 'hindernisbaan',
+    'orlogsvlag', 'saluut', 'wachtpost', 'identiteitsbewijs', 'noodrantsoen', 'veldfles',
+    'kaartlezen', 'geheime boodschap', 'beveiliging', 'bewaking', 'grenscontrole',
+    'veiligheidszone', 'bufferzones', 'neutrale zone', 'demilitarisatie', 'vredesmissie', 'VN-missie',
+    'NAVO-oefening', 'militaire alliantie', 'wapenbestand', 'vuurstaking', 'terugtrekking', 'bezetting',
+    'bevrijding', 'overwinning', 'nederlaag', 'verovering', 'stadsbelegering', 'blokkade',
+    'embargo', 'oorlogsverklaring', 'mobilisatie', 'dienstplicht', 'huurling', 'militie',
+    'reservist', 'veteraan', 'krijgsgevangene', 'onderscheiding',
+    'vaandel', 'vlag', 'schouderstuk', 'rang',
+    'oorlogsgraf', 'herdenkingsmonument', 'nationale begraafplaats', 'militaire parade', 'militaire politie',
+    'inlichtingendienst', 'geheime dienst', 'spionnage', 'cyberaanval', 'informatieoorlog', 'psychologische oorlogsvoering',
+    'guerrilla', 'terrorisme', 'aanslagen', 'zelfmoordaanslag', 'bom aanslag', 'ontvoeringen',
+    'scherpschutter', 'bomopruimer',
+    'pantserdivisie', 'granaatwerper', 'mortier',
+    'antitankwapen', 'mijnenlegger', 'amfibievoertuig',
+    'konvooi', 'luchtaanval', 'bombardement', 'beschietingen', 'salvo',
+    'verdedigingslinie', 'aanvallen', 'terugtrekken','uniform',
+    'medaille', 'schreeuw', 'aanval', 'verdediging', 'wapen', 'ransel',
+    'kaart', 'leger', 'gevecht', 'oorlog', 'strijd', 'concentratiekamp'
+  ];
+
+  const gereedschap = [
+    'hamer', 'schaar', 'sleutel', 'moersleutel', 'schroefsleutel', 'tang',
+    'zaag', 'schroevendraaier', 'beitel', 'mes', 'pikhouweel', 'zeis',
+    'hooivork', 'hark', 'gieter', 'borstel', 'verfkwast', 'ladder',
+    'touwladder', 'trap', 'waterpas', 'boormachine', 'kettingzaag', 'naaimachine',
+    'stroomgenerator', 'turbine', 'dynamo', 'liniaal', 'weegschaal', 'gereedschapskist',
+    'spijker', 'smeedijzer', 'telraam', 'rekenmachine', 'aardappelschiller',
+    'waterpomptang', 'steeksleutel', 'inbussleutel', 'schaaf', 'vijl',
+    'handzaag', 'figuurzaag', 'cirkelzaag', 'schuurmachine', 'decoupeerzaag',
+    'accuboormachine', 'lasapparaat', 'soldeerbout', 'heteluchtpistool', 'meetlint', 'duimstok',
+    'prikpen', 'punttang', 'schroef',
+    'bout', 'moer', 'ring', 'plug', 'haak', 'kram',
+    'nagel', 'kittpistool', 'lijmpistool', 'lijmklem', 'bankschroef', 'werkbank',
+    'veiligheidshelm', 'veiligheidsbril', 'werkhandschoenen', 'stofmasker', 'gehoorbescherming', 'kniebeschermer',
+    'kruiwagen', 'hefboom', 'katrol', 'handkar', 'palletwagen',
+    'hijsband', 'touw', 'steiger', 'koevoet', 'breekijzer', 'schuurpapier',
+    'freesmachine', 'bankmes', 'stanleymes', 'cuttermesje', 'lintmeter', 'dieptemeter',
+    'gradenboog', 'klinknagel', 'snijder',
+    'verfroller', 'kwast', 'verfbak', 'afplaktape', 'kit', 'siliconekit',
+    'purschuim', 'isolatiemateriaal', 'ducttape', 'perslucht',
+    'compressor', 'spijkerpistool', 'tacker', 'houtlijm',
+    'plamuurmes', 'roerder', 'mixer', 'cementmixer', 'hoogteschaffer',
+    'nijptang', 'werktafel', 'lijmspuit', 'noodstroomgenerator', 'stofopvangzak',
+    'verlengstuk', 'worktafel', 'spoorbreedte', 'boorset', 'luchtcompressor', 'verfspuiter',
+    'verf afbijter', 'ontvetter', 'ontroesters', 'beschermkapjes',
+    'zaagblad', 'potje verf', 'rol', 'spijkertje', 'schroefje', 'boortje',
+    'zaagje', 'sloopkogel', 'hijskraan', 'moker', 'vuurhaard', 'kachel',
+    'gasbrander', 'lasbril', 'koord', 'spatel', 'tegelsnijder'
+  ];
+
+  const ruimte = [
+    'astronaut', 'astroloog', 'ruimtevaart', 'ruimtewetenschapper', 'raket', 'space shuttle',
+    'maanlander', 'vliegende schotel', 'satelliet', 'telescoop', 'sterrenwacht', 'ruimtestation',
+    'ruimtepak', 'lanceerplatform', 'ruimtesonde', 'maan', 'zon', 'ster',
+    'planeet', 'komeet', 'ruimte', 'melkweg', 'zwart gat', 'supernova',
+    'sterrenstelsel', 'meteoor', 'meteoriet', 'Mars', 'Venus', 'Jupiter', 'Saturnus',
+    'Mercurius', 'Neptunus', 'Uranus', 'noorderlicht', 'maansverduistering',
+    'eclips', 'zwaartekracht', 'dampkring', 'astronomie', 'buitenaards leven', 'maanwandeling',
+    'ISS', 'seconde', 'Pluto',
+    'big bang', 'heelal', 'asteroïde', 'komeetstaart',
+    'meteorenregen', 'vallende ster', 'ruimtecapsule', 'ruimtewandeling',
+    'ruimtetelescoop', 'Hubble', 'James Webb', 'kosmische straling', 'gewichtloosheid',
+    'zuurstoftank', 'landingsgestel', 'lanceerinstallatie',
+    'NASA', 'lichtjaar', 'lichtsnelheid', 'horizon',
+    'sterrenkunde', 'planetarium',
+    'relativiteitstheorie', 'oerknal', 'botsende sterrenstelsels',
+    'gasreuzen', 'planetenring',
+    'magnetische pool', 'poolster', 'evenaar', 'landing op de maan', 'eerste mens in de ruimte',
+    'commerciële ruimtevaart', 'marsrover', 'Voyager',
+    'Apollo', 'SpaceX', 'gps-tracker',
+    'hemellichaam', 'sterrenbeeld', 'Grote Beer',
+    'Kleine Beer', 'Tweelingen', 'Maagd', 'Waterman',
+    'kosmonaut', 'luchtsluis',
+    'koppelingssysteem', 'zonnepanelen', 'gyroscoop', 'hitteschild',
+    'krater', 'sterrenkundige', 'CO2-filter', 'maanmissie',
+    'stratosfeer', 'magnetisch veld', 'ruimteschip', 'marslandschap'
+  ];
+
+  const spreekwoorden = [
+    'alle hens aan dek',
+    'als de kat van huis is dansen de muizen',
+    'al doende leert men',
+    'beter laat dan nooit',
+    'de appel valt niet ver van de boom',
+    'door de zure appel heen bijten',
+    'een gewaarschuwd man telt voor twee',
+    'van een koude kermis thuiskomen',
+    'een oogie dichtknijpen',
+    'een storm in een glas water',
+    'ergens de brui aan geven',
+    'het kind met het badwater weggooien',
+    'het roer omgooien',
+    'hoge bomen vangen veel wind',
+    'iemand een hak zetten',
+    'iemand in de maling nemen',
+    'iemand op de kast jagen',
+    'in de wolken zijn',
+    'in het nauw gedreven',
+    'je kunt niet op twee paarden tegelijk wedden',
+    'je huid duur verkopen',
+    'zoals het klokje thuis tikt tikt het nergens',
+    'langs de neus weg',
+    'met de deur in huis vallen',
+    'met lege handen staan',
+    'met zijn rug tegen de muur staan',
+    'met stomheid geslagen zijn',
+    'nieuwe bezems vegen schoon',
+    'niet alle dagen zondag',
+    'olie op het vuur gooien',
+    'om de hete brij heen draaien',
+    'onder de duim houden',
+    'op zijn lauweren rusten',
+    'over de rooie gaan',
+    'over een kam scheren',
+    'roet in het eten gooien',
+    'slapende honden wakker maken',
+    'muggenziften',
+    'tegen de stroom ingaan',
+    'twee honden vechten om een been',
+    'uit de school klappen',
+    'van een mug een olifant maken',
+    'van het kastje naar de muur sturen',
+    'ver van mijn bed show',
+    'vuur met vuur bestrijden',
+    'water naar de zee dragen',
+    'wie niet waagt wie niet wint',
+    'nieuwe wijn in oude zakken',
+    'wolf in schaapskleren',
+    'zijn hand overspelen',
+    'zijn tanden laten zien',
+    'zijn vingers branden aan iets',
+    'zo vader zo zoon',
+    'broodje aap verhaal',
+    'door de mand vallen',
+    'met de gebakken peren zitten',
+    'de koe bij de horens vatten',
+    'iemand de wind uit de zeilen nemen',
+    'met alle winden meedraaien',
+    'geen haar op zijn hoofd',
+    'uit zijn vel springen',
+    'de hand in eigen boezem steken',
+    'achter het net vissen',
+    'iets op zijn beloop laten',
+    'twee vliegen in een klap',
+    'als twee druppels water',
+    'de wind in de zeilen hebben',
+    'met de neus in de boter vallen',
+    'de pineut zijn',
+    'in de aap gelogeerd zijn',
+    'al is de leugen nog zo snel de waarheid achterhaalt haar wel',
+    'beter een vogel in de hand dan tien in de lucht',
+    'een ezel stoot zich geen twee keer aan dezelfde steen',
+    'oost west thuis best',
+    'zoals de waard is vertrouwt hij zijn gasten',
+    'wie goed doet goed ontmoet',
+    'leugens hebben korte benen',
+    'in het land der blinden is eenoog koning',
+    'van uitstel komt afstel',
+    'de eerste klap is een daalder waard',
+    'eigen haard is goud waard',
+    'achteraf is iedereen wijs',
+    'als het kalf verdronken is dempt men de put',
+    'gedeelde smart is halve smart',
+    'gedeelde vreugde is dubbele vreugde',
+    'geld maakt niet gelukkig',
+    'het gras is altijd groener aan de andere kant',
+    'honger is de beste saus',
+    'ieder huisje heeft zijn kruisje',
+    'jong geleerd oud gedaan',
+    'liefde maakt blind',
+    'met geduld en vlijt komt men wijd',
+    'na regen komt zonneschijn',
+    'nooit te oud om te leren',
+    'onbekend maakt onbemind',
+    'oude liefde roest niet',
+    'praten is zilver zwijgen is goud',
+    'Rome is niet in een dag gebouwd',
+    'schone schijn bedriegt',
+    'stille wateren hebben diepe gronden',
+    'tijd is geld',
+    'uit het oog uit het hart',
+    'vele handen maken licht werk',
+    'vertrouwen komt te voet en gaat te paard',
+    'waar rook is is vuur',
+    'wat men niet weet wat men niet deert',
+    'wie de schoen past trekt hem aan',
+    'wie het kleine niet eert is het grote niet weerd',
+    'wie kaatst moet de bal verwachten',
+    'wie zwijgt stemt toe',
+    'men moet het ijzer smeden als het heet is',
+    'een goed begin is het halve werk',
+    'aan een half woord genoeg hebben',
+    'hoe meer zielen hoe meer vreugd',
+    'het doel heiligt de middelen',
+    'de pen is machtiger dan het zwaard',
+    'beter voorkomen dan genezen',
+    'eind goed al goed',
+    'er is geen roos zonder doornen',
+    'wie het laatst lacht lacht het best',
+    'in de nood leert men zijn vrienden kennen',
+    'met een zwaluw is het nog geen zomer',
+    'over smaak valt niet te twisten',
+    'wat de boer niet kent dat eet hij niet',
+    'een wit voetje halen',
+    'iets voor zoete koek slikken',
+    'op de vingers tikken',
+    'over de schreef gaan',
+    'er met de pet naar gooien',
+    'iemand het hoofd op hol brengen',
+    'hard aan de weg timmeren',
+    'ergens geen gat in zien',
+    'met de neus op de feiten drukken',
+    'op zijn dooie gemakje',
+    'schouders ergens onder zetten',
+    'iemand een loer draaien',
+    'met fluwelen handschoen aanpakken',
+    'niet alles is goud wat er blinkt',
+    'het achter de ellebogen hebben',
+    'de knoop doorhakken',
+    'ergens geen doekjes omwinden',
+    'iets door de vingers zien',
+    'iemand naar de mond praten',
+    'zijn hart op de tong dragen',
+    'de boot missen',
+    'er een nachtje over slapen',
+    'met de billen bloot',
+    'niet van gisteren zijn',
+    'op de hoogte zijn',
+    'zijn mond voorbij praten',
+    'tegen beter weten in',
+    'uit de hand lopen',
+    'van geen ophouden weten',
+    'het bijltje erbij neerleggen',
+    'met een kluitje in het riet sturen',
+    'zijn hart ophalen',
+    'uit de toon vallen',
+    'de kat uit de boom kijken'
+  ];
+
+  const huishouden = [
+    'aanrecht', 'barbecuetang', 'keukenrol', 'theedoek', 'servet', 'wasmachine',
+    'beker', 'glaasje', 'wijnglas', 'lepel', 'vork', 'kookwekker',
+    'strijkijzer', 'bezem', 'plantenpot', 'plantje', 'gordijn', 'deurmat',
+    'deurbel', 'rolluik', 'vloerkleed', 'lamp', 'gloeilamp', 'wekker',
+    'klok', 'boekenkast', 'spiegel', 'tafel', 'stoel', 'bank',
+    'bureau', 'dekbed', 'mand', 'prullenbak', 'wastafel', 'koffiezetapparaat',
+    'koelkast', 'vriezer', 'magnetron', 'sierkussen', 'kookpan', 'schoonmaakmiddel',
+    'barbecue', 'borrelplank', 'snijplank', 'airfryer', 'blender', 'koekenpan',
+    'pan', 'pollepel', 'soeplepel', 'theekan', 'theemuts', 'kookplaat',
+    'oven', 'broodrooster', 'waterkoker', 'keukenmixer', 'sapcentrifuge', 'keukenmachine',
+    'rijstkoker', 'slowcooker', 'wokpan', 'braadpan', 'steelpan', 'grillpan',
+    'maatbeker', 'keukendoek', 'ovenwant', 'rasp', 'zeef', 'vergiet',
+    'blik opener', 'pizzasnijder', 'aardappelstamper', 'handdoek', 'badmat', 'douchegordijn',
+    'zeep', 'shampoo', 'conditioner', 'scheerapparaat', 'haarborstel', 'toiletpapier',
+    'kussen', 'deken', 'laken', 'kussensloop', 'matras', 'nachtkastje',
+    'kleerkast', 'kledingrek', 'strijkplank', 'wasmand', 'droogrek', 'stofzuiger',
+    'dweil', 'stoffer', 'bloempot', 'vaas', 'fotolijst', 'tuinslang',
+    'tuinschaar', 'grasmaaier', 'heggenschaar', 'tuinstoel', 'tuintafel', 'parasol',
+    'tuinkussen', 'saladeschaal', 'serveerschaal', 'soepkom', 'ontbijtkom', 'theepot',
+    'koffiepot', 'suikerpot', 'roomkannetje', 'broodtrommel', 'koektrommel', 'botervloot',
+    'kaasplank', 'bestek', 'mes', 'theelepel', 'opscheplepel', 'spatel',
+    'garde', 'deegroller', 'taartvorm', 'muffinvorm', 'bakpapier', 'aluminiumfolie',
+    'huishoudfolie', 'vershoudzakje', 'diepvrieszak', 'stofdoek', 'mop', 'emmer',
+    'schrobber', 'toiletborstel', 'afwasborstel', 'sponzen', 'schuurspons', 'allesreiniger',
+    'bleekwater', 'afwasmiddel', 'vaatwasser', 'vaatwasmiddel', 'wasmiddel', 'wasverzachter',
+    'droogkast', 'eettafel', 'eetkamerstoel', 'salontafel', 'tv-meubel', 'wandkast',
+    'ladekast', 'commode', 'dressoir', 'kapstok', 'schoenenrek', 'bijzettafel',
+    'schoffel', 'spade', 'tuinvork', 'tuinschep', 'plantenbak', 'compostbak',
+    'regenwatertank', 'sprinkler', 'tuinkruiwagen', 'plantenspuit', 'onkruidsteker', 'koffiezetter',
+    'pannenset', 'braadslede', 'soeppan', 'fluitketel', 'eierdopje', 'broodplank',
+    'kaasrasp', 'citruspers', 'blikopener', 'dopjesopener', 'kurkentrekker', 'kookboek',
+    'receptenboek', 'keukentimer', 'keukenweegschaal', 'maatlepel', 'spuitzak', 'taartsteker',
+    'cakestandaard', 'boterpapier', 'rijstzeef', 'vuilniszak', 'vuilnisbak', 'afvalbak',
+    'oud papier bak', 'glasbak', 'gft-bak', 'papierbak', 'vloerlamp', 'tafellamp',
+    'bureaulamp', 'plafondlamp', 'spotje', 'vitrage', 'overgordijn', 'rolgordijn',
+    'antislipmat', 'muizenmat', 'vloerbedekking', 'parket', 'laminaat', 'tegels',
+    'behang', 'verf', 'handdoekrek', 'zeephouder', 'tandenborstelhouder', 'toilettasje',
+    'nagelvijl', 'pincet', 'bloemperk', 'vijverpomp', 'tuinverlichting', 'schutting',
+    'pergola', 'tuinhek', 'tuinpad', 'vliegenwering', 'muggenlamp', 'vogelbadje',
+    'vogelhuisje', 'vogelvoer', 'tuinaarde', 'bad', 'douche', 'toilet',
+    'plank', 'rek', 'bak', 'verwarmingsradiator', 'thermostaatknop', 'rookmelder',
+    'sleutelhaak', 'brievenbus', 'buitenlamp', 'wandspiegel', 'fotolijstje', 'kaarsenhouder',
+    'windlicht', 'plantenhanger', 'salontafelkleed', 'badkamerspiegel', 'wasknijper'
+  ];
+
+  WORDS_BY_CATEGORY['dieren'] = dieren;
+  WORDS_BY_CATEGORY['voedsel'] = voedsel;
+  WORDS_BY_CATEGORY['beroepen'] = beroepen;
+  WORDS_BY_CATEGORY['sport'] = sport;
+  WORDS_BY_CATEGORY['objecten'] = objecten;
+  WORDS_BY_CATEGORY['huishouden'] = huishouden;
+  WORDS_BY_CATEGORY['natuur'] = natuur;
+  WORDS_BY_CATEGORY['vervoer'] = vervoer;
+  WORDS_BY_CATEGORY['plaatsen'] = plaatsen;
+  WORDS_BY_CATEGORY['acties'] = acties;
+  WORDS_BY_CATEGORY['landen'] = landen;
+  WORDS_BY_CATEGORY['gereedschap'] = gereedschap;
+  WORDS_BY_CATEGORY['muziek'] = muziek;
+  WORDS_BY_CATEGORY['militair'] = militair;
+  WORDS_BY_CATEGORY['ruimte'] = ruimte;
+  WORDS_BY_CATEGORY['wetenschap'] = wetenschap;
+  WORDS_BY_CATEGORY['politiek'] = politiek;
+  WORDS_BY_CATEGORY['spreekwoorden'] = spreekwoorden;
+  WORDS_BY_CATEGORY['all'] = [...new Set(Object.values(WORDS_BY_CATEGORY).flat())];
+})();
+
+// Bonus words: alle woorden uit categorieen met bonus: true (spreekwoorden)
+const BONUS_WORDS_SET = new Set(
+  CATEGORIES
+    .filter(c => c.bonus)
+    .flatMap(c => WORDS_BY_CATEGORY[c.id] || [])
+);
+
+// Geeft het aantal bonuspunten terug voor een woord:
+// spreekwoorden (uit bonus-categorie) → +2 extra (totaal 3 punten)
+// woorden met een spatie (twee inputs, bijv. "militaire parade") → +1 extra (totaal 2 punten)
+// gewone woorden → 0 bonuspunten (totaal 1 punt)
+function getBonusPoints(word) {
+  if (BONUS_WORDS_SET.has(word)) return 2;
+  if (word && word.trim().includes(' ')) return 1;
+  return 0;
+}
 
 const DEFAULT_ROUND_TIME = 120;
 
@@ -370,6 +929,7 @@ function SetupScreen({ onStart }) {
   const [names, setNames] = useState(["Dennis", "Marion", "Theo"]);
   const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
   const [teamMode, setTeamMode] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState(() => new Set(CATEGORIES.map((c) => c.id)));
   // In team mode: teamSizes[t] = aantal spelers in team t
   const [teamSizes, setTeamSizes] = useState([2, 2]);
 
@@ -464,30 +1024,13 @@ function SetupScreen({ onStart }) {
   };
 
   const randomizeNames = () => {
-    if (teamMode) {
-      setNames((prev) => {
-        const next = [];
-        let offset = 0;
-        for (let t = 0; t < count; t++) {
-          const size = teamSizes[t];
-          const slice = prev.slice(offset, offset + size);
-          let shuffled;
-          do { shuffled = shuffle([...slice]); }
-          while (slice.length > 1 && shuffled.every((n, i) => n === slice[i]));
-          next.push(...shuffled);
-          offset += size;
-        }
-        return next;
-      });
-    } else {
-      setNames((prev) => {
-        if (prev.length <= 1) return prev;
-        let next;
-        do { next = shuffle([...prev]); }
-        while (next.every((n, i) => n === prev[i]));
-        return next;
-      });
-    }
+    setNames((prev) => {
+      if (prev.length <= 1) return prev;
+      let next;
+      do { next = shuffle([...prev]); }
+      while (prev.length > 1 && next.every((n, i) => n === prev[i]));
+      return next;
+    });
   };
 
   const canStart = names.every((n) => n.trim().length > 0);
@@ -508,10 +1051,36 @@ function SetupScreen({ onStart }) {
     return teams;
   };
 
+  const allCatIds = new Set(CATEGORIES.map((c) => c.id));
+  const nonAllIds = CATEGORIES.filter((c) => c.id !== "all").map((c) => c.id);
+  const allSelected = nonAllIds.every((id) => selectedCategories.has(id));
+
+  const toggleCategory = (id) => {
+    setSelectedCategories((prev) => {
+      const next = new Set(prev);
+      if (id === "all") {
+        // Toggle: als alles al aan → alles uit; anders alles aan
+        if (allSelected) {
+          return new Set(); // alles deselecteren
+        } else {
+          return new Set(CATEGORIES.map((c) => c.id)); // alles selecteren
+        }
+      }
+      // Individuele categorie togglen (nooit "all" meenemen)
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      next.delete("all");
+      return next;
+    });
+  };
+
   const handleStart = () => {
     if (!canStart) return;
     const trimmed = names.map((n) => n.trim());
-    onStart(trimmed, roundTime, buildTeams());
+    onStart(trimmed, roundTime, buildTeams(), selectedCategories);
   };
 
   // Bereken naam-offset per team
@@ -534,7 +1103,7 @@ function SetupScreen({ onStart }) {
               onClick={toggleTeamMode}
               title="Schakel team-modus in of uit"
             >
-              {teamMode ? "Team modus aan" : "Team modus"}
+              {teamMode ? "👥 Team modus aan" : "👥 Team modus"}
             </button>
           </div>
           <div className="time-control">
@@ -547,9 +1116,11 @@ function SetupScreen({ onStart }) {
         <div className="setup-section">
           <div className="names-label-row">
             <label className="setup-label">Namen van spelers</label>
-            <button className="randomize-btn" onClick={randomizeNames} title="Volgorde door elkaar gooien">
-              Andere volgorde
-            </button>
+            {!teamMode && (
+              <button className="randomize-btn" onClick={randomizeNames} title="Volgorde door elkaar gooien">
+                Andere volgorde
+              </button>
+            )}
           </div>
           {teamMode ? (
             <div className="teams-grid">
@@ -605,6 +1176,30 @@ function SetupScreen({ onStart }) {
         </div>
 
         <div className="setup-section">
+          <div className="names-label-row">
+            <label className="setup-label">Categorieën</label>
+            <button
+              className={`randomize-btn${allSelected ? " randomize-btn-active" : ""}`}
+              onClick={() => toggleCategory("all")}
+              title={allSelected ? "Deselecteer alle categorieën" : "Selecteer alle categorieën"}
+            >
+              🎲 Alles
+            </button>
+          </div>
+          <div className="category-grid">
+            {CATEGORIES.filter((cat) => cat.id !== "all").map((cat) => (
+              <button
+                key={cat.id}
+                className={`category-btn${selectedCategories.has(cat.id) ? " category-btn-active" : ""}`}
+                onClick={() => toggleCategory(cat.id)}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="setup-section">
           <label className="setup-label">Tijd per ronde</label>
           <div className="time-control">
             <button
@@ -657,34 +1252,33 @@ const w = (n) => n === 1 ? "woord" : "woorden";
 const pt = (n) => n === 1 ? "punt" : "punten";
 
 const MESSAGES_GREAT = [
-  () => `Wat een mooie prestatie! 🏆`,
+  () => `Wat een enorme prestatie! 🏆`,
   () => `Jij verdient een sticker! ⭐`,
   () => `De rest is onder de indruk. 😎`,
   () => `De anderen beven van angst. 🫨`,
   () => `Je staat in vuur en vlam! 🔥`,
-  (n) => `${n} ${w(n)} goed geraden! 🥳`,
-  (n) => `${n} ${pt(n)} erbij geknalt! 💥`,
-  () => `Jij bent niet te stoppen! 🚀`,
+  () => `Je bent niet te stoppen! 🚀`,
   () => `De rest kan wel inpakken! 😄`,
   () => `Heb jij dit zitten oefen? 🤨`,
-  (n) => `${n} ${w(n)} in één ronde! 🤩`,
 ];
 
 const MESSAGES_OK = [
-  () => `Lekker bezig! 🙌`,
+  (n) => `${n} ${w(n)}, lekker bezig! 🙌`,
   (n) => `${n} ${w(n)}, niet slecht! 👍`,
   (n) => `${n} ${pt(n)} op de teller. ✅`,
-  () => `De tijd is om! ⏰`,
+  (n) => `${n} ${w(n)} goed geraden! 🥳`,
+  (n) => `${n} ${pt(n)} erbij geknalt! 💥`,
   (n) => `${n} ${pt(n)} bijgeschreven! ✍️`,
-  () => `Ga zo door! 💪`,
+  (n) => `${n} ${w(n)} in één ronde! 🤩`,
+  (n) => `${n} ${w(n)}, ga zo door! 💪`,
 ];
 
 const MESSAGES_POOR = [
-  () => `Ik weet niet of dit goed komt! 😅`,
-  () => `Volgende keer beter! 🙈`,
-  () => `Haal even rustig adem! 😮‍💨`,
+  () => `Ik weet niet of dit nog goed komt! 😅`,
+  (n) => `${n} ${w(n)}. Volgende keer beter! 🙈`,
+  (n) => `${n} ${w(n)}. Haal even rustig adem! 😮‍💨`,
   () => `De volgende ronde gaat beter, toch? 😉`,
-  () => `De anderen ruiken bloed! 🩸`,
+  () => `De andere spelers ruiken bloed! 🩸`,
   () => `De spanning zat er zeker in! 😅`,
 ];
 
@@ -693,10 +1287,10 @@ function getRandomEndMessage(correctCount, roundTime) {
   const ratio = target > 0 ? correctCount / target : 0;
 
   let pool, tier;
-  if (ratio >= 1.0) {
+  if (ratio >= 0.75) {
     pool = MESSAGES_GREAT;
     tier = "great";
-  } else if (ratio >= 0.6) {
+  } else if (ratio >= 0.5) {
     pool = MESSAGES_OK;
     tier = "ok";
   } else {
@@ -714,13 +1308,14 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const scoresRef = useRef({ correct: 0, skipped: 0 });
   const endMessageRef = useRef(null);
   const [timeLeft, setTimeLeft] = useState(roundTime);
-  const [flash, setFlash] = useState(null); // "correct" | "skip"
-  const [timesUp, setTimesUp] = useState(false); // timer ran out, but current word can still be finished
+  const [flash, setFlash] = useState(null); // "correct" | "skip" | "bonus"
+  const [timesUp, setTimesUp] = useState(false);
   const [done, setDone] = useState(false);
   const timerRef = useRef(null);
+  const wordResultsRef = useRef([]); // [{word, guessed, isBonus}]
 
   const startTimeRef = useRef(null);
-  const [timeRemaining, setTimeRemaining] = useState(roundTime); // exact float for smooth circle
+  const [timeRemaining, setTimeRemaining] = useState(roundTime);
 
   useEffect(() => {
     startTimeRef.current = Date.now();
@@ -735,7 +1330,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
       }
     }, 50);
     return () => clearInterval(timerRef.current);
-  }, []); // roundTime verandert nooit na mount — bewust leeg
+  }, []);
 
   const triggerFlash = (type) => {
     setFlash(type);
@@ -743,18 +1338,22 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   };
 
   const wordIndexRef = useRef(0);
-  const [skipPenalty, setSkipPenalty] = useState(0); // countdown 3..2..1..0
+  const [skipPenalty, setSkipPenalty] = useState(0);
   const penaltyRef = useRef(null);
 
   const finishRound = useCallback((finalScores, finalWordIndex) => {
     endMessageRef.current = getRandomEndMessage(finalScores.correct, roundTime);
     setDone(true);
-    setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex }), 2800);
+    setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex, wordResults: wordResultsRef.current }), 2800);
   }, [onRoundEnd, roundTime]);
 
   const correct = () => {
     if (done || skipPenalty > 0) return;
-    triggerFlash("correct");
+    const word = words[wordIndexRef.current];
+    const bonusPts = getBonusPoints(word);
+    const isBonus = bonusPts > 0;
+    triggerFlash(isBonus ? "bonus" : "correct");
+    wordResultsRef.current = [...wordResultsRef.current, { word, guessed: true, isBonus, bonusPts }];
     const newScores = { ...scoresRef.current, correct: scoresRef.current.correct + 1 };
     scoresRef.current = newScores;
     setScores(newScores);
@@ -767,7 +1366,9 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
 
   const skip = () => {
     if (done || skipPenalty > 0) return;
+    const word = words[wordIndexRef.current];
     triggerFlash("skip");
+    wordResultsRef.current = [...wordResultsRef.current, { word, guessed: false, isBonus: getBonusPoints(word) > 0, bonusPts: 0 }];
     const newScores = { ...scoresRef.current, skipped: scoresRef.current.skipped + 1 };
     scoresRef.current = newScores;
     setScores(newScores);
@@ -777,15 +1378,12 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
       finishRound(newScores, wordIndexRef.current);
       return;
     }
-    // Start 3-second penalty countdown
     setSkipPenalty(3);
     let count = 3;
     penaltyRef.current = setInterval(() => {
       count -= 1;
       setSkipPenalty(count);
-      if (count <= 0) {
-        clearInterval(penaltyRef.current);
-      }
+      if (count <= 0) clearInterval(penaltyRef.current);
     }, 1000);
   };
 
@@ -794,6 +1392,9 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const pct = timeRemaining / roundTime;
   const timerColor = timesUp ? "#f87171" : timeLeft > 30 ? "#4ade80" : timeLeft > 10 ? "#fbbf24" : "#f87171";
   const circumference = 2 * Math.PI * 44;
+  const currentWord = words[wordIndex];
+  const currentBonusPts = currentWord ? getBonusPoints(currentWord) : 0;
+  const isCurrentBonus = currentBonusPts > 0;
 
   return (
     <div className={`screen round-screen ${flash ? `flash-${flash}` : ""} ${done ? "round-done" : ""}`}>
@@ -846,7 +1447,10 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
           <>
             <div className="word-anchor">
               <div className="word-counter">woord {wordIndex + 1}</div>
-              <div className="current-word">{words[wordIndex] ?? "— geen woorden meer —"}</div>
+              {isCurrentBonus && (
+                <div className="bonus-badge">⭐ BONUSWOORD — {currentBonusPts === 2 ? 'spreekwoord: 3 punten!' : '2 punten!'}</div>
+              )}
+              <div className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ?? "— geen woorden meer —"}</div>
               <div className="times-up-banner" style={{visibility: timesUp ? 'visible' : 'hidden'}}>⏰ Tijd is om — maak dit woord nog af!</div>
             </div>
           </>
@@ -869,7 +1473,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   );
 }
 
-function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRestart, onContinue, teams, teamScores }) {
+function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRestart, onContinue, onShowStats, teams, teamScores }) {
   const isLast = currentRound >= totalRounds;
 
   // Team mode: sorteer teams op score
@@ -911,6 +1515,9 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
         </div>
         {isLast ? (
           <div className="final-btns">
+            <button className="score-btn stats-btn" onClick={onShowStats}>
+              📊 Statistieken bekijken
+            </button>
             <button className="score-btn continue-btn" onClick={onContinue}>
               Nog een ronde! →
             </button>
@@ -920,9 +1527,110 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
           </div>
         ) : (
           <button className="score-btn next-btn" onClick={onNext}>
-            {teams ? "Volgende speler →" : "Volgende speler →"}
+            Volgende speler →
           </button>
         )}
+      </div>
+    </div>
+  );
+}
+
+// ── Stats Screen ─────────────────────────────────────────────────────────────
+
+function StatsScreen({ players, playerStats, scores, onRestart, onContinue }) {
+  const [activePlayer, setActivePlayer] = useState(0);
+
+  const ps = playerStats[activePlayer];
+  if (!ps) return null;
+
+  const allRounds = ps.rounds;
+  const totalCorrect = allRounds.reduce((s, r) => s + r.correct, 0);
+  const totalSkipped = allRounds.reduce((s, r) => s + r.skipped, 0);
+  const totalBonus = allRounds.reduce((s, r) => s + (r.bonusPoints || 0), 0);
+  const totalSeen = totalCorrect + totalSkipped;
+  const skipRatio = totalSeen > 0 ? Math.round((totalSkipped / totalSeen) * 100) : 0;
+
+  const bestRound = allRounds.reduce((best, r, i) => (r.correct > (best?.correct ?? -1) ? { ...r, idx: i } : best), null);
+
+  const allWordResults = allRounds.flatMap(r => r.wordResults || []);
+  const guessedWords = allWordResults.filter(w => w.guessed);
+  const skippedWords = allWordResults.filter(w => !w.guessed);
+
+  return (
+    <div className="screen stats-screen">
+      <div className="stats-card">
+        <h2 className="score-title">📊 Statistieken</h2>
+
+        {/* Player tabs */}
+        <div className="stats-tabs">
+          {players.map((p, i) => (
+            <button
+              key={i}
+              className={`stats-tab${activePlayer === i ? " stats-tab-active" : ""}`}
+              onClick={() => setActivePlayer(i)}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+
+        <div className="stats-player-name">{players[activePlayer]}</div>
+        <div className="stats-total-score">{scores[activePlayer]} punten totaal</div>
+
+        {/* Overview grid */}
+        <div className="stats-grid">
+          <div className="stats-cell">
+            <div className="stats-cell-val">{totalCorrect}</div>
+            <div className="stats-cell-lbl">✓ Geraden</div>
+          </div>
+          <div className="stats-cell">
+            <div className="stats-cell-val">{totalSkipped}</div>
+            <div className="stats-cell-lbl">↷ Geskipt</div>
+          </div>
+          <div className="stats-cell">
+            <div className="stats-cell-val">{skipRatio}%</div>
+            <div className="stats-cell-lbl">Skip-ratio</div>
+          </div>
+          <div className="stats-cell stats-cell-gold">
+            <div className="stats-cell-val">+{totalBonus}</div>
+            <div className="stats-cell-lbl">⭐ Bonuspunten</div>
+          </div>
+        </div>
+
+        {bestRound && (
+          <div className="stats-best">
+            🏅 Beste ronde: ronde {bestRound.idx + 1} — {bestRound.correct} woorden geraden
+          </div>
+        )}
+
+        {/* Word lists */}
+        <div className="stats-words-section">
+          <div className="stats-words-col">
+            <div className="stats-words-title stats-green">✓ Goed geraden ({guessedWords.length})</div>
+            <div className="stats-words-list">
+              {guessedWords.slice(0, 20).map((wr, i) => (
+                <span key={i} className={`stats-word-chip${wr.isBonus ? " stats-word-bonus" : ""}`}>
+                  {wr.word}{wr.isBonus ? " ⭐" : ""}
+                </span>
+              ))}
+              {guessedWords.length > 20 && <span className="stats-word-more">+{guessedWords.length - 20} meer</span>}
+            </div>
+          </div>
+          <div className="stats-words-col">
+            <div className="stats-words-title stats-red">↷ Geskipt ({skippedWords.length})</div>
+            <div className="stats-words-list">
+              {skippedWords.slice(0, 20).map((wr, i) => (
+                <span key={i} className="stats-word-chip stats-word-skipped">{wr.word}</span>
+              ))}
+              {skippedWords.length > 20 && <span className="stats-word-more">+{skippedWords.length - 20} meer</span>}
+            </div>
+          </div>
+        </div>
+
+        <div className="final-btns" style={{marginTop: 20}}>
+          <button className="score-btn continue-btn" onClick={onContinue}>Nog een ronde! →</button>
+          <button className="score-btn restart-btn" onClick={onRestart}>Nieuw spel</button>
+        </div>
       </div>
     </div>
   );
@@ -931,23 +1639,37 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
 // ── Main App ──────────────────────────────────────────────────────────────────
 
 export default function App() {
-  const [phase, setPhase] = useState("setup"); // setup | handoff | round | score
+  const [phase, setPhase] = useState("setup"); // setup | handoff | round | score | stats
   const [players, setPlayers] = useState([]);
   const [scores, setScores] = useState([]);
   const [displayScores, setDisplayScores] = useState([]);
   const [currentPlayerIdx, setCurrentPlayerIdx] = useState(0);
-  const [roundNum, setRoundNum] = useState(0); // how many rounds completed
+  const [roundNum, setRoundNum] = useState(0);
   const [wordDeck, setWordDeck] = useState([]);
   const [usedWords, setUsedWords] = useState(new Set());
   const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
-  // Team mode: teams = [{ name, players }] or null for individual mode
   const [teams, setTeams] = useState(null);
-  // teamScores: array of scores parallel to teams array
   const [teamScores, setTeamScores] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  // playerStats: array of { rounds: [{correct, skipped, words:[{word,guessed}]}] }
+  const [playerStats, setPlayerStats] = useState([]);
 
-  const totalRounds = players.length; // each player plays once = 1 full round
+  const totalRounds = players.length;
 
-  const startGame = (names, time, teamsData) => {
+  const getWordPool = (cats) => {
+    const catSet = cats instanceof Set ? cats : new Set();
+    const nonAll = CATEGORIES.filter((c) => c.id !== "all").map((c) => c.id);
+    // Lege selectie of alles geselecteerd → gewoon alle woorden
+    if (catSet.size === 0 || catSet.has("all") || nonAll.every((id) => catSet.has(id))) return WORDS_BY_CATEGORY['all'];
+    const merged = new Set();
+    catSet.forEach((id) => {
+      const arr = WORDS_BY_CATEGORY[id];
+      if (arr) arr.forEach((w) => merged.add(w));
+    });
+    return merged.size > 0 ? [...merged] : WORDS_BY_CATEGORY['all'];
+  };
+
+  const startGame = (names, time, teamsData, categories) => {
     const empty = Array(names.length).fill(0);
     setPlayers(names);
     setScores(empty);
@@ -956,9 +1678,13 @@ export default function App() {
     setRoundNum(0);
     setUsedWords(new Set());
     setRoundTime(time);
-    setWordDeck(shuffle(WORDS));
+    const catSet = categories instanceof Set ? categories : new Set(["all"]);
+    setSelectedCategory(catSet);
+    const pool = getWordPool(catSet);
+    setWordDeck(shuffle(pool));
     setTeams(teamsData);
     setTeamScores(teamsData ? Array(teamsData.length).fill(0) : []);
+    setPlayerStats(names.map(() => ({ rounds: [] })));
     setPhase("handoff");
   };
 
@@ -975,9 +1701,14 @@ export default function App() {
     return null;
   };
 
-  const onRoundEnd = ({ correct, wordsUsed }) => {
+  const onRoundEnd = ({ correct, skipped, wordsUsed, wordResults }) => {
+    // wordResults: [{word, guessed, isBonus, bonusPts}]
+    // spreekwoorden geven +2 extra (totaal 3), twee-woords zinnen +1 extra (totaal 2)
+    const bonusPoints = wordResults ? wordResults.filter(r => r.guessed).reduce((sum, r) => sum + (r.bonusPts || 0), 0) : 0;
+    const totalPoints = correct + bonusPoints;
+
     const newScores = [...scores];
-    newScores[currentPlayerIdx] += correct;
+    newScores[currentPlayerIdx] += totalPoints;
     setScores(newScores);
     setDisplayScores(newScores);
 
@@ -985,12 +1716,21 @@ export default function App() {
       const teamIdx = getTeamIdxForPlayer(currentPlayerIdx);
       if (teamIdx !== null) {
         const newTeamScores = [...teamScores];
-        newTeamScores[teamIdx] += correct;
+        newTeamScores[teamIdx] += totalPoints;
         setTeamScores(newTeamScores);
       }
     }
 
-    // Mark the words shown this round as used
+    // Track per-player stats
+    const newPlayerStats = playerStats.map((ps, i) => {
+      if (i !== currentPlayerIdx) return ps;
+      return {
+        ...ps,
+        rounds: [...ps.rounds, { correct, skipped, bonusPoints, wordResults: wordResults || [] }]
+      };
+    });
+    setPlayerStats(newPlayerStats);
+
     const newUsed = new Set(usedWords);
     wordDeck.slice(0, wordsUsed).forEach(w => newUsed.add(w));
     setUsedWords(newUsed);
@@ -1001,17 +1741,18 @@ export default function App() {
   const onNext = (nextUsed) => {
     const nextIdx = (currentPlayerIdx + 1) % players.length;
     setCurrentPlayerIdx(nextIdx);
-    const available = WORDS.filter(w => !(nextUsed || usedWords).has(w));
-    setWordDeck(shuffle(available.length >= 10 ? available : WORDS));
+    const pool = getWordPool(selectedCategory);
+    const available = pool.filter(w => !(nextUsed || usedWords).has(w));
+    setWordDeck(shuffle(available.length >= 10 ? available : pool));
     setPhase("handoff");
   };
 
   const onContinue = () => {
-    // Start a new full rotation keeping current scores and excluding used words
     setCurrentPlayerIdx(0);
     setRoundNum(0);
-    const available = WORDS.filter(w => !usedWords.has(w));
-    setWordDeck(shuffle(available.length >= 10 ? available : WORDS));
+    const pool = getWordPool(selectedCategory);
+    const available = pool.filter(w => !usedWords.has(w));
+    setWordDeck(shuffle(available.length >= 10 ? available : pool));
     setPhase("handoff");
   };
 
@@ -1021,7 +1762,10 @@ export default function App() {
     setScores([]);
     setTeams(null);
     setTeamScores([]);
+    setPlayerStats([]);
   };
+
+  const onShowStats = () => setPhase("stats");
 
   const currentWords = wordDeck;
 
@@ -1464,7 +2208,121 @@ export default function App() {
         .restart-btn:hover { background: rgba(255,255,255,0.15); }
         .continue-btn { background: linear-gradient(135deg, #34d399, #60a5fa); color: white; box-shadow: 0 6px 24px rgba(52,211,153,0.35); margin-bottom: 10px; }
         .continue-btn:hover { transform: translateY(-2px); }
+        .stats-btn { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1a1a1a; box-shadow: 0 6px 24px rgba(251,191,36,0.35); margin-bottom: 10px; }
+        .stats-btn:hover { transform: translateY(-2px); }
         .final-btns { display: flex; flex-direction: column; }
+
+        /* ── Category picker ── */
+        .category-grid {
+          display: flex; flex-wrap: wrap; gap: 6px;
+        }
+        .category-btn {
+          padding: 6px 12px; border-radius: 20px;
+          border: 1.5px solid rgba(255,255,255,0.15);
+          background: rgba(255,255,255,0.06);
+          color: rgba(255,255,255,0.7);
+          font-size: 12px; font-weight: 700; font-family: inherit;
+          cursor: pointer; transition: all 0.15s;
+          user-select: none;
+        }
+        .category-btn:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.3); }
+        .category-btn-active {
+          background: rgba(167,139,250,0.28);
+          border-color: rgba(167,139,250,0.75);
+          color: #c4b5fd;
+          box-shadow: 0 0 0 2px rgba(167,139,250,0.18);
+        }
+        .category-btn-active:hover {
+          background: rgba(167,139,250,0.38);
+        }
+
+        /* ── Bonus word ── */
+        .bonus-badge {
+          font-size: 12px; font-weight: 800; letter-spacing: 0.06em;
+          color: #fbbf24;
+          background: rgba(251,191,36,0.12);
+          border: 1.5px solid rgba(251,191,36,0.35);
+          border-radius: 12px; padding: 4px 12px;
+          text-align: center; margin-bottom: 8px;
+          animation: pulse-gold 1.2s ease-in-out infinite;
+        }
+        @keyframes pulse-gold {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(251,191,36,0.4); }
+          50% { box-shadow: 0 0 0 8px rgba(251,191,36,0); }
+        }
+        .current-word.bonus-word {
+          background: linear-gradient(135deg, #fbbf24, #f59e0b);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        .flash-bonus { animation: flash-bonus-anim 0.4s ease; }
+        @keyframes flash-bonus-anim {
+          0% { background: rgba(251,191,36,0); }
+          30% { background: rgba(251,191,36,0.2); }
+          100% { background: rgba(251,191,36,0); }
+        }
+
+        /* ── Stats screen ── */
+        .stats-card {
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.12);
+          border-radius: 24px; padding: 28px 20px;
+          width: 100%; max-width: 480px;
+          backdrop-filter: blur(20px);
+          overflow-y: auto; max-height: 92vh;
+        }
+        .stats-tabs {
+          display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;
+        }
+        .stats-tab {
+          padding: 6px 14px; border-radius: 20px;
+          border: 1.5px solid rgba(255,255,255,0.15);
+          background: rgba(255,255,255,0.06);
+          color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 700;
+          font-family: inherit; cursor: pointer; transition: all 0.15s;
+        }
+        .stats-tab-active {
+          background: rgba(167,139,250,0.25);
+          border-color: rgba(167,139,250,0.6); color: #a78bfa;
+        }
+        .stats-player-name {
+          font-family: 'Righteous', cursive; font-size: 22px; margin-bottom: 2px;
+        }
+        .stats-total-score {
+          color: #a78bfa; font-size: 14px; font-weight: 700; margin-bottom: 16px;
+        }
+        .stats-grid {
+          display: grid; grid-template-columns: 1fr 1fr;
+          gap: 10px; margin-bottom: 14px;
+        }
+        .stats-cell {
+          background: rgba(255,255,255,0.06);
+          border: 1.5px solid rgba(255,255,255,0.1);
+          border-radius: 16px; padding: 12px;
+          text-align: center;
+        }
+        .stats-cell-gold { border-color: rgba(251,191,36,0.35); background: rgba(251,191,36,0.08); }
+        .stats-cell-val { font-family: 'Righteous', cursive; font-size: 26px; }
+        .stats-cell-lbl { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); margin-top: 2px; }
+        .stats-best {
+          font-size: 13px; font-weight: 700; color: #fbbf24;
+          background: rgba(251,191,36,0.1); border: 1.5px solid rgba(251,191,36,0.25);
+          border-radius: 12px; padding: 10px 14px; margin-bottom: 14px;
+        }
+        .stats-words-section { display: flex; gap: 10px; margin-bottom: 4px; }
+        .stats-words-col { flex: 1; min-width: 0; }
+        .stats-words-title { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+        .stats-green { color: #4ade80; }
+        .stats-red { color: #f87171; }
+        .stats-words-list { display: flex; flex-wrap: wrap; gap: 4px; }
+        .stats-word-chip {
+          font-size: 11px; font-weight: 700; padding: 3px 8px;
+          border-radius: 10px; background: rgba(74,222,128,0.1);
+          border: 1px solid rgba(74,222,128,0.25); color: #4ade80;
+        }
+        .stats-word-bonus { background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.4); color: #fbbf24; }
+        .stats-word-skipped { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.25); color: #f87171; }
+        .stats-word-more { font-size: 11px; color: rgba(255,255,255,0.4); align-self: center; }
 
         @media (max-width: 380px) {
           .names-grid { grid-template-columns: 1fr; }
@@ -1507,8 +2365,19 @@ export default function App() {
           onNext={() => onNext(usedWords)}
           onRestart={onRestart}
           onContinue={onContinue}
+          onShowStats={onShowStats}
           teams={teams}
           teamScores={teamScores}
+        />
+      )}
+
+      {phase === "stats" && (
+        <StatsScreen
+          players={players}
+          playerStats={playerStats}
+          scores={displayScores}
+          onRestart={onRestart}
+          onContinue={onContinue}
         />
       )}
     </>
