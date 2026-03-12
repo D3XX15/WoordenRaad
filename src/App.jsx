@@ -580,7 +580,7 @@ const WORDS_BY_CATEGORY = (() => {
     'raketschild', 'luchtafweer', 'radar', 'sonar', 'gevaarlijk',
     'nachtkijker', 'verrekijker', 'veldtent', 'veldhospitaal', 'verbandpost', 'ziekenauto',
     'wapenopslag', 'munitiedepot', 'kruitkamer', 'schietbaan', 'hindernisbaan',
-    'orlogsvlag', 'saluut', 'wachtpost', 'identiteitsbewijs', 'noodrantsoen', 'veldfles',
+    'oorlogsvlag', 'saluut', 'wachtpost', 'identiteitsbewijs', 'noodrantsoen', 'veldfles',
     'kaartlezen', 'geheime boodschap', 'beveiliging', 'bewaking', 'grenscontrole',
     'veiligheidszone', 'bufferzones', 'neutrale zone', 'demilitarisatie', 'vredesmissie', 'VN-missie',
     'NAVO-oefening', 'militaire alliantie', 'wapenbestand', 'vuurstaking', 'terugtrekking', 'bezetting',
@@ -623,7 +623,7 @@ const WORDS_BY_CATEGORY = (() => {
     'compressor', 'spijkerpistool', 'tacker', 'houtlijm',
     'plamuurmes', 'roerder', 'mixer', 'cementmixer', 'hoogteschaffer',
     'nijptang', 'werktafel', 'lijmspuit', 'noodstroomgenerator', 'stofopvangzak',
-    'verlengstuk', 'worktafel', 'spoorbreedte', 'boorset', 'luchtcompressor', 'verfspuiter',
+    'verlengstuk', 'werktafel', 'spoorbreedte', 'boorset', 'luchtcompressor', 'verfspuiter',
     'verf afbijter', 'ontvetter', 'ontroesters', 'beschermkapjes',
     'zaagblad', 'potje verf', 'rol', 'spijkertje', 'schroefje', 'boortje',
     'zaagje', 'sloopkogel', 'hijskraan', 'moker', 'vuurhaard', 'kachel',
@@ -902,6 +902,7 @@ function SetupScreen({ onStart }) {
   const [selectedCategories, setSelectedCategories] = useState(() => new Set(CATEGORIES.map((c) => c.id)));
   // In team mode: teamSizes[t] = aantal spelers in team t
   const [teamSizes, setTeamSizes] = useState([2, 2]);
+  const [teamNames, setTeamNames] = useState(["Team 1", "Team 2"]);
 
   const toggleTeamMode = () => {
     setTeamMode((prev) => {
@@ -909,6 +910,7 @@ function SetupScreen({ onStart }) {
         // Schakel over naar team-modus: 2 teams van elk 2 spelers
         setCount(2);
         setTeamSizes([2, 2]);
+        setTeamNames(["Team 1", "Team 2"]);
         setNames(Array(4).fill(""));
       } else {
         // Terug naar singles
@@ -928,6 +930,11 @@ function SetupScreen({ onStart }) {
       while (newSizes.length < clamped) newSizes.push(2);
       const total = newSizes.reduce((a, b) => a + b, 0);
       setTeamSizes(newSizes);
+      setTeamNames((prev) => {
+        const next = [...prev.slice(0, clamped)];
+        while (next.length < clamped) next.push(`Team ${next.length + 1}`);
+        return next;
+      });
       setNames((prevNames) => {
         const next = [...prevNames];
         while (next.length < total) next.push("");
@@ -984,7 +991,7 @@ function SetupScreen({ onStart }) {
     let offset = 0;
     for (let t = 0; t < count; t++) {
       result.push({
-        name: `Team ${t + 1}`,
+        name: teamNames[t] || `Team ${t + 1}`,
         players: trimmed.slice(offset, offset + teamSizes[t]),
       });
       offset += teamSizes[t];
@@ -1018,7 +1025,7 @@ function SetupScreen({ onStart }) {
   const getTeamOffset = (t) => teamSizes.slice(0, t).reduce((a, b) => a + b, 0);
 
   return (
-    <div className="screen setup-screen">
+    <div className="screen">
       <div className="setup-card">
         <div className="logo-area">
           <div className="logo-icon">💬</div>
@@ -1026,12 +1033,22 @@ function SetupScreen({ onStart }) {
           <p className="logo-sub">Het raad- en uitbeeldspel</p>
         </div>
 
-        <button
-          className={`start-btn mode-toggle-btn${teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
-          onClick={toggleTeamMode}
-        >
-          {teamMode ? "Teamplayer" : "Singleplayer"}
-        </button>
+        <div style={{display:'flex', gap:'12px', marginBottom:'20px'}}>
+          <button
+            className={`start-btn mode-toggle-btn${!teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
+            style={{margin:0, flex:1}}
+            onClick={() => !teamMode ? null : toggleTeamMode()}
+          >
+            👤 Singles
+          </button>
+          <button
+            className={`start-btn mode-toggle-btn${teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
+            style={{margin:0, flex:1}}
+            onClick={() => teamMode ? null : toggleTeamMode()}
+          >
+            👥 Teams
+          </button>
+        </div>
 
         <div className="setup-section">
           <div className="names-label-row">
@@ -1049,7 +1066,12 @@ function SetupScreen({ onStart }) {
                 return (
                   <div key={t} className="team-block">
                     <div className="team-block-header">
-                      <span>Team {t + 1}</span>
+                      <input
+                        className="name-input team-name-input"
+                        value={teamNames[t] ?? `Team ${t + 1}`}
+                        onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
+                        maxLength={20}
+                      />
                       <div className="team-size-controls">
                         {size > 2 && (
                           <button className="team-size-btn team-size-remove" onClick={() => removePlayerFromTeam(t)} title="Speler verwijderen">−1</button>
@@ -1098,11 +1120,11 @@ function SetupScreen({ onStart }) {
           <div className="names-label-row">
             <label className="setup-label">Categorieën</label>
             <button
-              className={`randomize-btn${allSelected ? " randomize-btn-active" : ""}`}
+              className={`randomize-btn alles-btn${allSelected ? " randomize-btn-active" : ""}`}
               onClick={() => toggleCategory("all")}
               title={allSelected ? "Deselecteer alle categorieën" : "Selecteer alle categorieën"}
             >
-              🎲 Alles
+              🎲 Alle Categorieën
             </button>
           </div>
           <div className="category-grid">
@@ -1363,7 +1385,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
       <div className="word-stage">
         {done ? (
           (() => {
-            const result = endMessageRef.current || getRandomEndMessage(scores.correct, roundTime);
+            const result = endMessageRef.current;
             const n = result.count;
             return (
               <div className="word-done-wrap">
@@ -1451,7 +1473,7 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
   }
 
   return (
-    <div className="screen score-screen">
+    <div className="screen">
       <div className="score-card">
         <h2 className="score-title">{isLast ? "🏆 Eindstand" : `Stand na ronde ${currentRound}`}</h2>
         {isLast && tiedPlayerIndices && (
@@ -1577,7 +1599,7 @@ function StatsScreen({ players, playerStats, scores, onRestart, onContinue }) {
   const skippedWords = allWordResults.filter(w => !w.guessed);
 
   return (
-    <div className="screen stats-screen">
+    <div className="screen">
       <div className="stats-card">
         <h2 className="score-title">📊 Statistieken</h2>
 
@@ -1661,7 +1683,7 @@ function StatsScreen({ players, playerStats, scores, onRestart, onContinue }) {
 // Categoriepicker: apart component zodat hooks in TiebreakerRound altijd worden aangeroepen.
 function TiebreakerCategoryPicker({ candidateCategories, onCategoryChosen }) {
   return (
-    <div className="screen score-screen">
+    <div className="screen">
       <div className="score-card">
         <h2 className="score-title" style={{marginBottom:'6px'}}>⚡ Tie-breaker</h2>
         <p style={{textAlign:'center', color:'rgba(255,255,255,0.5)', fontSize:'13px', marginBottom:'22px', lineHeight:'1.5'}}>
@@ -1753,7 +1775,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
     const hasJointWinner = results.filter(r => r.time === winnerTime).length > 1;
 
     return (
-      <div className="screen score-screen">
+      <div className="screen">
         <div className="score-card">
           <h2 className="score-title">⚡ Tie-breaker resultaten</h2>
           <div style={{
@@ -1776,11 +1798,10 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
           </div>
           <div className="scores-list">
             {results.map((r, i) => {
-              const isWinner = r.time === winnerTime;
-              const tieBadges = ["🏆", "🥈", "🥉"];
+              const tieBadges = ["🥇", "🥈", "🥉"];
               return (
                 <div key={r.name} className={`score-row rank-${i + 1} rank-final`}>
-                  <span className="rank-badge">{isWinner ? "🏆" : (tieBadges[i] ?? i + 1)}</span>
+                  <span className="rank-badge">{tieBadges[i] ?? i + 1}</span>
                   <span className="score-name">{r.name}</span>
                   <span className="score-pts" style={{fontSize:'17px'}}>
                     {r.time.toFixed(1)}s
@@ -2480,6 +2501,18 @@ export default function App() {
           border-color: #34d399;
         }
         .randomize-btn-active:hover { background: rgba(52,211,153,0.18) !important; }
+        .alles-btn {
+          background: rgba(255,255,255,0.05);
+          color: rgba(255,255,255,0.45);
+          border-color: rgba(255,255,255,0.2);
+        }
+        .alles-btn:hover { background: rgba(255,255,255,0.1) !important; }
+        .alles-btn.randomize-btn-active {
+          background: rgba(52,211,153,0.08);
+          color: #34d399;
+          border-color: #34d399;
+        }
+        .alles-btn.randomize-btn-active:hover { background: rgba(52,211,153,0.18) !important; }
 
         .teams-grid { display: flex; flex-direction: column; gap: 14px; }
         .team-block {
@@ -2499,6 +2532,21 @@ export default function App() {
           align-items: center;
           justify-content: space-between;
         }
+        .team-name-input {
+          font-size: 13px !important;
+          font-weight: 800 !important;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #a78bfa !important;
+          padding: 6px 10px !important;
+          flex: none !important;
+          width: 250px;
+          background: rgba(167,139,250,0.06) !important;
+          border: 2px solid rgba(167,139,250,0.35) !important;
+          border-radius: 8px !important;
+        }
+        .team-name-input:focus { border-color: #a78bfa !important; background: rgba(167,139,250,0.1) !important; }
+        .team-name-input::placeholder { color: rgba(167,139,250,0.4) !important; }
         .team-size-controls { display: flex; gap: 6px; }
         .team-size-btn {
           padding: 3px 10px;
@@ -2626,15 +2674,6 @@ export default function App() {
         }
 
         /* ── Bonus word ── */
-        .bonus-badge {
-          font-size: 12px; font-weight: 800; letter-spacing: 0.06em;
-          color: #fbbf24;
-          background: rgba(251,191,36,0.12);
-          border: 1.5px solid rgba(251,191,36,0.35);
-          border-radius: 12px; padding: 4px 12px;
-          text-align: center; margin-bottom: 8px;
-          animation: pulse-gold 1.2s ease-in-out infinite;
-        }
         @keyframes pulse-gold {
           0%, 100% { box-shadow: 0 0 0 0 rgba(251,191,36,0.4); }
           50% { box-shadow: 0 0 0 8px rgba(251,191,36,0); }
