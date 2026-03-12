@@ -1437,7 +1437,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
               <div className="word-counter">woord {wordIndex + 1}</div>
               <div className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ?? "— geen woorden meer —"}</div>
               <div className={`times-up-banner${isCurrentBonus && !timesUp ? ' bonus-banner' : ''}`} style={{visibility: (timesUp || isCurrentBonus) ? 'visible' : 'hidden'}}>
-                {timesUp ? '⏰ Tijd is om — maak dit woord nog af!' : `⭐ BONUSWOORD — spreekwoord: 3 punten!`}
+                {timesUp ? '⏰ Tijd is om — maak dit woord nog af!' : `⭐ BONUSSPREEKWOORD — 3 punten!`}
               </div>
             </div>
           </>
