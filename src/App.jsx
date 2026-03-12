@@ -2,34 +2,31 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 // ── Categorieën ──────────────────────────────────────────────────────────────
 const CATEGORIES = [
-  { id: "all",              label: "🎲 Alles",                   emoji: "🎲" },
-  { id: "dieren",           label: "🐾 Dieren",                  emoji: "🐾" },
-  { id: "voedsel",          label: "🍕 Voedsel",                 emoji: "🍕" },
-  { id: "beroepen",         label: "👷 Beroepen",                emoji: "👷" },
-  { id: "sport",            label: "⚽ Sport & Hobby",           emoji: "⚽" },
-  { id: "huishouden",       label: "🏠 Huishouden",              emoji: "🏠" },
-  { id: "objecten",         label: "📦 Objecten",                emoji: "📦" },
-  { id: "natuur",           label: "🌿 Natuur",                  emoji: "🌿" },
-  { id: "vervoer",          label: "🚗 Vervoer",                 emoji: "🚗" },
-  { id: "plaatsen",         label: "🏛️ Plaatsen",                emoji: "🏛️" },
-  { id: "acties",           label: "🏃 Acties",                  emoji: "🏃" },
-  { id: "landen",           label: "🌍 Landen",                  emoji: "🌍" },
-  { id: "gereedschap",      label: "🔧 Gereedschap",             emoji: "🔧" },
-  { id: "muziek",           label: "🎤 Muziek",                  emoji: "🎤" },
-  { id: "militair",         label: "🪖 Militair",                emoji: "🪖" },
-  { id: "ruimte",           label: "🚀 Ruimte",                  emoji: "🚀" },
-  { id: "wetenschap",       label: "🔬 Wetenschap",              emoji: "🔬" },
-  { id: "politiek",         label: "🏛 Politiek",                emoji: "🏛" },
-  { id: "spreekwoorden",    label: "💬 Spreekwoorden",           emoji: "💬", bonus: true },
+  { id: "all",           label: "🎲 Alles" },
+  { id: "dieren",        label: "🐾 Dieren" },
+  { id: "voedsel",       label: "🍕 Voedsel" },
+  { id: "beroepen",      label: "👷 Beroepen" },
+  { id: "sport",         label: "⚽ Sport & Hobby" },
+  { id: "huishouden",    label: "🏠 Huishouden" },
+  { id: "objecten",      label: "📦 Objecten" },
+  { id: "natuur",        label: "🌿 Natuur" },
+  { id: "vervoer",       label: "🚗 Vervoer" },
+  { id: "plaatsen",      label: "🏛️ Plaatsen" },
+  { id: "acties",        label: "🏃 Acties" },
+  { id: "landen",        label: "🌍 Landen" },
+  { id: "gereedschap",   label: "🔧 Gereedschap" },
+  { id: "muziek",        label: "🎤 Muziek" },
+  { id: "militair",      label: "🪖 Militair" },
+  { id: "ruimte",        label: "🚀 Ruimte" },
+  { id: "wetenschap",    label: "🔬 Wetenschap" },
+  { id: "politiek",      label: "🏛 Politiek" },
+  { id: "spreekwoorden", label: "💬 Spreekwoorden", bonus: true },
 ];
 
 
 
 // WORDS_BY_CATEGORY maps category id → word array
-const WORDS_BY_CATEGORY = {};
-
-// Build category buckets
-(function buildCategories() {
+const WORDS_BY_CATEGORY = (() => {
   const dieren = [
     'aardvarken', 'adelaar', 'albatros', 'alpaca', 'anakonda', 'baviaan',
     'beer', 'bever', 'bijenkoningin', 'bizon', 'boomkikker', 'boomslang',
@@ -526,7 +523,7 @@ const WORDS_BY_CATEGORY = {};
     'gitaar', 'basgitaar', 'elektrische gitaar', 'akoestische gitaar', 'ukelele', 'banjo',
     'viool', 'altviool', 'cello', 'contrabas', 'harp',
     'luit', 'sitar', 'trompet', 'trombone', 'tuba', 'hoorn',
-    'saxofoon', 'klarinet', 'clarinet', 'fluit', 'dwarsfluit', 'blokfluit',
+    'saxofoon', 'klarinet', 'fluit', 'dwarsfluit', 'blokfluit',
     'fagot', 'hobo', 'didgeridoo', 'piano', 'vleugel', 'orgel',
     'accordeon', 'synthesizer', 'keyboard', 'trommel', 'xylofoon', 'djembé',
     'microfoon', 'luidspreker', 'versterker', 'mengpaneel', 'gramofoon', 'elpee',
@@ -872,25 +869,9 @@ const WORDS_BY_CATEGORY = {};
     'windlicht', 'plantenhanger', 'salontafelkleed', 'badkamerspiegel', 'wasknijper'
   ];
 
-  WORDS_BY_CATEGORY['dieren'] = dieren;
-  WORDS_BY_CATEGORY['voedsel'] = voedsel;
-  WORDS_BY_CATEGORY['beroepen'] = beroepen;
-  WORDS_BY_CATEGORY['sport'] = sport;
-  WORDS_BY_CATEGORY['objecten'] = objecten;
-  WORDS_BY_CATEGORY['huishouden'] = huishouden;
-  WORDS_BY_CATEGORY['natuur'] = natuur;
-  WORDS_BY_CATEGORY['vervoer'] = vervoer;
-  WORDS_BY_CATEGORY['plaatsen'] = plaatsen;
-  WORDS_BY_CATEGORY['acties'] = acties;
-  WORDS_BY_CATEGORY['landen'] = landen;
-  WORDS_BY_CATEGORY['gereedschap'] = gereedschap;
-  WORDS_BY_CATEGORY['muziek'] = muziek;
-  WORDS_BY_CATEGORY['militair'] = militair;
-  WORDS_BY_CATEGORY['ruimte'] = ruimte;
-  WORDS_BY_CATEGORY['wetenschap'] = wetenschap;
-  WORDS_BY_CATEGORY['politiek'] = politiek;
-  WORDS_BY_CATEGORY['spreekwoorden'] = spreekwoorden;
-  WORDS_BY_CATEGORY['all'] = [...new Set(Object.values(WORDS_BY_CATEGORY).flat())];
+  const map = { dieren, voedsel, beroepen, sport, objecten, huishouden, natuur, vervoer, plaatsen, acties, landen, gereedschap, muziek, militair, ruimte, wetenschap, politiek, spreekwoorden };
+  map.all = [...new Set(Object.values(map).flat())];
+  return map;
 })();
 
 // Bonus words: alle woorden uit categorieen met bonus: true (spreekwoorden)
@@ -900,13 +881,8 @@ const BONUS_WORDS_SET = new Set(
     .flatMap(c => WORDS_BY_CATEGORY[c.id] || [])
 );
 
-// Geeft het aantal bonuspunten terug voor een woord:
-// spreekwoorden (uit bonus-categorie) → +2 extra (totaal 3 punten)
-// gewone woorden → 0 bonuspunten (totaal 1 punt)
-function getBonusPoints(word) {
-  if (BONUS_WORDS_SET.has(word)) return 2;
-  return 0;
-}
+// Spreekwoorden geven +2 extra punten (totaal 3); gewone woorden 0
+const getBonusPoints = (word) => BONUS_WORDS_SET.has(word) ? 2 : 0;
 
 const DEFAULT_ROUND_TIME = 120;
 
@@ -1233,28 +1209,27 @@ const MESSAGES_GREAT = [
 ];
 
 const MESSAGES_OK = [
-  (n, pts) => `${n} ${w(n)}, lekker bezig! 🙌`,
-  (n, pts) => `${n} ${w(n)}, niet slecht! 👍`,
+  (n, pts) => `${pts} ${pt(pts)}, lekker bezig! 🙌`,
+  (n, pts) => `${pts} ${pt(pts)}, niet slecht! 👍`,
   (n, pts) => `${pts} ${pt(pts)} op de teller. ✅`,
-  (n, pts) => `${n} ${w(n)} goed geraden! 🥳`,
+  (n, pts) => `${pts} ${pt(pts)}, wat geweldig! 🥳`,
   (n, pts) => `${pts} ${pt(pts)} erbij geknalt! 💥`,
   (n, pts) => `${pts} ${pt(pts)} bijgeschreven! ✍️`,
-  (n, pts) => `${n} ${w(n)} in één ronde! 🤩`,
-  (n, pts) => `${n} ${w(n)}, ga zo door! 💪`,
+  (n, pts) => `${pts} ${pt(pts)} in één ronde! 🤩`,
+  (n, pts) => `${pts} ${pt(pts)}, ga zo door! 💪`,
 ];
 
 const MESSAGES_POOR = [
   () => `Ik weet niet of dit nog goed komt! 😅`,
-  (n, pts) => `${n} ${w(n)}. Volgende keer beter! 🙈`,
-  (n, pts) => `${n} ${w(n)}. Haal even rustig adem! 😮‍💨`,
+  (n, pts) => `${pts} ${pt(pts)}. Volgende keer beter! 🙈`,
+  (n, pts) => `${pts} ${pt(pts)}. Haal even rustig adem! 😮‍💨`,
   () => `De volgende ronde gaat beter, toch? 😉`,
   () => `De andere spelers ruiken bloed! 🩸`,
   () => `De spanning zat er zeker in! 😅`,
 ];
 
-function getRandomEndMessage(correctCount, roundTime, totalScore) {
-  const scoreForTier = totalScore !== undefined ? totalScore : correctCount;
-  const ratio = roundTime > 0 ? scoreForTier / (roundTime / 6) : 0;
+function getRandomEndMessage(correctCount, roundTime, totalScore = correctCount) {
+  const ratio = roundTime > 0 ? totalScore / (roundTime / 6) : 0;
   const [pool, tier] =
     ratio >= 0.75 ? [MESSAGES_GREAT, "great"] :
     ratio >= 0.5  ? [MESSAGES_OK,    "ok"]    :
@@ -1265,6 +1240,8 @@ function getRandomEndMessage(correctCount, roundTime, totalScore) {
 
 function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const [wordIndex, setWordIndex] = useState(0);
+  // NB: voor tijdkritische logica worden refs gebruikt naast state,
+  // zodat interval-callbacks altijd de actuele waarde hebben (geen stale closure).
   const [scores, setScores] = useState({ correct: 0, skipped: 0 });
   const scoresRef = useRef({ correct: 0, skipped: 0 });
   const endMessageRef = useRef(null);
@@ -1653,16 +1630,16 @@ export default function App() {
 
   const getWordPool = (cats) => {
     const catSet = cats instanceof Set ? cats : new Set();
-    const nonAll = CATEGORIES.filter((c) => c.id !== "all").map((c) => c.id);
-    if (catSet.size === 0 || catSet.has("all") || nonAll.every((id) => catSet.has(id))) {
-      return WORDS_BY_CATEGORY['all'];
+    const nonAllIds = CATEGORIES.filter(c => c.id !== "all").map(c => c.id);
+    // Gebruik 'alles' als niets geselecteerd is of alle categorieën aan staan
+    if (catSet.size === 0 || nonAllIds.every(id => catSet.has(id))) {
+      return WORDS_BY_CATEGORY.all;
     }
     const merged = new Set();
     for (const id of catSet) {
-      const arr = WORDS_BY_CATEGORY[id];
-      if (arr) arr.forEach((w) => merged.add(w));
+      (WORDS_BY_CATEGORY[id] || []).forEach(w => merged.add(w));
     }
-    return merged.size > 0 ? [...merged] : WORDS_BY_CATEGORY['all'];
+    return merged.size > 0 ? [...merged] : WORDS_BY_CATEGORY.all;
   };
 
   const startGame = (names, time, teamsData, categories) => {
@@ -1712,13 +1689,13 @@ export default function App() {
     return order;
   };
 
-  // Helper: given a player index, find which team they belong to
+  // Helper: geeft het teamindex terug voor een spelerindex
   const getTeamIdxForPlayer = (playerIdx) => {
     if (!teams) return null;
     let offset = 0;
     for (let t = 0; t < teams.length; t++) {
-      if (playerIdx < offset + teams[t].players.length) return t;
       offset += teams[t].players.length;
+      if (playerIdx < offset) return t;
     }
     return null;
   };
@@ -1786,6 +1763,8 @@ export default function App() {
     setTeams(null);
     setTeamScores([]);
     setPlayerStats([]);
+    setPlayOrder([]);
+    setPlayOrderPos(0);
   };
 
   return (
