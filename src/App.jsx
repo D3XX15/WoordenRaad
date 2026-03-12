@@ -988,7 +988,7 @@ function SetupScreen({ onStart }) {
     });
   };
 
-  const canStart = names.every((n) => n.trim().length > 0);
+  const canStart = names.every((n) => n.trim().length > 0) && selectedCategories.size > 0;
 
   // Bouw teams array: [{ name: "Team 1", players: [...] }, ...]
   const buildTeams = () => {
@@ -1357,8 +1357,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const timerColor = timesUp ? "#f87171" : timeLeft > 30 ? "#4ade80" : timeLeft > 10 ? "#fbbf24" : "#f87171";
   const circumference = 2 * Math.PI * 44;
   const currentWord = words[wordIndex];
-  const currentBonusPts = currentWord ? getBonusPoints(currentWord) : 0;
-  const isCurrentBonus = currentBonusPts > 0;
+  const isCurrentBonus = currentWord ? getBonusPoints(currentWord) > 0 : false;
 
   return (
     <div className={`screen round-screen ${flash ? `flash-${flash}` : ""} ${done ? "round-done" : ""}`}>
@@ -1439,7 +1438,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   );
 }
 
-function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRestart, onContinue, onShowStats, teams, teamScores }) {
+function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRestart, onContinue, onShowStats, teams, teamScores, onStartTiebreaker }) {
   const isLast = currentRound >= totalRounds;
 
   // Team mode: sorteer teams op gemiddelde score per speler
@@ -1458,36 +1457,89 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
     ? [...players].map((p, i) => ({ name: p, score: scores[i] })).sort((a, b) => b.score - a.score)
     : null;
 
+  // Gelijkspel detectie (alleen bij eindstand)
+  let tiedPlayerIndices = null;
+  if (isLast && !teams) {
+    const topScore = Math.max(...scores);
+    const tied = scores.map((s, i) => ({ s, i })).filter(x => x.s === topScore);
+    if (tied.length > 1) tiedPlayerIndices = tied.map(x => x.i);
+  }
+  if (isLast && teams) {
+    const topAvg = Math.max(...sortedTeams.map(t => t.avgScore));
+    const tiedTeams = sortedTeams.filter(t => t.avgScore === topAvg);
+    // In team-modus: gebruik de originele player indices van de teams die gelijk staan
+    if (tiedTeams.length > 1) {
+      // We gebruiken één speler per team als vertegenwoordiger voor de tie-breaker
+      tiedPlayerIndices = tiedTeams.map(team => {
+        const idx = teams.findIndex(t => t.name === team.name);
+        let offset = 0;
+        for (let t = 0; t < idx; t++) offset += teams[t].players.length;
+        return offset; // eerste speler van elk gebonden team
+      });
+    }
+  }
+
   return (
     <div className="screen score-screen">
       <div className="score-card">
         <h2 className="score-title">{isLast ? "🏆 Eindstand" : `Stand na ronde ${currentRound}`}</h2>
+        {isLast && tiedPlayerIndices && (
+          <button
+            onClick={() => onStartTiebreaker(tiedPlayerIndices)}
+            style={{
+              width:'100%',
+              background:'rgba(251,191,36,0.1)',
+              border:'1.5px solid rgba(251,191,36,0.3)',
+              borderRadius:'14px',
+              padding:'10px 16px',
+              marginBottom:'14px',
+              textAlign:'center',
+              fontSize:'14px',
+              fontWeight:700,
+              color:'#fbbf24',
+              cursor:'pointer',
+              fontFamily:'inherit',
+              transition:'background 0.15s, border-color 0.15s',
+            }}
+            onMouseOver={e => { e.currentTarget.style.background='rgba(251,191,36,0.22)'; e.currentTarget.style.borderColor='rgba(251,191,36,0.6)'; }}
+            onMouseOut={e => { e.currentTarget.style.background='rgba(251,191,36,0.1)'; e.currentTarget.style.borderColor='rgba(251,191,36,0.3)'; }}
+          >
+            🤝 Gelijkspel! Tik hier voor een tie-breaker.
+          </button>
+        )}
         <div className="scores-list">
           {sortedTeams
-            ? sortedTeams.map((team, i) => (
-                <div key={team.name} className={`score-row rank-${i + 1}`}>
-                  <span className="rank-badge">{i === 0 ? "👑" : i + 1}</span>
-                  <div className="score-name-block">
-                    <span className="score-name">{team.name}</span>
-                    <span className="score-members">{team.players.join(", ")}</span>
+            ? (() => {
+                const topAvg = sortedTeams[0]?.avgScore;
+                return sortedTeams.map((team, i) => (
+                  <div key={team.name} className={`score-row rank-${i + 1}`}>
+                    <span className="rank-badge">{team.avgScore === topAvg ? "👑" : i + 1}</span>
+                    <div className="score-name-block">
+                      <span className="score-name">{team.name}</span>
+                      <span className="score-members">{team.players.join(", ")}</span>
+                    </div>
+                    <div style={{textAlign:'right'}}>
+                      <span className="score-pts">{team.avgScore} pt</span>
+                      <div style={{fontSize:'11px', opacity:0.5, marginTop:'2px'}}>gem. per speler · totaal {team.totalScore}</div>
+                    </div>
                   </div>
-                  <div style={{textAlign:'right'}}>
-                    <span className="score-pts">{team.avgScore} pt</span>
-                    <div style={{fontSize:'11px', opacity:0.5, marginTop:'2px'}}>gem. per speler · totaal {team.totalScore}</div>
+                ));
+              })()
+            : (() => {
+                const topScore = sortedPlayers[0]?.score;
+                return sortedPlayers.map((p, i) => (
+                  <div key={p.name} className={`score-row rank-${i + 1}`}>
+                    <span className="rank-badge">{p.score === topScore ? "👑" : i + 1}</span>
+                    <span className="score-name">{p.name}</span>
+                    <span className="score-pts">{p.score} pt</span>
                   </div>
-                </div>
-              ))
-            : sortedPlayers.map((p, i) => (
-                <div key={p.name} className={`score-row rank-${i + 1}`}>
-                  <span className="rank-badge">{i === 0 ? "👑" : i + 1}</span>
-                  <span className="score-name">{p.name}</span>
-                  <span className="score-pts">{p.score} pt</span>
-                </div>
-              ))
+                ));
+              })()
           }
         </div>
         {isLast ? (
           <div className="final-btns">
+
             <button className="score-btn stats-btn" onClick={onShowStats}>
               📊 Statistieken bekijken
             </button>
@@ -1609,10 +1661,238 @@ function StatsScreen({ players, playerStats, scores, onRestart, onContinue }) {
   );
 }
 
+// ── Tiebreaker Screen ─────────────────────────────────────────────────────────
+
+function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGuessed, onRestart, onContinue }) {
+  const { tiedPlayerIndices, candidateCategories, chosenCategoryId, words, categoryLabel, times, currentStep } = tiebreakerState;
+  const allDone = currentStep >= tiedPlayerIndices.length;
+
+  // Category picker: show when no category chosen yet
+  if (!chosenCategoryId) {
+    return (
+      <div className="screen score-screen">
+        <div className="score-card">
+          <h2 className="score-title" style={{marginBottom:'6px'}}>⚡ Tie-breaker</h2>
+          <p style={{textAlign:'center', color:'rgba(255,255,255,0.5)', fontSize:'13px', marginBottom:'22px', lineHeight:'1.5'}}>
+            Kies samen een categorie.<br/>Alle spelers krijgen een woord uit dezelfde categorie.
+          </p>
+          <div style={{display:'flex', flexDirection:'column', gap:'12px', marginBottom:'24px'}}>
+            {(candidateCategories || []).map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => onCategoryChosen(cat.id)}
+                style={{
+                  width:'100%', padding:'18px 20px',
+                  borderRadius:'18px',
+                  background:'rgba(167,139,250,0.1)',
+                  border:'2px solid rgba(167,139,250,0.3)',
+                  color:'white', fontFamily:'inherit',
+                  fontSize:'20px', fontWeight:800,
+                  cursor:'pointer', textAlign:'left',
+                  transition:'all 0.15s',
+                  display:'flex', alignItems:'center', gap:'12px',
+                }}
+                onMouseOver={e => { e.currentTarget.style.background='rgba(167,139,250,0.25)'; e.currentTarget.style.borderColor='rgba(167,139,250,0.7)'; }}
+                onMouseOut={e => { e.currentTarget.style.background='rgba(167,139,250,0.1)'; e.currentTarget.style.borderColor='rgba(167,139,250,0.3)'; }}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // subPhase: 'handoff' | 'round' | 'results'
+  const [subPhase, setSubPhase] = useState('handoff');
+  const [elapsed, setElapsed] = useState(0);
+  const startTimeRef = useRef(null);
+  const timerRef = useRef(null);
+
+  // Reset timer when moving to a new player's round
+  useEffect(() => {
+    setSubPhase('handoff');
+    setElapsed(0);
+    clearInterval(timerRef.current);
+  }, [currentStep]);
+
+  const startRound = () => {
+    setSubPhase('round');
+    startTimeRef.current = Date.now();
+    timerRef.current = setInterval(() => {
+      setElapsed((Date.now() - startTimeRef.current) / 1000);
+    }, 50);
+  };
+
+  const handleGuessed = () => {
+    clearInterval(timerRef.current);
+    const finalTime = (Date.now() - startTimeRef.current) / 1000;
+    setElapsed(finalTime);
+    setSubPhase('handoff');
+    onWordGuessed(finalTime);
+  };
+
+  useEffect(() => () => clearInterval(timerRef.current), []);
+
+  const currentPlayerIdx = allDone ? null : tiedPlayerIndices[currentStep];
+  const currentWord = allDone ? null : words[currentStep];
+
+  // Results view
+  if (allDone) {
+    const results = tiedPlayerIndices.map((pi, i) => ({
+      name: players[pi],
+      time: times[i],
+    })).sort((a, b) => a.time - b.time);
+    const winnerTime = results[0].time;
+    const hasJointWinner = results.filter(r => r.time === winnerTime).length > 1;
+
+    return (
+      <div className="screen score-screen">
+        <div className="score-card">
+          <h2 className="score-title">⚡ Tie-breaker resultaten</h2>
+          <div style={{fontSize:'13px', color:'rgba(255,255,255,0.45)', marginBottom:'16px', textAlign:'center'}}>
+            Categorie: {categoryLabel}
+          </div>
+          <div className="scores-list">
+            {results.map((r, i) => {
+              const isWinner = r.time === winnerTime;
+              return (
+                <div key={r.name} className={`score-row rank-${i + 1}`}>
+                  <span className="rank-badge">{isWinner ? "🏆" : i + 1}</span>
+                  <span className="score-name">{r.name}</span>
+                  <span className="score-pts" style={{fontSize:'17px'}}>
+                    {r.time.toFixed(1)}s
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{
+            margin:'20px 0 8px',
+            padding:'16px',
+            borderRadius:'16px',
+            background: hasJointWinner ? 'rgba(251,191,36,0.08)' : 'rgba(74,222,128,0.08)',
+            border: `1.5px solid ${hasJointWinner ? 'rgba(251,191,36,0.3)' : 'rgba(74,222,128,0.3)'}`,
+            textAlign:'center',
+          }}>
+            {hasJointWinner ? (
+              <span style={{color:'#fbbf24', fontWeight:800, fontSize:'16px'}}>
+                🤝 Nog steeds gelijkspel!
+              </span>
+            ) : (
+              <span style={{color:'#4ade80', fontWeight:800, fontSize:'16px'}}>
+                🏆 {results[0].name} wint de tie-breaker!
+              </span>
+            )}
+          </div>
+          <div className="final-btns">
+            <button className="score-btn continue-btn" onClick={onContinue}>Nog een ronde! →</button>
+            <button className="score-btn restart-btn" onClick={onRestart}>Nieuw spel</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Handoff view
+  if (subPhase === 'handoff') {
+    return (
+      <div className="screen handoff-screen">
+        <div className="handoff-card">
+          <div className="handoff-icon">⚡</div>
+          <p className="handoff-sub" style={{color:'#fbbf24', fontWeight:800, letterSpacing:'0.06em', fontSize:'13px'}}>
+            TIE-BREAKER · {currentStep + 1}/{tiedPlayerIndices.length}
+          </p>
+          <h2 className="handoff-name">{players[currentPlayerIdx]}</h2>
+          <p className="handoff-tip" style={{marginBottom:'6px'}}>Geef het apparaat aan {players[currentPlayerIdx]}.</p>
+          <p className="handoff-tip">De andere spelers kijken weg!</p>
+          <p style={{fontSize:'12px', color:'rgba(255,255,255,0.35)', margin:'10px 0 20px', textAlign:'center'}}>
+            Categorie: {categoryLabel}
+          </p>
+          <button className="handoff-btn" onClick={startRound}>
+            Ik ben klaar — start tie-breaker!
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Round view — show word, count-up timer, "guessed" button
+  const secs = Math.floor(elapsed);
+  const tenths = Math.floor((elapsed % 1) * 10);
+
+  // Fill circle: 0→full over 60s. After 60s a red overlay continues filling over the yellow base.
+  const circumference = 2 * Math.PI * 44;
+  const over30 = elapsed > 30;
+  const yellowFill = over30 ? 1 : elapsed / 30;
+  const redFill = over30 ? Math.min((elapsed - 30) / 30, 1) : 0;
+  // dashoffset: full circle = circumference (empty), 0 = full
+  const yellowOffset = circumference * (1 - yellowFill);
+  const redOffset = circumference * (1 - redFill);
+  // Interpolate stroke from yellow (#fbbf24) → dark red (#b91c1c) as redFill grows
+  const ri = Math.round(251 + (185 - 251) * redFill);
+  const gi = Math.round(191 + (28  - 191) * redFill);
+  const bi = Math.round(36  + (28  - 36)  * redFill);
+  const redStroke = `rgb(${ri},${gi},${bi})`;
+
+  return (
+    <div className="screen round-screen">
+      <div className="round-top">
+        <span className="round-player">⚡ {players[currentPlayerIdx]}</span>
+        <div className="timer-wrap">
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            {/* Track */}
+            <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="8"/>
+            {/* Yellow fill — grows from 0 to full over 60s, then stays full */}
+            <circle cx="50" cy="50" r="44" fill="none" stroke="#fbbf24" strokeWidth="8"
+              strokeDasharray={circumference}
+              strokeDashoffset={yellowOffset}
+              strokeLinecap="round"
+              transform="rotate(-90 50 50)"
+              style={{transition:'stroke-dashoffset 0.05s linear'}}
+            />
+            {/* Red overlay — grows from 0 to full over the next 30s */}
+            {over30 && (
+              <circle cx="50" cy="50" r="44" fill="none" stroke={redStroke} strokeWidth="8"
+                strokeDasharray={circumference}
+                strokeDashoffset={redOffset}
+                strokeLinecap="round"
+                transform="rotate(-90 50 50)"
+                style={{transition:'stroke-dashoffset 0.05s linear'}}
+              />
+            )}
+            <text x="50" y="50" textAnchor="middle" fill="white" fontSize="15" fontWeight="700" fontFamily="inherit" dy="0">{secs}</text>
+            <text x="50" y="65" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="11" fontFamily="inherit">.{tenths}s</text>
+          </svg>
+        </div>
+        <div className="round-stats">
+          <span style={{fontSize:'12px', color:'rgba(255,255,255,0.4)'}}>{categoryLabel}</span>
+        </div>
+      </div>
+
+      <div className="word-stage">
+        <div className="word-anchor">
+          <div className="word-counter">laat dit raden</div>
+          <div className="current-word">{currentWord}</div>
+          <div className="times-up-banner" style={{visibility:'hidden'}}>placeholder</div>
+        </div>
+      </div>
+
+      <div className="action-row">
+        <button className="action-btn correct-btn" style={{flex:1}} onClick={handleGuessed}>
+          <span className="btn-icon">✓</span>
+          <span className="btn-label">Goed geraden!</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ── Main App ──────────────────────────────────────────────────────────────────
 
 export default function App() {
-  const [phase, setPhase] = useState("setup"); // setup | handoff | round | score | stats
+  const [phase, setPhase] = useState("setup"); // setup | handoff | round | score | stats | tiebreaker
   const [players, setPlayers] = useState([]);
   const [scores, setScores] = useState([]);
   const [currentPlayerIdx, setCurrentPlayerIdx] = useState(0);
@@ -1625,6 +1905,8 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   // playerStats: array of { rounds: [{correct, skipped, words:[{word,guessed}]}] }
   const [playerStats, setPlayerStats] = useState([]);
+  // Tie-breaker state
+  const [tiebreakerState, setTiebreakerState] = useState(null);
 
   const totalRounds = players.length;
 
@@ -1754,6 +2036,64 @@ export default function App() {
     const available = pool.filter(w => !usedWords.has(w));
     setWordDeck(shuffle(available.length >= 10 ? available : pool));
     setPhase("handoff");
+  };
+
+  const onStartTiebreaker = (tiedPlayerIndices) => {
+    // Always show exactly 3 categories.
+    // Priority: categories used in this game (excl. spreekwoorden) come first,
+    // then fill up with random safe categories not yet in the list.
+    const safeCats = ['dieren', 'voedsel', 'beroepen', 'sport', 'objecten', 'natuur', 'landen', 'vervoer', 'plaatsen', 'muziek', 'acties', 'gereedschap', 'wetenschap', 'ruimte', 'militair', 'politiek', 'huishouden'];
+    const catSet = selectedCategory instanceof Set ? selectedCategory : new Set();
+    const nonAllIds = CATEGORIES.filter(c => c.id !== "all").map(c => c.id);
+    const allSelected = catSet.size === 0 || nonAllIds.every(id => catSet.has(id));
+
+    // Categories used in this game that are safe (no spreekwoorden, no all)
+    const usedSafe = allSelected
+      ? []
+      : safeCats.filter(c => catSet.has(c));
+
+    // Shuffle the used-safe list, take up to 3
+    const chosen = shuffle(usedSafe).slice(0, 3);
+
+    // Fill remaining slots with random safe cats not already chosen
+    const remaining = shuffle(safeCats.filter(c => !chosen.includes(c)));
+    while (chosen.length < 3 && remaining.length > 0) chosen.push(remaining.shift());
+
+    const candidateCategories = chosen.map(id => CATEGORIES.find(c => c.id === id)).filter(Boolean);
+
+    setTiebreakerState({
+      tiedPlayerIndices,
+      candidateCategories,
+      chosenCategoryId: null,
+      words: null,
+      categoryLabel: null,
+      times: tiedPlayerIndices.map(() => null),
+      currentStep: 0,
+    });
+    setPhase('tiebreaker');
+  };
+
+  const onTiebreakerCategoryChosen = (catId) => {
+    const chosenCat = CATEGORIES.find(c => c.id === catId);
+    const pool = WORDS_BY_CATEGORY[catId] || [];
+    const tiedIndices = tiebreakerState.tiedPlayerIndices;
+    const fresh = pool.filter(w => !usedWords.has(w));
+    const src = shuffle(fresh.length >= tiedIndices.length ? fresh : shuffle(pool));
+    const words = src.slice(0, tiedIndices.length);
+    setTiebreakerState(prev => ({
+      ...prev,
+      chosenCategoryId: catId,
+      categoryLabel: chosenCat?.label ?? '🎲',
+      words,
+    }));
+  };
+
+  const onTiebreakerWordGuessed = (elapsedSeconds) => {
+    setTiebreakerState(prev => {
+      const newTimes = [...prev.times];
+      newTimes[prev.currentStep] = elapsedSeconds;
+      return { ...prev, times: newTimes, currentStep: prev.currentStep + 1 };
+    });
   };
 
   const onRestart = () => {
@@ -2238,13 +2578,13 @@ export default function App() {
           transition: all 0.2s;
         }
         .next-btn { background: linear-gradient(135deg, #a78bfa, #60a5fa); color: white; box-shadow: 0 6px 24px rgba(167,139,250,0.35); }
-        .next-btn:hover { transform: translateY(-2px); }
+        .next-btn:hover { }
         .restart-btn { background: rgba(255,255,255,0.1); color: white; border: 1.5px solid rgba(255,255,255,0.2); }
         .restart-btn:hover { background: rgba(255,255,255,0.15); }
         .continue-btn { background: linear-gradient(135deg, #34d399, #60a5fa); color: white; box-shadow: 0 6px 24px rgba(52,211,153,0.35); margin-bottom: 10px; }
-        .continue-btn:hover { transform: translateY(-2px); }
+        .continue-btn:hover { }
         .stats-btn { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1a1a1a; box-shadow: 0 6px 24px rgba(251,191,36,0.35); margin-bottom: 10px; }
-        .stats-btn:hover { transform: translateY(-2px); }
+        .stats-btn:hover { }
         .final-btns { display: flex; flex-direction: column; }
 
         /* ── Category picker ── */
@@ -2403,6 +2743,18 @@ export default function App() {
           onShowStats={() => setPhase("stats")}
           teams={teams}
           teamScores={teamScores}
+          onStartTiebreaker={onStartTiebreaker}
+        />
+      )}
+
+      {phase === "tiebreaker" && tiebreakerState && (
+        <TiebreakerScreen
+          players={players}
+          tiebreakerState={tiebreakerState}
+          onCategoryChosen={onTiebreakerCategoryChosen}
+          onWordGuessed={onTiebreakerWordGuessed}
+          onRestart={onRestart}
+          onContinue={onContinue}
         />
       )}
 
