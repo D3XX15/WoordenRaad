@@ -1708,6 +1708,15 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
   const startTimeRef = useRef(null);
   const timerRef = useRef(null);
 
+  // Reset timer when moving to a new player's round
+  useEffect(() => {
+    setSubPhase('handoff');
+    setElapsed(0);
+    clearInterval(timerRef.current);
+  }, [currentStep]);
+
+  useEffect(() => () => clearInterval(timerRef.current), []);
+
   // Category picker: show when no category chosen yet
   if (!chosenCategoryId) {
     return (
@@ -1717,13 +1726,6 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
       />
     );
   }
-
-  // Reset timer when moving to a new player's round
-  useEffect(() => {
-    setSubPhase('handoff');
-    setElapsed(0);
-    clearInterval(timerRef.current);
-  }, [currentStep]);
 
   const startRound = () => {
     setSubPhase('round');
@@ -1740,8 +1742,6 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
     setSubPhase('handoff');
     onWordGuessed(finalTime);
   };
-
-  useEffect(() => () => clearInterval(timerRef.current), []);
 
   const currentPlayerIdx = allDone ? null : tiedPlayerIndices[currentStep];
   const currentWord = allDone ? null : words[currentStep];
