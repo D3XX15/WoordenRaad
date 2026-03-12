@@ -1233,20 +1233,20 @@ const MESSAGES_GREAT = [
 ];
 
 const MESSAGES_OK = [
-  (n) => `${n} ${w(n)}, lekker bezig! 🙌`,
-  (n) => `${n} ${w(n)}, niet slecht! 👍`,
-  (n) => `${n} ${pt(n)} op de teller. ✅`,
-  (n) => `${n} ${w(n)} goed geraden! 🥳`,
-  (n) => `${n} ${pt(n)} erbij geknalt! 💥`,
-  (n) => `${n} ${pt(n)} bijgeschreven! ✍️`,
-  (n) => `${n} ${w(n)} in één ronde! 🤩`,
-  (n) => `${n} ${w(n)}, ga zo door! 💪`,
+  (n, pts) => `${n} ${w(n)}, lekker bezig! 🙌`,
+  (n, pts) => `${n} ${w(n)}, niet slecht! 👍`,
+  (n, pts) => `${pts} ${pt(pts)} op de teller. ✅`,
+  (n, pts) => `${n} ${w(n)} goed geraden! 🥳`,
+  (n, pts) => `${pts} ${pt(pts)} erbij geknalt! 💥`,
+  (n, pts) => `${pts} ${pt(pts)} bijgeschreven! ✍️`,
+  (n, pts) => `${n} ${w(n)} in één ronde! 🤩`,
+  (n, pts) => `${n} ${w(n)}, ga zo door! 💪`,
 ];
 
 const MESSAGES_POOR = [
   () => `Ik weet niet of dit nog goed komt! 😅`,
-  (n) => `${n} ${w(n)}. Volgende keer beter! 🙈`,
-  (n) => `${n} ${w(n)}. Haal even rustig adem! 😮‍💨`,
+  (n, pts) => `${n} ${w(n)}. Volgende keer beter! 🙈`,
+  (n, pts) => `${n} ${w(n)}. Haal even rustig adem! 😮‍💨`,
   () => `De volgende ronde gaat beter, toch? 😉`,
   () => `De andere spelers ruiken bloed! 🩸`,
   () => `De spanning zat er zeker in! 😅`,
@@ -1260,7 +1260,7 @@ function getRandomEndMessage(correctCount, roundTime, totalScore) {
     ratio >= 0.5  ? [MESSAGES_OK,    "ok"]    :
                     [MESSAGES_POOR,  "poor"];
   const idx = Math.floor(Math.random() * pool.length);
-  return { message: pool[idx](correctCount), tier, count: correctCount };
+  return { message: pool[idx](correctCount, totalScore), tier, count: correctCount, totalScore };
 }
 
 function RoundScreen({ player, words, onRoundEnd, roundTime }) {
@@ -1420,7 +1420,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
             const n = result.count;
             return (
               <div className="word-done-wrap">
-                <div className="word-done-count">{n} {w(n)} goed geraden</div>
+                <div className="word-done-count">{n} {w(n)} · {result.totalScore} {pt(result.totalScore)}</div>
                 <div className={`word-done-msg tier-${result.tier}`}>{result.message}</div>
               </div>
             );
@@ -1431,7 +1431,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
             <div className="penalty-bar-track">
               <div className="penalty-bar-fill" />
             </div>
-            <div className="penalty-sublabel">Volgende woord zo meteen…</div>
+            <div className="penalty-sublabel">Wacht een paar seconden…</div>
           </div>
         ) : (
           <>
@@ -1439,7 +1439,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
               <div className="word-counter">woord {wordIndex + 1}</div>
               <div className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ?? "— geen woorden meer —"}</div>
               <div className={`times-up-banner${isCurrentBonus && !timesUp ? ' bonus-banner' : ''}`} style={{visibility: (timesUp || isCurrentBonus) ? 'visible' : 'hidden'}}>
-                {timesUp ? '⏰ Tijd is om — maak dit woord nog af!' : `⭐ BONUSWOORD — spreekwoord: 3 punten!`}
+                {timesUp ? '⏰ Tijd is om — maak dit woord nog af!' : `⭐ BONUSGEZEGDE — 3 punten!`}
               </div>
             </div>
           </>
