@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // ── Categorieën ──────────────────────────────────────────────────────────────
 const CATEGORIES = [
@@ -345,7 +345,7 @@ const WORDS_BY_CATEGORY = (() => {
     'Sicilië', 'Steppe', 'boomhut', 'brandtrap', 'carwash', 'dierenasiel',
     'fietsbrug', 'gemaal', 'graftombe', 'hertenkamp', 'ijsbaantje', 'kasteelgracht',
     'kerkhof', 'kinderdagverblijf', 'klimrek', 'klimbos', 'lantaarnpaal', 'markthal',
-    'meubelboulevard', 'recreatiegebied', 'ophaalbrug', 'plattegrond', 'riolering', 'rotonde',
+    'meubelboulevard', 'ophaalbrug', 'plattegrond', 'riolering', 'rotonde',
     'schaapskooi', 'sportpark', 'stadspark', 'steiger', 'stoep', 'uitkijktoren',
     'visvijver', 'voetbalveld', 'volkstuin', 'wijngaard', 'windpark', 'zonnepark',
     'hutje', 'bungalow', 'studentenhuis', 'flat', 'appartement', 'studio',
@@ -423,9 +423,9 @@ const WORDS_BY_CATEGORY = (() => {
     'Andorra', 'Angola', 'Burkina Faso', 'Costa Rica', 'Cyprus', 'Djibouti',
     'Dominicaanse Republiek', 'El Salvador', 'Eritrea', 'Estland', 'Gambia', 'Guyana',
     'Ivoorkust', 'Kameroen', 'Kirgizië', 'Koeweit', 'Liechtenstein', 'Madagaskar',
-    'Mauritius', 'Nieuw-Zeeland', 'Noord-Korea', 'Oost-Timor', 'Papua Nieuw-Guinea', 'Filipijnen',
+    'Mauritius', 'Nieuw-Zeeland', 'Noord-Korea', 'Oost-Timor', 'Papua Nieuw-Guinea',
     'San Marino', 'Sierra Leone', 'Taiwan', 'Tadzjikistan', 'Tsjaad', 'Turkmenistan',
-    'Vaticaanstad', 'Wit-Rusland', 'Centraal-Afrikaanse Republiek', 'Trinidad en Tobago', 'Bosnië-Herzegovina', 'Libië',
+    'Vaticaanstad', 'Wit-Rusland', 'Centraal-Afrikaanse Republiek', 'Trinidad en Tobago', 'Bosnië-Herzegovina',
     'Kaapverdië', 'Dominica', 'Palestina', 'Schotland', 'Wales', 'Catalonië',
     'Koerdistan', 'Tibet', 'Puerto Rico', 'Groenland', 'Aruba', 'Curaçao',
     'Bermuda', 'Gibraltar', 'Frans-Guyana', 'Tahiti', 'Sint Maarten'
@@ -592,7 +592,7 @@ const WORDS_BY_CATEGORY = (() => {
     'reservist', 'veteraan', 'krijgsgevangene', 'onderscheiding',
     'vaandel', 'vlag', 'schouderstuk', 'rang',
     'oorlogsgraf', 'herdenkingsmonument', 'militaire parade', 'militaire politie',
-    'inlichtingendienst', 'geheime dienst', 'spionnage', 'cyberaanval', 'informatieoorlog', 'psychologische oorlogsvoering',
+    'inlichtingendienst', 'geheime dienst', 'cyberaanval', 'informatieoorlog', 'psychologische oorlogsvoering',
     'guerrilla', 'terrorisme', 'aanslagen', 'zelfmoordaanslag', 'bom aanslag', 'ontvoeringen',
     'scherpschutter', 'bomopruimer',
     'pantserdivisie', 'granaatwerper', 'mortier',
@@ -1244,7 +1244,6 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const scoresRef = useRef({ correct: 0, skipped: 0 });
   const endMessageRef = useRef(null);
   const [timeRemaining, setTimeRemaining] = useState(roundTime);
-  const timeRemainingRef = useRef(roundTime);
   const [flash, setFlash] = useState(null); // "correct" | "skip" | "bonus"
   const [timesUp, setTimesUp] = useState(false);
   const timesUpRef = useRef(false);
@@ -1258,7 +1257,6 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
     timerRef.current = setInterval(() => {
       const elapsed = (Date.now() - startTimeRef.current) / 1000;
       const remaining = Math.max(0, roundTime - elapsed);
-      timeRemainingRef.current = remaining;
       setTimeRemaining(remaining);
       if (remaining <= 0) {
         clearInterval(timerRef.current);
@@ -1287,12 +1285,12 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const penaltyRef = useRef(null);
   const skipPenaltyRef = useRef(0);
 
-  const finishRound = useCallback((finalScores, finalWordIndex) => {
+  const finishRound = (finalScores, finalWordIndex) => {
     const totalScore = finalScores.correct + wordResultsRef.current.reduce((sum, r) => sum + (r.bonusPts || 0), 0);
     endMessageRef.current = getRandomEndMessage(finalScores.correct, roundTime, totalScore);
     setDone(true);
     setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex, wordResults: wordResultsRef.current }), 2800);
-  }, [onRoundEnd, roundTime]);
+  };
 
   // Ref naar finishRound zodat de timer-interval er altijd de actuele versie van kan aanroepen
   const finishRoundRef = useRef(finishRound);
