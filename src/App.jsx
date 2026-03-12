@@ -595,7 +595,7 @@ const WORDS_BY_CATEGORY = {};
     'embargo', 'oorlogsverklaring', 'mobilisatie', 'dienstplicht', 'huurling', 'militie',
     'reservist', 'veteraan', 'krijgsgevangene', 'onderscheiding',
     'vaandel', 'vlag', 'schouderstuk', 'rang',
-    'oorlogsgraf', 'herdenkingsmonument', 'nationale begraafplaats', 'militaire parade', 'militaire politie',
+    'oorlogsgraf', 'herdenkingsmonument', 'militaire parade', 'militaire politie',
     'inlichtingendienst', 'geheime dienst', 'spionnage', 'cyberaanval', 'informatieoorlog', 'psychologische oorlogsvoering',
     'guerrilla', 'terrorisme', 'aanslagen', 'zelfmoordaanslag', 'bom aanslag', 'ontvoeringen',
     'scherpschutter', 'bomopruimer',
