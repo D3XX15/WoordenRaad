@@ -10,15 +10,15 @@ const CATEGORIES = [
   { id: "natuur",        label: "🌿 Natuur" },
   { id: "muziek",        label: "🎤 Muziek" },
   { id: "ruimte",        label: "🚀 Ruimte" },
-  { id: "acties",        label: "🏃 Werkwoorden" },
   { id: "gereedschap",   label: "🔧 Gereedschap" },
+  { id: "wetenschap",    label: "🔬 Wetenschap" },
   { id: "huishouden",    label: "🏠 Huishouden" },
   { id: "objecten",      label: "📦 Objecten" },
   { id: "plaatsen",      label: "🧭 Plaatsen" },
   { id: "landen",        label: "🌍 Landen" },
   { id: "politiek",      label: "⚖️ Politiek" },
   { id: "militair",      label: "🪖 Militair" },
-  { id: "wetenschap",    label: "🔬 Wetenschap" },
+  { id: "acties",        label: "🏃 Werkwoorden" },
   { id: "spreekwoorden", label: "💬 Spreekwoorden", bonus: true },
 ];
 
