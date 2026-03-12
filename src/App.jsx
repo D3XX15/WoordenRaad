@@ -1252,8 +1252,9 @@ const MESSAGES_POOR = [
   () => `De spanning zat er zeker in! 😅`,
 ];
 
-function getRandomEndMessage(correctCount, roundTime) {
-  const ratio = roundTime > 0 ? correctCount / (roundTime / 6) : 0;
+function getRandomEndMessage(correctCount, roundTime, totalScore) {
+  const scoreForTier = totalScore !== undefined ? totalScore : correctCount;
+  const ratio = roundTime > 0 ? scoreForTier / (roundTime / 6) : 0;
   const [pool, tier] =
     ratio >= 0.75 ? [MESSAGES_GREAT, "great"] :
     ratio >= 0.5  ? [MESSAGES_OK,    "ok"]    :
@@ -1312,7 +1313,8 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const skipPenaltyRef = useRef(0);
 
   const finishRound = useCallback((finalScores, finalWordIndex) => {
-    endMessageRef.current = getRandomEndMessage(finalScores.correct, roundTime);
+    const totalScore = finalScores.correct + wordResultsRef.current.reduce((sum, r) => sum + (r.bonusPts || 0), 0);
+    endMessageRef.current = getRandomEndMessage(finalScores.correct, roundTime, totalScore);
     setDone(true);
     setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex, wordResults: wordResultsRef.current }), 2800);
   }, [onRoundEnd, roundTime]);
@@ -1437,7 +1439,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
               <div className="word-counter">woord {wordIndex + 1}</div>
               <div className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ?? "— geen woorden meer —"}</div>
               <div className={`times-up-banner${isCurrentBonus && !timesUp ? ' bonus-banner' : ''}`} style={{visibility: (timesUp || isCurrentBonus) ? 'visible' : 'hidden'}}>
-                {timesUp ? '⏰ Tijd is om — maak dit woord nog af!' : `⭐ BONUSSPREEKWOORD — 3 punten!`}
+                {timesUp ? '⏰ Tijd is om — maak dit woord nog af!' : `⭐ BONUSWOORD — spreekwoord: 3 punten!`}
               </div>
             </div>
           </>
