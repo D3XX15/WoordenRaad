@@ -2101,7 +2101,7 @@ export default function App() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Righteous&display=swap');
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
         html, body {
           font-family: 'Nunito', sans-serif;
@@ -2227,6 +2227,7 @@ export default function App() {
           transition: all 0.18s;
         }
         .time-btn:hover:not(:disabled) { border-color: #a78bfa; background: rgba(167,139,250,0.08); color: #a78bfa; }
+        .time-btn:focus:not(:focus-visible) { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.05); color: white; }
         .time-btn:disabled { opacity: 0.3; cursor: default; }
         .time-display {
           flex: 1;
@@ -2503,8 +2504,10 @@ export default function App() {
           line-height: 1.4;
         }
         .team-size-btn:hover { background: rgba(167,139,250,0.18); }
+        .team-size-btn:focus:not(:focus-visible) { background: rgba(167,139,250,0.08); }
         .team-size-remove { border-color: #fbbf24; border-width: 2.5px; background: rgba(251,191,36,0.08); color: #fbbf24; }
         .team-size-remove:hover { background: rgba(251,191,36,0.18); }
+        .team-size-remove:focus:not(:focus-visible) { background: rgba(251,191,36,0.08); }
 
         .team-block .name-input-wrap { margin-bottom: 6px; }
         .team-block .name-input-wrap:last-child { margin-bottom: 0; }
