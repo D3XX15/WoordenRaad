@@ -125,7 +125,7 @@ const WORDS_BY_CATEGORY = {};
     'architect', 'automonteur', 'bakker', 'barista', 'beveiliger', 'bibliothecaris',
     'blogger', 'boekhoudster', 'botanicus', 'brandweerman', 'buschauffeur', 'cardioloog',
     'casinodealer', 'chef-kok', 'chiropractor', 'chirurg', 'circusdirecteur', 'clown',
-    'coach', 'cowboy', 'croupier', 'danser', 'dansleraar', 'data-analist',
+    'voetbalcoach', 'cowboy', 'croupier', 'danser', 'dansleraar', 'data-analist',
     'dermatoloog', 'detective', 'dierenarts', 'dierentrainer', 'diplomaat', 'documentairemaker',
     'dokter', 'dronepiloot', 'duikinstructeur', 'econoom', 'ethisch hacker', 'examinator',
     'farmaceut', 'filosoof', 'fotograaf', 'fysiotherapeut', 'gameontwikkelaar', 'gastronoom',
