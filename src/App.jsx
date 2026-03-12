@@ -1830,13 +1830,10 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
   const secs = Math.floor(elapsed);
   const tenths = Math.floor((elapsed % 1) * 10);
 
-  // Fill circle: 0→full over 30s (yellow), then red overlay grows over the next 30s
+  // Fill circle: 0→full over 60s (orange/yellow)
   const circumference = 2 * Math.PI * 44;
-  const over30 = elapsed > 30;
-  const yellowFill = over30 ? 1 : elapsed / 30;
-  const redFill = over30 ? Math.min((elapsed - 30) / 30, 1) : 0;
+  const yellowFill = Math.min(elapsed / 60, 1);
   const yellowOffset = circumference * (1 - yellowFill);
-  const redOffset = circumference * (1 - redFill);
 
   return (
     <div className="screen round-screen">
@@ -1846,7 +1843,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
           <svg width="100" height="100" viewBox="0 0 100 100">
             {/* Track */}
             <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="8"/>
-            {/* Yellow fill — grows from 0 to full over 60s, then stays full */}
+            {/* Yellow/orange fill — grows from 0 to full over 60s */}
             <circle cx="50" cy="50" r="44" fill="none" stroke="#fbbf24" strokeWidth="8"
               strokeDasharray={circumference}
               strokeDashoffset={yellowOffset}
@@ -1854,16 +1851,6 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
               transform="rotate(-90 50 50)"
               style={{transition:'stroke-dashoffset 0.05s linear'}}
             />
-            {/* Red overlay — grows from 0 to full over the next 30s, direct red (no interpolation) */}
-            {over30 && (
-              <circle cx="50" cy="50" r="44" fill="none" stroke="#ef4444" strokeWidth="8"
-                strokeDasharray={circumference}
-                strokeDashoffset={redOffset}
-                strokeLinecap="round"
-                transform="rotate(-90 50 50)"
-                style={{transition:'stroke-dashoffset 0.05s linear'}}
-              />
-            )}
             <text x="50" y="50" textAnchor="middle" fill="white" fontSize="15" fontWeight="700" fontFamily="inherit" dy="0">{secs}</text>
             <text x="50" y="65" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="11" fontFamily="inherit">.{tenths}s</text>
           </svg>
