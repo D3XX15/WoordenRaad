@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 // ── Categorieën ──────────────────────────────────────────────────────────────
 const CATEGORIES = [
-  { id: "all",           label: "🎲 Alles" },
   { id: "dieren",        label: "🐾 Dieren" },
   { id: "voedsel",       label: "🍕 Voedsel" },
   { id: "beroepen",      label: "👷 Beroepen" },
@@ -1006,19 +1005,18 @@ function SetupScreen({ onStart }) {
     return result;
   };
 
-  const nonAllIds = CATEGORIES.filter((c) => c.id !== "all").map((c) => c.id);
-  const allSelected = nonAllIds.every((id) => selectedCategories.has(id));
+  const allCategoryIds = CATEGORIES.map((c) => c.id);
+  const allSelected = allCategoryIds.every((id) => selectedCategories.has(id));
 
   const toggleCategory = (id) => {
     setSelectedCategories((prev) => {
       if (id === "all") {
         // Alles aan als nog niet alles aan, anders alles uit
-        return allSelected ? new Set() : new Set(CATEGORIES.map((c) => c.id));
+        return allSelected ? new Set() : new Set(allCategoryIds);
       }
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
-      next.delete("all");
       return next;
     });
   };
@@ -1133,7 +1131,7 @@ function SetupScreen({ onStart }) {
             </button>
           </div>
           <div className="category-grid">
-            {CATEGORIES.filter((cat) => cat.id !== "all").map((cat) => (
+            {CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
                 className={`category-btn${selectedCategories.has(cat.id) ? " category-btn-active" : ""}`}
@@ -1209,20 +1207,20 @@ const MESSAGES_GREAT = [
 ];
 
 const MESSAGES_OK = [
-  (n, pts) => `${pts} ${pt(pts)}, lekker bezig! 🙌`,
-  (n, pts) => `${pts} ${pt(pts)}, niet slecht! 👍`,
-  (n, pts) => `${pts} ${pt(pts)} op de teller. ✅`,
-  (n, pts) => `${pts} ${pt(pts)}, wat geweldig! 🥳`,
-  (n, pts) => `${pts} ${pt(pts)} erbij geknalt! 💥`,
-  (n, pts) => `${pts} ${pt(pts)} bijgeschreven! ✍️`,
-  (n, pts) => `${pts} ${pt(pts)} in één ronde! 🤩`,
-  (n, pts) => `${pts} ${pt(pts)}, ga zo door! 💪`,
+  (_, pts) => `${pts} ${pt(pts)}, lekker bezig! 🙌`,
+  (_, pts) => `${pts} ${pt(pts)}, niet slecht! 👍`,
+  (_, pts) => `${pts} ${pt(pts)} op de teller. ✅`,
+  (_, pts) => `${pts} ${pt(pts)}, wat geweldig! 🥳`,
+  (_, pts) => `${pts} ${pt(pts)} erbij geknalt! 💥`,
+  (_, pts) => `${pts} ${pt(pts)} bijgeschreven! ✍️`,
+  (_, pts) => `${pts} ${pt(pts)} in één ronde! 🤩`,
+  (_, pts) => `${pts} ${pt(pts)}, ga zo door! 💪`,
 ];
 
 const MESSAGES_POOR = [
   () => `Ik weet niet of dit nog goed komt! 😅`,
-  (n, pts) => `${pts} ${pt(pts)}. Volgende keer beter! 🙈`,
-  (n, pts) => `${pts} ${pt(pts)}. Haal even rustig adem! 😮‍💨`,
+  (_, pts) => `${pts} ${pt(pts)}. Volgende keer beter! 🙈`,
+  (_, pts) => `${pts} ${pt(pts)}. Haal even rustig adem! 😮‍💨`,
   () => `De volgende ronde gaat beter, toch? 😉`,
   () => `De andere spelers ruiken bloed! 🩸`,
   () => `De spanning zat er zeker in! 😅`,
@@ -1663,52 +1661,62 @@ function StatsScreen({ players, playerStats, scores, onRestart, onContinue }) {
 
 // ── Tiebreaker Screen ─────────────────────────────────────────────────────────
 
+// Categoriepicker: apart component zodat hooks in TiebreakerRound altijd worden aangeroepen.
+function TiebreakerCategoryPicker({ candidateCategories, onCategoryChosen }) {
+  return (
+    <div className="screen score-screen">
+      <div className="score-card">
+        <h2 className="score-title" style={{marginBottom:'6px'}}>⚡ Tie-breaker</h2>
+        <p style={{textAlign:'center', color:'rgba(255,255,255,0.5)', fontSize:'13px', marginBottom:'22px', lineHeight:'1.5'}}>
+          Kies samen een categorie.<br/>Alle spelers krijgen een woord uit dezelfde categorie.
+        </p>
+        <div style={{display:'flex', flexDirection:'column', gap:'12px', marginBottom:'24px'}}>
+          {(candidateCategories || []).map(cat => (
+            <button
+              key={cat.id}
+              onClick={() => onCategoryChosen(cat.id)}
+              style={{
+                width:'100%', padding:'18px 20px',
+                borderRadius:'18px',
+                background:'rgba(167,139,250,0.1)',
+                border:'2px solid rgba(167,139,250,0.3)',
+                color:'white', fontFamily:'inherit',
+                fontSize:'20px', fontWeight:800,
+                cursor:'pointer', textAlign:'left',
+                transition:'all 0.15s',
+                display:'flex', alignItems:'center', gap:'12px',
+              }}
+              onMouseOver={e => { e.currentTarget.style.background='rgba(167,139,250,0.25)'; e.currentTarget.style.borderColor='rgba(167,139,250,0.7)'; }}
+              onMouseOut={e => { e.currentTarget.style.background='rgba(167,139,250,0.1)'; e.currentTarget.style.borderColor='rgba(167,139,250,0.3)'; }}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGuessed, onRestart, onContinue }) {
   const { tiedPlayerIndices, candidateCategories, chosenCategoryId, words, categoryLabel, times, currentStep } = tiebreakerState;
   const allDone = currentStep >= tiedPlayerIndices.length;
-
-  // Category picker: show when no category chosen yet
-  if (!chosenCategoryId) {
-    return (
-      <div className="screen score-screen">
-        <div className="score-card">
-          <h2 className="score-title" style={{marginBottom:'6px'}}>⚡ Tie-breaker</h2>
-          <p style={{textAlign:'center', color:'rgba(255,255,255,0.5)', fontSize:'13px', marginBottom:'22px', lineHeight:'1.5'}}>
-            Kies samen een categorie.<br/>Alle spelers krijgen een woord uit dezelfde categorie.
-          </p>
-          <div style={{display:'flex', flexDirection:'column', gap:'12px', marginBottom:'24px'}}>
-            {(candidateCategories || []).map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => onCategoryChosen(cat.id)}
-                style={{
-                  width:'100%', padding:'18px 20px',
-                  borderRadius:'18px',
-                  background:'rgba(167,139,250,0.1)',
-                  border:'2px solid rgba(167,139,250,0.3)',
-                  color:'white', fontFamily:'inherit',
-                  fontSize:'20px', fontWeight:800,
-                  cursor:'pointer', textAlign:'left',
-                  transition:'all 0.15s',
-                  display:'flex', alignItems:'center', gap:'12px',
-                }}
-                onMouseOver={e => { e.currentTarget.style.background='rgba(167,139,250,0.25)'; e.currentTarget.style.borderColor='rgba(167,139,250,0.7)'; }}
-                onMouseOut={e => { e.currentTarget.style.background='rgba(167,139,250,0.1)'; e.currentTarget.style.borderColor='rgba(167,139,250,0.3)'; }}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // subPhase: 'handoff' | 'round' | 'results'
   const [subPhase, setSubPhase] = useState('handoff');
   const [elapsed, setElapsed] = useState(0);
   const startTimeRef = useRef(null);
   const timerRef = useRef(null);
+
+  // Category picker: show when no category chosen yet
+  if (!chosenCategoryId) {
+    return (
+      <TiebreakerCategoryPicker
+        candidateCategories={candidateCategories}
+        onCategoryChosen={onCategoryChosen}
+      />
+    );
+  }
 
   // Reset timer when moving to a new player's round
   useEffect(() => {
@@ -1902,7 +1910,7 @@ export default function App() {
   const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
   const [teams, setTeams] = useState(null);
   const [teamScores, setTeamScores] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState(() => new Set());
   // playerStats: array of { rounds: [{correct, skipped, words:[{word,guessed}]}] }
   const [playerStats, setPlayerStats] = useState([]);
   // Tie-breaker state
@@ -1912,9 +1920,9 @@ export default function App() {
 
   const getWordPool = (cats) => {
     const catSet = cats instanceof Set ? cats : new Set();
-    const nonAllIds = CATEGORIES.filter(c => c.id !== "all").map(c => c.id);
+    const allIds = CATEGORIES.map(c => c.id);
     // Gebruik 'alles' als niets geselecteerd is of alle categorieën aan staan
-    if (catSet.size === 0 || nonAllIds.every(id => catSet.has(id))) {
+    if (catSet.size === 0 || allIds.every(id => catSet.has(id))) {
       return WORDS_BY_CATEGORY.all;
     }
     const merged = new Set();
@@ -1932,7 +1940,7 @@ export default function App() {
     setRoundNum(0);
     setUsedWords(new Set());
     setRoundTime(time);
-    const catSet = categories instanceof Set ? categories : new Set(["all"]);
+    const catSet = categories instanceof Set ? categories : new Set();
     setSelectedCategory(catSet);
     const pool = getWordPool(catSet);
     setWordDeck(shuffle(pool));
@@ -2044,8 +2052,8 @@ export default function App() {
     // then fill up with random safe categories not yet in the list.
     const safeCats = ['dieren', 'voedsel', 'beroepen', 'sport', 'objecten', 'natuur', 'landen', 'vervoer', 'plaatsen', 'muziek', 'acties', 'gereedschap', 'wetenschap', 'ruimte', 'militair', 'politiek', 'huishouden'];
     const catSet = selectedCategory instanceof Set ? selectedCategory : new Set();
-    const nonAllIds = CATEGORIES.filter(c => c.id !== "all").map(c => c.id);
-    const allSelected = catSet.size === 0 || nonAllIds.every(id => catSet.has(id));
+    const allIds = CATEGORIES.map(c => c.id);
+    const allSelected = catSet.size === 0 || allIds.every(id => catSet.has(id));
 
     // Categories used in this game that are safe (no spreekwoorden, no all)
     const usedSafe = allSelected
@@ -2178,22 +2186,6 @@ export default function App() {
 
         .setup-section { margin-bottom: 28px; }
         .setup-label { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 12px; }
-
-        .player-count-row { display: flex; gap: 8px; flex-wrap: wrap; }
-        .count-btn {
-          width: 44px; height: 44px;
-          border-radius: 12px;
-          border: 1.5px solid rgba(255,255,255,0.15);
-          background: rgba(255,255,255,0.05);
-          color: white;
-          font-family: inherit;
-          font-size: 16px;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all 0.18s;
-        }
-        .count-btn:hover { border-color: #a78bfa; background: rgba(167,139,250,0.15); }
-        .count-btn.active { background: #a78bfa; border-color: #a78bfa; color: #0f0a1e; }
 
         .names-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         .names-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
