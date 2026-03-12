@@ -2230,9 +2230,8 @@ export default function App() {
         .start-btn.ready {
           background: linear-gradient(135deg, #a78bfa, #60a5fa);
           color: white;
-          box-shadow: 0 8px 32px rgba(167,139,250,0.35);
         }
-        .start-btn.ready:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(167,139,250,0.5); }
+        .start-btn.ready:hover { transform: translateY(-2px); }
 
         /* ── Handoff ── */
         .handoff-screen { background: none; }
@@ -2262,7 +2261,6 @@ export default function App() {
           font-size: 18px;
           cursor: pointer;
           transition: all 0.2s;
-          box-shadow: 0 6px 24px rgba(167,139,250,0.4);
         }
         .handoff-btn:hover { transform: translateY(-2px); }
 
@@ -2550,13 +2548,13 @@ export default function App() {
           cursor: pointer;
           transition: all 0.2s;
         }
-        .next-btn { background: linear-gradient(135deg, #a78bfa, #60a5fa); color: white; box-shadow: 0 6px 24px rgba(167,139,250,0.35); }
+        .next-btn { background: linear-gradient(135deg, #a78bfa, #60a5fa); color: white; }
         .next-btn:hover { }
         .restart-btn { background: rgba(255,255,255,0.1); color: white; border: 1.5px solid rgba(255,255,255,0.2); }
         .restart-btn:hover { background: rgba(255,255,255,0.15); }
-        .continue-btn { background: linear-gradient(135deg, #34d399, #60a5fa); color: white; box-shadow: 0 6px 24px rgba(52,211,153,0.35); margin-bottom: 10px; }
+        .continue-btn { background: linear-gradient(135deg, #34d399, #60a5fa); color: white; margin-bottom: 10px; }
         .continue-btn:hover { }
-        .stats-btn { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1a1a1a; box-shadow: 0 6px 24px rgba(251,191,36,0.35); margin-bottom: 10px; }
+        .stats-btn { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1a1a1a; margin-bottom: 10px; }
         .stats-btn:hover { }
         .final-btns { display: flex; flex-direction: column; }
 
@@ -2578,7 +2576,6 @@ export default function App() {
           background: rgba(167,139,250,0.28);
           border-color: rgba(167,139,250,0.75);
           color: #c4b5fd;
-          box-shadow: 0 0 0 2px rgba(167,139,250,0.18);
         }
         .category-btn-active:hover {
           background: rgba(167,139,250,0.38);
