@@ -1030,7 +1030,7 @@ function SetupScreen({ onStart }) {
           className={`start-btn mode-toggle-btn${teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
           onClick={toggleTeamMode}
         >
-          {teamMode ? "👥 Teams" : "👤 Singles"}
+          {teamMode ? "Teamplayer" : "Singleplayer"}
         </button>
 
         <div className="setup-section">
