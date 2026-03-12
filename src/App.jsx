@@ -1507,9 +1507,10 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
           {sortedTeams
             ? (() => {
                 const topAvg = sortedTeams[0]?.avgScore;
+                const medals = ["🥇","🥈","🥉"];
                 return sortedTeams.map((team, i) => (
-                  <div key={team.name} className={`score-row rank-${i + 1}`}>
-                    <span className="rank-badge">{team.avgScore === topAvg ? "👑" : i + 1}</span>
+                  <div key={team.name} className={`score-row rank-${i + 1} ${isLast ? "rank-final" : "rank-interim"}`}>
+                    <span className="rank-badge">{isLast ? (medals[i] ?? i + 1) : (team.avgScore === topAvg ? "👑" : i + 1)}</span>
                     <div className="score-name-block">
                       <span className="score-name">{team.name}</span>
                       <span className="score-members">{team.players.join(", ")}</span>
@@ -1523,9 +1524,10 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
               })()
             : (() => {
                 const topScore = sortedPlayers[0]?.score;
+                const medals = ["🥇","🥈","🥉"];
                 return sortedPlayers.map((p, i) => (
-                  <div key={p.name} className={`score-row rank-${i + 1}`}>
-                    <span className="rank-badge">{p.score === topScore ? "👑" : i + 1}</span>
+                  <div key={p.name} className={`score-row rank-${i + 1} ${isLast ? "rank-final" : "rank-interim"}`}>
+                    <span className="rank-badge">{isLast ? (medals[i] ?? i + 1) : (p.score === topScore ? "👑" : i + 1)}</span>
                     <span className="score-name">{p.name}</span>
                     <span className="score-pts">{p.score} pt</span>
                   </div>
@@ -2151,7 +2153,7 @@ export default function App() {
         /* ── Setup ── */
         .setup-card {
           background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.12);
+          border: 2.5px solid rgba(255,255,255,0.12);
           border-radius: 24px;
           padding: 28px 20px;
           width: 100%;
@@ -2179,9 +2181,9 @@ export default function App() {
         .names-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .names-label-row .setup-label { margin-bottom: 0; }
         .randomize-btn {
-          background: rgba(167,139,250,0.15);
+          background: rgba(167,139,250,0.08);
           color: #a78bfa;
-          border: 1.5px solid rgba(167,139,250,0.35);
+          border: 2.5px solid #a78bfa;
           border-radius: 10px;
           padding: 6px 12px;
           font-size: 13px;
@@ -2190,9 +2192,9 @@ export default function App() {
           transition: all 0.18s;
           white-space: nowrap;
         }
-        .randomize-btn:hover { background: rgba(167,139,250,0.28); }
-        .name-input-wrap { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 0 12px; transition: border-color 0.2s; }
-        .name-input-wrap:focus-within { border-color: #a78bfa; }
+        .randomize-btn:hover { background: rgba(167,139,250,0.18); }
+        .name-input-wrap { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 2.5px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 0 12px; transition: border-color 0.2s; }
+        .name-input-wrap:focus-within { border-color: #a78bfa; background: rgba(167,139,250,0.06); }
         .name-num { font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.3); min-width: 14px; }
         .name-input { flex: 1; background: none; border: none; outline: none; color: white; font-family: inherit; font-size: 14px; font-weight: 600; padding: 12px 0; }
         .name-input::placeholder { color: rgba(255,255,255,0.25); }
@@ -2215,7 +2217,7 @@ export default function App() {
         .time-btn {
           width: 64px; height: 44px;
           border-radius: 12px;
-          border: 1.5px solid rgba(255,255,255,0.15);
+          border: 2.5px solid rgba(255,255,255,0.18);
           background: rgba(255,255,255,0.05);
           color: white;
           font-family: inherit;
@@ -2224,7 +2226,7 @@ export default function App() {
           cursor: pointer;
           transition: all 0.18s;
         }
-        .time-btn:hover:not(:disabled) { border-color: #a78bfa; background: rgba(167,139,250,0.15); }
+        .time-btn:hover:not(:disabled) { border-color: #a78bfa; background: rgba(167,139,250,0.08); color: #a78bfa; }
         .time-btn:disabled { opacity: 0.3; cursor: default; }
         .time-display {
           flex: 1;
@@ -2235,10 +2237,11 @@ export default function App() {
         }
 
         .start-btn.ready {
-          background: linear-gradient(135deg, #a78bfa, #60a5fa);
-          color: white;
+          background: rgba(167,139,250,0.08);
+          color: #a78bfa;
+          border: 3px solid #a78bfa;
         }
-        .start-btn.ready:hover { filter: brightness(1.1); }
+        .start-btn.ready:hover { background: rgba(167,139,250,0.15); }
 
         /* ── Handoff ── */
         .handoff-screen { background: none; }
@@ -2261,15 +2264,15 @@ export default function App() {
         .handoff-btn {
           padding: 16px 32px;
           border-radius: 16px;
-          border: none;
-          background: linear-gradient(135deg, #a78bfa, #60a5fa);
-          color: white;
+          border: 3px solid #a78bfa;
+          background: rgba(167,139,250,0.08);
+          color: #a78bfa;
           font-family: 'Righteous', cursive;
           font-size: 18px;
           cursor: pointer;
           transition: all 0.2s;
         }
-        .handoff-btn:hover { filter: brightness(1.1); }
+        .handoff-btn:hover { background: rgba(167,139,250,0.15); }
 
         /* ── Round ── */
         .round-screen {
@@ -2461,16 +2464,16 @@ export default function App() {
         }
 
         .randomize-btn-active {
-          background: rgba(52,211,153,0.2);
+          background: rgba(52,211,153,0.08);
           color: #34d399;
-          border-color: rgba(52,211,153,0.45);
+          border-color: #34d399;
         }
-        .randomize-btn-active:hover { background: rgba(52,211,153,0.32) !important; }
+        .randomize-btn-active:hover { background: rgba(52,211,153,0.18) !important; }
 
         .teams-grid { display: flex; flex-direction: column; gap: 14px; }
         .team-block {
-          background: rgba(255,255,255,0.04);
-          border: 1.5px solid rgba(255,255,255,0.1);
+          background: rgba(167,139,250,0.05);
+          border: 2.5px solid rgba(167,139,250,0.25);
           border-radius: 16px;
           padding: 12px 14px;
         }
@@ -2489,8 +2492,8 @@ export default function App() {
         .team-size-btn {
           padding: 3px 10px;
           border-radius: 8px;
-          border: 1.5px solid rgba(167,139,250,0.35);
-          background: rgba(167,139,250,0.12);
+          border: 2.5px solid #a78bfa;
+          background: rgba(167,139,250,0.08);
           color: #a78bfa;
           font-size: 12px;
           font-weight: 800;
@@ -2499,9 +2502,9 @@ export default function App() {
           transition: all 0.15s;
           line-height: 1.4;
         }
-        .team-size-btn:hover { background: rgba(167,139,250,0.25); }
-        .team-size-remove { border-color: rgba(251,191,36,0.35); background: rgba(251,191,36,0.1); color: #fbbf24; }
-        .team-size-remove:hover { background: rgba(251,191,36,0.22); }
+        .team-size-btn:hover { background: rgba(167,139,250,0.18); }
+        .team-size-remove { border-color: #fbbf24; border-width: 2.5px; background: rgba(251,191,36,0.08); color: #fbbf24; }
+        .team-size-remove:hover { background: rgba(251,191,36,0.18); }
 
         .team-block .name-input-wrap { margin-bottom: 6px; }
         .team-block .name-input-wrap:last-child { margin-bottom: 0; }
@@ -2529,12 +2532,22 @@ export default function App() {
           padding: 14px 16px;
           border-radius: 16px;
           background: rgba(255,255,255,0.05);
-          border: 1.5px solid rgba(255,255,255,0.07);
+          border: 3px solid rgba(255,255,255,0.07);
           animation: slideIn 0.4s ease both;
         }
-        .score-row.rank-1 { background: rgba(167,139,250,0.18); border-color: rgba(167,139,250,0.5); }
-        .score-row.rank-2 { background: rgba(148,163,184,0.12); border-color: rgba(148,163,184,0.3); }
-        .score-row.rank-3 { background: rgba(180,120,60,0.12); border-color: rgba(180,120,60,0.3); }
+        .score-row.rank-1 { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
+        .score-row.rank-2 { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
+        .score-row.rank-3 { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
+
+        /* Tussenstand: alleen #1 groen, rest neutraal */
+        .score-row.rank-1.rank-interim { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
+        .score-row.rank-2.rank-interim { background: rgba(255,255,255,0.05); border: 3px solid rgba(255,255,255,0.14); }
+        .score-row.rank-3.rank-interim { background: rgba(255,255,255,0.05); border: 3px solid rgba(255,255,255,0.14); }
+
+        /* Eindstand: goud / zilver / brons */
+        .score-row.rank-1.rank-final { background: rgba(251,191,36,0.08); border: 3px solid #fbbf24; }
+        .score-row.rank-2.rank-final { background: rgba(148,163,184,0.08); border: 3px solid #94a3b8; }
+        .score-row.rank-3.rank-final { background: rgba(205,127,50,0.08); border: 3px solid #cd7f32; }
         @keyframes slideIn { from{transform:translateX(-20px);opacity:0} to{transform:translateX(0);opacity:1} }
         .score-row:nth-child(1){animation-delay:0.05s}
         .score-row:nth-child(2){animation-delay:0.1s}
@@ -2546,9 +2559,10 @@ export default function App() {
         .rank-badge { font-size: 20px; min-width: 28px; text-align: center; flex-shrink: 0; }
         .score-name { flex: 1; font-size: clamp(14px, 4vw, 18px); font-weight: 700; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .score-pts { font-family: 'Righteous', cursive; font-size: clamp(16px, 4vw, 20px); color: #a78bfa; flex-shrink: 0; }
-        .score-row.rank-1 .score-pts { color: #c4b5fd; }
-        .score-row.rank-2 .score-pts { color: #cbd5e1; }
-        .score-row.rank-3 .score-pts { color: #d49b60; }
+        .score-row.rank-1.rank-interim .score-pts { color: #4ade80; }
+        .score-row.rank-1.rank-final .score-pts { color: #fbbf24; }
+        .score-row.rank-2.rank-final .score-pts { color: #94a3b8; }
+        .score-row.rank-3.rank-final .score-pts { color: #cd7f32; }
 
         .score-btn {
           width: 100%;
@@ -2560,14 +2574,14 @@ export default function App() {
           cursor: pointer;
           transition: filter 0.18s;
         }
-        .next-btn { background: linear-gradient(135deg, #a78bfa, #60a5fa); color: white; }
-        .next-btn:hover { filter: brightness(1.1); }
-        .restart-btn { background: rgba(255,255,255,0.1); color: white; border: 1.5px solid rgba(255,255,255,0.2); }
-        .restart-btn:hover { background: rgba(255,255,255,0.15); }
-        .continue-btn { background: linear-gradient(135deg, #34d399, #60a5fa); color: white; margin-bottom: 10px; }
-        .continue-btn:hover { filter: brightness(1.1); }
-        .stats-btn { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1a1a1a; margin-bottom: 10px; }
-        .stats-btn:hover { filter: brightness(1.08); }
+        .next-btn { background: rgba(167,139,250,0.08); color: #a78bfa; border: 3px solid #a78bfa; }
+        .next-btn:hover { background: rgba(167,139,250,0.15); }
+        .restart-btn { background: rgba(255,255,255,0.08); color: white; border: 1.5px solid rgba(255,255,255,0.2); }
+        .restart-btn:hover { background: rgba(255,255,255,0.14); }
+        .continue-btn { background: rgba(74,222,128,0.1); color: #4ade80; border: 1.5px solid rgba(74,222,128,0.35); margin-bottom: 10px; }
+        .continue-btn:hover { background: rgba(74,222,128,0.18); }
+        .stats-btn { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1.5px solid rgba(251,191,36,0.35); margin-bottom: 10px; }
+        .stats-btn:hover { background: rgba(251,191,36,0.18); }
         .final-btns { display: flex; flex-direction: column; }
 
         /* ── Category picker ── */
@@ -2576,22 +2590,22 @@ export default function App() {
         }
         .category-btn {
           padding: 8px 14px; border-radius: 20px;
-          border: 1.5px solid rgba(255,255,255,0.15);
-          background: rgba(255,255,255,0.06);
-          color: rgba(255,255,255,0.75);
+          border: 2.5px solid rgba(255,255,255,0.2);
+          background: rgba(255,255,255,0.05);
+          color: rgba(255,255,255,0.7);
           font-size: 13px; font-weight: 700; font-family: inherit;
           cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s;
           user-select: none;
         }
-        .category-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.35); color: white; }
+        .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
         .category-btn-active {
-          background: rgba(167,139,250,0.22);
-          border-color: rgba(167,139,250,0.65);
+          background: rgba(167,139,250,0.08);
+          border-color: #a78bfa;
           color: #c4b5fd;
         }
         .category-btn-active:hover {
-          background: rgba(167,139,250,0.32);
-          border-color: rgba(167,139,250,0.85);
+          background: rgba(167,139,250,0.18);
+          border-color: #a78bfa;
         }
 
         /* ── Bonus word ── */
