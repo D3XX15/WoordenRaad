@@ -63,7 +63,7 @@ const WORDS_BY_CATEGORY = {};
     'krekel', 'mus', 'vuurvliegje', 'zeepaardje', 'zeeschildpad', 'zwaan',
     'zwaluw', 'zwarte mamba', 'zwarte panter', 'damhert', 'forel', 'goudhaan',
     'heggenmus', 'hop', 'ijsvogel', 'kauw', 'knobbelzwaan', 'nachtegaal',
-    'paradijsvogel', 'pimpelmees', 'roodborst', 'steenuil', 'zanglijster', 'kraai',
+    'pimpelmees', 'roodborst', 'steenuil', 'zanglijster', 'kraai',
     'walrus', 'zeeleeuw', 'bruinvis', 'potvis', 'bultrug', 'zeebaars',
     'tonijn', 'zalm', 'haring', 'makreel', 'kabeljauw', 'paling',
     'karper', 'baars', 'rog', 'zwaardvis', 'clownvis', 'zeester',
@@ -156,7 +156,7 @@ const WORDS_BY_CATEGORY = {};
     'directeur', 'drogist', 'elektricien', 'forensisch arts', 'huisarts', 'marechaussee',
     'marketeer', 'masseur', 'muziekleraar', 'ondernemer', 'pedagoog', 'penningmeester',
     'politiecommissaris', 'rechter', 'redacteur', 'regisseur', 'rijinstructeur', 'secretaris',
-    'coach', 'stadsgids', 'stewardess', 'therapeut', 'verloskundige', 'vertaler',
+    'stadsgids', 'stewardess', 'therapeut', 'verloskundige', 'vertaler',
     'vrachtwagenchauffeur', 'zorgverlener', 'zwemleraar', 'fietsenmaker', 'glazenmaker', 'hoefsmid',
     'schoenmaker', 'stoffeerder', 'tegelzetter', 'verzorger', 'begeleider', 'ober'
   ];
@@ -184,15 +184,15 @@ const WORDS_BY_CATEGORY = {};
     'vissen', 'vliegeren', 'vliegvissen', 'voetbal', 'volleybal', 'wandelen',
     'waterpolo', 'waterskiën', 'wakeboarden', 'wedstrijdvissen', 'wielrennen', 'worstelen',
     'yoga', 'zeilen', 'zwemmen', 'schermen', 'kaartspelen', 'kwartetten',
-    'tekenen', 'abseilen', 'biljartbal', 'kampioensbeker', 'medaille', 'stopwatch',
+    'tekenen', 'abseilen', 'kampioensbeker', 'medaille', 'stopwatch',
     'dartpijl', 'flipperkast', 'gele kaart', 'rode kaart', 'schaakbord', 'speelkaart',
-    'trampoline', 'waterpistool', 'fotograferen', 'vogelkijken', 'stoepkrijten',
+    'trampoline', 'fotograferen', 'vogelkijken', 'stoepkrijten',
     'borduren', 'breien', 'haakwerk', 'handwerken', 'origami',
     'pottenbakken', 'weven', 'lego', 'gezelschapsspel', 'escaperoom',
     'lasergame', 'beachtennis', 'langlaufen', 'kleiduivenschieten',
     'halfpipe', 'rolstoelbasketbal', 'dansen', 'salsadansen', 'linedance', 'volksdansen',
     'kampvuur maken', 'boogschieten', 'survivallen', 'kajakken', 'raften', 'skateboarden',
-    'windsurfen', 'roei', 'jagen', 'springen', 'polo', 'snorkelen',
+    'windsurfen', 'jagen', 'snorkelen',
     'puzzelen', 'bordspel', 'videospellen', 'kamperen', 'crossfit', 'boot camp',
     'spinning', 'kickboksen', 'speedklimmen', 'zaalvoetbal', 'rolstoeltennis', 'paragliding',
     'estafettelopen', 'polsstokverspringen', 'kogelslingeren',
@@ -902,11 +902,9 @@ const BONUS_WORDS_SET = new Set(
 
 // Geeft het aantal bonuspunten terug voor een woord:
 // spreekwoorden (uit bonus-categorie) → +2 extra (totaal 3 punten)
-// woorden met een spatie (twee inputs, bijv. "militaire parade") → +1 extra (totaal 2 punten)
 // gewone woorden → 0 bonuspunten (totaal 1 punt)
 function getBonusPoints(word) {
   if (BONUS_WORDS_SET.has(word)) return 2;
-  if (word && word.trim().includes(' ')) return 1;
   return 0;
 }
 
@@ -935,17 +933,17 @@ function SetupScreen({ onStart }) {
 
   const toggleTeamMode = () => {
     setTeamMode((prev) => {
-      const next = !prev;
-      if (next) {
-        // Schakel over naar 2 teams van elk 2 spelers
+      if (!prev) {
+        // Schakel over naar team-modus: 2 teams van elk 2 spelers
         setCount(2);
         setTeamSizes([2, 2]);
         setNames(Array(4).fill(""));
       } else {
+        // Terug naar singles
         setCount(3);
         setNames(["Dennis", "Marion", "Theo"]);
       }
-      return next;
+      return !prev;
     });
   };
 
@@ -953,24 +951,19 @@ function SetupScreen({ onStart }) {
     const clamped = Math.min(teamMode ? 10 : 20, Math.max(2, n));
     setCount(clamped);
     if (teamMode) {
-      setTeamSizes((prev) => {
-        const next = [...prev];
-        while (next.length < clamped) next.push(2);
-        return next.slice(0, clamped);
-      });
-      setNames((prev) => {
-        // Herbereken totaal op basis van nieuwe teamSizes
-        const newSizes = teamSizes.slice(0, clamped);
-        while (newSizes.length < clamped) newSizes.push(2);
-        const total = newSizes.reduce((a, b) => a + b, 0);
-        const next = [...prev];
+      // Bereken nieuwe teamSizes synchroon op basis van huidige state
+      const newSizes = [...teamSizes.slice(0, clamped)];
+      while (newSizes.length < clamped) newSizes.push(2);
+      const total = newSizes.reduce((a, b) => a + b, 0);
+      setTeamSizes(newSizes);
+      setNames((prevNames) => {
+        const next = [...prevNames];
         while (next.length < total) next.push("");
-        // Trim achteraan op basis van nieuwe teamSizes
-        let result = [];
+        const result = [];
         let offset = 0;
         for (let t = 0; t < clamped; t++) {
           result.push(...next.slice(offset, offset + newSizes[t]));
-          offset += (prev.length > offset ? newSizes[t] : newSizes[t]);
+          offset += newSizes[t];
         }
         return result.slice(0, total);
       });
@@ -985,13 +978,8 @@ function SetupScreen({ onStart }) {
 
   // Voeg een speler toe aan team t
   const addPlayerToTeam = (t) => {
-    // Gebruik huidige teamSizes direct voor offset-berekening
     const offset = teamSizes.slice(0, t + 1).reduce((a, b) => a + b, 0);
-    setTeamSizes((prev) => {
-      const next = [...prev];
-      next[t] = next[t] + 1;
-      return next;
-    });
+    setTeamSizes((prev) => prev.map((s, i) => i === t ? s + 1 : s));
     setNames((prev) => {
       const next = [...prev];
       next.splice(offset, 0, "");
@@ -1003,11 +991,7 @@ function SetupScreen({ onStart }) {
   const removePlayerFromTeam = (t) => {
     if (teamSizes[t] <= 2) return;
     const offset = teamSizes.slice(0, t + 1).reduce((a, b) => a + b, 0);
-    setTeamSizes((prev) => {
-      const next = [...prev];
-      next[t] = next[t] - 1;
-      return next;
-    });
+    setTeamSizes((prev) => prev.map((s, i) => i === t ? s - 1 : s));
     setNames((prev) => {
       const next = [...prev];
       next.splice(offset - 1, 1);
@@ -1015,13 +999,8 @@ function SetupScreen({ onStart }) {
     });
   };
 
-  const updateName = (i, v) => {
-    setNames((prev) => {
-      const next = [...prev];
-      next[i] = v;
-      return next;
-    });
-  };
+  const updateName = (i, v) =>
+    setNames((prev) => prev.map((n, j) => j === i ? v : n));
 
   const randomizeNames = () => {
     setNames((prev) => {
@@ -1039,39 +1018,30 @@ function SetupScreen({ onStart }) {
   const buildTeams = () => {
     if (!teamMode) return null;
     const trimmed = names.map((n) => n.trim());
-    const teams = [];
+    const result = [];
     let offset = 0;
     for (let t = 0; t < count; t++) {
-      teams.push({
+      result.push({
         name: `Team ${t + 1}`,
         players: trimmed.slice(offset, offset + teamSizes[t]),
       });
       offset += teamSizes[t];
     }
-    return teams;
+    return result;
   };
 
-  const allCatIds = new Set(CATEGORIES.map((c) => c.id));
   const nonAllIds = CATEGORIES.filter((c) => c.id !== "all").map((c) => c.id);
   const allSelected = nonAllIds.every((id) => selectedCategories.has(id));
 
   const toggleCategory = (id) => {
     setSelectedCategories((prev) => {
-      const next = new Set(prev);
       if (id === "all") {
-        // Toggle: als alles al aan → alles uit; anders alles aan
-        if (allSelected) {
-          return new Set(); // alles deselecteren
-        } else {
-          return new Set(CATEGORIES.map((c) => c.id)); // alles selecteren
-        }
+        // Alles aan als nog niet alles aan, anders alles uit
+        return allSelected ? new Set() : new Set(CATEGORIES.map((c) => c.id));
       }
-      // Individuele categorie togglen (nooit "all" meenemen)
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       next.delete("all");
       return next;
     });
@@ -1283,21 +1253,11 @@ const MESSAGES_POOR = [
 ];
 
 function getRandomEndMessage(correctCount, roundTime) {
-  const target = roundTime / 6;
-  const ratio = target > 0 ? correctCount / target : 0;
-
-  let pool, tier;
-  if (ratio >= 0.75) {
-    pool = MESSAGES_GREAT;
-    tier = "great";
-  } else if (ratio >= 0.5) {
-    pool = MESSAGES_OK;
-    tier = "ok";
-  } else {
-    pool = MESSAGES_POOR;
-    tier = "poor";
-  }
-
+  const ratio = roundTime > 0 ? correctCount / (roundTime / 6) : 0;
+  const [pool, tier] =
+    ratio >= 0.75 ? [MESSAGES_GREAT, "great"] :
+    ratio >= 0.5  ? [MESSAGES_OK,    "ok"]    :
+                    [MESSAGES_POOR,  "poor"];
   const idx = Math.floor(Math.random() * pool.length);
   return { message: pool[idx](correctCount), tier, count: correctCount };
 }
@@ -1307,26 +1267,35 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const [scores, setScores] = useState({ correct: 0, skipped: 0 });
   const scoresRef = useRef({ correct: 0, skipped: 0 });
   const endMessageRef = useRef(null);
-  const [timeLeft, setTimeLeft] = useState(roundTime);
+  const [timeRemaining, setTimeRemaining] = useState(roundTime);
+  const timeRemainingRef = useRef(roundTime);
   const [flash, setFlash] = useState(null); // "correct" | "skip" | "bonus"
   const [timesUp, setTimesUp] = useState(false);
+  const timesUpRef = useRef(false);
   const [done, setDone] = useState(false);
   const timerRef = useRef(null);
   const wordResultsRef = useRef([]); // [{word, guessed, isBonus}]
-
   const startTimeRef = useRef(null);
-  const [timeRemaining, setTimeRemaining] = useState(roundTime);
 
   useEffect(() => {
     startTimeRef.current = Date.now();
     timerRef.current = setInterval(() => {
       const elapsed = (Date.now() - startTimeRef.current) / 1000;
       const remaining = Math.max(0, roundTime - elapsed);
+      timeRemainingRef.current = remaining;
       setTimeRemaining(remaining);
-      setTimeLeft(Math.round(remaining));
       if (remaining <= 0) {
         clearInterval(timerRef.current);
+        timesUpRef.current = true;
         setTimesUp(true);
+        // Stop eventuele lopende skip-penalty en beëindig de ronde direct
+        if (penaltyRef.current) {
+          clearInterval(penaltyRef.current);
+          penaltyRef.current = null;
+          skipPenaltyRef.current = 0;
+          setSkipPenalty(0);
+          finishRoundRef.current(scoresRef.current, wordIndexRef.current);
+        }
       }
     }, 50);
     return () => clearInterval(timerRef.current);
@@ -1340,6 +1309,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const wordIndexRef = useRef(0);
   const [skipPenalty, setSkipPenalty] = useState(0);
   const penaltyRef = useRef(null);
+  const skipPenaltyRef = useRef(0);
 
   const finishRound = useCallback((finalScores, finalWordIndex) => {
     endMessageRef.current = getRandomEndMessage(finalScores.correct, roundTime);
@@ -1347,49 +1317,64 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
     setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex, wordResults: wordResultsRef.current }), 2800);
   }, [onRoundEnd, roundTime]);
 
+  // Ref naar finishRound zodat de timer-interval er altijd de actuele versie van kan aanroepen
+  const finishRoundRef = useRef(finishRound);
+  useEffect(() => { finishRoundRef.current = finishRound; }, [finishRound]);
+
   const correct = () => {
-    if (done || skipPenalty > 0) return;
+    if (done || skipPenaltyRef.current > 0) return;
     const word = words[wordIndexRef.current];
     const bonusPts = getBonusPoints(word);
     const isBonus = bonusPts > 0;
     triggerFlash(isBonus ? "bonus" : "correct");
-    wordResultsRef.current = [...wordResultsRef.current, { word, guessed: true, isBonus, bonusPts }];
+    wordResultsRef.current.push({ word, guessed: true, isBonus, bonusPts });
     const newScores = { ...scoresRef.current, correct: scoresRef.current.correct + 1 };
     scoresRef.current = newScores;
     setScores(newScores);
     wordIndexRef.current += 1;
     setWordIndex(wordIndexRef.current);
-    if (timesUp) {
+    if (timesUpRef.current) {
       finishRound(newScores, wordIndexRef.current);
     }
   };
 
   const skip = () => {
-    if (done || skipPenalty > 0) return;
+    if (done || skipPenaltyRef.current > 0) return;
     const word = words[wordIndexRef.current];
     triggerFlash("skip");
-    wordResultsRef.current = [...wordResultsRef.current, { word, guessed: false, isBonus: getBonusPoints(word) > 0, bonusPts: 0 }];
+    wordResultsRef.current.push({ word, guessed: false, isBonus: getBonusPoints(word) > 0, bonusPts: 0 });
     const newScores = { ...scoresRef.current, skipped: scoresRef.current.skipped + 1 };
     scoresRef.current = newScores;
     setScores(newScores);
     wordIndexRef.current += 1;
     setWordIndex(wordIndexRef.current);
-    if (timesUp) {
+    // Alleen penalty starten als tijd nog niet verstreken is
+    if (timesUpRef.current) {
       finishRound(newScores, wordIndexRef.current);
       return;
     }
+    skipPenaltyRef.current = 3;
     setSkipPenalty(3);
     let count = 3;
     penaltyRef.current = setInterval(() => {
       count -= 1;
+      skipPenaltyRef.current = count;
       setSkipPenalty(count);
-      if (count <= 0) clearInterval(penaltyRef.current);
+      if (count <= 0) {
+        clearInterval(penaltyRef.current);
+        penaltyRef.current = null;
+        // Als tijd intussen is verlopen: ronde beëindigen, anders gewoon doorgaan
+        if (timesUpRef.current) {
+          finishRound(scoresRef.current, wordIndexRef.current);
+        }
+      }
     }, 1000);
   };
 
   useEffect(() => () => clearInterval(penaltyRef.current), []);
 
   const pct = timeRemaining / roundTime;
+  const timeLeft = Math.round(timeRemaining);
   const timerColor = timesUp ? "#f87171" : timeLeft > 30 ? "#4ade80" : timeLeft > 10 ? "#fbbf24" : "#f87171";
   const circumference = 2 * Math.PI * 44;
   const currentWord = words[wordIndex];
@@ -1440,8 +1425,11 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
           })()
         ) : skipPenalty > 0 ? (
           <div className="penalty-wrap">
-            <div className="penalty-label">Overgeslagen — wacht even</div>
-            <div className="penalty-countdown">{skipPenalty}</div>
+            <div className="penalty-label">⏭️ Overgeslagen</div>
+            <div className="penalty-bar-track">
+              <div className="penalty-bar-fill" />
+            </div>
+            <div className="penalty-sublabel">Volgende woord zo meteen…</div>
           </div>
         ) : (
           <>
@@ -1449,7 +1437,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
               <div className="word-counter">woord {wordIndex + 1}</div>
               <div className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ?? "— geen woorden meer —"}</div>
               <div className={`times-up-banner${isCurrentBonus && !timesUp ? ' bonus-banner' : ''}`} style={{visibility: (timesUp || isCurrentBonus) ? 'visible' : 'hidden'}}>
-                {timesUp ? '⏰ Tijd is om — maak dit woord nog af!' : `⭐ BONUSWOORD — ${currentBonusPts === 2 ? 'spreekwoord: 3 punten!' : '2 punten!'}`}
+                {timesUp ? '⏰ Tijd is om — maak dit woord nog af!' : `⭐ BONUSWOORD — spreekwoord: 3 punten!`}
               </div>
             </div>
           </>
@@ -1648,7 +1636,6 @@ export default function App() {
   const [phase, setPhase] = useState("setup"); // setup | handoff | round | score | stats
   const [players, setPlayers] = useState([]);
   const [scores, setScores] = useState([]);
-  const [displayScores, setDisplayScores] = useState([]);
   const [currentPlayerIdx, setCurrentPlayerIdx] = useState(0);
   const [roundNum, setRoundNum] = useState(0);
   const [wordDeck, setWordDeck] = useState([]);
@@ -1665,13 +1652,14 @@ export default function App() {
   const getWordPool = (cats) => {
     const catSet = cats instanceof Set ? cats : new Set();
     const nonAll = CATEGORIES.filter((c) => c.id !== "all").map((c) => c.id);
-    // Lege selectie of alles geselecteerd → gewoon alle woorden
-    if (catSet.size === 0 || catSet.has("all") || nonAll.every((id) => catSet.has(id))) return WORDS_BY_CATEGORY['all'];
+    if (catSet.size === 0 || catSet.has("all") || nonAll.every((id) => catSet.has(id))) {
+      return WORDS_BY_CATEGORY['all'];
+    }
     const merged = new Set();
-    catSet.forEach((id) => {
+    for (const id of catSet) {
       const arr = WORDS_BY_CATEGORY[id];
       if (arr) arr.forEach((w) => merged.add(w));
-    });
+    }
     return merged.size > 0 ? [...merged] : WORDS_BY_CATEGORY['all'];
   };
 
@@ -1679,7 +1667,6 @@ export default function App() {
     const empty = Array(names.length).fill(0);
     setPlayers(names);
     setScores(empty);
-    setDisplayScores(empty);
     setCurrentPlayerIdx(0);
     setRoundNum(0);
     setUsedWords(new Set());
@@ -1736,14 +1723,13 @@ export default function App() {
 
   const onRoundEnd = ({ correct, skipped, wordsUsed, wordResults }) => {
     // wordResults: [{word, guessed, isBonus, bonusPts}]
-    // spreekwoorden geven +2 extra (totaal 3), twee-woords zinnen +1 extra (totaal 2)
+    // spreekwoorden geven +2 extra (totaal 3)
     const bonusPoints = wordResults ? wordResults.filter(r => r.guessed).reduce((sum, r) => sum + (r.bonusPts || 0), 0) : 0;
     const totalPoints = correct + bonusPoints;
 
     const newScores = [...scores];
     newScores[currentPlayerIdx] += totalPoints;
     setScores(newScores);
-    setDisplayScores(newScores);
 
     if (teams) {
       const teamIdx = getTeamIdxForPlayer(currentPlayerIdx);
@@ -1771,17 +1757,15 @@ export default function App() {
     setPhase("score");
   };
 
-  const onNext = (nextUsed) => {
+  const onNext = () => {
     const nextPos = (playOrderPos + 1) % playOrder.length;
     setPlayOrderPos(nextPos);
     setCurrentPlayerIdx(playOrder[nextPos]);
     const pool = getWordPool(selectedCategory);
-    const available = pool.filter(w => !(nextUsed || usedWords).has(w));
+    const available = pool.filter(w => !usedWords.has(w));
     setWordDeck(shuffle(available.length >= 10 ? available : pool));
     setPhase("handoff");
   };
-
-  const onRoundReady = () => setPhase("round");
 
   const onContinue = () => {
     setPlayOrderPos(0);
@@ -1801,10 +1785,6 @@ export default function App() {
     setTeamScores([]);
     setPlayerStats([]);
   };
-
-  const onShowStats = () => setPhase("stats");
-
-  const currentWords = wordDeck;
 
   return (
     <>
@@ -2066,14 +2046,36 @@ export default function App() {
         @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
 
 
-        .penalty-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
-        .penalty-label { font-size: clamp(13px, 3.5vw, 16px); color: #fbbf24; opacity: 0.8; }
-        .penalty-countdown {
+        .penalty-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+        .penalty-label {
           font-family: 'Righteous', cursive;
-          font-size: 96px;
+          font-size: clamp(15px, 4vw, 18px);
           color: #fbbf24;
-          animation: pulse 0.9s infinite alternate;
-          line-height: 1;
+          letter-spacing: 0.04em;
+        }
+        .penalty-bar-track {
+          width: 220px;
+          height: 6px;
+          background: rgba(251,191,36,0.15);
+          border-radius: 3px;
+          overflow: hidden;
+        }
+        .penalty-bar-fill {
+          height: 100%;
+          background: #fbbf24;
+          border-radius: 3px;
+          width: 100%;
+          animation: penalty-drain 3s linear forwards;
+        }
+        @keyframes penalty-drain {
+          from { width: 100%; }
+          to   { width: 0%; }
+        }
+        .penalty-sublabel {
+          font-size: clamp(12px, 3vw, 14px);
+          color: rgba(255,255,255,0.45);
+          font-weight: 600;
+          letter-spacing: 0.02em;
         }
         .btn-disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
         .times-up-banner {
@@ -2394,7 +2396,7 @@ export default function App() {
         <HandoffScreen
           player={players[currentPlayerIdx]}
           teamName={teams ? teams[getTeamIdxForPlayer(currentPlayerIdx)]?.name : null}
-          onReady={onRoundReady}
+          onReady={() => setPhase("round")}
         />
       )}
 
@@ -2402,8 +2404,8 @@ export default function App() {
         <RoundScreen
           key={`${currentPlayerIdx}-${roundNum}`}
           player={players[currentPlayerIdx]}
-          words={currentWords}
-          onRoundEnd={(s) => onRoundEnd(s)}
+          words={wordDeck}
+          onRoundEnd={onRoundEnd}
           roundTime={roundTime}
         />
       )}
@@ -2411,13 +2413,13 @@ export default function App() {
       {phase === "score" && (
         <ScoreScreen
           players={players}
-          scores={displayScores}
+          scores={scores}
           currentRound={roundNum}
           totalRounds={totalRounds}
-          onNext={() => onNext(usedWords)}
+          onNext={onNext}
           onRestart={onRestart}
           onContinue={onContinue}
-          onShowStats={onShowStats}
+          onShowStats={() => setPhase("stats")}
           teams={teams}
           teamScores={teamScores}
         />
@@ -2427,7 +2429,7 @@ export default function App() {
         <StatsScreen
           players={players}
           playerStats={playerStats}
-          scores={displayScores}
+          scores={scores}
           onRestart={onRestart}
           onContinue={onContinue}
         />
