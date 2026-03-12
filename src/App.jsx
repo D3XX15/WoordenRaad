@@ -2,23 +2,23 @@ import { useState, useEffect, useRef } from "react";
 
 // ── Categorieën ──────────────────────────────────────────────────────────────
 const CATEGORIES = [
-  { id: "dieren",        label: "🐾 Dieren" },
+  { id: "dieren",        label: "🐶 Dieren" },
   { id: "voedsel",       label: "🍕 Voedsel" },
   { id: "beroepen",      label: "👷 Beroepen" },
   { id: "sport",         label: "⚽ Sport & Hobby" },
-  { id: "huishouden",    label: "🏠 Huishouden" },
-  { id: "objecten",      label: "📦 Objecten" },
+  { id: "muziek",        label: "🎤 Muziek" },
   { id: "natuur",        label: "🌿 Natuur" },
   { id: "vervoer",       label: "🚗 Vervoer" },
-  { id: "plaatsen",      label: "🏛️ Plaatsen" },
+  { id: "huishouden",    label: "🏠 Huishouden" },
+  { id: "objecten",      label: "📦 Objecten" },
   { id: "acties",        label: "🏃 Acties" },
+  { id: "plaatsen",      label: "🧭 Plaatsen" },
   { id: "landen",        label: "🌍 Landen" },
   { id: "gereedschap",   label: "🔧 Gereedschap" },
-  { id: "muziek",        label: "🎤 Muziek" },
   { id: "militair",      label: "🪖 Militair" },
   { id: "ruimte",        label: "🚀 Ruimte" },
   { id: "wetenschap",    label: "🔬 Wetenschap" },
-  { id: "politiek",      label: "🏛 Politiek" },
+  { id: "politiek",      label: "⚖️ Politiek" },
   { id: "spreekwoorden", label: "💬 Spreekwoorden", bonus: true },
 ];
 
