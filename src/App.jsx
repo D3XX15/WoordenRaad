@@ -2,14 +2,14 @@ import { useState, useEffect, useRef } from "react";
 
 // ── Categorieën ──────────────────────────────────────────────────────────────
 const CATEGORIES = [
-  { id: "dieren",        label: "🐶 Dieren" },
+  { id: "sport",         label: "⚽ Sport & Hobby" },
   { id: "voedsel",       label: "🍕 Voedsel" },
+  { id: "dieren",        label: "🐶 Dieren" },
   { id: "beroepen",      label: "👷 Beroepen" },
   { id: "gereedschap",   label: "🔧 Gereedschap" },
   { id: "vervoer",       label: "🚗 Vervoer" },
   { id: "natuur",        label: "🌿 Natuur" },
   { id: "muziek",        label: "🎤 Muziek" },
-  { id: "sport",         label: "⚽ Sport & Hobby" },
   { id: "huishouden",    label: "🏠 Huishouden" },
   { id: "objecten",      label: "📦 Objecten" },
   { id: "acties",        label: "🏃 Acties" },
