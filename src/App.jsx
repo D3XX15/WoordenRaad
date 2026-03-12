@@ -1447,11 +1447,10 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
           <>
             <div className="word-anchor">
               <div className="word-counter">woord {wordIndex + 1}</div>
-              {isCurrentBonus && (
-                <div className="bonus-badge">⭐ BONUSWOORD — {currentBonusPts === 2 ? 'spreekwoord: 3 punten!' : '2 punten!'}</div>
-              )}
               <div className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ?? "— geen woorden meer —"}</div>
-              <div className="times-up-banner" style={{visibility: timesUp ? 'visible' : 'hidden'}}>⏰ Tijd is om — maak dit woord nog af!</div>
+              <div className={`times-up-banner${isCurrentBonus && !timesUp ? ' bonus-banner' : ''}`} style={{visibility: (timesUp || isCurrentBonus) ? 'visible' : 'hidden'}}>
+                {timesUp ? '⏰ Tijd is om — maak dit woord nog af!' : `⭐ BONUSWOORD — ${currentBonusPts === 2 ? 'spreekwoord: 3 punten!' : '2 punten!'}`}
+              </div>
             </div>
           </>
         )}
@@ -1692,10 +1691,37 @@ export default function App() {
     setTeams(teamsData);
     setTeamScores(teamsData ? Array(teamsData.length).fill(0) : []);
     setPlayerStats(names.map(() => ({ rounds: [] })));
+    const order = buildPlayOrder(teamsData, names.length);
+    setPlayOrder(order);
+    setPlayOrderPos(0);
+    setCurrentPlayerIdx(order[0] ?? 0);
     setPhase("handoff");
   };
 
-  const onRoundReady = () => setPhase("round");
+  // Speelvolgorde: in team modus afwisselend per team (A, B, S, C ipv A, S, B, C)
+  // playOrder is een array van player-indices in de juiste volgorde
+  const [playOrder, setPlayOrder] = useState([]);
+  const [playOrderPos, setPlayOrderPos] = useState(0);
+
+  const buildPlayOrder = (teamsData, totalPlayers) => {
+    if (!teamsData) return Array.from({ length: totalPlayers }, (_, i) => i);
+    // Bereken per team de absolute player-indices
+    const teamPlayerIndices = [];
+    let offset = 0;
+    for (const team of teamsData) {
+      teamPlayerIndices.push(team.players.map((_, i) => offset + i));
+      offset += team.players.length;
+    }
+    // Interleave: ronde 0 → speler 0 van elk team, ronde 1 → speler 1 van elk team, etc.
+    const maxSize = Math.max(...teamPlayerIndices.map(t => t.length));
+    const order = [];
+    for (let pos = 0; pos < maxSize; pos++) {
+      for (const indices of teamPlayerIndices) {
+        if (pos < indices.length) order.push(indices[pos]);
+      }
+    }
+    return order;
+  };
 
   // Helper: given a player index, find which team they belong to
   const getTeamIdxForPlayer = (playerIdx) => {
@@ -1746,16 +1772,20 @@ export default function App() {
   };
 
   const onNext = (nextUsed) => {
-    const nextIdx = (currentPlayerIdx + 1) % players.length;
-    setCurrentPlayerIdx(nextIdx);
+    const nextPos = (playOrderPos + 1) % playOrder.length;
+    setPlayOrderPos(nextPos);
+    setCurrentPlayerIdx(playOrder[nextPos]);
     const pool = getWordPool(selectedCategory);
     const available = pool.filter(w => !(nextUsed || usedWords).has(w));
     setWordDeck(shuffle(available.length >= 10 ? available : pool));
     setPhase("handoff");
   };
 
+  const onRoundReady = () => setPhase("round");
+
   const onContinue = () => {
-    setCurrentPlayerIdx(0);
+    setPlayOrderPos(0);
+    setCurrentPlayerIdx(playOrder[0] ?? 0);
     setRoundNum(0);
     const pool = getWordPool(selectedCategory);
     const available = pool.filter(w => !usedWords.has(w));
@@ -2057,6 +2087,21 @@ export default function App() {
           text-align: center;
           min-height: 40px;
           margin-top: 20px;
+          animation: pulse-red-banner 1.2s ease-in-out infinite;
+        }
+        @keyframes pulse-red-banner {
+          0%, 100% { box-shadow: 0 0 6px rgba(248,113,113,0.4); }
+          50% { box-shadow: 0 0 14px rgba(248,113,113,0.8); }
+        }
+        .times-up-banner.bonus-banner {
+          color: #fbbf24;
+          background: rgba(251,191,36,0.12);
+          border-color: rgba(251,191,36,0.35);
+          animation: pulse-gold-banner 1.2s ease-in-out infinite;
+        }
+        @keyframes pulse-gold-banner {
+          0%, 100% { box-shadow: 0 0 6px rgba(251,191,36,0.4); }
+          50% { box-shadow: 0 0 14px rgba(251,191,36,0.8); }
         }
         .word-done-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: -80px; }
         .word-done-count { font-size: clamp(18px, 5vw, 26px); color: rgba(255,255,255,0.6); font-family: 'Righteous', cursive; letter-spacing: 0.03em; }
