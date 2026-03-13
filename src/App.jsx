@@ -1810,7 +1810,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
             padding:'10px 16px',
             borderRadius:'14px',
             background: hasJointWinner ? 'rgba(251,191,36,0.08)' : 'rgba(74,222,128,0.08)',
-            border: `2.5px solid ${hasJointWinner ? 'rgba(251,191,36,0.3)' : 'rgba(74,222,128,0.3)'}`,
+            border: `3px solid ${hasJointWinner ? 'rgba(251,191,36,0.3)' : 'rgba(74,222,128,0.3)'}`,
             textAlign:'center',
           }}>
             {hasJointWinner ? (
