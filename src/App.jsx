@@ -2266,7 +2266,7 @@ export default function App() {
         .time-btn {
           width: 64px; height: 44px;
           border-radius: 12px;
-          border: 2.5px solid rgba(255,255,255,0.18);
+          border: 3px solid rgba(255,255,255,0.18);
           background: rgba(255,255,255,0.05);
           color: white;
           font-family: inherit;
