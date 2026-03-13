@@ -1576,7 +1576,7 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
               Statistieken bekijken
             </button>
             <button className="score-btn continue-btn" onClick={onContinue}>
-              Nog een ronde! →
+              Nog een ronde! ➜
             </button>
             <button className="score-btn restart-btn" onClick={onRestart}>
               Nieuw spel
@@ -1628,7 +1628,7 @@ function StatsScreen({ players, playerStats, scores, onRestart, onContinue, onBa
             onMouseOver={e=>{e.currentTarget.style.background="rgba(255,255,255,0.15)";e.currentTarget.style.color="#fff"}}
             onMouseOut={e=>{e.currentTarget.style.background="rgba(255,255,255,0.08)";e.currentTarget.style.color="rgba(255,255,255,0.75)"}}
             title="Terug naar scorebord"
-          >←</button>
+          ><span style={{display:"inline-block", transform:"scaleX(-1)"}}>➜</span></button>
           <h2 className="score-title" style={{margin:0, flex:1, textAlign:"center"}}>📊 Statistieken</h2>
           <div style={{width:36, flexShrink:0}} />
         </div>
@@ -1810,7 +1810,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
             padding:'10px 16px',
             borderRadius:'14px',
             background: hasJointWinner ? 'rgba(251,191,36,0.08)' : 'rgba(74,222,128,0.08)',
-            border: `3px solid ${hasJointWinner ? 'rgba(251,191,36,0.3)' : 'rgba(74,222,128,0.3)'}`,
+            border: `2.5px solid ${hasJointWinner ? 'rgba(251,191,36,0.3)' : 'rgba(74,222,128,0.3)'}`,
             textAlign:'center',
           }}>
             {hasJointWinner ? (
@@ -2747,7 +2747,7 @@ export default function App() {
         }
         .stats-cell {
           background: rgba(255,255,255,0.06);
-          border: 2.5px solid rgba(255,255,255,0.1);
+          border: 3px solid rgba(255,255,255,0.1);
           border-radius: 16px; padding: 12px;
           text-align: center;
         }
@@ -2756,7 +2756,7 @@ export default function App() {
         .stats-cell-lbl { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); margin-top: 2px; }
         .stats-best {
           font-size: 13px; font-weight: 700; color: #fbbf24;
-          background: rgba(251,191,36,0.1); border: 2.5px solid rgba(251,191,36,0.25);
+          background: rgba(251,191,36,0.1); border: 3px solid rgba(251,191,36,0.25);
           border-radius: 12px; padding: 10px 14px; margin-bottom: 14px;
         }
         .stats-words-section { display: flex; gap: 10px; margin-bottom: 4px; }
