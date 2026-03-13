@@ -1143,14 +1143,15 @@ function SetupScreen({ onStart }) {
           <label className="setup-label">Tijd per ronde</label>
           <div className="time-control">
             <button
-              className="time-btn time-btn-minus"
+              className={`time-btn time-btn-minus${roundTime <= 30 ? " time-btn-disabled" : ""}`}
               onClick={() => setRoundTime((t) => Math.max(30, t - 30))}
               disabled={roundTime <= 30}
             >−30s</button>
             <span className="time-display">{roundTime}s</span>
             <button
-              className="time-btn time-btn-plus"
-              onClick={() => setRoundTime((t) => t + 30)}
+              className={`time-btn time-btn-plus${roundTime >= 300 ? " time-btn-disabled" : ""}`}
+              onClick={() => setRoundTime((t) => Math.min(300, t + 30))}
+              disabled={roundTime >= 300}
             >+30s</button>
           </div>
         </div>
@@ -1506,7 +1507,7 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
             onMouseOver={e => { e.currentTarget.style.background='rgba(251,191,36,0.22)'; e.currentTarget.style.borderColor='rgba(251,191,36,0.6)'; }}
             onMouseOut={e => { e.currentTarget.style.background='rgba(251,191,36,0.1)'; e.currentTarget.style.borderColor='rgba(251,191,36,0.3)'; }}
           >
-            🤝 Gelijkspel! Tik hier voor een tie-breaker.
+            🤝 Gelijkspel! Start een tie-breaker.
           </button>
         )}
         <div className="scores-list">
@@ -1628,7 +1629,7 @@ function StatsScreen({ players, playerStats, scores, onRestart, onContinue, onBa
             onMouseOver={e=>{e.currentTarget.style.background="rgba(255,255,255,0.15)";e.currentTarget.style.color="#fff"}}
             onMouseOut={e=>{e.currentTarget.style.background="rgba(255,255,255,0.08)";e.currentTarget.style.color="rgba(255,255,255,0.75)"}}
             title="Terug naar scorebord"
-          ><span style={{display:"inline-block", transform:"scaleX(-1)"}}>➜</span></button>
+          ><span style={{display:"inline-block", transform:"scaleX(-1)", lineHeight:1, verticalAlign:"middle"}}>➜</span></button>
           <h2 className="score-title" style={{margin:0, flex:1, textAlign:"center"}}>📊 Statistieken</h2>
           <div style={{width:36, flexShrink:0}} />
         </div>
@@ -2280,6 +2281,7 @@ export default function App() {
         .time-btn-minus { border-color: #f87171; background: rgba(248,113,113,0.08); color: #f87171; }
         .time-btn-minus:hover:not(:disabled) { background: rgba(248,113,113,0.18); }
         .time-btn:disabled { opacity: 0.3; cursor: default; }
+        .time-btn-disabled { opacity: 1 !important; cursor: not-allowed !important; pointer-events: none; background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.35) !important; }
         .time-display {
           flex: 1;
           text-align: center;
@@ -2747,7 +2749,7 @@ export default function App() {
         }
         .stats-cell {
           background: rgba(255,255,255,0.06);
-          border: 3px solid rgba(255,255,255,0.1);
+          border: 2.5px solid rgba(255,255,255,0.1);
           border-radius: 16px; padding: 12px;
           text-align: center;
         }
@@ -2756,7 +2758,7 @@ export default function App() {
         .stats-cell-lbl { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); margin-top: 2px; }
         .stats-best {
           font-size: 13px; font-weight: 700; color: #fbbf24;
-          background: rgba(251,191,36,0.1); border: 3px solid rgba(251,191,36,0.25);
+          background: rgba(251,191,36,0.1); border: 2.5px solid rgba(251,191,36,0.25);
           border-radius: 12px; padding: 10px 14px; margin-bottom: 14px;
         }
         .stats-words-section { display: flex; gap: 10px; margin-bottom: 4px; }
