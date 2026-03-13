@@ -1624,7 +1624,7 @@ function StatsScreen({ players, playerStats, scores, onRestart, onContinue }) {
   return (
     <div className="screen">
       <div className="stats-card">
-        <h2 className="score-title">Statistieken</h2>
+        <h2 className="score-title">📊 Statistieken</h2>
 
         {/* Player tabs */}
         <div className="stats-tabs">
@@ -1857,7 +1857,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
             Categorie: {categoryLabel}
           </p>
           <button className="handoff-btn" onClick={startRound}>
-            Ik ben klaar — start tie-breaker!
+            Start tie-breaker!
           </button>
         </div>
       </div>
