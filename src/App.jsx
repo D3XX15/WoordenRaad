@@ -1856,7 +1856,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
             TIE-BREAKER · {currentStep + 1}/{tiedPlayerIndices.length}
           </p>
           <h2 className="handoff-name">{players[currentPlayerIdx]}</h2>
-          <p className="handoff-tip" style={{marginBottom:'2px'}}>Raad z.s.m. het woord</p>
+          <p className="handoff-tip" style={{marginBottom:'2px'}}>Raad z.s.m. het random woord</p>
           <p className="handoff-tip" style={{marginTop:'0px'}}>in de categorie: {categoryLabel}</p>
           <button className="handoff-btn" onClick={startRound}>
             Start tie-breaker!
