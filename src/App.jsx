@@ -872,7 +872,9 @@ const WORDS_BY_CATEGORY = (() => {
 // te herkennen, omdat het rechter deel vrijwel altijd zelf ook een speelwoord is.
 const HYPHENATION_DICT = (() => {
   const dict = new Set();
-  WORDS_BY_CATEGORY.all
+  Object.values(WORDS_BY_CATEGORY)
+    .filter(v => Array.isArray(v))
+    .flat()
     .filter(w => typeof w === 'string' && !w.includes(' ') && !w.includes('-'))
     .forEach(w => dict.add(w.toLowerCase()));
   return dict;
@@ -884,10 +886,10 @@ const HYPHENATION_DICT = (() => {
  * aangepast. Werkt samen met CSS `hyphens: manual`.
  *
  * Strategie:
- * 1. Zoek de meest linkse splitsing waarbij BEIDE delen geldige woorden zijn.
- * 2. Probeer daarna met verbindingsletters 's' (rijks|weg) of 'en' (honden|mand).
- * 3. Als fallback: meest linkse splitsing waarbij het RECHTER deel een
- * geldig woord is (≥4 tekens).
+ *  1. Zoek de meest linkse splitsing waarbij BEIDE delen geldige woorden zijn.
+ *  2. Probeer daarna met verbindingsletters 's' of 'en' (bijv. honden|mand).
+ *  3. Als fallback: meest linkse splitsing waarbij het RECHTER deel een
+ *     geldig woord is (≥4 tekens).
  */
 function hyphenateWord(word) {
   if (!word || word.length <= 9) return word;
@@ -904,7 +906,7 @@ function hyphenateWord(word) {
     }
   }
 
-  // Strategie 2: verbindingsletters 's' of 'en'
+  // Strategie 2: verbindingsletters 's' (rijks|weg) of 'en' (honden|mand)
   for (let i = 3; i <= lower.length - 4; i++) {
     if (lower[i] === 's') {
       const left = lower.slice(0, i);
@@ -1224,7 +1226,7 @@ function SetupScreen({ onStart }) {
           onClick={handleStart}
           disabled={!canStart}
         >
-          Spel starten
+          Spel starten →
         </button>
       </div>
     </div>
@@ -1290,7 +1292,7 @@ function getRandomEndMessage(correctCount, roundTime, totalScore = correctCount)
   const ratio = roundTime > 0 ? totalScore / (roundTime / 6) : 0;
   const [pool, tier] =
     ratio >= 0.6   ? [MESSAGES_GREAT, "great"] :
-    ratio >= 0.4   ? [MESSAGES_OK,    "ok"]    :
+    ratio >= 0.4  ? [MESSAGES_OK,     "ok"]    :
                      [MESSAGES_POOR,  "poor"];
   const idx = Math.floor(Math.random() * pool.length);
   return { message: pool[idx](correctCount, totalScore), tier, count: correctCount, totalScore };
@@ -1298,6 +1300,8 @@ function getRandomEndMessage(correctCount, roundTime, totalScore = correctCount)
 
 function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const [wordIndex, setWordIndex] = useState(0);
+  // NB: voor tijdkritische logica worden refs gebruikt naast state,
+  // zodat interval-callbacks altijd de actuele waarde hebben (geen stale closure).
   const [scores, setScores] = useState({ correct: 0, skipped: 0 });
   const scoresRef = useRef({ correct: 0, skipped: 0 });
   const endMessageRef = useRef(null);
@@ -1331,7 +1335,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
       }
     }, 50);
     return () => clearInterval(timerRef.current);
-  }, [roundTime]);
+  }, []);
 
   const triggerFlash = (type) => {
     setFlash(type);
@@ -1499,12 +1503,11 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
 function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRestart, onContinue, onShowStats, teams, teamScores, onStartTiebreaker, playedIndices }) {
   const isLast = currentRound >= totalRounds;
 
-  // Team mode: sorteer teams op gemiddelde score per speler en bewaar originalIndex
+  // Team mode: sorteer teams op gemiddelde score per speler
   const sortedTeams = teams
     ? [...teams]
         .map((t, i) => ({
           ...t,
-          originalIndex: i, // Belangrijk voor gelijke namen en tie-breakers
           totalScore: teamScores[i],
           avgScore: Math.round((teamScores[i] / t.players.length) * 10) / 10,
         }))
@@ -1523,15 +1526,16 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
     const tied = scores.map((s, i) => ({ s, i })).filter(x => x.s === topScore);
     if (tied.length > 1) tiedPlayerIndices = tied.map(x => x.i);
   }
-  
   if (isLast && teams) {
     const topAvg = Math.max(...sortedTeams.map(t => t.avgScore));
     const tiedTeams = sortedTeams.filter(t => t.avgScore === topAvg);
+    // In team-modus: gebruik de originele player indices van de teams die gelijk staan
     if (tiedTeams.length > 1) {
-      // Gebruik originalIndex voor correcte referentie 
+      // We gebruiken één speler per team als vertegenwoordiger voor de tie-breaker
       tiedPlayerIndices = tiedTeams.map(team => {
+        const idx = teams.findIndex(t => t.name === team.name);
         let offset = 0;
-        for (let t = 0; t < team.originalIndex; t++) offset += teams[t].players.length;
+        for (let t = 0; t < idx; t++) offset += teams[t].players.length;
         return offset; // eerste speler van elk gebonden team
       });
     }
@@ -1584,7 +1588,7 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
                     : (team.avgScore === topAvg ? "👑" : effectiveRank);
                   const rowClass = `score-row rank-${effectiveRank} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : (isTiedInterim ? "rank-interim-tied" : "rank-interim")}`;
                   return (
-                    <div key={`${team.originalIndex}-${team.name}`} className={rowClass}>
+                    <div key={team.name} className={rowClass}>
                       <span className="rank-badge">{badge}</span>
                       <div className="score-name-block">
                         <span className="score-name">{team.name}</span>
@@ -1807,7 +1811,7 @@ function TiebreakerCategoryPicker({ candidateCategories, onCategoryChosen }) {
   );
 }
 
-function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGuessed, onRestart }) {
+function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGuessed, onRestart, onContinue }) {
   const { tiedPlayerIndices, candidateCategories, chosenCategoryId, words, categoryLabel, times, currentStep } = tiebreakerState;
   const allDone = currentStep >= tiedPlayerIndices.length;
 
@@ -2594,6 +2598,8 @@ export default function App() {
           .correct-btn:hover { background: rgba(74,222,128,0.35); }
         }
 
+
+
         .teams-grid { display: flex; flex-direction: column; gap: 14px; }
         .team-block {
           background: rgba(167,139,250,0.05);
@@ -2652,6 +2658,7 @@ export default function App() {
         .score-name-block { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
         .score-members { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+        
         .score-card {
           background: rgba(255,255,255,0.06);
           border: 3px solid rgba(255,255,255,0.12);
@@ -2898,6 +2905,7 @@ export default function App() {
           onCategoryChosen={onTiebreakerCategoryChosen}
           onWordGuessed={onTiebreakerWordGuessed}
           onRestart={onRestart}
+          onContinue={onContinue}
         />
       )}
 
