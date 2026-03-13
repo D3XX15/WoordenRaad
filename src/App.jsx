@@ -1131,7 +1131,7 @@ function SetupScreen({ onStart }) {
               onClick={() => toggleCategory("all")}
               title={allSelected ? "Deselecteer alle categorieën" : "Selecteer alle categorieën"}
             >
-              🎲 Alle Categorieën
+              🎲 Alles
             </button>
           </div>
           <div className="category-grid">
