@@ -1902,7 +1902,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
 
       <div className="word-stage">
         <div className="word-anchor">
-          <div className="word-counter">laat dit raden</div>
+          <div className="word-counter">leg z.s.m. uit</div>
           <div className="current-word">{currentWord}</div>
           <div className="times-up-banner" style={{visibility:'hidden'}}>placeholder</div>
         </div>
