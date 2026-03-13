@@ -81,13 +81,13 @@ const WORDS_BY_CATEGORY = (() => {
     'carpaccio', 'cashewnoot', 'champignon', 'cheesecake', 'chipolata', 'chips',
     'chocolade', 'churros', 'ciabatta', 'citroen', 'citroentaart', 'cola',
     'corndog', 'couscous', 'cranberrysap', 'croissant', 'crème brûlée', 'curry',
-    'dadel', 'donut', 'doperwt', 'drakenvrucht', 'druiven', 'éclairs',
+    'dadel', 'donut', 'doperwt', 'drakenvrucht', 'druiven', 'eclairs',
     'ei', 'enchilada', 'energiedrank', 'erwtensoep', 'espresso', 'falafel',
     'feta', 'fondue', 'friet', 'frikandel', 'frisdrank', 'fruitsalade',
     'garnaal', 'gazpacho', 'gehaktbal', 'geitenkaas', 'gelato', 'gerst',
     'gin-tonic', 'goulash', 'granaatappel', 'groenten', 'groentesoep', 'gyros',
     'hamburger', 'hazelnoot', 'honing', 'hotdog', 'hummus', 'ijs',
-    'jalapeño', 'jus', 'kaas', 'kaasfondue', 'kaassoufflé', 'kaneelbroodje',
+    'jalapeno', 'jus', 'kaas', 'kaasfondue', 'kaassoufflé', 'kaneelbroodje',
     'kappertjes', 'kapsalon', 'kastanje', 'kerrieworst', 'kersensap', 'kip',
     'kipnuggets', 'koffie', 'kokosmelk', 'komkommer', 'koriander', 'kroket',
     'kwark', 'kwarktaart', 'lamsvlees', 'lasagne', 'latte', 'limonade',
@@ -103,7 +103,7 @@ const WORDS_BY_CATEGORY = (() => {
     'roggebrood', 'rolmops', 'roomijs', 'rozijnen', 'rucola', 'rum',
     'salade', 'sandwich', 'sap', 'satésaus', 'scones', 'selderij',
     'sinaasappel', 'slagroom', 'smoothie', 'snoep', 'soep', 'sojasaus',
-    'soufflé', 'spaghetti', 'spek', 'spinazie', 'stamppot', 'stoofpot',
+    'soufflé', 'spaghetti', 'spek', 'spinazie', 'stampot', 'stoofpot',
     'strudel', 'suiker', 'sushi', 'taart', 'taco', 'tapenade',
     'tartaar', 'teriyaki', 'thee', 'tiramisu', 'toast', 'tomatensaus',
     'tomatensoep', 'tompouce', 'tortilla', 'truffel', 'tzatziki', 'ui',
@@ -120,7 +120,7 @@ const WORDS_BY_CATEGORY = (() => {
     'accountant', 'acrobaat', 'acteur', 'advocaat', 'apotheker', 'archeoloog',
     'architect', 'automonteur', 'bakker', 'barista', 'beveiliger', 'bibliothecaris',
     'blogger', 'boekhoudster', 'botanicus', 'brandweerman', 'buschauffeur', 'cardioloog',
-    'casinodealer', 'chefkok', 'chiropractor', 'chirurg', 'circusdirecteur', 'clown',
+    'casinodealer', 'chef-kok', 'chiropractor', 'chirurg', 'circusdirecteur', 'clown',
     'voetbalcoach', 'cowboy', 'croupier', 'danser', 'dansleraar', 'data-analist',
     'dermatoloog', 'detective', 'dierenarts', 'dierentrainer', 'diplomaat', 'documentairemaker',
     'dokter', 'dronepiloot', 'duikinstructeur', 'econoom', 'ethisch hacker', 'examinator',
@@ -175,7 +175,7 @@ const WORDS_BY_CATEGORY = (() => {
     'schaatsen', 'schaken', 'schansspringen', 'scrabble', 'sjoelen', 'skeeleren',
     'skeleton', 'skiën', 'skislalom', 'snowboarden', 'softbal', 'speerwerpen',
     'spijkerpoepen', 'squash', 'stoeien', 'suppen', 'surfen', 'synchroonzwemmen',
-    'taekwondo', 'tafeltennis', 'tennis', 'touwtrekken', 'trailrunning', 'trampolinespringen',
+    'taekwondo', 'tafeltennis', 'tennis', 'touwtrekken', 'trail running', 'trampolinespringen',
     'trefbal', 'triatlon', 'turnen', 'varen', 'veldrijden', 'verspringen',
     'vissen', 'vliegeren', 'vliegvissen', 'voetbal', 'volleybal', 'wandelen',
     'waterpolo', 'waterskiën', 'wakeboarden', 'wedstrijdvissen', 'wielrennen', 'worstelen',
@@ -189,7 +189,7 @@ const WORDS_BY_CATEGORY = (() => {
     'halfpipe', 'rolstoelbasketbal', 'dansen', 'salsadansen', 'linedance', 'volksdansen',
     'kampvuur maken', 'boogschieten', 'survivallen', 'kajakken', 'raften', 'skateboarden',
     'windsurfen', 'jagen', 'snorkelen',
-    'puzzelen', 'bordspel', 'videospellen', 'kamperen', 'crossfit', 'bootcamp',
+    'puzzelen', 'bordspel', 'videospellen', 'kamperen', 'crossfit', 'boot camp',
     'spinning', 'kickboksen', 'speedklimmen', 'zaalvoetbal', 'rolstoeltennis', 'paragliding',
     'estafettelopen', 'polsstokverspringen', 'kogelslingeren',
     'tafeltennistafel', 'voetbalnet', 'basketbalring', 'hockeystick', 'tennisracket'
@@ -291,7 +291,7 @@ const WORDS_BY_CATEGORY = (() => {
     'postduif', 'postkoets', 'racefiets', 'racewagen', 'reddingsboot', 'rijtuig',
     'riksja', 'robotaxi', 'roeiboot', 'schip', 'scooterdeeldienst', 'segway',
     'slee', 'sleepboot', 'sloep', 'sneltrein', 'speedboot', 'stadsbus',
-    'stadsfiets', 'step', 'stoomboot', 'stoomlocomotief', 'SUV', 'taxi',
+    'stadsfiets', 'step', 'stoomboot', 'stoomlocomotief', 'suv', 'taxi',
     'touringcar', 'tractor', 'tram', 'trolleybus', 'tuk-tuk', 'veerboot',
     'vierwieler', 'vrachtwagen', 'waterbus', 'waterfiets', 'bushalte', 'watervliegtuig',
     'wielerbaan', 'zeilschip', 'zijspan', 'zonneauto', 'zweefvliegtuig', 'vliegtuigkaping',
@@ -342,7 +342,7 @@ const WORDS_BY_CATEGORY = (() => {
     'gerechtshof', 'tribune', 'Afrika', 'Azië', 'Europa', 'Noord-Amerika',
     'Zuid-Amerika', 'Himalaya', 'Kaspische Zee', 'Mississippi', 'Nijl', 'Noordzee',
     'Sahara', 'Thames', 'Corsica', 'Hawaï', 'Kaukasus', 'Siberië',
-    'Sicilië', 'boomhut', 'brandtrap', 'carwash', 'dierenasiel',
+    'Sicilië', 'Steppe', 'boomhut', 'brandtrap', 'carwash', 'dierenasiel',
     'fietsbrug', 'gemaal', 'graftombe', 'hertenkamp', 'ijsbaantje', 'kasteelgracht',
     'kerkhof', 'kinderdagverblijf', 'klimrek', 'klimbos', 'lantaarnpaal', 'markthal',
     'meubelboulevard', 'ophaalbrug', 'plattegrond', 'riolering', 'rotonde',
@@ -377,7 +377,7 @@ const WORDS_BY_CATEGORY = (() => {
     'sluipen', 'brand blussen', 'eerste hulp verlenen', 'blindoeken', 'een geheim bewaren', 'inhalen',
     'misleiden', 'in de rij staan', 'op de vlucht zijn', 'rijbewijs halen', 'schipbreuk lijden', 'sleutels verliezen',
     'verslikken', 'hinkelen', 'touwtjesspringen', 'zwijgen', 'triomferen', 'takelen',
-    'haasten', 'vervelen', 'achtervolgen', 'bazelen',
+    'angst', 'geluk', 'haast', 'vervelen', 'achtervolgen', 'bazelen',
     'bedanken', 'begroeten', 'beschermen', 'bewonderen', 'boeren', 'controleren',
     'debatteren', 'demonstreren', 'flirten', 'herkennen', 'hijgen', 'improviseren',
     'jongleren', 'knijpen', 'krabben', 'kwispelen', 'mompelen', 'ontsnappen',
@@ -522,7 +522,7 @@ const WORDS_BY_CATEGORY = (() => {
     'saxofoon', 'klarinet', 'fluit', 'dwarsfluit', 'blokfluit',
     'fagot', 'hobo', 'didgeridoo', 'piano', 'vleugel', 'orgel',
     'accordeon', 'synthesizer', 'keyboard', 'trommel', 'xylofoon', 'djembé',
-    'microfoon', 'luidspreker', 'versterker', 'mengpaneel', 'grammofoon', 'elpee',
+    'microfoon', 'luidspreker', 'versterker', 'mengpaneel', 'gramofoon', 'elpee',
     'platenspeler', 'koptelefoon', 'muziekdoos', 'notenbalk', 'orgelpijp', 'albumhoes',
     'muziek', 'orkest', 'koor', 'symfonie', 'opera', 'jazz',
     'blues', 'rock', 'pop', 'rap', 'hiphop', 'klassiek',
@@ -533,7 +533,7 @@ const WORDS_BY_CATEGORY = (() => {
     'operazanger', 'componist', 'gitarist', 'drummer', 'pianist', 'violist',
     'kapelmeester', 'bandlid', 'producer', 'pianospelen', 'djembé spelen', 'componeren',
     'dirigeren', 'optreden', 'country', 'gospel', 'latin', 'afrobeat',
-    'disco', 'techno', 'house', 'trance', 'ambient',
+    'disco', 'techno', 'house', 'trance', 'drum and bass', 'ambient',
     'new wave', 'indie', 'grunge', 'hardrock', 'heavy metal', 'r&b',
     'toonladder', 'noot', 'maat', 'tempo', 'dynamiek', 'harmonie',
     'octaaf', 'interval', 'crescendo', 'panfluit', 'doedelzak',
@@ -551,7 +551,7 @@ const WORDS_BY_CATEGORY = (() => {
     'remix', 'mashup', 'cover', 'liveband',
     'openluchtconcert', 'jamsessie', 'nachtclub', 'poppodium', 'muziekzaal',
     'operahuis', 'concertgebouw', 'festivalterrein', 'backstage',
-    'soundcheck', 'trekharmonica', 'oud', 'strijkkwartet',
+    'soundcheck', 'trekharmonika', 'oud', 'strijkkwartet',
     'volkslied', 'kinderlied', 'slaapliedje', 'kerstlied', 'hymne', 'psalm',
     'serenade', 'wals', 'polka', 'tango', 'samba', 'rumba',
     'cha-cha-cha', 'foxtrot', 'quickstep', 'slowfox'
@@ -590,8 +590,8 @@ const WORDS_BY_CATEGORY = (() => {
     'vaandel', 'vlag', 'schouderstuk', 'rang',
     'oorlogsgraf', 'herdenkingsmonument', 'militaire parade', 'militaire politie',
     'inlichtingendienst', 'geheime dienst', 'cyberaanval', 'informatieoorlog', 'psychologische oorlogsvoering',
-    'guerrilla', 'terrorisme', 'aanslagen', 'zelfmoordaanslag', 'bomaanslag', 'ontvoeringen',
-    'scherpschutter', 'bomopruimer', 'angst',
+    'guerrilla', 'terrorisme', 'aanslagen', 'zelfmoordaanslag', 'bom aanslag', 'ontvoeringen',
+    'scherpschutter', 'bomopruimer',
     'pantserdivisie', 'granaatwerper', 'mortier',
     'antitankwapen', 'mijnenlegger', 'amfibievoertuig',
     'konvooi', 'luchtaanval', 'bombardement', 'beschietingen', 'salvo',
@@ -621,10 +621,10 @@ const WORDS_BY_CATEGORY = (() => {
     'verfroller', 'kwast', 'verfbak', 'afplaktape', 'kit', 'siliconekit',
     'purschuim', 'isolatiemateriaal', 'ducttape', 'perslucht',
     'compressor', 'spijkerpistool', 'tacker', 'houtlijm',
-    'plamuurmes', 'roerder', 'mixer', 'cementmixer', 'hoogwerker',
+    'plamuurmes', 'roerder', 'mixer', 'cementmixer', 'hoogteschaffer',
     'nijptang', 'werktafel', 'lijmspuit', 'noodstroomgenerator', 'stofopvangzak',
     'verlengstuk', 'spoorbreedte', 'boorset', 'luchtcompressor', 'verfspuiter',
-    'verf afbijter', 'ontvetter',
+    'verf afbijter', 'ontvetter', 'ontroesters', 'beschermkapjes',
     'zaagblad', 'potje verf', 'rol', 'spijkertje', 'schroefje', 'boortje',
     'zaagje', 'sloopkogel', 'hijskraan', 'moker', 'vuurhaard', 'kachel',
     'gasbrander', 'lasbril', 'koord', 'spatel', 'tegelsnijder'
@@ -853,7 +853,7 @@ const WORDS_BY_CATEGORY = (() => {
     'kaasrasp', 'citruspers', 'blikopener', 'dopjesopener', 'kurkentrekker', 'kookboek',
     'receptenboek', 'keukentimer', 'keukenweegschaal', 'maatlepel', 'spuitzak', 'taartsteker',
     'cakestandaard', 'boterpapier', 'rijstzeef', 'vuilniszak', 'vuilnisbak', 'afvalbak',
-    'papierbak', 'glasbak', 'gft-bak', 'papierbak', 'vloerlamp', 'tafellamp',
+    'oud papier bak', 'glasbak', 'gft-bak', 'papierbak', 'vloerlamp', 'tafellamp',
     'bureaulamp', 'plafondlamp', 'spotje', 'vitrage', 'overgordijn', 'rolgordijn',
     'antislipmat', 'muizenmat', 'vloerbedekking', 'parket', 'laminaat', 'tegels',
     'behang', 'verf', 'handdoekrek', 'zeephouder', 'tandenborstelhouder', 'toilettasje',
@@ -871,46 +871,10 @@ const WORDS_BY_CATEGORY = (() => {
 })();
 
 // ── Dutch compound-word hyphenation ──────────────────────────────────────────
-// Aanvullende Nederlandse basiswoorden die als deel van samenstellingen voorkomen
-// maar niet zelfstandig in de spelwoordenlijst staan.
-const DUTCH_SUPPLEMENT = new Set([
-  // Verbindingsvormen van dieren
-  'bijen','mieren','honden','katten','wolven','beren','vissen','vogels',
-  'paarden','schapen','varkens','koeien','reuzen','dwergen',
-  // Eerste delen van samenstellingen
-  'brand','netel','boom','kraan','stok','vlieg','vliegtuig','water',
-  'grizzly','prairie','galapagos','komodo','lieve','heers',
-  'brand','buffel','reuzen','dwerg','maanvis',
-  // Tweede delen / achtervoegsels
-  'beestje','staartje','staart','koningin','vogelbekdier','apparaat',
-  'bouwer','maker','houder','eter','kenner','speler','rijder','loper',
-  'werker','vaarder','steker','zoeker','drinker',
-  // Natuur en elementen
-  'vuur','aarde','lucht','wind','zon','maan','meer','zee','berg','bos',
-  'regen','sneeuw','storm','golf','golf',
-  // Lichaamsdelen
-  'hoofd','hand','arm','been','voet','oog','oor','mond','neus','hart',
-  'rug','buik','nek','keel','knie','schouder','pols','teen','tand','lip',
-  // Huis en omgeving
-  'huis','tuin','weg','stad','dorp','land','deur','raam','muur','dak',
-  'kamer','plein','park','haven','brug','straat',
-  // Voedsel componenten
-  'soep','saus','taart','koek','brood','meel','worst','kaas','boter',
-  // Personen
-  'man','vrouw','kind','jongen','meisje','vriend','baas',
-  // Kleuren als eerste deel
-  'rood','blauw','groen','geel','zwart','wit','goud','zilver','grijs',
-  // Tijd
-  'dag','nacht','jaar','uur','morgen','avond','middag','tijd','week',
-  // Algemeen
-  'werk','spel','deel','kant','punt','lijn','slag','stuk','ding','zaak',
-  'groot','klein','lang','kort','oud','nieuw','snel','sterk','zwaar',
-  'hout','steen','glas','metaal','staal',
-]);
-
-// Gecombineerd woordenboek: spelwoorden + aanvulling
+// Woordenboek opgebouwd uit alle spelwoorden — dat is voldoende om samenstellingen
+// te herkennen, omdat het rechter deel vrijwel altijd zelf ook een speelwoord is.
 const HYPHENATION_DICT = (() => {
-  const dict = new Set(DUTCH_SUPPLEMENT);
+  const dict = new Set();
   Object.values(WORDS_BY_CATEGORY)
     .filter(v => Array.isArray(v))
     .flat()
