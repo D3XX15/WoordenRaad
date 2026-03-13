@@ -2248,13 +2248,13 @@ export default function App() {
           width: 100%;
           padding: 18px;
           border-radius: 16px;
-          border: 3px solid #a78bfa;
-          background: rgba(167,139,250,0.08);
-          color: #a78bfa;
+          border: none;
           font-family: 'Righteous', cursive;
           font-size: 20px;
           letter-spacing: 0.04em;
           cursor: pointer;
+          background: rgba(255,255,255,0.08);
+          color: rgba(255,255,255,0.3);
           transition: all 0.25s;
           margin-top: 4px;
         }
@@ -2282,11 +2282,11 @@ export default function App() {
         }
 
         .start-btn.ready {
-          background: rgba(52,211,153,0.08);
-          color: #34d399;
-          border: 3px solid #34d399;
+          border: 3px solid #a78bfa;
+          background: rgba(167,139,250,0.08);
+          color: #a78bfa;
         }
-        .start-btn.ready:hover { background: rgba(52,211,153,0.15); }
+        .start-btn.ready:hover { background: rgba(167,139,250,0.15); }
         .mode-toggle-btn {
           margin-bottom: 20px;
           border: 3px solid rgba(255,255,255,0.2);
