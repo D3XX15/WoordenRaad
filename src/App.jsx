@@ -922,7 +922,7 @@ function SetupScreen({ onStart }) {
   };
 
   const updateCount = (n) => {
-    const clamped = Math.min(teamMode ? 10 : 10, Math.max(2, n));
+    const clamped = Math.min(10, Math.max(2, n));
     setCount(clamped);
     if (teamMode) {
       // Bereken nieuwe teamSizes synchroon op basis van huidige state
@@ -1143,13 +1143,13 @@ function SetupScreen({ onStart }) {
           <label className="setup-label">Tijd per ronde</label>
           <div className="time-control">
             <button
-              className="time-btn"
+              className="time-btn time-btn-minus"
               onClick={() => setRoundTime((t) => Math.max(30, t - 30))}
               disabled={roundTime <= 30}
             >−30s</button>
             <span className="time-display">{roundTime}s</span>
             <button
-              className="time-btn"
+              className="time-btn time-btn-plus"
               onClick={() => setRoundTime((t) => t + 30)}
             >+30s</button>
           </div>
@@ -1190,7 +1190,6 @@ function HandoffScreen({ player, teamName, onReady }) {
 
 const w = (n) => n === 1 ? "woord" : "woorden";
 const pt = (n) => n === 1 ? "punt" : "punten";
-const wd = (n) => n === 1 ? "woord" : "woorden";
 
 const MESSAGES_GREAT = [
   () => `Wat een enorme prestatie! 🏆`,
@@ -1672,7 +1671,7 @@ function StatsScreen({ players, playerStats, scores, onRestart, onContinue, onBa
 
         {bestRound && (
           <div className="stats-best">
-            🏅 Beste ronde: {bestRound.idx + 1} — {bestRound.correct} {wd(bestRound.correct)} geraden
+            🏅 Beste ronde: {bestRound.idx + 1} — {bestRound.correct} {w(bestRound.correct)} geraden
           </div>
         )}
 
@@ -1939,6 +1938,9 @@ export default function App() {
   const [playerStats, setPlayerStats] = useState([]);
   // Tie-breaker state
   const [tiebreakerState, setTiebreakerState] = useState(null);
+  // Speelvolgorde: in team modus afwisselend per team
+  const [playOrder, setPlayOrder] = useState([]);
+  const [playOrderPos, setPlayOrderPos] = useState(0);
 
   const totalRounds = players.length;
 
@@ -1980,8 +1982,6 @@ export default function App() {
 
   // Speelvolgorde: in team modus afwisselend per team (A, B, S, C ipv A, S, B, C)
   // playOrder is een array van player-indices in de juiste volgorde
-  const [playOrder, setPlayOrder] = useState([]);
-  const [playOrderPos, setPlayOrderPos] = useState(0);
 
   const buildPlayOrder = (teamsData, totalPlayers) => {
     if (!teamsData) return Array.from({ length: totalPlayers }, (_, i) => i);
@@ -2137,6 +2137,7 @@ export default function App() {
     setPlayerStats([]);
     setPlayOrder([]);
     setPlayOrderPos(0);
+    setTiebreakerState(null);
   };
 
   return (
@@ -2266,16 +2267,18 @@ export default function App() {
         .time-btn {
           width: 64px; height: 44px;
           border-radius: 12px;
-          border: 3px solid rgba(255,255,255,0.18);
-          background: rgba(255,255,255,0.05);
-          color: white;
+          border: 3px solid #34d399;
+          background: rgba(52,211,153,0.08);
+          color: #34d399;
           font-family: inherit;
           font-size: 15px;
           font-weight: 700;
           cursor: pointer;
           transition: all 0.18s;
         }
-        .time-btn:hover:not(:disabled) { border-color: #34d399; background: rgba(52,211,153,0.08); color: #34d399; }
+        .time-btn-plus:hover:not(:disabled) { background: rgba(52,211,153,0.18); }
+        .time-btn-minus { border-color: #f87171; background: rgba(248,113,113,0.08); color: #f87171; }
+        .time-btn-minus:hover:not(:disabled) { background: rgba(248,113,113,0.18); }
         .time-btn:disabled { opacity: 0.3; cursor: default; }
         .time-display {
           flex: 1;
@@ -2450,7 +2453,7 @@ export default function App() {
           font-size: clamp(13px, 3.5vw, 16px);
           color: #f87171;
           background: rgba(248,113,113,0.12);
-          border: 2.5px solid rgba(248,113,113,0.35);
+          border: 3px solid rgba(248,113,113,0.35);
           border-radius: 12px;
           padding: 8px 16px;
           text-align: center;
