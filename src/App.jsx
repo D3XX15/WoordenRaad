@@ -13,11 +13,11 @@ const CATEGORIES = [
   { id: "natuur",        label: "🌿 Natuur" },
   { id: "muziek",        label: "🎤 Muziek" },
   { id: "objecten",      label: "📦 Objecten" },
+  { id: "militair",      label: "🪖 Militair" },
+  { id: "ruimte",        label: "🚀 Ruimte" },
   { id: "wetenschap",    label: "🔬 Wetenschap" },
   { id: "gereedschap",   label: "🔧 Gereedschap" },
   { id: "politiek",      label: "⚖️ Politiek" },
-  { id: "militair",      label: "🪖 Militair" },
-  { id: "ruimte",        label: "🚀 Ruimte" },
   { id: "landen",        label: "🌍 Landen" },
   { id: "spreekwoorden", label: "💬 Spreekwoorden", bonus: true },
 ];
