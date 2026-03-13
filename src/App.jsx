@@ -2196,7 +2196,7 @@ export default function App() {
         /* ── Setup ── */
         .setup-card {
           background: rgba(255,255,255,0.06);
-          border: 2.5px solid rgba(255,255,255,0.12);
+          border: 3px solid rgba(255,255,255,0.12);
           border-radius: 24px;
           padding: 28px 20px;
           width: 100%;
@@ -2314,7 +2314,7 @@ export default function App() {
           text-align: center;
           padding: 40px 24px;
           background: rgba(255,255,255,0.06);
-          border: 2.5px solid rgba(255,255,255,0.12);
+          border: 3px solid rgba(255,255,255,0.12);
           border-radius: 28px;
           max-width: 400px;
           width: 100%;
@@ -2591,7 +2591,7 @@ export default function App() {
         
         .score-card {
           background: rgba(255,255,255,0.06);
-          border: 2.5px solid rgba(255,255,255,0.12);
+          border: 3px solid rgba(255,255,255,0.12);
           border-radius: 24px;
           padding: 28px 20px;
           width: 100%;
@@ -2712,7 +2712,7 @@ export default function App() {
         /* ── Stats screen ── */
         .stats-card {
           background: rgba(255,255,255,0.06);
-          border: 2.5px solid rgba(255,255,255,0.12);
+          border: 3px solid rgba(255,255,255,0.12);
           border-radius: 24px; padding: 28px 20px;
           width: 100%; max-width: 480px;
           backdrop-filter: blur(20px);
