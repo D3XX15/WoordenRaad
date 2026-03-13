@@ -922,7 +922,7 @@ function SetupScreen({ onStart }) {
   };
 
   const updateCount = (n) => {
-    const clamped = Math.min(teamMode ? 10 : 20, Math.max(2, n));
+    const clamped = Math.min(teamMode ? 10 : 10, Math.max(2, n));
     setCount(clamped);
     if (teamMode) {
       // Bereken nieuwe teamSizes synchroon op basis van huidige state
@@ -957,6 +957,7 @@ function SetupScreen({ onStart }) {
 
   // Voeg een speler toe aan team t
   const addPlayerToTeam = (t) => {
+    if (teamSizes[t] >= 10) return;
     const offset = teamSizes.slice(0, t + 1).reduce((a, b) => a + b, 0);
     setTeamSizes((prev) => prev.map((s, i) => i === t ? s + 1 : s));
     setNames((prev) => {
@@ -1057,7 +1058,9 @@ function SetupScreen({ onStart }) {
               {count > 2 && (
                 <button className="team-size-btn team-size-remove" onClick={() => updateCount(count - 1)}>−1</button>
               )}
-              <button className="team-size-btn team-size-add" onClick={() => updateCount(count + 1)} disabled={teamMode ? count >= 10 : count >= 20}>+1</button>
+              {count < 10 && (
+                <button className="team-size-btn team-size-add" onClick={() => updateCount(count + 1)}>+1</button>
+              )}
             </div>
           </div>
           {teamMode ? (
@@ -1078,7 +1081,9 @@ function SetupScreen({ onStart }) {
                         {size > 2 && (
                           <button className="team-size-btn team-size-remove" onClick={() => removePlayerFromTeam(t)} title="Speler verwijderen">−1</button>
                         )}
-                        <button className="team-size-btn team-size-add" onClick={() => addPlayerToTeam(t)} title="Speler toevoegen">+1</button>
+                        {size < 10 && (
+                          <button className="team-size-btn team-size-add" onClick={() => addPlayerToTeam(t)} title="Speler toevoegen">+1</button>
+                        )}
                       </div>
                     </div>
                     {Array.from({ length: size }, (_, p) => {
@@ -1197,17 +1202,23 @@ const pt = (n) => n === 1 ? "punt" : "punten";
 const MESSAGES_GREAT = [
   () => `Wat een enorme prestatie! 🏆`,
   () => `Jij verdient een sticker! ⭐`,
-  () => `De rest is onder de indruk. 😎`,
-  () => `De anderen beven van angst. 🫨`,
+  () => `De rest is onder de indruk! 😎`,
+  () => `Woordenboek opgegeten ofzo? 📖`,
+  () => `De rest beeft van angst! 🫨`,
   () => `Je staat in vuur en vlam! 🔥`,
   () => `Je bent niet te stoppen! 🚀`,
   () => `De rest kan wel inpakken! 😄`,
   () => `Heb jij dit zitten oefen? 🤨`,
+  () => `Waar kom jij vandaan?! 👽`,
+  () => `Dit is gewoon pesten. 😂`,
+  () => `Even een staande ovatie. 👏`,
 ];
 
 const MESSAGES_OK = [
   (_, pts) => `${pts} ${pt(pts)}, lekker bezig! 🙌`,
   (_, pts) => `${pts} ${pt(pts)}, niet slecht! 👍`,
+  (_, pts) => `${pts} ${pt(pts)}, da's geen schande! 👌`,
+  (_, pts) => `${pts} ${pt(pts)}. Daar doe je 't voor! 🎉`,
   (_, pts) => `${pts} ${pt(pts)} op de teller. ✅`,
   (_, pts) => `${pts} ${pt(pts)}, wat geweldig! 🥳`,
   (_, pts) => `${pts} ${pt(pts)} erbij geknalt! 💥`,
@@ -1215,12 +1226,16 @@ const MESSAGES_OK = [
   (_, pts) => `${pts} ${pt(pts)} in één ronde! 🤩`,
   (_, pts) => `${pts} ${pt(pts)}, ga zo door! 💪`,
 ];
-
 const MESSAGES_POOR = [
-  () => `Ik weet niet of dit nog goed komt! 😅`,
+  () => `Geeft niks, je ziet er tenminste goed uit. 💅`,
+  (_, pts) => `${pts} ${pt(pts)}, werk aan de winkel! 🔨`,
   (_, pts) => `${pts} ${pt(pts)}. Volgende keer beter! 🙈`,
   (_, pts) => `${pts} ${pt(pts)}. Haal even rustig adem! 😮‍💨`,
-  () => `De volgende ronde gaat beter, toch? 😉`,
+  (_, pts) => `${pts} ${pt(pts)}, niemand hoeft het te weten. 🤫`,
+  () => `Misschien is schilderen meer iets voor jou? 🎨`,
+  () => `De anderen hebben stiekem geoefend. Vast. 🕵️`,
+  () => `Volgende keer misschien de bril op? 👓`,
+  () => `De volgende ronde gaat vast beter. 😉`,
   () => `De andere spelers ruiken bloed! 🩸`,
   () => `De spanning zat er zeker in! 😅`,
 ];
@@ -1228,9 +1243,9 @@ const MESSAGES_POOR = [
 function getRandomEndMessage(correctCount, roundTime, totalScore = correctCount) {
   const ratio = roundTime > 0 ? totalScore / (roundTime / 6) : 0;
   const [pool, tier] =
-    ratio >= 0.75 ? [MESSAGES_GREAT, "great"] :
-    ratio >= 0.5  ? [MESSAGES_OK,    "ok"]    :
-                    [MESSAGES_POOR,  "poor"];
+    ratio >= 0.5   ? [MESSAGES_GREAT, "great"] :
+    ratio >= 0.35  ? [MESSAGES_OK,    "ok"]    :
+                     [MESSAGES_POOR,  "poor"];
   const idx = Math.floor(Math.random() * pool.length);
   return { message: pool[idx](correctCount, totalScore), tier, count: correctCount, totalScore };
 }
