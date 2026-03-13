@@ -1176,7 +1176,6 @@ function HandoffScreen({ player, teamName, onReady }) {
         <p className="handoff-sub">Geef de telefoon aan</p>
         <h2 className="handoff-name">{player}</h2>
         {teamName && <p className="handoff-team">{teamName}</p>}
-        <p className="handoff-tip">De andere spelers kijken weg!</p>
         <button className="handoff-btn" onClick={onReady}>
           Ik ben er klaar voor!
         </button>
