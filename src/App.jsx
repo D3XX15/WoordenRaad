@@ -189,7 +189,7 @@ const WORDS_BY_CATEGORY = (() => {
     'windsurfen', 'jagen', 'snorkelen',
     'puzzelen', 'bordspel', 'videospellen', 'kamperen', 'crossfit', 'boot camp',
     'spinning', 'kickboksen', 'speedklimmen', 'zaalvoetbal', 'rolstoeltennis', 'paragliding',
-    'estafettelopen', 'polsstokverspringen', 'kogelslingeren',
+    'estafettelopen', 'fierljeppen', 'kogelslingeren',
     'tafeltennistafel', 'voetbalnet', 'basketbalring', 'hockeystick', 'tennisracket'
   ];
 
