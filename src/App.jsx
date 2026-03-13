@@ -440,7 +440,7 @@ const WORDS_BY_CATEGORY = (() => {
     'quarantaine', 'reflectie', 'rehabilitatie', 'reïncarnatie', 'schizofrenie', 'stigma',
     'surrogaatmoeder', 'transplantatie', 'tunnelvisie', 'vaccinatie', 'wedergeboorte', 'begrafenis',
     'laboratorium', 'algoritme', 'brainstorm', 'evolutie', 'frictie', 'grafiek',
-    'hypotheek', 'implosie', 'mutatie', 'nihilisme', 'paradox', 'pesticide',
+    'implosie', 'mutatie', 'nihilisme', 'paradox', 'pesticide',
     'relatief', 'stralingsvergiftiging', 'tijdreizen', 'utopie', 'stroomuitval', 'hersenspoeling',
     'isolatie', 'sprookje', 'plagiaat', 'archeologie', 'barometer', 'geigerteller',
     'kwikthermometer', 'stethoscoop', 'thermometer', 'vergrootglas', 'loep', 'magneet',
@@ -623,7 +623,7 @@ const WORDS_BY_CATEGORY = (() => {
     'compressor', 'spijkerpistool', 'tacker', 'houtlijm',
     'plamuurmes', 'roerder', 'mixer', 'cementmixer', 'hoogteschaffer',
     'nijptang', 'werktafel', 'lijmspuit', 'noodstroomgenerator', 'stofopvangzak',
-    'verlengstuk', 'werktafel', 'spoorbreedte', 'boorset', 'luchtcompressor', 'verfspuiter',
+    'verlengstuk', 'spoorbreedte', 'boorset', 'luchtcompressor', 'verfspuiter',
     'verf afbijter', 'ontvetter', 'ontroesters', 'beschermkapjes',
     'zaagblad', 'potje verf', 'rol', 'spijkertje', 'schroefje', 'boortje',
     'zaagje', 'sloopkogel', 'hijskraan', 'moker', 'vuurhaard', 'kachel',
@@ -832,7 +832,7 @@ const WORDS_BY_CATEGORY = (() => {
     'oven', 'broodrooster', 'waterkoker', 'keukenmixer', 'sapcentrifuge', 'keukenmachine',
     'rijstkoker', 'slowcooker', 'wokpan', 'braadpan', 'steelpan', 'grillpan',
     'maatbeker', 'keukendoek', 'ovenwant', 'rasp', 'zeef', 'vergiet',
-    'blik opener', 'pizzasnijder', 'aardappelstamper', 'handdoek', 'badmat', 'douchegordijn',
+    'pizzasnijder', 'aardappelstamper', 'handdoek', 'badmat', 'douchegordijn',
     'zeep', 'shampoo', 'conditioner', 'scheerapparaat', 'haarborstel', 'toiletpapier',
     'kussen', 'deken', 'laken', 'kussensloop', 'matras', 'nachtkastje',
     'kleerkast', 'kledingrek', 'strijkplank', 'wasmand', 'droogrek', 'stofzuiger',
@@ -1200,7 +1200,7 @@ const MESSAGES_GREAT = [
   () => `Je staat in vuur en vlam! 🔥`,
   () => `Je bent niet te stoppen! 🚀`,
   () => `De rest kan wel inpakken! 😄`,
-  () => `Heb jij dit zitten oefen? 🤨`,
+  () => `Heb jij dit zitten oefenen? 🤨`,
   () => `Waar kom jij vandaan?! 👽`,
   () => `Dit is gewoon pesten. 😂`,
   () => `Even een staande ovatie. 👏`,
@@ -1290,17 +1290,18 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const [skipPenalty, setSkipPenalty] = useState(0);
   const penaltyRef = useRef(null);
   const skipPenaltyRef = useRef(0);
+  const roundEndTimeoutRef = useRef(null);
 
   const finishRound = (finalScores, finalWordIndex) => {
     const totalScore = finalScores.correct + wordResultsRef.current.reduce((sum, r) => sum + (r.bonusPts || 0), 0);
     endMessageRef.current = getRandomEndMessage(finalScores.correct, roundTime, totalScore);
     setDone(true);
-    setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex, wordResults: wordResultsRef.current }), 2800);
+    roundEndTimeoutRef.current = setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex, wordResults: wordResultsRef.current }), 2800);
   };
 
   // Ref naar finishRound zodat de timer-interval er altijd de actuele versie van kan aanroepen
-  const finishRoundRef = useRef(finishRound);
-  useEffect(() => { finishRoundRef.current = finishRound; }, [finishRound]);
+  const finishRoundRef = useRef(null);
+  finishRoundRef.current = finishRound;
 
   const correct = () => {
     if (done || skipPenaltyRef.current > 0) return;
@@ -1352,7 +1353,10 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
     }, 1000);
   };
 
-  useEffect(() => () => clearInterval(penaltyRef.current), []);
+  useEffect(() => () => {
+    clearInterval(penaltyRef.current);
+    clearTimeout(roundEndTimeoutRef.current);
+  }, []);
 
   const pct = timeRemaining / roundTime;
   const timeLeft = Math.round(timeRemaining);
@@ -1595,7 +1599,7 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
 
 // ── Stats Screen ─────────────────────────────────────────────────────────────
 
-function StatsScreen({ players, playerStats, scores, initialPlayer, onRestart, onContinue, onBack }) {
+function StatsScreen({ players, playerStats, scores, initialPlayer, onBack }) {
   const [activePlayer, setActivePlayer] = useState(initialPlayer ?? 0);
 
   const ps = playerStats[activePlayer];
@@ -1953,7 +1957,7 @@ export default function App() {
     }
     const merged = new Set();
     for (const id of catSet) {
-      (WORDS_BY_CATEGORY[id] || []).forEach(w => merged.add(w));
+      (WORDS_BY_CATEGORY[id] || []).forEach(word => merged.add(word));
     }
     return merged.size > 0 ? [...merged] : WORDS_BY_CATEGORY.all;
   };
@@ -2044,7 +2048,7 @@ export default function App() {
     setPlayerStats(newPlayerStats);
 
     const newUsed = new Set(usedWords);
-    wordDeck.slice(0, wordsUsed).forEach(w => newUsed.add(w));
+    wordDeck.slice(0, wordsUsed).forEach(word => newUsed.add(word));
     setUsedWords(newUsed);
     setRoundNum((r) => r + 1);
     setPhase("score");
@@ -2631,7 +2635,7 @@ export default function App() {
 
         /* Eindstand: goud / zilver / brons */
         .score-row.rank-1.rank-final { background: rgba(251,191,36,0.08); border: 3px solid #fbbf24; }
-        .score-row.rank-2.rank-final { background: rgba(148,163,184,0.08); border: 3px solid #94a3b8; }
+        .score-row.rank-2.rank-final { background: rgba(192,192,192,0.1); border: 3px solid #c0c0c0; }
         .score-row.rank-3.rank-final { background: rgba(205,127,50,0.08); border: 3px solid #cd7f32; }
         .score-row.rank-4.rank-final, .score-row.rank-5.rank-final, .score-row.rank-6.rank-final,
         .score-row.rank-7.rank-final, .score-row.rank-8.rank-final, .score-row.rank-9.rank-final,
@@ -2653,7 +2657,7 @@ export default function App() {
         .score-pts { font-family: 'Righteous', cursive; font-size: clamp(16px, 4vw, 20px); color: rgba(255,255,255,0.9); flex-shrink: 0; }
         .score-row.rank-1.rank-interim .score-pts { color: #4ade80; }
         .score-row.rank-1.rank-final .score-pts { color: #fbbf24; }
-        .score-row.rank-2.rank-final .score-pts { color: #94a3b8; }
+        .score-row.rank-2.rank-final .score-pts { color: #c0c0c0; }
         .score-row.rank-3.rank-final .score-pts { color: #cd7f32; }
         .score-row.rank-4.rank-final .score-pts, .score-row.rank-5.rank-final .score-pts,
         .score-row.rank-6.rank-final .score-pts, .score-row.rank-7.rank-final .score-pts,
@@ -2849,8 +2853,6 @@ export default function App() {
           playerStats={playerStats}
           scores={scores}
           initialPlayer={statsInitialPlayer}
-          onRestart={onRestart}
-          onContinue={onContinue}
           onBack={() => setPhase("score")}
         />
       )}
