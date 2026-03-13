@@ -186,10 +186,9 @@ const WORDS_BY_CATEGORY = (() => {
     'lasergame', 'beachtennis', 'langlaufen', 'kleiduivenschieten',
     'halfpipe', 'rolstoelbasketbal', 'dansen', 'salsadansen', 'linedance', 'volksdansen',
     'kampvuur maken', 'boogschieten', 'survivallen', 'kajakken', 'raften', 'skateboarden',
-    'windsurfen', 'jagen', 'snorkelen',
+    'windsurfen', 'jagen', 'snorkelen', 'estafettelopen', 'fierljeppen', 'kogelslingeren',
     'puzzelen', 'bordspel', 'videospellen', 'kamperen', 'crossfit', 'boot camp',
     'spinning', 'kickboksen', 'speedklimmen', 'zaalvoetbal', 'rolstoeltennis', 'paragliding',
-    'estafettelopen', 'fierljeppen', 'kogelslingeren',
     'tafeltennistafel', 'voetbalnet', 'basketbalring', 'hockeystick', 'tennisracket'
   ];
 
