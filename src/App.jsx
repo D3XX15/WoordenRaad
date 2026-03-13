@@ -1178,7 +1178,7 @@ function HandoffScreen({ player, teamName, onReady }) {
         {teamName && <p className="handoff-team">{teamName}</p>}
         <p className="handoff-tip">De andere spelers kijken weg!</p>
         <button className="handoff-btn" onClick={onReady}>
-          Ik ben klaar — start ronde!
+          Ik ben er klaar voor!
         </button>
       </div>
     </div>
@@ -1856,11 +1856,8 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
             TIE-BREAKER · {currentStep + 1}/{tiedPlayerIndices.length}
           </p>
           <h2 className="handoff-name">{players[currentPlayerIdx]}</h2>
-          <p className="handoff-tip" style={{marginBottom:'6px'}}>Geef het apparaat aan {players[currentPlayerIdx]}.</p>
-          <p className="handoff-tip">De andere spelers kijken weg!</p>
-          <p style={{fontSize:'12px', color:'rgba(255,255,255,0.35)', margin:'10px 0 20px', textAlign:'center'}}>
-            Categorie: {categoryLabel}
-          </p>
+          <p className="handoff-tip" style={{marginBottom:'2px'}}>Raad z.s.m. het woord</p>
+          <p className="handoff-tip" style={{marginTop:'0px'}}>in de categorie: {categoryLabel}</p>
           <button className="handoff-btn" onClick={startRound}>
             Start tie-breaker!
           </button>
