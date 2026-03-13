@@ -2665,7 +2665,7 @@ export default function App() {
         }
         .next-btn { background: rgba(167,139,250,0.08); color: #a78bfa; border: 3px solid #a78bfa; }
         .next-btn:hover { background: rgba(167,139,250,0.15); }
-        .restart-btn { background: rgba(255,255,255,0.08); color: white; border: 3px solid rgba(255,255,255,0.2); }
+        .restart-btn { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); border: 3px solid rgba(255,255,255,0.2); }
         .restart-btn:hover { background: rgba(255,255,255,0.14); }
         .continue-btn { background: rgba(52,211,153,0.1); color: #34d399; border: 3px solid rgba(52,211,153,0.35); margin-bottom: 10px; }
         .continue-btn:hover { background: rgba(52,211,153,0.18); }
