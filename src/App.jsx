@@ -1055,12 +1055,8 @@ function SetupScreen({ onStart }) {
           <div className="names-label-row">
             <label className="setup-label" style={{marginBottom:0}}>{teamMode ? "Teams" : "Spelers"}</label>
             <div style={{display:'flex', alignItems:'center', gap:'8px'}}>
-              {count > 2 && (
-                <button className="team-size-btn team-size-remove" onClick={() => updateCount(count - 1)}>−1</button>
-              )}
-              {count < 10 && (
-                <button className="team-size-btn team-size-add" onClick={() => updateCount(count + 1)}>+1</button>
-              )}
+              <button className={`team-size-btn team-size-remove${count <= 2 ? " team-size-btn-disabled" : ""}`} onClick={() => updateCount(count - 1)} disabled={count <= 2}>−1</button>
+              <button className={`team-size-btn team-size-add${count >= 10 ? " team-size-btn-disabled" : ""}`} onClick={() => updateCount(count + 1)} disabled={count >= 10}>+1</button>
             </div>
           </div>
           {teamMode ? (
@@ -1078,12 +1074,8 @@ function SetupScreen({ onStart }) {
                         maxLength={12}
                       />
                       <div className="team-size-controls">
-                        {size > 2 && (
-                          <button className="team-size-btn team-size-remove" onClick={() => removePlayerFromTeam(t)} title="Speler verwijderen">−1</button>
-                        )}
-                        {size < 10 && (
-                          <button className="team-size-btn team-size-add" onClick={() => addPlayerToTeam(t)} title="Speler toevoegen">+1</button>
-                        )}
+                        <button className={`team-size-btn team-size-remove${size <= 2 ? " team-size-btn-disabled" : ""}`} onClick={() => removePlayerFromTeam(t)} title="Speler verwijderen" disabled={size <= 2}>−1</button>
+                        <button className={`team-size-btn team-size-add${size >= 10 ? " team-size-btn-disabled" : ""}`} onClick={() => addPlayerToTeam(t)} title="Speler toevoegen" disabled={size >= 10}>+1</button>
                       </div>
                     </div>
                     {Array.from({ length: size }, (_, p) => {
@@ -2572,9 +2564,10 @@ export default function App() {
           transition: all 0.15s;
           line-height: 1.4;
         }
-        .team-size-btn:hover { background: rgba(52,211,153,0.18); }
+        .team-size-btn:hover:not(.team-size-btn-disabled) { background: rgba(52,211,153,0.18); }
         .team-size-remove { border-color: #f87171; border-width: 2.5px; background: rgba(248,113,113,0.08); color: #f87171; }
-        .team-size-remove:hover { background: rgba(248,113,113,0.18); }
+        .team-size-remove:hover:not(.team-size-btn-disabled) { background: rgba(248,113,113,0.18); }
+        .team-size-btn-disabled { opacity: 1; cursor: not-allowed; pointer-events: none; background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.35) !important; }
 
         .team-block .name-input-wrap { margin-bottom: 6px; }
         .team-block .name-input-wrap:last-child { margin-bottom: 0; }
