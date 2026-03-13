@@ -1190,6 +1190,7 @@ function HandoffScreen({ player, teamName, onReady }) {
 
 const w = (n) => n === 1 ? "woord" : "woorden";
 const pt = (n) => n === 1 ? "punt" : "punten";
+const wd = (n) => n === 1 ? "woord" : "woorden";
 
 const MESSAGES_GREAT = [
   () => `Wat een enorme prestatie! 🏆`,
@@ -1491,7 +1492,7 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
             style={{
               width:'100%',
               background:'rgba(251,191,36,0.1)',
-              border:'1.5px solid rgba(251,191,36,0.3)',
+              border:'2.5px solid rgba(251,191,36,0.3)',
               borderRadius:'14px',
               padding:'10px 16px',
               marginBottom:'14px',
@@ -1594,7 +1595,7 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
 
 // ── Stats Screen ─────────────────────────────────────────────────────────────
 
-function StatsScreen({ players, playerStats, scores, onRestart, onContinue }) {
+function StatsScreen({ players, playerStats, scores, onRestart, onContinue, onBack }) {
   const [activePlayer, setActivePlayer] = useState(0);
 
   const ps = playerStats[activePlayer];
@@ -1616,7 +1617,22 @@ function StatsScreen({ players, playerStats, scores, onRestart, onContinue }) {
   return (
     <div className="screen">
       <div className="stats-card">
-        <h2 className="score-title">📊 Statistieken</h2>
+        <div style={{display:"flex", alignItems:"center", marginBottom:16}}>
+          <button
+            onClick={onBack}
+            style={{
+              background:"rgba(255,255,255,0.08)", border:"2.5px solid rgba(255,255,255,0.15)",
+              borderRadius:12, color:"rgba(255,255,255,0.75)", fontSize:18,
+              width:36, height:36, display:"flex", alignItems:"center", justifyContent:"center",
+              cursor:"pointer", flexShrink:0, transition:"all 0.15s"
+            }}
+            onMouseOver={e=>{e.currentTarget.style.background="rgba(255,255,255,0.15)";e.currentTarget.style.color="#fff"}}
+            onMouseOut={e=>{e.currentTarget.style.background="rgba(255,255,255,0.08)";e.currentTarget.style.color="rgba(255,255,255,0.75)"}}
+            title="Terug naar scorebord"
+          >←</button>
+          <h2 className="score-title" style={{margin:0, flex:1, textAlign:"center"}}>📊 Statistieken</h2>
+          <div style={{width:36, flexShrink:0}} />
+        </div>
 
         {/* Player tabs */}
         <div className="stats-tabs">
@@ -1632,7 +1648,7 @@ function StatsScreen({ players, playerStats, scores, onRestart, onContinue }) {
         </div>
 
         <div className="stats-player-name">{players[activePlayer]}</div>
-        <div className="stats-total-score">{scores[activePlayer]} punten totaal</div>
+        <div className="stats-total-score">{scores[activePlayer]} {pt(scores[activePlayer])}</div>
 
         {/* Overview grid */}
         <div className="stats-grid">
@@ -1656,7 +1672,7 @@ function StatsScreen({ players, playerStats, scores, onRestart, onContinue }) {
 
         {bestRound && (
           <div className="stats-best">
-            🏅 Beste ronde: ronde {bestRound.idx + 1} — {bestRound.correct} woorden geraden
+            🏅 Beste ronde: {bestRound.idx + 1} — {bestRound.correct} {wd(bestRound.correct)} geraden
           </div>
         )}
 
@@ -1684,10 +1700,7 @@ function StatsScreen({ players, playerStats, scores, onRestart, onContinue }) {
           </div>
         </div>
 
-        <div className="final-btns" style={{marginTop: 20}}>
-          <button className="score-btn continue-btn" onClick={onContinue}>Nog een ronde! →</button>
-          <button className="score-btn restart-btn" onClick={onRestart}>Nieuw spel</button>
-        </div>
+
       </div>
     </div>
   );
@@ -1713,7 +1726,7 @@ function TiebreakerCategoryPicker({ candidateCategories, onCategoryChosen }) {
                 width:'100%', padding:'18px 20px',
                 borderRadius:'18px',
                 background:'rgba(167,139,250,0.1)',
-                border:'2px solid rgba(167,139,250,0.3)',
+                border:'2.5px solid rgba(167,139,250,0.3)',
                 color:'white', fontFamily:'inherit',
                 fontSize:'20px', fontWeight:800,
                 cursor:'pointer', textAlign:'left',
@@ -1795,18 +1808,18 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
           <h2 className="score-title">⚡ Tie-breaker resultaten</h2>
           <div style={{
             margin:'0 0 16px',
-            padding:'16px',
-            borderRadius:'16px',
+            padding:'10px 16px',
+            borderRadius:'14px',
             background: hasJointWinner ? 'rgba(251,191,36,0.08)' : 'rgba(74,222,128,0.08)',
-            border: `1.5px solid ${hasJointWinner ? 'rgba(251,191,36,0.3)' : 'rgba(74,222,128,0.3)'}`,
+            border: `2.5px solid ${hasJointWinner ? 'rgba(251,191,36,0.3)' : 'rgba(74,222,128,0.3)'}`,
             textAlign:'center',
           }}>
             {hasJointWinner ? (
-              <span style={{color:'#fbbf24', fontWeight:800, fontSize:'16px'}}>
+              <span style={{color:'#fbbf24', fontWeight:800, fontSize:'14px'}}>
                 🤝 Nog steeds gelijkspel!
               </span>
             ) : (
-              <span style={{color:'#4ade80', fontWeight:800, fontSize:'16px'}}>
+              <span style={{color:'#4ade80', fontWeight:800, fontSize:'14px'}}>
                 🏆 {results[0].name} wint de tie-breaker!
               </span>
             )}
@@ -2437,7 +2450,7 @@ export default function App() {
           font-size: clamp(13px, 3.5vw, 16px);
           color: #f87171;
           background: rgba(248,113,113,0.12);
-          border: 1.5px solid rgba(248,113,113,0.35);
+          border: 2.5px solid rgba(248,113,113,0.35);
           border-radius: 12px;
           padding: 8px 16px;
           text-align: center;
@@ -2545,7 +2558,7 @@ export default function App() {
           flex: none !important;
           width: 160px;
           background: rgba(167,139,250,0.06) !important;
-          border: 2px solid rgba(167,139,250,0.35) !important;
+          border: 2.5px solid rgba(167,139,250,0.35) !important;
           border-radius: 8px !important;
         }
         .team-name-input:focus { border-color: #a78bfa !important; background: rgba(167,139,250,0.1) !important; }
@@ -2578,7 +2591,7 @@ export default function App() {
         
         .score-card {
           background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.12);
+          border: 2.5px solid rgba(255,255,255,0.12);
           border-radius: 24px;
           padding: 28px 20px;
           width: 100%;
@@ -2647,11 +2660,11 @@ export default function App() {
         }
         .next-btn { background: rgba(167,139,250,0.08); color: #a78bfa; border: 3px solid #a78bfa; }
         .next-btn:hover { background: rgba(167,139,250,0.15); }
-        .restart-btn { background: rgba(255,255,255,0.08); color: white; border: 1.5px solid rgba(255,255,255,0.2); }
+        .restart-btn { background: rgba(255,255,255,0.08); color: white; border: 3px solid rgba(255,255,255,0.2); }
         .restart-btn:hover { background: rgba(255,255,255,0.14); }
-        .continue-btn { background: rgba(52,211,153,0.1); color: #34d399; border: 1.5px solid rgba(52,211,153,0.35); margin-bottom: 10px; }
+        .continue-btn { background: rgba(52,211,153,0.1); color: #34d399; border: 3px solid rgba(52,211,153,0.35); margin-bottom: 10px; }
         .continue-btn:hover { background: rgba(52,211,153,0.18); }
-        .stats-btn { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1.5px solid rgba(251,191,36,0.35); margin-bottom: 10px; }
+        .stats-btn { background: rgba(251,191,36,0.1); color: #fbbf24; border: 3px solid rgba(251,191,36,0.35); margin-bottom: 10px; }
         .stats-btn:hover { background: rgba(251,191,36,0.18); }
         .final-btns { display: flex; flex-direction: column; }
 
@@ -2661,7 +2674,7 @@ export default function App() {
         }
         .category-btn {
           padding: 8px 14px; border-radius: 20px;
-          border: 2.5px solid rgba(255,255,255,0.2);
+          border: 3px solid rgba(255,255,255,0.2);
           background: rgba(255,255,255,0.05);
           color: rgba(255,255,255,0.7);
           font-size: 13px; font-weight: 700; font-family: inherit;
@@ -2699,7 +2712,7 @@ export default function App() {
         /* ── Stats screen ── */
         .stats-card {
           background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.12);
+          border: 2.5px solid rgba(255,255,255,0.12);
           border-radius: 24px; padding: 28px 20px;
           width: 100%; max-width: 480px;
           backdrop-filter: blur(20px);
@@ -2710,7 +2723,7 @@ export default function App() {
         }
         .stats-tab {
           padding: 6px 14px; border-radius: 20px;
-          border: 1.5px solid rgba(255,255,255,0.15);
+          border: 2.5px solid rgba(255,255,255,0.15);
           background: rgba(255,255,255,0.06);
           color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 700;
           font-family: inherit; cursor: pointer; transition: all 0.15s;
@@ -2731,7 +2744,7 @@ export default function App() {
         }
         .stats-cell {
           background: rgba(255,255,255,0.06);
-          border: 1.5px solid rgba(255,255,255,0.1);
+          border: 2.5px solid rgba(255,255,255,0.1);
           border-radius: 16px; padding: 12px;
           text-align: center;
         }
@@ -2740,7 +2753,7 @@ export default function App() {
         .stats-cell-lbl { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); margin-top: 2px; }
         .stats-best {
           font-size: 13px; font-weight: 700; color: #fbbf24;
-          background: rgba(251,191,36,0.1); border: 1.5px solid rgba(251,191,36,0.25);
+          background: rgba(251,191,36,0.1); border: 2.5px solid rgba(251,191,36,0.25);
           border-radius: 12px; padding: 10px 14px; margin-bottom: 14px;
         }
         .stats-words-section { display: flex; gap: 10px; margin-bottom: 4px; }
@@ -2752,7 +2765,7 @@ export default function App() {
         .stats-word-chip {
           font-size: 11px; font-weight: 700; padding: 3px 8px;
           border-radius: 10px; background: rgba(74,222,128,0.1);
-          border: 1px solid rgba(74,222,128,0.25); color: #4ade80;
+          border: 2.5px solid rgba(74,222,128,0.25); color: #4ade80;
         }
         .stats-word-bonus { background: rgba(251,146,60,0.12); border-color: rgba(251,146,60,0.4); color: #fb923c; }
         .stats-word-skipped { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.25); color: #f87171; }
@@ -2825,6 +2838,7 @@ export default function App() {
           scores={scores}
           onRestart={onRestart}
           onContinue={onContinue}
+          onBack={() => setPhase("score")}
         />
       )}
     </>
