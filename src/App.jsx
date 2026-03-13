@@ -81,13 +81,13 @@ const WORDS_BY_CATEGORY = (() => {
     'carpaccio', 'cashewnoot', 'champignon', 'cheesecake', 'chipolata', 'chips',
     'chocolade', 'churros', 'ciabatta', 'citroen', 'citroentaart', 'cola',
     'corndog', 'couscous', 'cranberrysap', 'croissant', 'crème brûlée', 'curry',
-    'dadel', 'donut', 'doperwt', 'drakenvrucht', 'druiven', 'eclairs',
+    'dadel', 'donut', 'doperwt', 'drakenvrucht', 'druiven', 'éclairs',
     'ei', 'enchilada', 'energiedrank', 'erwtensoep', 'espresso', 'falafel',
     'feta', 'fondue', 'friet', 'frikandel', 'frisdrank', 'fruitsalade',
     'garnaal', 'gazpacho', 'gehaktbal', 'geitenkaas', 'gelato', 'gerst',
     'gin-tonic', 'goulash', 'granaatappel', 'groenten', 'groentesoep', 'gyros',
     'hamburger', 'hazelnoot', 'honing', 'hotdog', 'hummus', 'ijs',
-    'jalapeno', 'jus', 'kaas', 'kaasfondue', 'kaassoufflé', 'kaneelbroodje',
+    'jalapeño', 'jus', 'kaas', 'kaasfondue', 'kaassoufflé', 'kaneelbroodje',
     'kappertjes', 'kapsalon', 'kastanje', 'kerrieworst', 'kersensap', 'kip',
     'kipnuggets', 'koffie', 'kokosmelk', 'komkommer', 'koriander', 'kroket',
     'kwark', 'kwarktaart', 'lamsvlees', 'lasagne', 'latte', 'limonade',
@@ -103,7 +103,7 @@ const WORDS_BY_CATEGORY = (() => {
     'roggebrood', 'rolmops', 'roomijs', 'rozijnen', 'rucola', 'rum',
     'salade', 'sandwich', 'sap', 'satésaus', 'scones', 'selderij',
     'sinaasappel', 'slagroom', 'smoothie', 'snoep', 'soep', 'sojasaus',
-    'soufflé', 'spaghetti', 'spek', 'spinazie', 'stampot', 'stoofpot',
+    'soufflé', 'spaghetti', 'spek', 'spinazie', 'stamppot', 'stoofpot',
     'strudel', 'suiker', 'sushi', 'taart', 'taco', 'tapenade',
     'tartaar', 'teriyaki', 'thee', 'tiramisu', 'toast', 'tomatensaus',
     'tomatensoep', 'tompouce', 'tortilla', 'truffel', 'tzatziki', 'ui',
@@ -120,7 +120,7 @@ const WORDS_BY_CATEGORY = (() => {
     'accountant', 'acrobaat', 'acteur', 'advocaat', 'apotheker', 'archeoloog',
     'architect', 'automonteur', 'bakker', 'barista', 'beveiliger', 'bibliothecaris',
     'blogger', 'boekhoudster', 'botanicus', 'brandweerman', 'buschauffeur', 'cardioloog',
-    'casinodealer', 'chef-kok', 'chiropractor', 'chirurg', 'circusdirecteur', 'clown',
+    'casinodealer', 'chefkok', 'chiropractor', 'chirurg', 'circusdirecteur', 'clown',
     'voetbalcoach', 'cowboy', 'croupier', 'danser', 'dansleraar', 'data-analist',
     'dermatoloog', 'detective', 'dierenarts', 'dierentrainer', 'diplomaat', 'documentairemaker',
     'dokter', 'dronepiloot', 'duikinstructeur', 'econoom', 'ethisch hacker', 'examinator',
@@ -175,7 +175,7 @@ const WORDS_BY_CATEGORY = (() => {
     'schaatsen', 'schaken', 'schansspringen', 'scrabble', 'sjoelen', 'skeeleren',
     'skeleton', 'skiën', 'skislalom', 'snowboarden', 'softbal', 'speerwerpen',
     'spijkerpoepen', 'squash', 'stoeien', 'suppen', 'surfen', 'synchroonzwemmen',
-    'taekwondo', 'tafeltennis', 'tennis', 'touwtrekken', 'trail running', 'trampolinespringen',
+    'taekwondo', 'tafeltennis', 'tennis', 'touwtrekken', 'trailrunning', 'trampolinespringen',
     'trefbal', 'triatlon', 'turnen', 'varen', 'veldrijden', 'verspringen',
     'vissen', 'vliegeren', 'vliegvissen', 'voetbal', 'volleybal', 'wandelen',
     'waterpolo', 'waterskiën', 'wakeboarden', 'wedstrijdvissen', 'wielrennen', 'worstelen',
@@ -189,7 +189,7 @@ const WORDS_BY_CATEGORY = (() => {
     'halfpipe', 'rolstoelbasketbal', 'dansen', 'salsadansen', 'linedance', 'volksdansen',
     'kampvuur maken', 'boogschieten', 'survivallen', 'kajakken', 'raften', 'skateboarden',
     'windsurfen', 'jagen', 'snorkelen',
-    'puzzelen', 'bordspel', 'videospellen', 'kamperen', 'crossfit', 'boot camp',
+    'puzzelen', 'bordspel', 'videospellen', 'kamperen', 'crossfit', 'bootcamp',
     'spinning', 'kickboksen', 'speedklimmen', 'zaalvoetbal', 'rolstoeltennis', 'paragliding',
     'estafettelopen', 'polsstokverspringen', 'kogelslingeren',
     'tafeltennistafel', 'voetbalnet', 'basketbalring', 'hockeystick', 'tennisracket'
@@ -291,7 +291,7 @@ const WORDS_BY_CATEGORY = (() => {
     'postduif', 'postkoets', 'racefiets', 'racewagen', 'reddingsboot', 'rijtuig',
     'riksja', 'robotaxi', 'roeiboot', 'schip', 'scooterdeeldienst', 'segway',
     'slee', 'sleepboot', 'sloep', 'sneltrein', 'speedboot', 'stadsbus',
-    'stadsfiets', 'step', 'stoomboot', 'stoomlocomotief', 'suv', 'taxi',
+    'stadsfiets', 'step', 'stoomboot', 'stoomlocomotief', 'SUV', 'taxi',
     'touringcar', 'tractor', 'tram', 'trolleybus', 'tuk-tuk', 'veerboot',
     'vierwieler', 'vrachtwagen', 'waterbus', 'waterfiets', 'bushalte', 'watervliegtuig',
     'wielerbaan', 'zeilschip', 'zijspan', 'zonneauto', 'zweefvliegtuig', 'vliegtuigkaping',
@@ -342,7 +342,7 @@ const WORDS_BY_CATEGORY = (() => {
     'gerechtshof', 'tribune', 'Afrika', 'Azië', 'Europa', 'Noord-Amerika',
     'Zuid-Amerika', 'Himalaya', 'Kaspische Zee', 'Mississippi', 'Nijl', 'Noordzee',
     'Sahara', 'Thames', 'Corsica', 'Hawaï', 'Kaukasus', 'Siberië',
-    'Sicilië', 'Steppe', 'boomhut', 'brandtrap', 'carwash', 'dierenasiel',
+    'Sicilië', 'boomhut', 'brandtrap', 'carwash', 'dierenasiel',
     'fietsbrug', 'gemaal', 'graftombe', 'hertenkamp', 'ijsbaantje', 'kasteelgracht',
     'kerkhof', 'kinderdagverblijf', 'klimrek', 'klimbos', 'lantaarnpaal', 'markthal',
     'meubelboulevard', 'ophaalbrug', 'plattegrond', 'riolering', 'rotonde',
@@ -377,7 +377,7 @@ const WORDS_BY_CATEGORY = (() => {
     'sluipen', 'brand blussen', 'eerste hulp verlenen', 'blindoeken', 'een geheim bewaren', 'inhalen',
     'misleiden', 'in de rij staan', 'op de vlucht zijn', 'rijbewijs halen', 'schipbreuk lijden', 'sleutels verliezen',
     'verslikken', 'hinkelen', 'touwtjesspringen', 'zwijgen', 'triomferen', 'takelen',
-    'angst', 'geluk', 'haast', 'vervelen', 'achtervolgen', 'bazelen',
+    'haasten', 'vervelen', 'achtervolgen', 'bazelen',
     'bedanken', 'begroeten', 'beschermen', 'bewonderen', 'boeren', 'controleren',
     'debatteren', 'demonstreren', 'flirten', 'herkennen', 'hijgen', 'improviseren',
     'jongleren', 'knijpen', 'krabben', 'kwispelen', 'mompelen', 'ontsnappen',
@@ -436,7 +436,7 @@ const WORDS_BY_CATEGORY = (() => {
     'hartstilstand', 'hersenletsel', 'homeopathie', 'hoogtevrees', 'hormoon', 'hypnose',
     'hysterie', 'illusie', 'immuunsysteem', 'injectie', 'jaloezie', 'keizersnede',
     'meditatie', 'migraine', 'narcisme', 'obsessie', 'onderbewustzijn', 'overdosis',
-    'overlevingsdrang', 'pandemie', 'paranoia', 'persoonlijkheidsstoornis', 'posttraumatische stress', 'psychiatrie',
+    'overlevingsdrang', 'pandemie', 'paranoia', 'persoonlijkheid', 'PTSS', 'psychiatrie',
     'quarantaine', 'reflectie', 'rehabilitatie', 'reïncarnatie', 'schizofrenie', 'stigma',
     'surrogaatmoeder', 'transplantatie', 'tunnelvisie', 'vaccinatie', 'wedergeboorte', 'begrafenis',
     'laboratorium', 'algoritme', 'brainstorm', 'evolutie', 'frictie', 'grafiek',
@@ -456,7 +456,7 @@ const WORDS_BY_CATEGORY = (() => {
     'bunsenbrander', 'onderzoeksinstituut', 'promotie', 'wetenschappelijk artikel', 'peer review',
     'citatie', 'bibliografie', 'laboratoriumjas', 'proefopstelling', 'meting', 'fout',
     'nauwkeurigheid', 'precisie', 'kalibratie', 'ijking', 'standaard', 'kilogram',
-    'meter', 'ampere', 'kelvin', 'joule', 'watt',
+    'meter', 'ampere', 'kelvin', 'joule', 'watt', 'stoornis',
     'frequentie', 'golflengte', 'trilling', 'geluid', 'licht', 'kleur',
     'spectrum', 'breking', 'spiegeling', 'elektriciteit', 'magnetisme', 'stroom',
     'spanning', 'weerstand', 'geleider', 'supergeleider', 'mysterie',
@@ -522,7 +522,7 @@ const WORDS_BY_CATEGORY = (() => {
     'saxofoon', 'klarinet', 'fluit', 'dwarsfluit', 'blokfluit',
     'fagot', 'hobo', 'didgeridoo', 'piano', 'vleugel', 'orgel',
     'accordeon', 'synthesizer', 'keyboard', 'trommel', 'xylofoon', 'djembé',
-    'microfoon', 'luidspreker', 'versterker', 'mengpaneel', 'gramofoon', 'elpee',
+    'microfoon', 'luidspreker', 'versterker', 'mengpaneel', 'grammofoon', 'elpee',
     'platenspeler', 'koptelefoon', 'muziekdoos', 'notenbalk', 'orgelpijp', 'albumhoes',
     'muziek', 'orkest', 'koor', 'symfonie', 'opera', 'jazz',
     'blues', 'rock', 'pop', 'rap', 'hiphop', 'klassiek',
@@ -533,7 +533,7 @@ const WORDS_BY_CATEGORY = (() => {
     'operazanger', 'componist', 'gitarist', 'drummer', 'pianist', 'violist',
     'kapelmeester', 'bandlid', 'producer', 'pianospelen', 'djembé spelen', 'componeren',
     'dirigeren', 'optreden', 'country', 'gospel', 'latin', 'afrobeat',
-    'disco', 'techno', 'house', 'trance', 'drum and bass', 'ambient',
+    'disco', 'techno', 'house', 'trance', 'ambient',
     'new wave', 'indie', 'grunge', 'hardrock', 'heavy metal', 'r&b',
     'toonladder', 'noot', 'maat', 'tempo', 'dynamiek', 'harmonie',
     'octaaf', 'interval', 'crescendo', 'panfluit', 'doedelzak',
@@ -551,7 +551,7 @@ const WORDS_BY_CATEGORY = (() => {
     'remix', 'mashup', 'cover', 'liveband',
     'openluchtconcert', 'jamsessie', 'nachtclub', 'poppodium', 'muziekzaal',
     'operahuis', 'concertgebouw', 'festivalterrein', 'backstage',
-    'soundcheck', 'trekharmonika', 'oud', 'strijkkwartet',
+    'soundcheck', 'trekharmonica', 'oud', 'strijkkwartet',
     'volkslied', 'kinderlied', 'slaapliedje', 'kerstlied', 'hymne', 'psalm',
     'serenade', 'wals', 'polka', 'tango', 'samba', 'rumba',
     'cha-cha-cha', 'foxtrot', 'quickstep', 'slowfox'
@@ -590,8 +590,8 @@ const WORDS_BY_CATEGORY = (() => {
     'vaandel', 'vlag', 'schouderstuk', 'rang',
     'oorlogsgraf', 'herdenkingsmonument', 'militaire parade', 'militaire politie',
     'inlichtingendienst', 'geheime dienst', 'cyberaanval', 'informatieoorlog', 'psychologische oorlogsvoering',
-    'guerrilla', 'terrorisme', 'aanslagen', 'zelfmoordaanslag', 'bom aanslag', 'ontvoeringen',
-    'scherpschutter', 'bomopruimer',
+    'guerrilla', 'terrorisme', 'aanslagen', 'zelfmoordaanslag', 'bomaanslag', 'ontvoeringen',
+    'scherpschutter', 'bomopruimer', 'angst',
     'pantserdivisie', 'granaatwerper', 'mortier',
     'antitankwapen', 'mijnenlegger', 'amfibievoertuig',
     'konvooi', 'luchtaanval', 'bombardement', 'beschietingen', 'salvo',
@@ -621,10 +621,10 @@ const WORDS_BY_CATEGORY = (() => {
     'verfroller', 'kwast', 'verfbak', 'afplaktape', 'kit', 'siliconekit',
     'purschuim', 'isolatiemateriaal', 'ducttape', 'perslucht',
     'compressor', 'spijkerpistool', 'tacker', 'houtlijm',
-    'plamuurmes', 'roerder', 'mixer', 'cementmixer', 'hoogteschaffer',
+    'plamuurmes', 'roerder', 'mixer', 'cementmixer', 'hoogwerker',
     'nijptang', 'werktafel', 'lijmspuit', 'noodstroomgenerator', 'stofopvangzak',
     'verlengstuk', 'spoorbreedte', 'boorset', 'luchtcompressor', 'verfspuiter',
-    'verf afbijter', 'ontvetter', 'ontroesters', 'beschermkapjes',
+    'verf afbijter', 'ontvetter',
     'zaagblad', 'potje verf', 'rol', 'spijkertje', 'schroefje', 'boortje',
     'zaagje', 'sloopkogel', 'hijskraan', 'moker', 'vuurhaard', 'kachel',
     'gasbrander', 'lasbril', 'koord', 'spatel', 'tegelsnijder'
@@ -853,7 +853,7 @@ const WORDS_BY_CATEGORY = (() => {
     'kaasrasp', 'citruspers', 'blikopener', 'dopjesopener', 'kurkentrekker', 'kookboek',
     'receptenboek', 'keukentimer', 'keukenweegschaal', 'maatlepel', 'spuitzak', 'taartsteker',
     'cakestandaard', 'boterpapier', 'rijstzeef', 'vuilniszak', 'vuilnisbak', 'afvalbak',
-    'oud papier bak', 'glasbak', 'gft-bak', 'papierbak', 'vloerlamp', 'tafellamp',
+    'papierbak', 'glasbak', 'gft-bak', 'papierbak', 'vloerlamp', 'tafellamp',
     'bureaulamp', 'plafondlamp', 'spotje', 'vitrage', 'overgordijn', 'rolgordijn',
     'antislipmat', 'muizenmat', 'vloerbedekking', 'parket', 'laminaat', 'tegels',
     'behang', 'verf', 'handdoekrek', 'zeephouder', 'tandenborstelhouder', 'toilettasje',
@@ -869,6 +869,110 @@ const WORDS_BY_CATEGORY = (() => {
   map.all = [...new Set(Object.values(map).flat())];
   return map;
 })();
+
+// ── Dutch compound-word hyphenation ──────────────────────────────────────────
+// Aanvullende Nederlandse basiswoorden die als deel van samenstellingen voorkomen
+// maar niet zelfstandig in de spelwoordenlijst staan.
+const DUTCH_SUPPLEMENT = new Set([
+  // Verbindingsvormen van dieren
+  'bijen','mieren','honden','katten','wolven','beren','vissen','vogels',
+  'paarden','schapen','varkens','koeien','reuzen','dwergen',
+  // Eerste delen van samenstellingen
+  'brand','netel','boom','kraan','stok','vlieg','vliegtuig','water',
+  'grizzly','prairie','galapagos','komodo','lieve','heers',
+  'brand','buffel','reuzen','dwerg','maanvis',
+  // Tweede delen / achtervoegsels
+  'beestje','staartje','staart','koningin','vogelbekdier','apparaat',
+  'bouwer','maker','houder','eter','kenner','speler','rijder','loper',
+  'werker','vaarder','steker','zoeker','drinker',
+  // Natuur en elementen
+  'vuur','aarde','lucht','wind','zon','maan','meer','zee','berg','bos',
+  'regen','sneeuw','storm','golf','golf',
+  // Lichaamsdelen
+  'hoofd','hand','arm','been','voet','oog','oor','mond','neus','hart',
+  'rug','buik','nek','keel','knie','schouder','pols','teen','tand','lip',
+  // Huis en omgeving
+  'huis','tuin','weg','stad','dorp','land','deur','raam','muur','dak',
+  'kamer','plein','park','haven','brug','straat',
+  // Voedsel componenten
+  'soep','saus','taart','koek','brood','meel','worst','kaas','boter',
+  // Personen
+  'man','vrouw','kind','jongen','meisje','vriend','baas',
+  // Kleuren als eerste deel
+  'rood','blauw','groen','geel','zwart','wit','goud','zilver','grijs',
+  // Tijd
+  'dag','nacht','jaar','uur','morgen','avond','middag','tijd','week',
+  // Algemeen
+  'werk','spel','deel','kant','punt','lijn','slag','stuk','ding','zaak',
+  'groot','klein','lang','kort','oud','nieuw','snel','sterk','zwaar',
+  'hout','steen','glas','metaal','staal',
+]);
+
+// Gecombineerd woordenboek: spelwoorden + aanvulling
+const HYPHENATION_DICT = (() => {
+  const dict = new Set(DUTCH_SUPPLEMENT);
+  Object.values(WORDS_BY_CATEGORY)
+    .filter(v => Array.isArray(v))
+    .flat()
+    .filter(w => typeof w === 'string' && !w.includes(' ') && !w.includes('-'))
+    .forEach(w => dict.add(w.toLowerCase()));
+  return dict;
+})();
+
+/**
+ * Voegt een zachte koppelteken (\u00AD) in op de logische splitsingsplaats
+ * van een samengesteld Nederlands woord. Woorden van ≤9 tekens worden niet
+ * aangepast. Werkt samen met CSS `hyphens: manual`.
+ *
+ * Strategie:
+ *  1. Zoek de meest linkse splitsing waarbij BEIDE delen geldige woorden zijn.
+ *  2. Probeer daarna met verbindingsletters 's' of 'en' (bijv. honden|mand).
+ *  3. Als fallback: meest linkse splitsing waarbij het RECHTER deel een
+ *     geldig woord is (≥4 tekens).
+ */
+function hyphenateWord(word) {
+  if (!word || word.length <= 9) return word;
+
+  const lower = word.toLowerCase();
+  const dict = HYPHENATION_DICT;
+
+  // Strategie 1: beide delen zijn geldige woorden
+  for (let i = 3; i <= lower.length - 3; i++) {
+    const left = lower.slice(0, i);
+    const right = lower.slice(i);
+    if (dict.has(left) && dict.has(right)) {
+      return word.slice(0, i) + '\u00AD' + word.slice(i);
+    }
+  }
+
+  // Strategie 2: verbindingsletters 's' (rijks|weg) of 'en' (honden|mand)
+  for (let i = 3; i <= lower.length - 4; i++) {
+    if (lower[i] === 's') {
+      const left = lower.slice(0, i);
+      const right = lower.slice(i + 1);
+      if (dict.has(left) && dict.has(right) && right.length >= 3) {
+        return word.slice(0, i + 1) + '\u00AD' + word.slice(i + 1);
+      }
+    }
+    if (i + 2 <= lower.length && lower.slice(i, i + 2) === 'en') {
+      const left = lower.slice(0, i);
+      const right = lower.slice(i + 2);
+      if (dict.has(left) && dict.has(right) && right.length >= 3) {
+        return word.slice(0, i + 2) + '\u00AD' + word.slice(i + 2);
+      }
+    }
+  }
+
+  // Strategie 3: rechter deel is een geldig woord (≥4 tekens), meest links
+  for (let i = 3; i <= lower.length - 4; i++) {
+    const right = lower.slice(i);
+    if (dict.has(right)) {
+      return word.slice(0, i) + '\u00AD' + word.slice(i);
+    }
+  }
+
+  return word;
+}
 
 // Bonus words: alle woorden uit categorieen met bonus: true (spreekwoorden)
 const BONUS_WORDS_SET = new Set(
@@ -1410,7 +1514,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
           <>
             <div className="word-anchor">
               <div className="word-counter">woord {wordIndex + 1}</div>
-              <div key={wordIndex} className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ?? "— geen woorden meer —"}</div>
+              <div key={wordIndex} className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ? hyphenateWord(currentWord) : "— geen woorden meer —"}</div>
               <div className={`times-up-banner${isCurrentBonus && !timesUp ? ' bonus-banner' : ''}`} style={{visibility: (timesUp || isCurrentBonus) ? 'visible' : 'hidden'}}>
                 {timesUp ? '⏰ Tijd is om — maak dit woord nog af!' : `⭐ BONUSGEZEGDE — 3 punten!`}
               </div>
@@ -1509,16 +1613,19 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
             ? (() => {
                 const topAvg = sortedTeams[0]?.avgScore;
                 const medals = ["🥇","🥈","🥉"];
-                // Gelijkspel alleen bij de eerste plek
+                // Effectieve rang: aantal teams met strikt hogere gemiddelde score + 1
+                const getTeamEffectiveRank = (avgScore) => sortedTeams.filter(t2 => t2.avgScore > avgScore).length + 1;
+                // Gelijkspel detectie per plek
                 const firstPlaceTied = isLast && sortedTeams.filter(t => t.avgScore === topAvg).length > 1;
                 const interimFirstPlaceTied = !isLast && sortedTeams.filter(t => t.avgScore === topAvg).length > 1;
                 return sortedTeams.map((team, i) => {
+                  const effectiveRank = getTeamEffectiveRank(team.avgScore);
                   const isTiedFinal = firstPlaceTied && team.avgScore === topAvg;
                   const isTiedInterim = interimFirstPlaceTied && team.avgScore === topAvg;
                   const badge = isLast
-                    ? (isTiedFinal ? "👑" : (medals[i] ?? i + 1))
-                    : (team.avgScore === topAvg ? "👑" : i + 1);
-                  const rowClass = `score-row rank-${i + 1} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : (isTiedInterim ? "rank-interim-tied" : "rank-interim")}`;
+                    ? (isTiedFinal ? "👑" : (medals[effectiveRank - 1] ?? effectiveRank))
+                    : (team.avgScore === topAvg ? "👑" : effectiveRank);
+                  const rowClass = `score-row rank-${effectiveRank} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : (isTiedInterim ? "rank-interim-tied" : "rank-interim")}`;
                   return (
                     <div key={team.name} className={rowClass}>
                       <span className="rank-badge">{badge}</span>
@@ -1537,22 +1644,25 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
             : (() => {
                 const topScore = sortedPlayers[0]?.score;
                 const medals = ["🥇","🥈","🥉"];
-                // Gelijkspel alleen bij de eerste plek
+                // Effectieve rang: aantal spelers met strikt hogere score + 1
+                const getEffectiveRank = (score) => sortedPlayers.filter(p2 => p2.score > score).length + 1;
+                // Gelijkspel detectie per plek
                 const firstPlaceTied = isLast && sortedPlayers.filter(p => p.score === topScore).length > 1;
                 const interimFirstPlaceTied = !isLast && sortedPlayers.filter(p => p.score === topScore).length > 1;
                 return sortedPlayers.map((p, i) => {
+                  const effectiveRank = getEffectiveRank(p.score);
                   const isTiedFinal = firstPlaceTied && p.score === topScore;
                   const isTiedInterim = interimFirstPlaceTied && p.score === topScore;
                   const originalIdx = players.indexOf(p.name);
                   const hasPlayed = !isLast && (playedIndices?.has(originalIdx) ?? false);
                   const isTopScore = p.score === topScore;
                   const badge = isLast
-                    ? (isTiedFinal ? "👑" : (medals[i] ?? i + 1))
-                    : (isTopScore ? "👑" : i + 1);
+                    ? (isTiedFinal ? "👑" : (medals[effectiveRank - 1] ?? effectiveRank))
+                    : (isTopScore ? "👑" : effectiveRank);
                   const interimClass = isTiedInterim
                     ? "rank-interim-tied"
                     : (isTopScore ? "rank-interim" : (hasPlayed ? "rank-interim-played" : "rank-interim"));
-                  const rowClass = `score-row rank-${i + 1} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : interimClass}`;
+                  const rowClass = `score-row rank-${effectiveRank} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : interimClass}`;
                   return (
                     <div
                       key={p.name}
@@ -1898,7 +2008,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
       <div className="word-stage">
         <div className="word-anchor">
           <div className="word-counter">leg z.s.m. uit</div>
-          <div className="current-word">{currentWord}</div>
+          <div className="current-word">{hyphenateWord(currentWord)}</div>
           <div className="times-up-banner" style={{visibility:'hidden'}}>placeholder</div>
         </div>
       </div>
