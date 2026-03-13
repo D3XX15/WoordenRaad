@@ -1585,7 +1585,7 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
           </div>
         ) : (
           <button className="score-btn next-btn" onClick={onNext}>
-            Volgende speler →
+            Volgende speler ➜
           </button>
         )}
       </div>
