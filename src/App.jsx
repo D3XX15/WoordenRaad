@@ -2248,13 +2248,13 @@ export default function App() {
           width: 100%;
           padding: 18px;
           border-radius: 16px;
-          border: none;
+          border: 3px solid #a78bfa;
+          background: rgba(167,139,250,0.08);
+          color: #a78bfa;
           font-family: 'Righteous', cursive;
           font-size: 20px;
           letter-spacing: 0.04em;
           cursor: pointer;
-          background: rgba(255,255,255,0.08);
-          color: rgba(255,255,255,0.3);
           transition: all 0.25s;
           margin-top: 4px;
         }
