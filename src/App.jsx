@@ -1225,7 +1225,7 @@ function SetupScreen({ onStart }) {
           onClick={handleStart}
           disabled={!canStart}
         >
-          Spel starten →
+          Spel starten
         </button>
       </div>
     </div>
