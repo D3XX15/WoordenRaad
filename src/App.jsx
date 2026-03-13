@@ -1491,7 +1491,7 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
             style={{
               width:'100%',
               background:'rgba(251,191,36,0.1)',
-              border:'2.5px solid rgba(251,191,36,0.3)',
+              border:'3px solid rgba(251,191,36,0.3)',
               borderRadius:'14px',
               padding:'10px 16px',
               marginBottom:'14px',
