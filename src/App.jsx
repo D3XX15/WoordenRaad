@@ -8,7 +8,6 @@ const CATEGORIES = [
   { id: "huishouden",    label: "🏠 Huishouden" },
   { id: "vervoer",       label: "🚗 Vervoer" },
   { id: "plaatsen",      label: "🧭 Plaatsen" },
-  { id: "landen",        label: "🌍 Landen" },
   { id: "beroepen",      label: "👷 Beroepen" },
   { id: "acties",        label: "🏃 Werkwoorden" },
   { id: "objecten",      label: "📦 Objecten" },
@@ -19,6 +18,7 @@ const CATEGORIES = [
   { id: "ruimte",        label: "🚀 Ruimte" },
   { id: "politiek",      label: "⚖️ Politiek" },
   { id: "militair",      label: "🪖 Militair" },
+  { id: "landen",        label: "🌍 Landen" },
   { id: "spreekwoorden", label: "💬 Spreekwoorden", bonus: true },
 ];
 
