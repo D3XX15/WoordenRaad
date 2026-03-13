@@ -1581,7 +1581,7 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
           <div className="final-btns">
 
             <button className="score-btn stats-btn" onClick={onShowStats}>
-              📊 Statistieken bekijken
+              Statistieken bekijken
             </button>
             <button className="score-btn continue-btn" onClick={onContinue}>
               Nog een ronde! →
@@ -1624,7 +1624,7 @@ function StatsScreen({ players, playerStats, scores, onRestart, onContinue }) {
   return (
     <div className="screen">
       <div className="stats-card">
-        <h2 className="score-title">📊 Statistieken</h2>
+        <h2 className="score-title">Statistieken</h2>
 
         {/* Player tabs */}
         <div className="stats-tabs">
@@ -1834,7 +1834,6 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
             })}
           </div>
           <div className="final-btns">
-            <button className="score-btn continue-btn" onClick={onContinue}>Nog een ronde! →</button>
             <button className="score-btn restart-btn" onClick={onRestart}>Nieuw spel</button>
           </div>
         </div>
