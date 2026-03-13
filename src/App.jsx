@@ -1120,11 +1120,11 @@ function SetupScreen({ onStart }) {
           <div className="names-label-row">
             <label className="setup-label">Categorieën</label>
             <button
-              className={`randomize-btn alles-btn${allSelected ? " randomize-btn-active" : ""}`}
+              className={`toggle-all-btn${allSelected ? " toggle-all-btn-active" : ""}`}
               onClick={() => toggleCategory("all")}
               title={allSelected ? "Deselecteer alle categorieën" : "Selecteer alle categorieën"}
             >
-              🎲 Alle Categorieën
+              Alles
             </button>
           </div>
           <div className="category-grid">
@@ -1431,7 +1431,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   );
 }
 
-function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRestart, onContinue, onShowStats, teams, teamScores, onStartTiebreaker }) {
+function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRestart, onContinue, onShowStats, teams, teamScores, onStartTiebreaker, playedIndices }) {
   const isLast = currentRound >= totalRounds;
 
   // Team mode: sorteer teams op gemiddelde score per speler
@@ -1539,10 +1539,16 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
                 return sortedPlayers.map((p, i) => {
                   const isTiedFinal = firstPlaceTied && p.score === topScore;
                   const isTiedInterim = interimFirstPlaceTied && p.score === topScore;
+                  const originalIdx = players.indexOf(p.name);
+                  const hasPlayed = !isLast && (playedIndices?.has(originalIdx) ?? false);
+                  const isTopScore = p.score === topScore;
                   const badge = isLast
                     ? (isTiedFinal ? "👑" : (medals[i] ?? i + 1))
-                    : (p.score === topScore ? "👑" : i + 1);
-                  const rowClass = `score-row rank-${i + 1} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : (isTiedInterim ? "rank-interim-tied" : "rank-interim")}`;
+                    : (isTopScore ? "👑" : i + 1);
+                  const interimClass = isTiedInterim
+                    ? "rank-interim-tied"
+                    : (isTopScore ? "rank-interim" : (hasPlayed ? "rank-interim-played" : "rank-interim"));
+                  const rowClass = `score-row rank-${i + 1} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : interimClass}`;
                   return (
                     <div key={p.name} className={rowClass}>
                       <span className="rank-badge">{badge}</span>
@@ -2196,10 +2202,10 @@ export default function App() {
         .names-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         .names-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .names-label-row .setup-label { margin-bottom: 0; }
-        .randomize-btn {
-          background: rgba(167,139,250,0.08);
-          color: #a78bfa;
-          border: 2.5px solid #a78bfa;
+        .toggle-all-btn {
+          background: rgba(52,211,153,0.06);
+          color: #34d399;
+          border: 2.5px solid rgba(52,211,153,0.4);
           border-radius: 10px;
           padding: 6px 12px;
           font-size: 13px;
@@ -2208,9 +2214,15 @@ export default function App() {
           transition: all 0.18s;
           white-space: nowrap;
         }
-        .randomize-btn:hover { background: rgba(167,139,250,0.18); }
+        .toggle-all-btn:hover { background: rgba(52,211,153,0.12); }
+        .toggle-all-btn-active {
+          background: rgba(52,211,153,0.08);
+          color: #34d399;
+          border-color: #34d399;
+        }
+        .toggle-all-btn-active:hover { background: rgba(52,211,153,0.18); }
         .name-input-wrap { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 2.5px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 0 12px; transition: border-color 0.2s; }
-        .name-input-wrap:focus-within { border-color: #a78bfa; background: rgba(167,139,250,0.06); }
+        .name-input-wrap:focus-within { border-color: #60a5fa; background: rgba(96,165,250,0.06); }
         .name-num { font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.3); min-width: 14px; }
         .name-input { flex: 1; background: none; border: none; outline: none; color: white; font-family: inherit; font-size: 14px; font-weight: 600; padding: 12px 0; }
         .name-input::placeholder { color: rgba(255,255,255,0.25); }
@@ -2249,15 +2261,15 @@ export default function App() {
           text-align: center;
           font-family: 'Righteous', cursive;
           font-size: 24px;
-          color: #a78bfa;
+          color: rgba(255,255,255,0.9);
         }
 
         .start-btn.ready {
-          background: rgba(167,139,250,0.08);
-          color: #a78bfa;
-          border: 3px solid #a78bfa;
+          background: rgba(52,211,153,0.08);
+          color: #34d399;
+          border: 3px solid #34d399;
         }
-        .start-btn.ready:hover { background: rgba(167,139,250,0.15); }
+        .start-btn.ready:hover { background: rgba(52,211,153,0.15); }
         .mode-toggle-btn {
           margin-bottom: 20px;
           border: 3px solid rgba(255,255,255,0.2);
@@ -2430,14 +2442,14 @@ export default function App() {
           50% { box-shadow: 0 0 14px rgba(248,113,113,0.8); }
         }
         .times-up-banner.bonus-banner {
-          color: #fbbf24;
-          background: rgba(251,191,36,0.12);
-          border-color: rgba(251,191,36,0.35);
-          animation: pulse-gold-banner 1.2s ease-in-out infinite;
+          color: #fb923c;
+          background: rgba(251,146,60,0.12);
+          border-color: rgba(251,146,60,0.35);
+          animation: pulse-orange-banner 1.2s ease-in-out infinite;
         }
-        @keyframes pulse-gold-banner {
-          0%, 100% { box-shadow: 0 0 6px rgba(251,191,36,0.4); }
-          50% { box-shadow: 0 0 14px rgba(251,191,36,0.8); }
+        @keyframes pulse-orange-banner {
+          0%, 100% { box-shadow: 0 0 6px rgba(251,146,60,0.4); }
+          50% { box-shadow: 0 0 14px rgba(251,146,60,0.8); }
         }
         .word-done-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: -80px; }
         .word-done-count { font-size: clamp(18px, 5vw, 26px); color: rgba(255,255,255,0.6); font-family: 'Righteous', cursive; letter-spacing: 0.03em; }
@@ -2495,24 +2507,7 @@ export default function App() {
           .correct-btn:hover { background: rgba(74,222,128,0.35); }
         }
 
-        .randomize-btn-active {
-          background: rgba(52,211,153,0.08);
-          color: #34d399;
-          border-color: #34d399;
-        }
-        .randomize-btn-active:hover { background: rgba(52,211,153,0.18) !important; }
-        .alles-btn {
-          background: rgba(255,255,255,0.05);
-          color: rgba(255,255,255,0.45);
-          border-color: rgba(255,255,255,0.2);
-        }
-        .alles-btn:hover { background: rgba(255,255,255,0.1) !important; }
-        .alles-btn.randomize-btn-active {
-          background: rgba(52,211,153,0.08);
-          color: #34d399;
-          border-color: #34d399;
-        }
-        .alles-btn.randomize-btn-active:hover { background: rgba(52,211,153,0.18) !important; }
+
 
         .teams-grid { display: flex; flex-direction: column; gap: 14px; }
         .team-block {
@@ -2605,6 +2600,8 @@ export default function App() {
         /* Tussenstand gelijkspel: alle gedeelde eersten groen */
         .score-row.rank-interim-tied { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
         .score-row.rank-interim-tied .score-pts { color: #4ade80; }
+        .score-row.rank-interim-played { background: rgba(96,165,250,0.08); border: 3px solid rgba(96,165,250,0.5); }
+        .score-row.rank-interim-played .score-pts { color: #60a5fa; }
 
         /* Eindstand: goud / zilver / brons */
         .score-row.rank-1.rank-final { background: rgba(251,191,36,0.08); border: 3px solid #fbbf24; }
@@ -2623,7 +2620,7 @@ export default function App() {
 
         .rank-badge { font-size: 20px; min-width: 28px; text-align: center; flex-shrink: 0; }
         .score-name { flex: 1; font-size: clamp(14px, 4vw, 18px); font-weight: 700; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .score-pts { font-family: 'Righteous', cursive; font-size: clamp(16px, 4vw, 20px); color: #a78bfa; flex-shrink: 0; }
+        .score-pts { font-family: 'Righteous', cursive; font-size: clamp(16px, 4vw, 20px); color: rgba(255,255,255,0.9); flex-shrink: 0; }
         .score-row.rank-1.rank-interim .score-pts { color: #4ade80; }
         .score-row.rank-1.rank-final .score-pts { color: #fbbf24; }
         .score-row.rank-2.rank-final .score-pts { color: #94a3b8; }
@@ -2643,8 +2640,8 @@ export default function App() {
         .next-btn:hover { background: rgba(167,139,250,0.15); }
         .restart-btn { background: rgba(255,255,255,0.08); color: white; border: 1.5px solid rgba(255,255,255,0.2); }
         .restart-btn:hover { background: rgba(255,255,255,0.14); }
-        .continue-btn { background: rgba(74,222,128,0.1); color: #4ade80; border: 1.5px solid rgba(74,222,128,0.35); margin-bottom: 10px; }
-        .continue-btn:hover { background: rgba(74,222,128,0.18); }
+        .continue-btn { background: rgba(52,211,153,0.1); color: #34d399; border: 1.5px solid rgba(52,211,153,0.35); margin-bottom: 10px; }
+        .continue-btn:hover { background: rgba(52,211,153,0.18); }
         .stats-btn { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1.5px solid rgba(251,191,36,0.35); margin-bottom: 10px; }
         .stats-btn:hover { background: rgba(251,191,36,0.18); }
         .final-btns { display: flex; flex-direction: column; }
@@ -2679,15 +2676,15 @@ export default function App() {
           50% { box-shadow: 0 0 0 8px rgba(251,191,36,0); }
         }
         .current-word.bonus-word {
-          background: linear-gradient(135deg, #fbbf24, #f59e0b);
+          background: linear-gradient(135deg, #fb923c, #f97316);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
           background-clip: text;
         }
         .flash-bonus { animation: flash-bonus-anim 0.4s ease; }
         @keyframes flash-bonus-anim {
-          0% { background: rgba(251,191,36,0); }
-          30% { background: rgba(251,191,36,0.2); }
-          100% { background: rgba(251,191,36,0); }
+          0% { background: rgba(251,146,60,0); }
+          30% { background: rgba(251,146,60,0.2); }
+          100% { background: rgba(251,146,60,0); }
         }
 
         /* ── Stats screen ── */
@@ -2729,7 +2726,7 @@ export default function App() {
           border-radius: 16px; padding: 12px;
           text-align: center;
         }
-        .stats-cell-gold { border-color: rgba(251,191,36,0.35); background: rgba(251,191,36,0.08); }
+        .stats-cell-gold { border-color: rgba(251,146,60,0.35); background: rgba(251,146,60,0.08); }
         .stats-cell-val { font-family: 'Righteous', cursive; font-size: 26px; }
         .stats-cell-lbl { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); margin-top: 2px; }
         .stats-best {
@@ -2748,7 +2745,7 @@ export default function App() {
           border-radius: 10px; background: rgba(74,222,128,0.1);
           border: 1px solid rgba(74,222,128,0.25); color: #4ade80;
         }
-        .stats-word-bonus { background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.4); color: #fbbf24; }
+        .stats-word-bonus { background: rgba(251,146,60,0.12); border-color: rgba(251,146,60,0.4); color: #fb923c; }
         .stats-word-skipped { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.25); color: #f87171; }
         .stats-word-more { font-size: 11px; color: rgba(255,255,255,0.4); align-self: center; }
 
@@ -2797,6 +2794,7 @@ export default function App() {
           teams={teams}
           teamScores={teamScores}
           onStartTiebreaker={onStartTiebreaker}
+          playedIndices={new Set(playOrder.slice(0, playOrderPos + 1))}
         />
       )}
 
