@@ -1581,7 +1581,7 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
         {isLast ? (
           <div className="final-btns">
             <button className="score-btn continue-btn" onClick={onContinue}>
-              Nog een ronde! ➜
+              Nog een ronde ➜
             </button>
             <button className="score-btn restart-btn" onClick={onRestart}>
               Nieuw spel
