@@ -1559,7 +1559,12 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
                     : (isTopScore ? "rank-interim" : (hasPlayed ? "rank-interim-played" : "rank-interim"));
                   const rowClass = `score-row rank-${i + 1} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : interimClass}`;
                   return (
-                    <div key={p.name} className={rowClass}>
+                    <div
+                      key={p.name}
+                      className={rowClass}
+                      onClick={isLast ? () => onShowStats(originalIdx) : undefined}
+                      style={isLast ? {cursor:'pointer'} : undefined}
+                    >
                       <span className="rank-badge">{badge}</span>
                       <span className="score-name">{p.name}</span>
                       <span className="score-pts">{p.score} pt</span>
@@ -1571,10 +1576,6 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
         </div>
         {isLast ? (
           <div className="final-btns">
-
-            <button className="score-btn stats-btn" onClick={onShowStats}>
-              Statistieken bekijken
-            </button>
             <button className="score-btn continue-btn" onClick={onContinue}>
               Nog een ronde! ➜
             </button>
@@ -1594,8 +1595,8 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
 
 // ── Stats Screen ─────────────────────────────────────────────────────────────
 
-function StatsScreen({ players, playerStats, scores, onRestart, onContinue, onBack }) {
-  const [activePlayer, setActivePlayer] = useState(0);
+function StatsScreen({ players, playerStats, scores, initialPlayer, onRestart, onContinue, onBack }) {
+  const [activePlayer, setActivePlayer] = useState(initialPlayer ?? 0);
 
   const ps = playerStats[activePlayer];
   if (!ps) return null;
@@ -1935,6 +1936,8 @@ export default function App() {
   const [playerStats, setPlayerStats] = useState([]);
   // Tie-breaker state
   const [tiebreakerState, setTiebreakerState] = useState(null);
+  // Stats: welke speler wordt getoond bij openen
+  const [statsInitialPlayer, setStatsInitialPlayer] = useState(0);
   // Speelvolgorde: in team modus afwisselend per team
   const [playOrder, setPlayOrder] = useState([]);
   const [playOrderPos, setPlayOrderPos] = useState(0);
@@ -2636,6 +2639,7 @@ export default function App() {
         .score-row.rank-tied { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
         .score-row.rank-tied .score-pts { color: #4ade80; }
         .score-row.rank-tied .score-name { color: #4ade80; }
+        .score-row[style*="pointer"]:hover { filter: brightness(1.25); }
         @keyframes slideIn { from{transform:translateX(-20px);opacity:0} to{transform:translateX(0);opacity:1} }
         .score-row:nth-child(1){animation-delay:0.05s}
         .score-row:nth-child(2){animation-delay:0.1s}
@@ -2820,7 +2824,7 @@ export default function App() {
           onNext={onNext}
           onRestart={onRestart}
           onContinue={onContinue}
-          onShowStats={() => setPhase("stats")}
+          onShowStats={(playerIdx) => { setStatsInitialPlayer(playerIdx ?? 0); setPhase("stats"); }}
           teams={teams}
           teamScores={teamScores}
           onStartTiebreaker={onStartTiebreaker}
@@ -2844,6 +2848,7 @@ export default function App() {
           players={players}
           playerStats={playerStats}
           scores={scores}
+          initialPlayer={statsInitialPlayer}
           onRestart={onRestart}
           onContinue={onContinue}
           onBack={() => setPhase("score")}
