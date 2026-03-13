@@ -1054,7 +1054,9 @@ function SetupScreen({ onStart }) {
           <div className="names-label-row">
             <label className="setup-label" style={{marginBottom:0}}>{teamMode ? "Teams" : "Spelers"}</label>
             <div style={{display:'flex', alignItems:'center', gap:'8px'}}>
-              <button className="team-size-btn team-size-remove" onClick={() => updateCount(count - 1)} disabled={count <= 2}>−1</button>
+              {count > 2 && (
+                <button className="team-size-btn team-size-remove" onClick={() => updateCount(count - 1)}>−1</button>
+              )}
               <button className="team-size-btn team-size-add" onClick={() => updateCount(count + 1)} disabled={teamMode ? count >= 10 : count >= 20}>+1</button>
             </div>
           </div>
@@ -1118,13 +1120,13 @@ function SetupScreen({ onStart }) {
 
         <div className="setup-section">
           <div className="names-label-row">
-            <label className="setup-label">Categorieën</label>
+            <label className="setup-label" style={{marginBottom:0}}>Categorieën ({selectedCategories.size}/{CATEGORIES.length})</label>
             <button
               className={`toggle-all-btn${allSelected ? " toggle-all-btn-active" : ""}`}
               onClick={() => toggleCategory("all")}
               title={allSelected ? "Deselecteer alle categorieën" : "Selecteer alle categorieën"}
             >
-              Alles
+              🎲 Alle Categorieën
             </button>
           </div>
           <div className="category-grid">
@@ -2203,9 +2205,9 @@ export default function App() {
         .names-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .names-label-row .setup-label { margin-bottom: 0; }
         .toggle-all-btn {
-          background: rgba(52,211,153,0.06);
-          color: #34d399;
-          border: 2.5px solid rgba(52,211,153,0.4);
+          background: rgba(255,255,255,0.05);
+          color: rgba(255,255,255,0.45);
+          border: 2.5px solid rgba(255,255,255,0.2);
           border-radius: 10px;
           padding: 6px 12px;
           font-size: 13px;
@@ -2214,7 +2216,7 @@ export default function App() {
           transition: all 0.18s;
           white-space: nowrap;
         }
-        .toggle-all-btn:hover { background: rgba(52,211,153,0.12); }
+        .toggle-all-btn:hover { background: rgba(255,255,255,0.1); }
         .toggle-all-btn-active {
           background: rgba(52,211,153,0.08);
           color: #34d399;
@@ -2254,7 +2256,7 @@ export default function App() {
           cursor: pointer;
           transition: all 0.18s;
         }
-        .time-btn:hover:not(:disabled) { border-color: #a78bfa; background: rgba(167,139,250,0.08); color: #a78bfa; }
+        .time-btn:hover:not(:disabled) { border-color: #34d399; background: rgba(52,211,153,0.08); color: #34d399; }
         .time-btn:disabled { opacity: 0.3; cursor: default; }
         .time-display {
           flex: 1;
@@ -2546,9 +2548,9 @@ export default function App() {
         .team-size-btn {
           padding: 3px 10px;
           border-radius: 8px;
-          border: 2.5px solid #a78bfa;
-          background: rgba(167,139,250,0.08);
-          color: #a78bfa;
+          border: 2.5px solid #34d399;
+          background: rgba(52,211,153,0.08);
+          color: #34d399;
           font-size: 12px;
           font-weight: 800;
           font-family: inherit;
@@ -2556,9 +2558,9 @@ export default function App() {
           transition: all 0.15s;
           line-height: 1.4;
         }
-        .team-size-btn:hover { background: rgba(167,139,250,0.18); }
-        .team-size-remove { border-color: #fbbf24; border-width: 2.5px; background: rgba(251,191,36,0.08); color: #fbbf24; }
-        .team-size-remove:hover { background: rgba(251,191,36,0.18); }
+        .team-size-btn:hover { background: rgba(52,211,153,0.18); }
+        .team-size-remove { border-color: #f87171; border-width: 2.5px; background: rgba(248,113,113,0.08); color: #f87171; }
+        .team-size-remove:hover { background: rgba(248,113,113,0.18); }
 
         .team-block .name-input-wrap { margin-bottom: 6px; }
         .team-block .name-input-wrap:last-child { margin-bottom: 0; }
@@ -2661,13 +2663,13 @@ export default function App() {
         }
         .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
         .category-btn-active {
-          background: rgba(167,139,250,0.08);
-          border-color: #a78bfa;
-          color: #c4b5fd;
+          background: rgba(52,211,153,0.08);
+          border-color: #34d399;
+          color: #34d399;
         }
         .category-btn-active:hover {
-          background: rgba(167,139,250,0.18);
-          border-color: #a78bfa;
+          background: rgba(52,211,153,0.18);
+          border-color: #34d399;
         }
 
         /* ── Bonus word ── */
