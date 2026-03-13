@@ -2324,7 +2324,7 @@ export default function App() {
         .handoff-icon { font-size: 52px; margin-bottom: 16px; animation: bounce 1.5s infinite; }
         @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
         .handoff-sub { font-size: 12px; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; margin-bottom: 10px; }
-        .handoff-name { font-family: 'Righteous', cursive; font-size: clamp(28px, 8vw, 42px); color: #a78bfa; margin-bottom: 16px; word-break: break-word; }
+        .handoff-name { font-family: 'Righteous', cursive; font-size: clamp(28px, 8vw, 42px); color: #a78bfa; margin-bottom: 24px; word-break: break-word; }
         .handoff-team { font-size: 13px; color: #34d399; font-weight: 800; letter-spacing: 0.06em; margin-top: -10px; margin-bottom: 16px; }
         .handoff-tip { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
         .handoff-btn {
@@ -2623,13 +2623,16 @@ export default function App() {
         /* Tussenstand gelijkspel: alle gedeelde eersten groen */
         .score-row.rank-interim-tied { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
         .score-row.rank-interim-tied .score-pts { color: #4ade80; }
-        .score-row.rank-interim-played { background: rgba(96,165,250,0.08); border: 3px solid rgba(96,165,250,0.5); }
-        .score-row.rank-interim-played .score-pts { color: #60a5fa; }
+        .score-row.rank-interim-played { background: rgba(167,139,250,0.08); border: 3px solid rgba(167,139,250,0.5); }
+        .score-row.rank-interim-played .score-pts { color: #a78bfa; }
 
         /* Eindstand: goud / zilver / brons */
         .score-row.rank-1.rank-final { background: rgba(251,191,36,0.08); border: 3px solid #fbbf24; }
         .score-row.rank-2.rank-final { background: rgba(148,163,184,0.08); border: 3px solid #94a3b8; }
         .score-row.rank-3.rank-final { background: rgba(205,127,50,0.08); border: 3px solid #cd7f32; }
+        .score-row.rank-4.rank-final, .score-row.rank-5.rank-final, .score-row.rank-6.rank-final,
+        .score-row.rank-7.rank-final, .score-row.rank-8.rank-final, .score-row.rank-9.rank-final,
+        .score-row.rank-10.rank-final { background: rgba(167,139,250,0.08); border: 3px solid rgba(167,139,250,0.5); }
         .score-row.rank-tied { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
         .score-row.rank-tied .score-pts { color: #4ade80; }
         .score-row.rank-tied .score-name { color: #4ade80; }
@@ -2648,6 +2651,10 @@ export default function App() {
         .score-row.rank-1.rank-final .score-pts { color: #fbbf24; }
         .score-row.rank-2.rank-final .score-pts { color: #94a3b8; }
         .score-row.rank-3.rank-final .score-pts { color: #cd7f32; }
+        .score-row.rank-4.rank-final .score-pts, .score-row.rank-5.rank-final .score-pts,
+        .score-row.rank-6.rank-final .score-pts, .score-row.rank-7.rank-final .score-pts,
+        .score-row.rank-8.rank-final .score-pts, .score-row.rank-9.rank-final .score-pts,
+        .score-row.rank-10.rank-final .score-pts { color: #a78bfa; }
 
         .score-btn {
           width: 100%;
