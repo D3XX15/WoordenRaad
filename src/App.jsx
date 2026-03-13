@@ -1185,8 +1185,6 @@ function HandoffScreen({ player, teamName, onReady }) {
 }
 
 // Berichten op basis van prestatie: enthousiast (goed) vs bemoedigend (matig/slecht)
-// Tier wordt bepaald door: woorden per seconde t.o.v. een streefsnelheid van ~1 woord per 6s
-// ratio = correct / (roundTime / 6)  →  >= 0.75 = goed, < 0.4 = slecht, daartussen = aardig
 
 const w = (n) => n === 1 ? "woord" : "woorden";
 const pt = (n) => n === 1 ? "punt" : "punten";
@@ -1201,7 +1199,6 @@ const MESSAGES_GREAT = [
   () => `Je bent niet te stoppen! 🚀`,
   () => `De rest kan wel inpakken! 😄`,
   () => `Heb jij zitten oefenen? 🤨`,
-  () => `Waar kom jij vandaan?! 👽`,
   () => `Dit heeft iets weg van pesten. 😂`,
   () => `Even een staande ovatie. 👏`,
 ];
@@ -1209,11 +1206,8 @@ const MESSAGES_GREAT = [
 const MESSAGES_OK = [
   (_, pts) => `${pts} ${pt(pts)}, lekker bezig! 🙌`,
   (_, pts) => `${pts} ${pt(pts)}, niet slecht! 👍`,
-  (_, pts) => `${pts} ${pt(pts)}, da's geen schande! 👌`,
-  (_, pts) => `${pts} ${pt(pts)}. Daar doe je 't voor! 🎉`,
   (_, pts) => `${pts} ${pt(pts)} op de teller. ✅`,
   (_, pts) => `${pts} ${pt(pts)}, wat geweldig! 🥳`,
-  (_, pts) => `${pts} ${pt(pts)} erbij geknalt! 💥`,
   (_, pts) => `${pts} ${pt(pts)} bijgeschreven! ✍️`,
   (_, pts) => `${pts} ${pt(pts)} in één ronde! 🤩`,
   (_, pts) => `${pts} ${pt(pts)}, ga zo door! 💪`,
@@ -1223,8 +1217,7 @@ const MESSAGES_POOR = [
   (_, pts) => `${pts} ${pt(pts)}. Volgende keer beter! 🙈`,
   (_, pts) => `${pts} ${pt(pts)}. Haal even rustig adem! 😮‍💨`,
   (_, pts) => `Gewoon doen alsof je die ${pts} ${pt(pts)} niet ziet. 🤫`,
-  () => `Misschien is schilderen meer iets voor jou? 🎨`,
-  () => `Volgende keer misschien je bril op? 👓`,
+  () => `Volgende keer eerst je bril opzetten. 🤓`,
   () => `De volgende ronde gaat vast beter. 😉`,
   () => `De andere spelers ruiken bloed! 🩸`,
   () => `De spanning zat er zeker in! 😅`,
@@ -1233,8 +1226,8 @@ const MESSAGES_POOR = [
 function getRandomEndMessage(correctCount, roundTime, totalScore = correctCount) {
   const ratio = roundTime > 0 ? totalScore / (roundTime / 6) : 0;
   const [pool, tier] =
-    ratio >= 0.5   ? [MESSAGES_GREAT, "great"] :
-    ratio >= 0.35  ? [MESSAGES_OK,    "ok"]    :
+    ratio >= 0.6   ? [MESSAGES_GREAT, "great"] :
+    ratio >= 0.4  ? [MESSAGES_OK,     "ok"]    :
                      [MESSAGES_POOR,  "poor"];
   const idx = Math.floor(Math.random() * pool.length);
   return { message: pool[idx](correctCount, totalScore), tier, count: correctCount, totalScore };
