@@ -2,23 +2,23 @@ import { useState, useEffect, useRef } from "react";
 
 // ── Categorieën ──────────────────────────────────────────────────────────────
 const CATEGORIES = [
-  { id: "sport",         label: "⚽ Sport & Hobby" },
-  { id: "voedsel",       label: "🍕 Eten & Drinken" },
   { id: "dieren",        label: "🐶 Dieren" },
-  { id: "beroepen",      label: "👷 Beroepen" },
-  { id: "vervoer",       label: "🚗 Vervoer" },
-  { id: "natuur",        label: "🌿 Natuur" },
-  { id: "muziek",        label: "🎤 Muziek" },
-  { id: "ruimte",        label: "🚀 Ruimte" },
-  { id: "gereedschap",   label: "🔧 Gereedschap" },
-  { id: "wetenschap",    label: "🔬 Wetenschap" },
+  { id: "voedsel",       label: "🍕 Eten & Drinken" },
+  { id: "sport",         label: "⚽ Sport & Hobby" },
   { id: "huishouden",    label: "🏠 Huishouden" },
-  { id: "politiek",      label: "⚖️ Politiek" },
-  { id: "militair",      label: "🪖 Militair" },
+  { id: "vervoer",       label: "🚗 Vervoer" },
   { id: "plaatsen",      label: "🧭 Plaatsen" },
   { id: "landen",        label: "🌍 Landen" },
-  { id: "objecten",      label: "📦 Objecten" },
+  { id: "beroepen",      label: "👷 Beroepen" },
   { id: "acties",        label: "🏃 Werkwoorden" },
+  { id: "objecten",      label: "📦 Objecten" },
+  { id: "natuur",        label: "🌿 Natuur" },
+  { id: "muziek",        label: "🎤 Muziek" },
+  { id: "wetenschap",    label: "🔬 Wetenschap" },
+  { id: "gereedschap",   label: "🔧 Gereedschap" },
+  { id: "ruimte",        label: "🚀 Ruimte" },
+  { id: "politiek",      label: "⚖️ Politiek" },
+  { id: "militair",      label: "🪖 Militair" },
   { id: "spreekwoorden", label: "💬 Spreekwoorden", bonus: true },
 ];
 
@@ -1072,7 +1072,7 @@ function SetupScreen({ onStart }) {
                         className="name-input team-name-input"
                         value={teamNames[t] ?? `Team ${t + 1}`}
                         onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
-                        maxLength={20}
+                        maxLength={12}
                       />
                       <div className="team-size-controls">
                         {size > 2 && (
@@ -1126,7 +1126,7 @@ function SetupScreen({ onStart }) {
               onClick={() => toggleCategory("all")}
               title={allSelected ? "Deselecteer alle categorieën" : "Selecteer alle categorieën"}
             >
-              Alle
+              🎲 Alle Categorieën
             </button>
           </div>
           <div className="category-grid">
@@ -2537,7 +2537,7 @@ export default function App() {
           color: #a78bfa !important;
           padding: 6px 10px !important;
           flex: none !important;
-          width: 250px;
+          width: 160px;
           background: rgba(167,139,250,0.06) !important;
           border: 2px solid rgba(167,139,250,0.35) !important;
           border-radius: 8px !important;
