@@ -126,8 +126,8 @@ const WORDS_BY_CATEGORY = (() => {
     'geograaf', 'geoloog', 'gids', 'glazenwasser', 'goochelaar', 'grafisch ontwerper',
     'gynaecoloog', 'handelaar', 'heks', 'hersenchirurg', 'hovenier', 'hypnotherapeut',
     'ijsbeeldhouwer', 'illustrator', 'immunoloog', 'informaticus', 'ingenieur', 'inspecteur',
-    'instrumentmaker', 'jager', 'jongleur', 'journalist', 'juwelier',
-    'kapitein', 'kapper', 'kassamedewerker', 'kinderarts', 'klusjesman', 'kok',
+    'jager', 'jongleur', 'journalist', 'juwelier',
+    'kapitein', 'kapper', 'kassière', 'kinderarts', 'klusjesman', 'kok',
     'kostuumontwerper', 'kraamverzorger', 'kruidenier', 'kunstcriticus', 'kunstenaar', 'kweker',
     'laborant', 'lasser', 'leraar', 'loodgieter', 'luchtverkeersleider', 'magiër',
     'makelaar', 'matroos', 'meteoroloog', 'microbioloog', 'modeontwerper',
@@ -277,7 +277,7 @@ const WORDS_BY_CATEGORY = (() => {
 
   const vervoer = [
     'aanhanger', 'achtbaan', 'ambulance', 'benzine', 'benzinestation', 'boeing',
-    'boot', 'brandweerauto', 'brandweerwagen', 'bromfiets', 'bus', 'camper',
+    'boot', 'brandweerwagen', 'bromfiets', 'bus', 'camper',
     'caravan', 'catamaran', 'containerschip', 'diesel', 'driewieler',
     'dronepost', 'dubbeldekker', 'duikboot', 'elektrische auto', 'elektrische scooter', 'fatbike',
     'fietsendrager', 'fietstaxi', 'forens', 'vrachtschip', 'gondel', 'gondelbaan',
@@ -294,7 +294,7 @@ const WORDS_BY_CATEGORY = (() => {
     'wielerbaan', 'zeilschip', 'zijspan', 'zonneauto', 'zweefvliegtuig', 'vliegtuigkaping',
     'fiets', 'elektrische fiets', 'scooter', 'trein', 'zeilboot', 'bijtanken',
     'tankwagen', 'brandstoftanker', 'jacht', 'rubberboot', 'ongeluk',
-    'kano', 'vlot', 'waterscooter', 'reddingsvlot', 'onderzeeër',
+    'kano', 'vlot', 'waterscooter', 'reddingsvlot', 'trimaran', 'onderzeeër',
     'stoomtram', 'toeristentrein', 'zweeftrein', 'kampeerbus', 'politiemotor', 'ziekenwagen',
     'brandweerboot', 'politiehelikopter', 'traumahelikopter', 'zeppelin', 'bakfiets', 'ligfiets',
     'tandemfiets', 'bromscooter', 'quad', 'buggy', 'golfkarretje', 'stadsauto',
@@ -356,7 +356,7 @@ const WORDS_BY_CATEGORY = (() => {
     'rollen', 'schilderen', 'slapen', 'snurken', 'struikelen', 'tikken',
     'vallen', 'vangen', 'verstoppen', 'vliegen', 'vouwen', 'waggelen',
     'wiebelen', 'afrekenen', 'afscheid nemen', 'bakken', 'bellen', 'betalen',
-    'bewaken', 'bidden', 'blozen', 'branden', 'breken', 'buigen',
+    'bewaken', 'bidden', 'blozen', 'branden', 'brengen', 'breken', 'buigen',
     'dagdromen', 'delen', 'douchen', 'dreigen', 'drinken', 'duwen',
     'eten', 'fluiten', 'gapen', 'geven', 'giechelen', 'gillen',
     'gluren', 'groeten', 'hangen', 'helpen', 'hijsen', 'huilen',
@@ -441,7 +441,7 @@ const WORDS_BY_CATEGORY = (() => {
     'relatief', 'vergiftiging', 'tijdreizen', 'utopie', 'stroomuitval', 'hersenspoeling',
     'isolatie', 'sprookje', 'plagiaat', 'archeologie', 'barometer', 'geigerteller',
     'kwikthermometer', 'stethoscoop', 'thermometer', 'vergrootglas', 'loep', 'magneet',
-    'transistor', 'dwangbuis', 'scalpel', 'defibrillator', 'rolstoel', 'atoomkern',
+    'transistor', 'dwangbuis', 'scalpel', 'defibrillator', 'atoomkern',
     'nucleaire reactor', 'radioactiviteit', 'biologie', 'scheikunde', 'natuurkunde', 'wiskunde',
     'informatica', 'geologie', 'meteorologie', 'genetica', 'microbiologie', 'ecologie',
     'antropologie', 'hypothese', 'theorie', 'experiment', 'observatie', 'controlegroep',
@@ -455,7 +455,7 @@ const WORDS_BY_CATEGORY = (() => {
     'nauwkeurigheid', 'precisie', 'standaard', 'kilogram',
     'meter', 'ampere', 'kelvin', 'joule', 'watt', 'stoornis',
     'frequentie', 'golflengte', 'trilling', 'geluid', 'licht', 'kleur',
-    'spectrum', 'weerspiegelen', 'elektriciteit', 'magnetisme', 'stroom',
+    'spectrum', 'breking', 'spiegeling', 'elektriciteit', 'magnetisme', 'stroom',
     'spanning', 'weerstand', 'geleider', 'supergeleider', 'mysterie',
     'chromosoom', 'DNA', 'RNA', 'gen', 'eiwit', 'cel',
     'celkern', 'mitochondriën', 'fotosynthese', 'ademhaling', 'reactie', 'verbinding',
@@ -505,9 +505,9 @@ const WORDS_BY_CATEGORY = (() => {
     'vermogensbelasting', 'accijns', 'handelsakkoord', 'handelspartner', 'economische unie', 'vrijhandel',
     'consumentenbescherming', 'milieubeleid', 'klimaatbeleid', 'energiebeleid', 'woningbeleid', 'onderwijsbeleid',
     'gezondheidszorg', 'pensioenstelsel', 'politieke partij', 'handelsverdrag', 'gelijkwaardigheid', 'algemene staking',
-    'verkiezingscampagne', 'staatsbegroting', 'belasting over toegevoegde waarde', 'vrijhandelszone', 'klimaatwet', 'woningmarkt',
+    'verkiezingscampagne', 'staatsbegroting', 'BTW', 'vrijhandelszone', 'klimaatwet', 'woningmarkt',
     'volksgezondheid', 'pensioenfonds', 'arbeidsongeschiktheid', 'uitkeringsinstantie', 'vice-premier', 'fractievoorzitter',
-    'partijcongres', 'ledenraadpleging', 'coalitiekabinet', 'minderheidskabinet', 'vertrouwensstemming', 'hoorzitting',
+    'partijcongres', 'ledenraadpleging', 'coalitiekabinet', 'minderheidskabinet', 'hoorzitting',
     'kamerdebat', 'burgemeester', 'fractieleider', 'provinciebestuur', 'kabinetscrisis', 'motie van wantrouwen',
     'tweede kamer', 'eerste kamer', 'confrontatie', 'waarheid', 'intimidatie', 'manipulatie'
   ];
@@ -564,7 +564,7 @@ const WORDS_BY_CATEGORY = (() => {
     'schild', 'wapenschild', 'helm', 'kogelvrij vest', 'gasmasker', 'camouflagepak',
     'bazooka', 'leugendetector', 'handboeien', 'morse', 'vuurpijl', 'harpoen',
     'guillotine', 'tank', 'pantservoertuig', 'onderzeeboot', 'vliegdekschip', 'oorlogsschip',
-    'gevechtsvliegtuig', 'militaire helikopter', 'kazerne', 'bunker', 'fort', 'vesting',
+    'gevechtsvliegtuig', 'kazerne', 'bunker', 'fort', 'vesting',
     'commandopost', 'militaire basis', 'loopgraaf', 'mijnenveld', 'patrouilleboot', 'schieten',
     'invasie', 'guerrilla oorlog', 'coup', 'oorlogsmisdaad', 'wapenhandel', 'burgerwacht',
     'agressor', 'militaire oefening', 'belegering', 'geheime operatie', 'spionage', 'sabotage',
@@ -613,7 +613,7 @@ const WORDS_BY_CATEGORY = (() => {
     'veiligheidshelm', 'veiligheidsbril', 'werkhandschoenen', 'stofmasker', 'gehoorbescherming', 'kniebeschermer',
     'kruiwagen', 'hefboom', 'katrol', 'handkar', 'palletwagen',
     'hijsband', 'touw', 'steiger', 'koevoet', 'breekijzer', 'schuurpapier',
-    'freesmachine', 'bankmes', 'stanleymes', 'dieptemeter',
+    'freesmachine', 'bankmes', 'stanleymes', 'cuttermesje', 'lintmeter', 'dieptemeter',
     'gradenboog', 'klinknagel', 'snijder',
     'verfroller', 'kwast', 'verfbak', 'afplaktape', 'kit', 'siliconekit',
     'purschuim', 'isolatiemateriaal', 'ducttape', 'perslucht',
@@ -863,7 +863,11 @@ const WORDS_BY_CATEGORY = (() => {
   ];
 
   const map = { dieren, voedsel, beroepen, sport, objecten, huishouden, natuur, vervoer, plaatsen, acties, landen, gereedschap, muziek, militair, ruimte, wetenschap, politiek, spreekwoorden };
-  map.all = [...new Set(Object.values(map).flat())];
+  
+  // FLAT alle woorden tot 1 array, filter dubbele (zoals 'vissen') eruit:
+  const allWords = [...new Set(Object.values(map).flat())];
+  map.all = allWords;
+
   return map;
 })();
 
@@ -881,6 +885,37 @@ const HYPHENATION_DICT = (() => {
 // Deze lijst vult het HYPHENATION_DICT aan voor woorden die niet 
 // als los speelwoord voorkomen, maar wel delen zijn van samenstellingen.
 const EXTRA_WORD_PARTS = new Set([
+'bijen', 'koningin', 'dwerg', 'pinguïn', 'galapagos', 'schildpad', 'lieveheers', 'beestje',
+'bid', 'sprinkhaan', 'stok', 'staartje', 'aardappel', 'puree', 'brandnetel', 'soep', 'caesar',
+'salade', 'granaat', 'appel', 'kaneel', 'broodje', 'vanille', 'pudding', 'water', 'meloen', 
+'biblio', 'thecaris', 'documentaire', 'maker', 'duik', 'instructeur', 'fysio', 'therapeut',
+'game', 'ontwikkelaar', 'hypno', 'ijsbeeld', 'beeld', 'houwer', 'kostuum', 'ontwerper',
+'kraam', 'verzorger', 'kunst', 'criticus', 'luchtverkeer', 'leider', 'museum', 'conservator',
+'revalidatie', 'arts', 'scenario', 'schrijver', 'stand-up', 'comedian', 'systeem', 'beheerder',
+'verzekering', 'agent', 'voeding', 'wetenschapper', 'ziekenhuis', 'directeur', 'tram', 'bestuurder',
+'undercover', 'agent', 'belasting', 'adviseur', 'politie', 'commissaris', 'vrachtwagen', 'chauffeur',
+'beach', 'volleybal', 'diepzee', 'duiken', 'langebaan', 'schaatsen', 'parachute', 'springen', 'polsstok',
+'hoogspringen', 'schans', 'synchroon', 'trampoline', 'wedstrijd', 'vissen', 'kampioen', 'beker',
+'gezelschap', 'spel', 'kleiduiven', 'schieten', 'estafette', 'ring', 'afstand', 'bediening',
+'armband', 'horloge', 'beeld', 'houwwerk', 'kaarsen', 'houder', 'manchet', 'knoop', 'scheep',
+'schroef', 'veiligheid', 'speld', 'boodchappen', 'tas', 'gehoor', 'apparaat', 'muur', 'schildering',
+'aard', 'verschuiving', 'lucht', 'vochtigheid', 'vulkaan', 'uitbarsting', 'zoetwater', 'meer',
+'zon', 'verduistering', 'deeldienst', 'stoom', 'locomotief', 'water', 'zweef', 'vliegtuig', 'kaping',
+'boot', 'trauma', 'spoorweg', 'overgang', 'paspoort', 'controle', 'kenteken', 'plaat', 'woon-werk',
+'verkeer', 'distributie', 'centrum', 'brandweer', 'kazerne', 'camping', 'terrein', 'recreatie', 
+'gebied', 'tandarts', 'praktijk', 'voetgangers', 'pannenkoeken', 'huis', 'kinder', 'dagverblijf',
+'meubel', 'boulevard', 'onder', 'handelen', 'touwtje', 'teweeg', 'stichten', 'live', 'streamen',
+'geheugen', 'verlies', 'bewustzijn', 'overling', 'drang', 'surrogaat', 'moeder', 'kwik', 'thermometer',
+'weten', 'schappelijk', 'onderzoek', 'instituut', 'deeltjes', 'versneller', 'parlement', 'aire',
+'staat', 'secretaris', 'rechtvaardig', 'heid', 'inkomen', 'verdeling', 'verkiezing', 'programma',
+'formatie', 'gesprekken', 'kabinet', 'formatie', 'hypotheekrente', 'rente', 'hypotheek', 'aftrek',
+'werkgever', 'organisatie', 'volk', 'vertegenwoordiger', 'inkomsten', 'vermogen', 'belasting', 
+'consumenten', 'bescherming', 'campagne', 'arbeid', 'ongeschikt', 'heid', 'minderheid', 'kabinet',
+'openlucht', 'concert', 'patrouille', 'verkenning', 'stad', 'belegering', 'inlichtingen',
+'stroom', 'generator', 'gereedschap', 'kist', 'aardappel', 'schiller', 'accu', 'boormachine',
+'hetelucht', 'pistool', 'werk', 'handschoen', 'bescherming', 'isolatie', 'materiaal',
+'maan', 'relativiteit', 'theorie', 'koppeling', 'lanceer', 'installatie',
+
   'aanslag', 'aardig', 'actie', 'akkoord', 'amfibie', 'apparaat', 'arijs', 'atie', 'aanval',
   'baan', 'band', 'basis', 'bedrijf', 'beheer', 'beleid', 'bestuur', 'bom', 'bond', 'bouw',
   'cel', 'concentratie', 'crisis', 'damp', 'debat', 'deel', 'deeltje', 'democratie', 'deur', 'dienst',
@@ -902,7 +937,7 @@ const EXTRA_WORD_PARTS = new Set([
 ]);
 
 function hyphenateWord(word) {
-  if (!word || word.includes(' ') || word.length <= 8) return word;
+  if (!word || word.includes(' ') || word.length <= 11) return word;
   
   const lower = word.toLowerCase();
   const isKnown = (str) => HYPHENATION_DICT.has(str) || EXTRA_WORD_PARTS.has(str);
