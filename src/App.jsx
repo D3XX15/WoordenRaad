@@ -580,7 +580,7 @@ const WORDS_BY_CATEGORY = (() => {
     'oorlogsvlag', 'saluut', 'wachtpost', 'identiteitsbewijs', 'noodrantsoen', 'veldfles',
     'kaartlezen', 'geheime boodschap', 'beveiliging', 'bewaking', 'grenscontrole',
     'veiligheidszone', 'bufferzones', 'neutrale zone', 'demilitarisatie', 'vredesmissie', 'VN-missie',
-    'NAVO-oefening', 'militaire alliantie', 'wapenbestand', 'vuurstaking', 'terugtrekking', 'bezetting',
+    'militaire alliantie', 'wapenbestand', 'vuurstaking', 'terugtrekking', 'bezetting',
     'bevrijding', 'overwinning', 'nederlaag', 'verovering', 'stadsbelegering', 'blokkade',
     'embargo', 'oorlogsverklaring', 'mobilisatie', 'dienstplicht', 'huurling', 'militie',
     'reservist', 'veteraan', 'krijgsgevangene', 'onderscheiding',
@@ -887,10 +887,15 @@ const EXTRA_WORD_PARTS = new Set([
   'kracht', 'macht', 'staf', 'bond', 'raad', 'kamer', 'gebouw',
   'kunde', 'logie', 'graaf', 'scoop', 'stelsel', 'vorming', 'factor',
   'stof', 'gas', 'damp', 'straal', 'golf', 'deeltje',
-  'verkeer', 'beleid', 'sturing', 'beheer', 'zorg', 'hulp', 'verlening',
+  'verkeer', 'beleid', 'sturing', 'zorg', 'hulp', 'verlening',
   'stand', 'punt', 'vlak', 'lijn', 'zijde', 'kant', 'deel',
   'bouw', 'vaart', 'vlucht', 'reis', 'machine', 'systeem', 'apparaat', 
-  'netwerk', 'bedrijf', 'kampioen', 'wedstrijd', 'speler'
+  'netwerk', 'bedrijf', 'kampioen', 'wedstrijd', 'speler',
+  'informatie', 'oorlog', 'voertuig', 'amfibie', 'wetenschap', 'ruimte',
+  'verkiezing', 'partij', 'bestuur', 'wet', 'recht', 'staat', 'minister', 'verdrag',
+  'onderzoek', 'proef', 'middel', 'stof', 'energie', 'kracht', 'veld', 'massa',
+  'wapen', 'bom', 'raket', 'aanval', 'front', 'leger', 'soldaat', 'basis',
+  'oxide', 'zuur', 'stof', 'stelling', 'neming', 'geving', 'schap', 'heid'
 ]);
 
 /**
