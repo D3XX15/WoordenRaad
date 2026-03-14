@@ -1103,14 +1103,14 @@ function SetupScreen({ onStart }) {
             style={{margin:0, flex:1}}
             onClick={() => !teamMode ? null : toggleTeamMode()}
           >
-            👤 Solo
+            👤
           </button>
           <button
             className={`start-btn mode-toggle-btn${teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
             style={{margin:0, flex:1}}
             onClick={() => teamMode ? null : toggleTeamMode()}
           >
-            👥 Teams
+            👥
           </button>
         </div>
 
