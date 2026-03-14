@@ -294,7 +294,7 @@ const WORDS_BY_CATEGORY = (() => {
     'wielerbaan', 'zeilschip', 'zijspan', 'zonneauto', 'zweefvliegtuig', 'vliegtuigkaping',
     'fiets', 'elektrische fiets', 'scooter', 'trein', 'zeilboot', 'bijtanken',
     'tankwagen', 'brandstoftanker', 'jacht', 'rubberboot', 'ongeluk',
-    'kano', 'vlot', 'waterscooter', 'reddingsvlot', 'transport', 'onderzeeër',
+    'kano', 'vlot', 'waterscooter', 'reddingsvlot', 'trimaran', 'onderzeeër',
     'stoomtram', 'toeristentrein', 'zweeftrein', 'kampeerbus', 'politiemotor', 'ziekenwagen',
     'brandweerboot', 'politiehelikopter', 'traumahelikopter', 'zeppelin', 'bakfiets', 'ligfiets',
     'tandemfiets', 'bromscooter', 'quad', 'buggy', 'golfkarretje', 'stadsauto',
@@ -580,7 +580,7 @@ const WORDS_BY_CATEGORY = (() => {
     'oorlogsvlag', 'saluut', 'wachtpost', 'identiteit', 'noodrantsoen', 'veldfles',
     'kaartlezen', 'geheime boodschap', 'beveiliging', 'bewaking', 'grenscontrole',
     'veiligheidszone', 'bufferzones', 'neutrale zone', 'demilitarisatie', 'vredesmissie', 'VN-missie',
-    'militaire alliantie', 'wapenbestand', 'vuurstaking', 'terugtrekking', 'bezetting',
+    'NAVO-oefening', 'militaire alliantie', 'wapenbestand', 'vuurstaking', 'terugtrekking', 'bezetting',
     'bevrijding', 'overwinning', 'nederlaag', 'verovering', 'stadsbelegering', 'blokkade',
     'embargo', 'oorlogsverklaring', 'mobilisatie', 'dienstplicht', 'huurling', 'militie',
     'reservist', 'veteraan', 'krijgsgevangene', 'onderscheiding',
@@ -881,6 +881,7 @@ const HYPHENATION_DICT = (() => {
 // Deze lijst vult het HYPHENATION_DICT aan voor woorden die niet 
 // als los speelwoord voorkomen, maar wel delen zijn van samenstellingen.
 const EXTRA_WORD_PARTS = new Set([
+  // --- Bestaande basis & Unieke delen ---
   'aanslag', 'moord', 'zelfmoord', 'verdediging', 'linie', 'beheer',
   'leider', 'voerder', 'meester', 'houder', 'werker', 'nemer', 'gever',
   'schutter', 'officier', 'wagen', 'schip', 'tuig', 'tuigage', 'dienst',
@@ -892,10 +893,16 @@ const EXTRA_WORD_PARTS = new Set([
   'bouw', 'vaart', 'vlucht', 'reis', 'machine', 'systeem', 'apparaat', 
   'netwerk', 'bedrijf', 'kampioen', 'wedstrijd', 'speler',
   'informatie', 'oorlog', 'voertuig', 'amfibie', 'wetenschap', 'ruimte',
+  'wapen', 'stilstand', 'akkoord', 'onderhandeling', 'aanval', 'front', 'leger', 
+  'soldaat', 'basis', 'raket', 'bom', 'explosie', 'vuur', 'schot', 'linie',
   'verkiezing', 'partij', 'bestuur', 'wet', 'recht', 'staat', 'minister', 'verdrag',
-  'onderzoek', 'proef', 'middel', 'energie', 'veld', 'massa',
-  'wapen', 'bom', 'raket', 'aanval', 'front', 'leger', 'soldaat', 'basis',
-  'oxide', 'zuur', 'stelling', 'neming', 'geving', 'schap', 'heid'
+  'democratie', 'crisis', 'overleg', 'akkoord', 'nota', 'debat', 'zetel',
+  'onderzoek', 'proef', 'middel', 'energie', 'veld', 'massa', 'oxide', 'zuur', 
+  'stof', 'cel', 'kern', 'kracht', 'stelsel', 'planeet', 'ster', 'weer',
+  'station', 'haven', 'pad', 'weg', 'baan', 'trein', 'fiets', 'motor', 
+  'wiel', 'band', 'deur', 'raam', 'kast', 'tafel', 'stoel',
+  'stelling', 'neming', 'geving', 'schap', 'heid', 'actie', 'iteit', 'isme',
+  'ing', 'atie', 'ment', 'erij', 'arijs', 'waardig', 'loos', 'vol'
 ]);
 
 function hyphenateWord(word) {
@@ -905,17 +912,22 @@ function hyphenateWord(word) {
   const isKnown = (str) => HYPHENATION_DICT.has(str) || EXTRA_WORD_PARTS.has(str);
 
   // --- STAP 1: Morfologische splitsing (Samenstellingen) ---
-  // We zoeken van RECHTS naar LINKS (achtervoegsels eerst)
   for (let i = lower.length - 3; i >= 4; i--) {
     const links = lower.slice(0, i);
     const rechts = lower.slice(i);
     
-    // Directe samenstelling (bijv. informatie-oorlog)
+    // Check 1: Kennen we beide delen? (Beste match)
     if (isKnown(links) && isKnown(rechts)) {
       return word.slice(0, i) + '\u00AD' + word.slice(i);
     }
     
-    // Tussen-s (bijv. verdedigings-linie)
+    // Check 2: Kent de lijst het RECHTER deel? (Bijv. -stilstand, -oorlog, -aanslag)
+    // We checken of het rechterdeel een bekend lang achtervoegsel is uit EXTRA_WORD_PARTS
+    if (EXTRA_WORD_PARTS.has(rechts) && rechts.length >= 5) {
+      return word.slice(0, i) + '\u00AD' + word.slice(i);
+    }
+
+    // Tussen-s check
     if (lower[i] === 's' && isKnown(lower.slice(0, i)) && isKnown(lower.slice(i + 1))) {
       return word.slice(0, i + 1) + '\u00AD' + word.slice(i + 1);
     }
