@@ -879,58 +879,59 @@ const HYPHENATION_DICT = (() => {
 })();
 
 /**
- * Voegt een zachte koppelteken (\u00AD) in op de logische splitsingsplaats
- * van een samengesteld Nederlands woord. Woorden van ≤9 tekens worden niet
- * aangepast. Werkt samen met CSS `hyphens: manual`.
- *
- * Strategie:
- * 1. Zoek de meest linkse splitsing waarbij BEIDE delen geldige woorden zijn.
- * 2. Probeer daarna met verbindingsletters 's' (rijks|weg) of 'en' (honden|mand).
- * 3. Als fallback: meest linkse splitsing waarbij het RECHTER deel een
- * geldig woord is (≥4 tekens).
+ * Improved Dutch hyphenation function.
+ * Splits words into syllables using Dutch phonological rules (V-CV, VC-CV).
  */
 function hyphenateWord(word) {
-  if (!word || word.length <= 9) return word;
+  // Don't hyphenate words shorter than 8 characters or phrases with spaces
+  if (!word || word.includes(' ') || word.length <= 7) return word;
 
-  const lower = word.toLowerCase();
-  const dict = HYPHENATION_DICT;
+  const vowels = 'aeiouyàáèéëïöü';
+  const diphthongs = ['ee', 'oo', 'aa', 'uu', 'ei', 'au', 'ie', 'ij', 'oe', 'ou', 'ui', 'eu'];
+  
+  let result = "";
+  let i = 0;
 
-  // Strategie 1: beide delen zijn geldige woorden
-  for (let i = 3; i <= lower.length - 3; i++) {
-    const left = lower.slice(0, i);
-    const right = lower.slice(i);
-    if (dict.has(left) && dict.has(right)) {
-      return word.slice(0, i) + '\u00AD' + word.slice(i);
-    }
-  }
+  while (i < word.length) {
+    result += word[i];
+    
+    // Logic to determine if we should place a soft hyphen after word[i]
+    if (i < word.length - 2) {
+      const char1 = word[i].toLowerCase();
+      const char2 = word[i + 1].toLowerCase();
+      const char3 = word[i + 2].toLowerCase();
 
-  // Strategie 2: verbindingsletters 's' of 'en'
-  for (let i = 3; i <= lower.length - 4; i++) {
-    if (lower[i] === 's') {
-      const left = lower.slice(0, i);
-      const right = lower.slice(i + 1);
-      if (dict.has(left) && dict.has(right) && right.length >= 3) {
-        return word.slice(0, i + 1) + '\u00AD' + word.slice(i + 1);
+      const isVow1 = vowels.includes(char1);
+      const isVow2 = vowels.includes(char2);
+      const isVow3 = vowels.includes(char3);
+
+      // Rule: V-CV (Split before a single consonant between vowels)
+      // Example: 'ka-mer'
+      if (isVow1 && !isVow2 && isVow3) {
+        if (i > 0) result += '\u00AD';
+      }
+      
+      // Rule: VC-CV (Split between two consonants)
+      // Example: 'kap-per'
+      else if (isVow1 && !isVow2 && !isVow3 && i < word.length - 3) {
+        const char4 = word[i + 3].toLowerCase();
+        if (vowels.includes(char4)) {
+          result += char2 + '\u00AD';
+          i++; 
+        }
+      }
+      
+      // Rule: V-V (Split between vowels that aren't diphthongs)
+      // Example: 'cre-atie'
+      else if (isVow1 && isVow2) {
+        if (!diphthongs.includes(char1 + char2)) {
+          result += '\u00AD';
+        }
       }
     }
-    if (i + 2 <= lower.length && lower.slice(i, i + 2) === 'en') {
-      const left = lower.slice(0, i);
-      const right = lower.slice(i + 2);
-      if (dict.has(left) && dict.has(right) && right.length >= 3) {
-        return word.slice(0, i + 2) + '\u00AD' + word.slice(i + 2);
-      }
-    }
+    i++;
   }
-
-  // Strategie 3: rechter deel is een geldig woord (≥4 tekens), meest links
-  for (let i = 3; i <= lower.length - 4; i++) {
-    const right = lower.slice(i);
-    if (dict.has(right)) {
-      return word.slice(0, i) + '\u00AD' + word.slice(i);
-    }
-  }
-
-  return word;
+  return result;
 }
 
 // Bonus words: alle woorden uit categorieen met bonus: true (spreekwoorden)
@@ -2475,6 +2476,7 @@ export default function App() {
           -webkit-hyphens: manual;
           max-width: 100%;
           padding: 0 8px;
+          text-align: center;
         }
         @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
 
