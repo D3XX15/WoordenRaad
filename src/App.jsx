@@ -576,7 +576,7 @@ const WORDS_BY_CATEGORY = (() => {
     'mijnenveger', 'verkenningsvliegtuig', 'bommenwerper', 'jachtvliegtuig', 'transportvliegtuig', 'gevechtshelikopter',
     'raketschild', 'luchtafweer', 'radar', 'sonar', 'gevaarlijk',
     'nachtkijker', 'verrekijker', 'veldtent', 'veldhospitaal', 'verbandpost', 'ziekenauto',
-    'wapenopslag', 'munitiedepot', 'kruitkamer', 'schietbaan', 'hindernisbaan',
+    'wapenopslag', 'munitiedepot', 'schietbaan', 'hindernisbaan',
     'oorlogsvlag', 'saluut', 'wachtpost', 'identiteit', 'noodrantsoen', 'veldfles',
     'kaartlezen', 'geheime boodschap', 'beveiliging', 'bewaking', 'grenscontrole',
     'veiligheidszone', 'bufferzones', 'neutrale zone', 'demilitarisatie', 'vredesmissie', 'VN-missie',
