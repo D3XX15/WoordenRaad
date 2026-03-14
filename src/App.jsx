@@ -294,7 +294,7 @@ const WORDS_BY_CATEGORY = (() => {
     'wielerbaan', 'zeilschip', 'zijspan', 'zonneauto', 'zweefvliegtuig', 'vliegtuigkaping',
     'fiets', 'elektrische fiets', 'scooter', 'trein', 'zeilboot', 'bijtanken',
     'tankwagen', 'brandstoftanker', 'jacht', 'rubberboot', 'ongeluk',
-    'kano', 'vlot', 'waterscooter', 'reddingsvlot', 'trimaran', 'onderzeeër',
+    'kano', 'vlot', 'waterscooter', 'reddingsvlot', 'transport', 'onderzeeër',
     'stoomtram', 'toeristentrein', 'zweeftrein', 'kampeerbus', 'politiemotor', 'ziekenwagen',
     'brandweerboot', 'politiehelikopter', 'traumahelikopter', 'zeppelin', 'bakfiets', 'ligfiets',
     'tandemfiets', 'bromscooter', 'quad', 'buggy', 'golfkarretje', 'stadsauto',
