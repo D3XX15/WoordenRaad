@@ -884,52 +884,57 @@ const EXTRA_WORD_PARTS = new Set([
   'aanslag', 'aardig', 'actie', 'akkoord', 'amfibie', 'apparaat', 'arijs', 'atie', 'aanval',
   'baan', 'band', 'basis', 'bedrijf', 'beheer', 'beleid', 'bestuur', 'bom', 'bond', 'bouw',
   'cel', 'crisis', 'damp', 'debat', 'deel', 'deeltje', 'democratie', 'deur', 'dienst',
-  'energie', 'erij', 'explosie', 'factor', 'fiets', 'front', 'factor', 'gas', 'gebouw',
-  'gevangene', 'geving', 'gever', 'golf', 'graaf', 'grond', 'haven', 'heid', 'houder', 'hulp',
-  'informatie', 'ing', 'isme', 'iteit', 'kamer', 'kampioen', 'kant', 'kast', 'kern', 'kracht',
-  'krijgs', 'kunde', 'kwartier', 'leger', 'leider', 'lijn', 'linie', 'logie', 'loos', 'lucht',
-  'machine', 'macht', 'massa', 'maatregel', 'meester', 'ment', 'middel', 'minister', 'misdaad',
-  'moord', 'motor', 'nemer', 'neming', 'netwerk', 'nota', 'officier', 'onderhandeling', 'onderzoek',
-  'oorlog', 'overleg', 'oxide', 'pad', 'partij', 'planeet', 'proef', 'punt', 'raad', 'raam',
-  'raket', 'recht', 'reis', 'ruimte', 'schap', 'schip', 'schot', 'schutter', 'scoop', 'sluiting',
-  'soldaat', 'speler', 'staf', 'stand', 'staat', 'station', 'stelling', 'stelsel', 'ster',
-  'stilstand', 'stof', 'stoel', 'straal', 'sturing', 'systeem', 'tafel', 'trein', 'tuig',
-  'tuigage', 'vaart', 'veld', 'verdrag', 'verdediging', 'verkeer', 'verkiezing', 'verklaring',
-  'verlening', 'vlak', 'vlucht', 'voertuig', 'voerder', 'vol', 'vorming', 'vuur', 'waardig',
-  'wagen', 'wapen', 'water', 'wedstrijd', 'weer', 'werker', 'wet', 'wetenschap', 'wiel', 'weg',
-  'zelfmoord', 'zetel', 'zijde', 'zorg', 'zuur', 'vliegtuig', 'transport'
+  'energie', 'erij', 'explosie', 'factor', 'fiets', 'front', 'gas', 'gebouw',
+  'gevangene', 'geving', 'gever', 'golf', 'graaf', 'grond', 'haven', 'heid', 'herdenking',
+  'houder', 'hulp', 'informatie', 'ing', 'isme', 'iteit', 'kamer', 'kampioen', 'kant', 
+  'kast', 'kern', 'kracht', 'krijgs', 'kunde', 'kwartier', 'leger', 'leider', 'lijn', 
+  'linie', 'logie', 'loos', 'lucht', 'machine', 'macht', 'massa', 'maatregel', 'meester', 
+  'ment', 'middel', 'minister', 'misdaad', 'monument',
+  'moord', 'motor', 'nemer', 'neming', 'netwerk', 'nota', 'officier', 'onderhandeling', 
+  'onderzoek', 'oorlog', 'overleg', 'oxide', 'pad', 'partij', 'planeet', 'proef', 'punt', 
+  'raad', 'raam', 'raket', 'recht', 'reis', 'ruimte', 'schap', 'schip', 'schot', 'schutter', 
+  'scoop', 'sluiting', 'soldaat', 'speler', 'staf', 'stand', 'staat', 'station', 'stelling', 
+  'stelsel', 'ster', 'stilstand', 'stof', 'stoel', 'straal', 'sturing', 'systeem', 'tafel', 
+  'transport', 'trein', 'tuig', 'tuigage', 'vaart', 'veld', 'verdrag', 'verdediging', 'verkeer', 
+  'verkiezing', 'verklaring', 'verlening', 'vlak', 'vliegtuig', 'vlucht', 'voertuig', 'voerder', 'vol', 
+  'vorming', 'vuur', 'waardig', 'wagen', 'wapen', 'water', 'wedstrijd', 'weer', 'werker', 
+  'wet', 'wetenschap', 'wiel', 'weg', 'zelfmoord', 'zetel', 'zijde', 'zorg', 'zuur'
 ]);
 
 function hyphenateWord(word) {
-  // Verhoogd naar 8: korte woorden hebben nooit hyphenation nodig
   if (!word || word.includes(' ') || word.length <= 8) return word;
   
   const lower = word.toLowerCase();
   const isKnown = (str) => HYPHENATION_DICT.has(str) || EXTRA_WORD_PARTS.has(str);
 
   // --- STAP 1: Morfologische splitsing (Samenstellingen) ---
-  // We zoeken van RECHTS naar LINKS naar logische ankerpunten
+  
+  // A. Check op tussen-s bij bekende woorden (bijv. herdenkings-monument)
+  for (let i = 4; i <= lower.length - 5; i++) {
+    if (lower[i] === 's') {
+      const stam = lower.slice(0, i);
+      const rest = lower.slice(i + 1);
+      if (isKnown(stam) && isKnown(rest)) {
+        return word.slice(0, i + 1) + '\u00AD' + word.slice(i + 1);
+      }
+    }
+  }
+
+  // B. Algemene samenstelling check (van rechts naar links)
   for (let i = lower.length - 4; i >= 4; i--) {
     const links = lower.slice(0, i);
     const rechts = lower.slice(i);
     
-    // 1. Kennen we beide delen? (bijv. oorlog-misdaad)
     if (isKnown(links) && isKnown(rechts)) {
       return word.slice(0, i) + '\u00AD' + word.slice(i);
     }
     
-    // 2. Is het rechterdeel een bekend anker (minstens 5 letters)? (bijv. -verklaring)
     if (EXTRA_WORD_PARTS.has(rechts) && rechts.length >= 5) {
       return word.slice(0, i) + '\u00AD' + word.slice(i);
     }
-
-    // 3. Tussen-s check (bijv. oorlogs-verklaring)
-    if (lower[i] === 's' && isKnown(lower.slice(0, i)) && isKnown(lower.slice(i + 1))) {
-      return word.slice(0, i + 1) + '\u00AD' + word.slice(i + 1);
-    }
   }
 
-  // --- STAP 2: Fonetisch Vangnet ---
+  // --- STAP 2: Fonetisch Vangnet (Alleen als Stap 1 niets vond) ---
   const vowels = 'aeiouyàáèéëïöü';
   const diphthongs = ['ee', 'oo', 'aa', 'uu', 'ei', 'au', 'ie', 'ij', 'oe', 'ou', 'ui', 'eu'];
   let result = "";
@@ -938,21 +943,20 @@ function hyphenateWord(word) {
   while (i < word.length) {
     result += word[i];
     
-    // BEVEILIGING: Breek nooit af als er nog maar 4 of minder letters volgen.
-    // Dit voorkomt wa-pen, gevange-ne, verkla-ring.
+    // BEVEILIGING: Nooit afbreken in de laatste 5 letters
     if (i < word.length - 5) { 
       const char1 = word[i].toLowerCase();
       const char2 = word[i + 1].toLowerCase();
       const char3 = word[i + 2].toLowerCase();
+      
       const isVow1 = vowels.includes(char1);
       const isVow2 = vowels.includes(char2);
       const isVow3 = vowels.includes(char3);
 
-      // V-CV regel (ka-mer)
+      // Alleen afbreken als we niet midden in een tweeklank zitten
       if (isVow1 && !isVow2 && isVow3 && i > 1) {
         result += '\u00AD';
       } 
-      // VC-CV regel (kap-per)
       else if (isVow1 && !isVow2 && !isVow3 && i < word.length - 6) {
         if (vowels.includes(word[i + 3].toLowerCase())) {
           result += char2 + '\u00AD';
