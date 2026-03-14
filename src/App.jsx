@@ -878,24 +878,61 @@ const HYPHENATION_DICT = (() => {
   return dict;
 })();
 
+// Deze lijst vult het HYPHENATION_DICT aan voor woorden die niet 
+// als los speelwoord voorkomen, maar wel delen zijn van samenstellingen.
+const EXTRA_WORD_PARTS = new Set([
+  'aanslag', 'moord', 'zelfmoord', 'verdediging', 'linie', 'beheer',
+  'leider', 'voerder', 'meester', 'houder', 'werker', 'nemer', 'gever',
+  'schutter', 'officier', 'wagen', 'schip', 'tuig', 'tuigage', 'dienst',
+  'kracht', 'macht', 'staf', 'bond', 'raad', 'kamer', 'gebouw',
+  'kunde', 'logie', 'graaf', 'scoop', 'stelsel', 'vorming', 'factor',
+  'stof', 'gas', 'damp', 'straal', 'golf', 'deeltje',
+  'verkeer', 'beleid', 'sturing', 'beheer', 'zorg', 'hulp', 'verlening',
+  'stand', 'punt', 'vlak', 'lijn', 'zijde', 'kant', 'deel',
+  'bouw', 'vaart', 'vlucht', 'reis', 'machine', 'systeem', 'apparaat', 
+  'netwerk', 'bedrijf', 'kampioen', 'wedstrijd', 'speler'
+]);
+
 /**
- * Improved Dutch hyphenation function.
- * Splits words into syllables using Dutch phonological rules (V-CV, VC-CV).
+ * Hybride Nederlandse afbreekfunctie.
+ * Kijkt EERST naar taalkundige samenstellingen (morfologisch),
+ * en valt daarna pas terug op lettergrepen (fonetisch).
  */
 function hyphenateWord(word) {
-  // Don't hyphenate words shorter than 8 characters or phrases with spaces
   if (!word || word.includes(' ') || word.length <= 7) return word;
+  
+  const lower = word.toLowerCase();
+  
+  // Hulpfunctie: is het een woord uit het game-woordenboek óf onze extra lijst?
+  const isKnown = (str) => HYPHENATION_DICT.has(str) || EXTRA_WORD_PARTS.has(str);
 
+  // --- STAP 1: Morfologische splitsing (Samenstellingen) ---
+  // Directe samenstellingen (bijv. zelfmoord-aanslag)
+  for (let i = 4; i <= lower.length - 4; i++) {
+    if (isKnown(lower.slice(0, i)) && isKnown(lower.slice(i))) {
+      return word.slice(0, i) + '\u00AD' + word.slice(i);
+    }
+  }
+
+  // Samenstellingen met tussen-s of tussen-en (bijv. verdedigings-linie)
+  for (let i = 4; i <= lower.length - 4; i++) {
+    if (lower[i] === 's' && isKnown(lower.slice(0, i)) && isKnown(lower.slice(i + 1))) {
+      return word.slice(0, i + 1) + '\u00AD' + word.slice(i + 1);
+    }
+    if (lower.slice(i, i + 2) === 'en' && isKnown(lower.slice(0, i)) && isKnown(lower.slice(i + 2))) {
+      return word.slice(0, i + 2) + '\u00AD' + word.slice(i + 2);
+    }
+  }
+
+  // --- STAP 2: Fonetische splitsing (Lettergrepen als vangnet) ---
   const vowels = 'aeiouyàáèéëïöü';
   const diphthongs = ['ee', 'oo', 'aa', 'uu', 'ei', 'au', 'ie', 'ij', 'oe', 'ou', 'ui', 'eu'];
-  
   let result = "";
   let i = 0;
 
   while (i < word.length) {
     result += word[i];
     
-    // Logic to determine if we should place a soft hyphen after word[i]
     if (i < word.length - 2) {
       const char1 = word[i].toLowerCase();
       const char2 = word[i + 1].toLowerCase();
@@ -905,14 +942,11 @@ function hyphenateWord(word) {
       const isVow2 = vowels.includes(char2);
       const isVow3 = vowels.includes(char3);
 
-      // Rule: V-CV (Split before a single consonant between vowels)
-      // Example: 'ka-mer'
-      if (isVow1 && !isVow2 && isVow3) {
-        if (i > 0) result += '\u00AD';
+      // V-CV regel
+      if (isVow1 && !isVow2 && isVow3 && i > 0) {
+        result += '\u00AD';
       }
-      
-      // Rule: VC-CV (Split between two consonants)
-      // Example: 'kap-per'
+      // VC-CV regel
       else if (isVow1 && !isVow2 && !isVow3 && i < word.length - 3) {
         const char4 = word[i + 3].toLowerCase();
         if (vowels.includes(char4)) {
@@ -920,13 +954,9 @@ function hyphenateWord(word) {
           i++; 
         }
       }
-      
-      // Rule: V-V (Split between vowels that aren't diphthongs)
-      // Example: 'cre-atie'
-      else if (isVow1 && isVow2) {
-        if (!diphthongs.includes(char1 + char2)) {
-          result += '\u00AD';
-        }
+      // V-V regel
+      else if (isVow1 && isVow2 && !diphthongs.includes(char1 + char2)) {
+        result += '\u00AD';
       }
     }
     i++;
