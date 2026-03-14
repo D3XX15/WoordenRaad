@@ -883,10 +883,10 @@ const HYPHENATION_DICT = (() => {
 const EXTRA_WORD_PARTS = new Set([
   'aanslag', 'aardig', 'actie', 'akkoord', 'amfibie', 'apparaat', 'arijs', 'atie', 'aanval',
   'baan', 'band', 'basis', 'bedrijf', 'beheer', 'beleid', 'bestuur', 'bom', 'bond', 'bouw',
-  'cel', 'crisis', 'damp', 'debat', 'deel', 'deeltje', 'democratie', 'deur', 'dienst',
+  'cel', 'concentratie', 'crisis', 'damp', 'debat', 'deel', 'deeltje', 'democratie', 'deur', 'dienst',
   'energie', 'erij', 'explosie', 'factor', 'fiets', 'front', 'gas', 'gebouw',
   'gevangene', 'geving', 'gever', 'golf', 'graaf', 'grond', 'haven', 'heid', 'herdenking',
-  'houder', 'hulp', 'informatie', 'ing', 'isme', 'iteit', 'kamer', 'kampioen', 'kant', 
+  'houder', 'hulp', 'informatie', 'ing', 'isme', 'iteit', 'kamer', 'kamp', 'kampioen', 'kant', 
   'kast', 'kern', 'kracht', 'krijgs', 'kunde', 'kwartier', 'leger', 'leider', 'lijn', 
   'linie', 'logie', 'loos', 'lucht', 'machine', 'macht', 'massa', 'maatregel', 'meester', 
   'ment', 'middel', 'minister', 'misdaad', 'monument',
