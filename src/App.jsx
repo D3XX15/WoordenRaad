@@ -881,59 +881,55 @@ const HYPHENATION_DICT = (() => {
 // Deze lijst vult het HYPHENATION_DICT aan voor woorden die niet 
 // als los speelwoord voorkomen, maar wel delen zijn van samenstellingen.
 const EXTRA_WORD_PARTS = new Set([
-  // --- Bestaande basis & Unieke delen ---
-  'aanslag', 'moord', 'zelfmoord', 'verdediging', 'linie', 'beheer',
-  'leider', 'voerder', 'meester', 'houder', 'werker', 'nemer', 'gever',
-  'schutter', 'officier', 'wagen', 'schip', 'tuig', 'tuigage', 'dienst',
-  'kracht', 'macht', 'staf', 'bond', 'raad', 'kamer', 'gebouw',
-  'kunde', 'logie', 'graaf', 'scoop', 'stelsel', 'vorming', 'factor',
-  'stof', 'gas', 'damp', 'straal', 'golf', 'deeltje',
-  'verkeer', 'beleid', 'sturing', 'zorg', 'hulp', 'verlening',
-  'stand', 'punt', 'vlak', 'lijn', 'zijde', 'kant', 'deel',
-  'bouw', 'vaart', 'vlucht', 'reis', 'machine', 'systeem', 'apparaat', 
-  'netwerk', 'bedrijf', 'kampioen', 'wedstrijd', 'speler',
-  'informatie', 'oorlog', 'voertuig', 'amfibie', 'wetenschap', 'ruimte',
-  'wapen', 'stilstand', 'akkoord', 'onderhandeling', 'aanval', 'front', 'leger', 
-  'soldaat', 'basis', 'raket', 'bom', 'explosie', 'vuur', 'schot', 'linie',
-  'verkiezing', 'partij', 'bestuur', 'wet', 'recht', 'staat', 'minister', 'verdrag',
-  'democratie', 'crisis', 'overleg', 'akkoord', 'nota', 'debat', 'zetel',
-  'onderzoek', 'proef', 'middel', 'energie', 'veld', 'massa', 'oxide', 'zuur', 
-  'stof', 'cel', 'kern', 'kracht', 'stelsel', 'planeet', 'ster', 'weer',
-  'station', 'haven', 'pad', 'weg', 'baan', 'trein', 'fiets', 'motor', 
-  'wiel', 'band', 'deur', 'raam', 'kast', 'tafel', 'stoel',
-  'stelling', 'neming', 'geving', 'schap', 'heid', 'actie', 'iteit', 'isme',
-  'ing', 'atie', 'ment', 'erij', 'arijs', 'waardig', 'loos', 'vol'
+  'aanslag', 'aardig', 'actie', 'akkoord', 'amfibie', 'apparaat', 'arijs', 'atie', 'aanval',
+  'baan', 'band', 'basis', 'bedrijf', 'beheer', 'beleid', 'bestuur', 'bom', 'bond', 'bouw',
+  'cel', 'crisis', 'damp', 'debat', 'deel', 'deeltje', 'democratie', 'deur', 'dienst',
+  'energie', 'erij', 'explosie', 'factor', 'fiets', 'front', 'factor', 'gas', 'gebouw',
+  'gevangene', 'geving', 'gever', 'golf', 'graaf', 'grond', 'haven', 'heid', 'houder', 'hulp',
+  'informatie', 'ing', 'isme', 'iteit', 'kamer', 'kampioen', 'kant', 'kast', 'kern', 'kracht',
+  'krijgs', 'kunde', 'kwartier', 'leger', 'leider', 'lijn', 'linie', 'logie', 'loos', 'lucht',
+  'machine', 'macht', 'massa', 'maatregel', 'meester', 'ment', 'middel', 'minister', 'misdaad',
+  'moord', 'motor', 'nemer', 'neming', 'netwerk', 'nota', 'officier', 'onderhandeling', 'onderzoek',
+  'oorlog', 'overleg', 'oxide', 'pad', 'partij', 'planeet', 'proef', 'punt', 'raad', 'raam',
+  'raket', 'recht', 'reis', 'ruimte', 'schap', 'schip', 'schot', 'schutter', 'scoop', 'sluiting',
+  'soldaat', 'speler', 'staf', 'stand', 'staat', 'station', 'stelling', 'stelsel', 'ster',
+  'stilstand', 'stof', 'stoel', 'straal', 'sturing', 'systeem', 'tafel', 'trein', 'tuig',
+  'tuigage', 'vaart', 'veld', 'verdrag', 'verdediging', 'verkeer', 'verkiezing', 'verklaring',
+  'verlening', 'vlak', 'vlucht', 'voertuig', 'voerder', 'vol', 'vorming', 'vuur', 'waardig',
+  'wagen', 'wapen', 'water', 'wedstrijd', 'weer', 'werker', 'wet', 'wetenschap', 'wiel', 'weg',
+  'zelfmoord', 'zetel', 'zijde', 'zorg', 'zuur'
 ]);
 
 function hyphenateWord(word) {
-  if (!word || word.includes(' ') || word.length <= 7) return word;
+  // Verhoogd naar 8: korte woorden hebben nooit hyphenation nodig
+  if (!word || word.includes(' ') || word.length <= 8) return word;
   
   const lower = word.toLowerCase();
   const isKnown = (str) => HYPHENATION_DICT.has(str) || EXTRA_WORD_PARTS.has(str);
 
   // --- STAP 1: Morfologische splitsing (Samenstellingen) ---
-  for (let i = lower.length - 3; i >= 4; i--) {
+  // We zoeken van RECHTS naar LINKS naar logische ankerpunten
+  for (let i = lower.length - 4; i >= 4; i--) {
     const links = lower.slice(0, i);
     const rechts = lower.slice(i);
     
-    // Check 1: Kennen we beide delen? (Beste match)
+    // 1. Kennen we beide delen? (bijv. oorlog-misdaad)
     if (isKnown(links) && isKnown(rechts)) {
       return word.slice(0, i) + '\u00AD' + word.slice(i);
     }
     
-    // Check 2: Kent de lijst het RECHTER deel? (Bijv. -stilstand, -oorlog, -aanslag)
-    // We checken of het rechterdeel een bekend lang achtervoegsel is uit EXTRA_WORD_PARTS
+    // 2. Is het rechterdeel een bekend anker (minstens 5 letters)? (bijv. -verklaring)
     if (EXTRA_WORD_PARTS.has(rechts) && rechts.length >= 5) {
       return word.slice(0, i) + '\u00AD' + word.slice(i);
     }
 
-    // Tussen-s check
+    // 3. Tussen-s check (bijv. oorlogs-verklaring)
     if (lower[i] === 's' && isKnown(lower.slice(0, i)) && isKnown(lower.slice(i + 1))) {
       return word.slice(0, i + 1) + '\u00AD' + word.slice(i + 1);
     }
   }
 
-  // --- STAP 2: Fonetische splitsing (Vangnet) ---
+  // --- STAP 2: Fonetisch Vangnet ---
   const vowels = 'aeiouyàáèéëïöü';
   const diphthongs = ['ee', 'oo', 'aa', 'uu', 'ei', 'au', 'ie', 'ij', 'oe', 'ou', 'ui', 'eu'];
   let result = "";
@@ -941,7 +937,10 @@ function hyphenateWord(word) {
 
   while (i < word.length) {
     result += word[i];
-    if (i < word.length - 2) {
+    
+    // BEVEILIGING: Breek nooit af als er nog maar 4 of minder letters volgen.
+    // Dit voorkomt wa-pen, gevange-ne, verkla-ring.
+    if (i < word.length - 5) { 
       const char1 = word[i].toLowerCase();
       const char2 = word[i + 1].toLowerCase();
       const char3 = word[i + 2].toLowerCase();
@@ -949,15 +948,16 @@ function hyphenateWord(word) {
       const isVow2 = vowels.includes(char2);
       const isVow3 = vowels.includes(char3);
 
-      if (isVow1 && !isVow2 && isVow3 && i > 0) {
+      // V-CV regel (ka-mer)
+      if (isVow1 && !isVow2 && isVow3 && i > 1) {
         result += '\u00AD';
-      } else if (isVow1 && !isVow2 && !isVow3 && i < word.length - 3) {
+      } 
+      // VC-CV regel (kap-per)
+      else if (isVow1 && !isVow2 && !isVow3 && i < word.length - 6) {
         if (vowels.includes(word[i + 3].toLowerCase())) {
           result += char2 + '\u00AD';
           i++; 
         }
-      } else if (isVow1 && isVow2 && !diphthongs.includes(char1 + char2)) {
-        result += '\u00AD';
       }
     }
     i++;
