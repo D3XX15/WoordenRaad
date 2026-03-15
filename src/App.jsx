@@ -1289,8 +1289,8 @@ function SetupScreen({ onStart }) {
         </div>
 
         <div className="setup-section">
-          <div className="names-label-row">
-            <label className="setup-label" style={{ marginBottom: '8px', textAlign:'center' }}>
+          <div className="names-label-row" style={{ justifyContent: 'center', width: '100%' }}>
+            <label className="setup-label" style={{ marginBottom: '8px', textAlign: 'center', width: '100%' }}>
               Categorieën ({selectedCategories.size}/{CATEGORIES.length})
             </label>
           </div>
@@ -1298,10 +1298,13 @@ function SetupScreen({ onStart }) {
           <button
             className={`toggle-all-btn${allSelected ? " toggle-all-btn-active" : ""}`}
             onClick={() => toggleCategory("all")}
-            title={allSelected ? "Deselecteer alle categorieën" : "Selecteer alle categorieën"}
-            style={{ marginBottom: '16px' }} // Extra ruimte tussen knop en de grid
+            style={{ 
+              width: '100%', 
+              marginBottom: '16px',
+              display: 'block'
+            }}
           >
-            {allSelected ? "❌ Alles deselecteren" : "🎲 Alles selecteren"}
+            {allSelected ? "🎲 Alles geselecteerd" : "🎲 Alles selecteren"}
           </button>
 
           <div className="category-grid">
