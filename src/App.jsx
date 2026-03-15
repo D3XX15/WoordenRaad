@@ -1318,9 +1318,6 @@ function SetupScreen({ onStart }) {
         </div>
 
         <div className="setup-section">
-          <label className="setup-label" style={{ textAlign: 'center', display: 'block', width: '100%', marginBottom: '12px'}}>
-            Categoriekeuze
-          </label>
 {/*       <button
             className={`toggle-all-btn${allSelected ? " toggle-all-btn-active" : ""}`}
             onClick={() => toggleCategory("all")}
