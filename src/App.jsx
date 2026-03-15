@@ -1314,7 +1314,7 @@ function SetupScreen({ onStart }) {
         </div>
 
         <div className="setup-section">
-          <label className="setup-label" style={{ textAlign: 'center', display: 'block', width: '100%' }}>
+          <label className="setup-label" style={{ textAlign: 'center', display: 'block', width: '100%', marginBottom: '12px'}}>
             Categoriekeuze
           </label>
 {/*       <button
