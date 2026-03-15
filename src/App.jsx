@@ -1224,7 +1224,7 @@ function SetupScreen({ onStart }) {
         </div>
 
         <div className="setup-section">
-          <label className="setup-label" style={{marginBottom: '12px', textAlign: 'center'}}>{teamMode ? "Aantal teams" : "Aantal spelers"}</label>
+          <label className="setup-label" style={{textAlign: 'center'}}>{teamMode ? "Aantal teams" : "Aantal spelers"}</label>
           <div className="time-control" style={{marginBottom: '20px'}}>
             <button
               className={`time-btn time-btn-minus${count <= 2 ? " time-btn-disabled" : ""}`}
@@ -1296,7 +1296,7 @@ function SetupScreen({ onStart }) {
 
         <div className="setup-section">
           <div className="names-label-row" style={{ justifyContent: 'center', width: '100%' }}>
-            <label className="setup-label" style={{ marginBottom: '4px', textAlign: 'center', width: '100%' }}>
+            <label className="setup-label" style={{ textAlign: 'center', width: '100%' }}>
               Aantal woorden ({totalWordsCount}/{absoluteTotalWords})
             </label>
           </div>
@@ -2411,7 +2411,6 @@ export default function App() {
 
         .names-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         .names-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-        .names-label-row .setup-label { margin-bottom: 0; }
         .toggle-all-btn {
           width: 100%;
           padding: 18px;
