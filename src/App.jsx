@@ -1317,7 +1317,7 @@ function SetupScreen({ onStart }) {
           <label className="setup-label" style={{ textAlign: 'center', display: 'block', width: '100%' }}>
             Categoriekeuze
           </label>
-          <button
+{/*       <button
             className={`toggle-all-btn${allSelected ? " toggle-all-btn-active" : ""}`}
             onClick={() => toggleCategory("all")}
             style={{ 
@@ -1327,7 +1327,7 @@ function SetupScreen({ onStart }) {
           >
             {allSelected ? "🎲 Alle categorieën" : "🎲 Alle categorieën"}
           </button>
-
+*/}
           <div className="category-grid">
             {CATEGORIES.map((cat) => (
               <button
