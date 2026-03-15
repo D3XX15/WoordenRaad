@@ -2870,7 +2870,7 @@ export default function App() {
 
         /* ── Category picker ── */
         .category-grid {
-          display: flex; flex-wrap: wrap; gap: 8px, margin: 0;
+          display: flex; flex-wrap: wrap; gap: 8px;
         }
         .category-btn {
           padding: 8px 14px; border-radius: 20px;
