@@ -2410,7 +2410,7 @@ export default function App() {
         .setup-label { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
 
         .names-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-        .names-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .names-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
         .names-label-row .setup-label { margin-bottom: 4px; }
         .toggle-all-btn {
           width: 100%;
@@ -2424,7 +2424,7 @@ export default function App() {
           background: rgba(255,255,255,0.05);
           color: rgba(255,255,255,0.45);
           transition: all 0.25s;
-          margin-bottom: 12px;
+          margin-bottom: 16px;
         }
         .toggle-all-btn:hover { background: rgba(255,255,255,0.1); }
         .toggle-all-btn-active {
