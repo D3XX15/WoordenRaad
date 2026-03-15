@@ -1304,7 +1304,7 @@ function SetupScreen({ onStart }) {
               display: 'block'
             }}
           >
-            {allSelected ? "🎲 Alles geselecteerd" : "🎲 Alles selecteren"}
+            {allSelected ? "🎲 Alle categorieën" : "🎲 Alle categorieën"}
           </button>
 
           <div className="category-grid">
