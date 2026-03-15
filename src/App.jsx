@@ -1290,15 +1290,20 @@ function SetupScreen({ onStart }) {
 
         <div className="setup-section">
           <div className="names-label-row">
-            <label className="setup-label" style={{marginBottom:0}}>Categorieën ({selectedCategories.size}/{CATEGORIES.length})</label>
-            <button
-              className={`toggle-all-btn${allSelected ? " toggle-all-btn-active" : ""}`}
-              onClick={() => toggleCategory("all")}
-              title={allSelected ? "Deselecteer alle categorieën" : "Selecteer alle categorieën"}
-            >
-              🎲 Alles
-            </button>
+            <label className="setup-label" style={{ marginBottom: '8px', textAlign:'center' }}>
+              Categorieën ({selectedCategories.size}/{CATEGORIES.length})
+            </label>
           </div>
+
+          <button
+            className={`toggle-all-btn${allSelected ? " toggle-all-btn-active" : ""}`}
+            onClick={() => toggleCategory("all")}
+            title={allSelected ? "Deselecteer alle categorieën" : "Selecteer alle categorieën"}
+            style={{ marginBottom: '16px' }} // Extra ruimte tussen knop en de grid
+          >
+            {allSelected ? "❌ Alles deselecteren" : "🎲 Alles selecteren"}
+          </button>
+
           <div className="category-grid">
             {CATEGORIES.map((cat) => (
               <button
