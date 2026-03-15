@@ -1228,11 +1228,11 @@ function SetupScreen({ onStart }) {
 */}
           <div className="time-control" style={{marginBottom: '20px'}}>
             <button
-              className={`time-btn time-btn-minus${count <= 2 ? " time-btn-disabled" : ""} spelers`}
+              className={`time-btn time-btn-minus${count <= 2 ? " time-btn-disabled" : ""}`}
               onClick={() => updateCount(count - 1)}
               disabled={count <= 2}
             >−</button>
-            <span className="time-display">{count}</span>
+            <span className="time-display">{count} spelers</span>
             <button
               className={`time-btn time-btn-plus${count >= 10 ? " time-btn-disabled" : ""}`}
               onClick={() => updateCount(count + 1)}
