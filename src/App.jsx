@@ -1169,8 +1169,8 @@ function SetupScreen({ onStart }) {
   const totalWordsCount = Array.from(selectedCategories).reduce((total, catId) => {
     return total + (WORDS_BY_CATEGORY[catId]?.length || 0);
   }, 0);
-  const absoluteTotalWords = Object.values(WORDS_BY_CATEGORY).reduce((total, wordList) => {
-    return total + (wordList?.length || 0);
+  const absoluteTotalWords = CATEGORIES.reduce((total, cat) => {
+    return total + (WORDS_BY_CATEGORY[cat.id]?.length || 0);
   }, 0);
   const allCategoryIds = CATEGORIES.map((c) => c.id);
   const allSelected = allCategoryIds.every((id) => selectedCategories.has(id));
