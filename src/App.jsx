@@ -1197,81 +1197,87 @@ function SetupScreen({ onStart }) {
   // Bereken naam-offset per team
   const getTeamOffset = (t) => teamSizes.slice(0, t).reduce((a, b) => a + b, 0);
 
-  return (
+return (
     <div className="screen">
       <div className="setup-card">
-        <div className="logo-area">
+        {/* Header Section */}
+        <div className="setup-header">
           <div className="logo-icon">💬</div>
           <h1 className="logo-title">WoordenRaad</h1>
           <p className="logo-sub">Het raad- en uitbeeldspel</p>
         </div>
 
-        <div style={{display:'flex', gap:'12px', marginBottom:'20px'}}>
-          <button
-            className={`start-btn mode-toggle-btn${!teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
-            style={{margin:0, flex:1}}
-            onClick={() => !teamMode ? null : toggleTeamMode()}
-          >
-            👤
-          </button>
-          <button
-            className={`start-btn mode-toggle-btn${teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
-            style={{margin:0, flex:1}}
-            onClick={() => teamMode ? null : toggleTeamMode()}
-          >
-            👥
-          </button>
+        {/* Mode Toggle Group */}
+        <div className="setup-group">
+          <div className="mode-toggle-container">
+            <button
+              className={`mode-btn ${!teamMode ? "active" : ""}`}
+              onClick={() => teamMode && toggleTeamMode()}
+            >
+              👤 Individueel
+            </button>
+            <button
+              className={`mode-btn ${teamMode ? "active" : ""}`}
+              onClick={() => !teamMode && toggleTeamMode()}
+            >
+              👥 Teams
+            </button>
+          </div>
         </div>
 
-        <div className="setup-section">
-          <label className="setup-label" style={{textAlign: 'center'}}>{teamMode ? "Aantal teams" : "Aantal spelers"}</label>
-          <div className="time-control" style={{marginBottom: '20px'}}>
+        {/* Player/Team Count Group */}
+        <div className="setup-group">
+          <label className="setup-label">{teamMode ? "Aantal teams" : "Aantal spelers"}</label>
+          <div className="stepper-control">
             <button
-              className={`time-btn time-btn-minus${count <= 2 ? " time-btn-disabled" : ""}`}
+              className="stepper-btn"
               onClick={() => updateCount(count - 1)}
               disabled={count <= 2}
             >−</button>
-            <span className="time-display">{count}</span>
+            <span className="stepper-display">{count}</span>
             <button
-              className={`time-btn time-btn-plus${count >= 10 ? " time-btn-disabled" : ""}`}
+              className="stepper-btn"
               onClick={() => updateCount(count + 1)}
               disabled={count >= 10}
             >+</button>
           </div>
+        </div>
+
+        {/* Names Input Area */}
+        <div className="setup-group scrollable-area">
           {teamMode ? (
             <div className="teams-grid">
               {Array.from({ length: count }, (_, t) => {
                 const offset = getTeamOffset(t);
                 const size = teamSizes[t];
                 return (
-                  <div key={t} className="team-block">
-                    <div className="team-block-header">
+                  <div key={t} className="team-card">
+                    <div className="team-card-header">
                       <input
-                        className="name-input team-name-input"
+                        className="team-name-input"
                         value={teamNames[t] ?? `Team ${t + 1}`}
                         onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
                         maxLength={12}
                       />
-                      <div className="team-size-controls">
-                        <button className={`team-size-btn team-size-remove${size <= 2 ? " team-size-btn-disabled" : ""}`} onClick={() => removePlayerFromTeam(t)} title="Speler verwijderen" disabled={size <= 2}>−1</button>
-                        <button className={`team-size-btn team-size-add${size >= 10 ? " team-size-btn-disabled" : ""}`} onClick={() => addPlayerToTeam(t)} title="Speler toevoegen" disabled={size >= 10}>+1</button>
+                      <div className="team-size-stepper">
+                        <button disabled={size <= 2} onClick={() => removePlayerFromTeam(t)}>−</button>
+                        <span>{size}</span>
+                        <button disabled={size >= 10} onClick={() => addPlayerToTeam(t)}>+</button>
                       </div>
                     </div>
-                    {Array.from({ length: size }, (_, p) => {
-                      const idx = offset + p;
-                      return (
-                        <div key={idx} className="name-input-wrap">
-                          <span className="name-num">{p + 1}</span>
+                    <div className="team-players-list">
+                      {Array.from({ length: size }, (_, p) => (
+                        <div key={offset + p} className="input-row">
+                          <span className="input-prefix">{p + 1}</span>
                           <input
-                            className="name-input"
+                            className="minimal-input"
                             placeholder={`Speler ${p + 1}`}
-                            value={names[idx] ?? ""}
-                            onChange={(e) => updateName(idx, e.target.value)}
-                            maxLength={16}
+                            value={names[offset + p] ?? ""}
+                            onChange={(e) => updateName(offset + p, e.target.value)}
                           />
                         </div>
-                      );
-                    })}
+                      ))}
+                    </div>
                   </div>
                 );
               })}
@@ -1279,14 +1285,13 @@ function SetupScreen({ onStart }) {
           ) : (
             <div className="names-grid">
               {names.map((name, i) => (
-                <div key={i} className="name-input-wrap">
-                  <span className="name-num">{i + 1}</span>
+                <div key={i} className="input-row">
+                  <span className="input-prefix">{i + 1}</span>
                   <input
-                    className="name-input"
+                    className="minimal-input"
                     placeholder={`Speler ${i + 1}`}
                     value={name}
                     onChange={(e) => updateName(i, e.target.value)}
-                    maxLength={16}
                   />
                 </div>
               ))}
@@ -1294,80 +1299,49 @@ function SetupScreen({ onStart }) {
           )}
         </div>
 
-        <div className="setup-section">
-          <label className="setup-label" style={{ textAlign: 'center', display: 'block', width: '100%' }}>
-            Tijd per ronde
-          </label>
-          <div className="time-control">
-            <button
-              className={`time-btn time-btn-minus${roundTime <= 30 ? " time-btn-disabled" : ""}`}
-              onClick={() => setRoundTime((t) => Math.max(30, t - 30))}
-              disabled={roundTime <= 30}
-            >−30s</button>
-            <span className="time-display">{roundTime}s</span>
-            <button
-              className={`time-btn time-btn-plus${roundTime >= 300 ? " time-btn-disabled" : ""}`}
-              onClick={() => setRoundTime((t) => Math.min(300, t + 30))}
-              disabled={roundTime >= 300}
-            >+30s</button>
+        {/* Settings Group (Time & Categories) */}
+        <div className="setup-group divider-top">
+          <label className="setup-label">Tijd per ronde</label>
+          <div className="stepper-control">
+            <button className="stepper-btn" onClick={() => setRoundTime(t => Math.max(30, t - 30))} disabled={roundTime <= 30}>−30s</button>
+            <span className="stepper-display">{roundTime}s</span>
+            <button className="stepper-btn" onClick={() => setRoundTime(t => Math.min(300, t + 30))} disabled={roundTime >= 300}>+30s</button>
           </div>
         </div>
 
-        <div className="setup-section">
-
-          <button
-            className={`toggle-all-btn${allSelected ? " toggle-all-btn-active" : ""}`}
-            onClick={() => toggleCategory("all")}
-            style={{ 
-              width: '100%',
-              display: 'block'
-            }}
-          >
-            {allSelected ? "🎲 Alle categorieën" : "🎲 Alle categorieën"}
-          </button>
-
+        <div className="setup-group">
+          <div className="category-header">
+            <label className="setup-label">Categorieën</label>
+            <button className="text-link-btn" onClick={() => toggleCategory("all")}>
+              {allSelected ? "Deselecteer alles" : "Selecteer alles"}
+            </button>
+          </div>
           <div className="category-grid">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
-                className={`category-btn${selectedCategories.has(cat.id) ? " category-btn-active" : ""}`}
+                className={`cat-chip ${selectedCategories.has(cat.id) ? "active" : ""}`}
                 onClick={() => toggleCategory(cat.id)}
               >
                 {cat.label}
               </button>
             ))}
           </div>
+          <p className="word-count-hint">
+            {totalWordsCount} / {absoluteTotalWords} woorden geselecteerd
+          </p>
         </div>
 
-        <div className="names-label-row" style={{ justifyContent: 'center', width: '100%' }}>
-          <label className="setup-label" style={{ textAlign: 'center', width: '100%' }}>
-            {totalWordsCount}/{absoluteTotalWords} woorden in het spel
-          </label>
+        {/* Footer Actions */}
+        <div className="setup-footer">
+          <button
+            className={`primary-start-btn ${canStart ? "ready" : ""}`}
+            onClick={handleStart}
+            disabled={!canStart}
+          >
+            Spel starten
+          </button>
         </div>
-
-        <button
-          className={`start-btn ${canStart ? "ready" : ""}`}
-          onClick={handleStart}
-          disabled={!canStart}
-        >
-          Spel starten
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function HandoffScreen({ player, teamName, onReady }) {
-  return (
-    <div className="screen handoff-screen">
-      <div className="handoff-card">
-        <div className="handoff-icon">📱</div>
-        <p className="handoff-sub">Geef de telefoon aan</p>
-        <h2 className="handoff-name">{player}</h2>
-        {teamName && <p className="handoff-team">{teamName}</p>}
-        <button className="handoff-btn" onClick={onReady}>
-          Ik ben er klaar voor!
-        </button>
       </div>
     </div>
   );
@@ -2981,6 +2955,136 @@ export default function App() {
           .handoff-icon { font-size: 40px; margin-bottom: 10px; }
           .word-stage { gap: 10px; padding: 12px; }
         }
+/* Card & Grouping */
+.setup-card {
+  display: flex;
+  flex-direction: column;
+  gap: 32px; /* Uniform breathing room between sections */
+  padding: 40px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.setup-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Internal spacing for items that belong together */
+}
+
+.divider-top {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 24px;
+}
+
+/* Typography */
+.setup-label {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+}
+
+/* Mode Toggles */
+.mode-toggle-container {
+  display: flex;
+  background: rgba(0,0,0,0.2);
+  padding: 4px;
+  border-radius: 12px;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mode-btn.active {
+  background: white;
+  color: #222;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Stepper Controls (Time/Count) */
+.stepper-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.stepper-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.2);
+  background: transparent;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.stepper-display {
+  font-size: 1.8rem;
+  font-weight: 800;
+  min-width: 80px;
+  text-align: center;
+}
+
+/* Input Styling */
+.input-row {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  padding: 4px 12px;
+  margin-bottom: 8px;
+}
+
+.input-prefix {
+  color: rgba(255,255,255,0.3);
+  margin-right: 12px;
+  font-weight: bold;
+}
+
+.minimal-input {
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 8px 0;
+  width: 100%;
+  outline: none;
+}
+
+/* Category Chips */
+.cat-chip {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid transparent;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cat-chip.active {
+  background: #4ade80; /* Brighter green */
+  color: #064e3b;
+  transform: translateY(-2px);
+}
+
+.word-count-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  opacity: 0.5;
+  margin-top: 8px;
+}
       `}</style>
 
       {phase === "setup" && <SetupScreen onStart={startGame} />}
