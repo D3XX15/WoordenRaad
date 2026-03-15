@@ -2443,7 +2443,7 @@ export default function App() {
           width: 100%;
           padding: 18px;
           border-radius: 16px;
-          border: 3px solid #a78bfa;
+          border: 3px solid #d1d5db;
           font-family: 'Righteous', cursive;
           font-size: 20px;
           letter-spacing: 0.04em;
