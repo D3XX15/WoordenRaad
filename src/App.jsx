@@ -1327,7 +1327,9 @@ function SetupScreen({ onStart }) {
         </div>
 
         <div className="setup-section">
-          <label className="setup-label">Tijd per ronde</label>
+          <label className="setup-label" style={{ textAlign: 'center', display: 'block', width: '100%' }}>
+            Tijd per ronde
+          </label>
           <div className="time-control">
             <button
               className={`time-btn time-btn-minus${roundTime <= 30 ? " time-btn-disabled" : ""}`}
@@ -2405,7 +2407,7 @@ export default function App() {
         .logo-sub { color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 4px; }
 
         .setup-section { margin-bottom: 28px; }
-        .setup-label { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 12px; }
+        .setup-label { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
 
         .names-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         .names-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
@@ -2422,6 +2424,7 @@ export default function App() {
           background: rgba(255,255,255,0.05);
           color: rgba(255,255,255,0.45);
           transition: all 0.25s;
+          margin-bottom: 2px;
         }
         .toggle-all-btn:hover { background: rgba(255,255,255,0.1); }
         .toggle-all-btn-active {
