@@ -1327,12 +1327,6 @@ function SetupScreen({ onStart }) {
             {allSelected ? "🎲 Alle categorieën" : "🎲 Alle categorieën"}
           </button>
 
-          <div className="names-label-row" style={{ justifyContent: 'center', width: '100%' }}>
-            <label className="setup-label" style={{ textAlign: 'center', width: '100%' }}>
-              {totalWordsCount}/{absoluteTotalWords} woorden
-            </label>
-          </div>
-
           <div className="category-grid">
             {CATEGORIES.map((cat) => (
               <button
@@ -1344,6 +1338,12 @@ function SetupScreen({ onStart }) {
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="names-label-row" style={{ justifyContent: 'center', width: '100%' }}>
+          <label className="setup-label" style={{ textAlign: 'center', width: '100%' }}>
+            {totalWordsCount}/{absoluteTotalWords} woorden in het spel
+          </label>
         </div>
 
         <button
