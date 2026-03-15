@@ -1224,10 +1224,11 @@ function SetupScreen({ onStart }) {
         </div>
 
         <div className="setup-section">
-          <label className="setup-label" style={{textAlign: 'center'}}>{teamMode ? "Aantal teams" : "Aantal spelers"}</label>
+{/*       <label className="setup-label" style={{textAlign: 'center'}}>{teamMode ? "Aantal teams" : "Aantal spelers"}</label> 
+*/}
           <div className="time-control" style={{marginBottom: '20px'}}>
             <button
-              className={`time-btn time-btn-minus${count <= 2 ? " time-btn-disabled" : ""}`}
+              className={`time-btn time-btn-minus${count <= 2 ? " time-btn-disabled" : ""} spelers`}
               onClick={() => updateCount(count - 1)}
               disabled={count <= 2}
             >−</button>
