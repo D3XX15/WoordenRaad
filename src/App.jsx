@@ -2397,16 +2397,17 @@ export default function App() {
         .names-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .names-label-row .setup-label { margin-bottom: 0; }
         .toggle-all-btn {
+          width: 100%;
+          padding: 18px;
+          border-radius: 16px;
+          border: none;
+          font-family: 'Righteous', cursive;
+          font-size: 20px;
+          letter-spacing: 0.04em;
+          cursor: pointer;
           background: rgba(255,255,255,0.05);
           color: rgba(255,255,255,0.45);
-          border: 2.5px solid rgba(255,255,255,0.2);
-          border-radius: 10px;
-          padding: 6px 12px;
-          font-size: 13px;
-          font-family: 'Righteous', cursive;
-          cursor: pointer;
-          transition: all 0.18s;
-          white-space: nowrap;
+          transition: all 0.25s;
         }
         .toggle-all-btn:hover { background: rgba(255,255,255,0.1); }
         .toggle-all-btn-active {
