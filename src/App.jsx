@@ -2428,7 +2428,8 @@ export default function App() {
           background: rgba(255,255,255,0.05);
           color: rgba(255,255,255,0.45);
           transition: all 0.25s;
-          margin-bottom: 24px;
+          margin-top: 20px;
+          margin-bottom: 8px;
         }
         .toggle-all-btn:hover { background: rgba(255,255,255,0.1); }
         .toggle-all-btn-active {
