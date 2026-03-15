@@ -2400,7 +2400,7 @@ export default function App() {
           width: 100%;
           padding: 18px;
           border-radius: 16px;
-          border: none;
+          border: 3px solid rgba(255,255,255,0.2);
           font-family: 'Righteous', cursive;
           font-size: 20px;
           letter-spacing: 0.04em;
@@ -2426,7 +2426,7 @@ export default function App() {
           width: 100%;
           padding: 18px;
           border-radius: 16px;
-          border: none;
+          border: 3px solid #a78bfa;
           font-family: 'Righteous', cursive;
           font-size: 20px;
           letter-spacing: 0.04em;
