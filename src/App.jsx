@@ -1166,6 +1166,9 @@ function SetupScreen({ onStart }) {
     return result;
   };
 
+  const totalWordsCount = Array.from(selectedCategories).reduce((total, catId) => {
+    return total + (WORDS_BY_CATEGORY[catId]?.length || 0);
+  }, 0);
   const allCategoryIds = CATEGORIES.map((c) => c.id);
   const allSelected = allCategoryIds.every((id) => selectedCategories.has(id));
 
@@ -1291,7 +1294,7 @@ function SetupScreen({ onStart }) {
         <div className="setup-section">
           <div className="names-label-row" style={{ justifyContent: 'center', width: '100%' }}>
             <label className="setup-label" style={{ marginBottom: '8px', textAlign: 'center', width: '100%' }}>
-              Categorieën ({selectedCategories.size}/{CATEGORIES.length})
+              Categorieën ({selectedCategories.size} stuks, {totalWordsCount} woorden)
             </label>
           </div>
 
