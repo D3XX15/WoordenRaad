@@ -1230,13 +1230,13 @@ function SetupScreen({ onStart }) {
               className={`time-btn time-btn-minus${count <= 2 ? " time-btn-disabled" : ""}`}
               onClick={() => updateCount(count - 1)}
               disabled={count <= 2}
-            >−</button>
+            >−1</button>
             <span className="time-display">{count}</span>
             <button
               className={`time-btn time-btn-plus${count >= 10 ? " time-btn-disabled" : ""}`}
               onClick={() => updateCount(count + 1)}
               disabled={count >= 10}
-            >+</button>
+            >+1</button>
           </div>
           {teamMode ? (
             <div className="teams-grid">
