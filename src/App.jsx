@@ -2412,7 +2412,7 @@ export default function App() {
 
         .names-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         .names-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-        .names-label-row .setup-label { margin-top: 4px; margin-bottom: 4px; }
+        .names-label-row .setup-label { margin-top: 10px; margin-bottom: 0; }
         .toggle-all-btn {
           width: 100%;
           padding: 18px;
