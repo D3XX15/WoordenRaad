@@ -2485,7 +2485,7 @@ export default function App() {
         }
         .start-btn.ready:hover { background: rgba(167,139,250,0.15); }
         .mode-toggle-btn {
-          margin-bottom: 20px;
+          margin-bottom: 24px;
           border: 3px solid rgba(255,255,255,0.2);
         }
         .mode-toggle-singles {
