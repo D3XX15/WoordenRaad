@@ -1314,21 +1314,6 @@ function SetupScreen({ onStart }) {
         </div>
 
         <div className="setup-section">
-          <label className="setup-label" style={{ textAlign: 'center', display: 'block', width: '100%' }}>
-            Categoriekeuze
-          </label>
-          
-          <div className="category-grid">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.id}
-                className={`category-btn${selectedCategories.has(cat.id) ? " category-btn-active" : ""}`}
-                onClick={() => toggleCategory(cat.id)}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
 
           <button
             className={`toggle-all-btn${allSelected ? " toggle-all-btn-active" : ""}`}
@@ -1340,12 +1325,23 @@ function SetupScreen({ onStart }) {
           >
             {allSelected ? "🎲 Alle categorieën" : "🎲 Alle categorieën"}
           </button>
-          
+
+          <div className="category-grid">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                className={`category-btn${selectedCategories.has(cat.id) ? " category-btn-active" : ""}`}
+                onClick={() => toggleCategory(cat.id)}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="names-label-row" style={{ justifyContent: 'center', width: '100%' }}>
           <label className="setup-label" style={{ textAlign: 'center', width: '100%' }}>
-            in totaal {totalWordsCount}/{absoluteTotalWords} woorden
+            {totalWordsCount}/{absoluteTotalWords} woorden in het spel
           </label>
         </div>
 
@@ -2428,8 +2424,7 @@ export default function App() {
           background: rgba(255,255,255,0.05);
           color: rgba(255,255,255,0.45);
           transition: all 0.25s;
-          margin-top: 20px;
-          margin-bottom: 8px;
+          margin-bottom: 12px;
         }
         .toggle-all-btn:hover { background: rgba(255,255,255,0.1); }
         .toggle-all-btn-active {
