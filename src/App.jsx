@@ -1296,7 +1296,7 @@ function SetupScreen({ onStart }) {
 
         <div className="setup-section">
           <div className="names-label-row" style={{ justifyContent: 'center', width: '100%' }}>
-            <label className="setup-label" style={{ marginBottom: '8px', textAlign: 'center', width: '100%' }}>
+            <label className="setup-label" style={{ marginBottom: '4px', textAlign: 'center', width: '100%' }}>
               Aantal woorden ({totalWordsCount}/{absoluteTotalWords})
             </label>
           </div>
