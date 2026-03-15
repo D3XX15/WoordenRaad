@@ -1230,13 +1230,13 @@ function SetupScreen({ onStart }) {
               className={`time-btn time-btn-minus${count <= 2 ? " time-btn-disabled" : ""}`}
               onClick={() => updateCount(count - 1)}
               disabled={count <= 2}
-            >−1</button>
+            >−</button>
             <span className="time-display">{count}</span>
             <button
               className={`time-btn time-btn-plus${count >= 10 ? " time-btn-disabled" : ""}`}
               onClick={() => updateCount(count + 1)}
               disabled={count >= 10}
-            >+1</button>
+            >+</button>
           </div>
           {teamMode ? (
             <div className="teams-grid">
@@ -1303,13 +1303,13 @@ function SetupScreen({ onStart }) {
               className={`time-btn time-btn-minus${roundTime <= 30 ? " time-btn-disabled" : ""}`}
               onClick={() => setRoundTime((t) => Math.max(30, t - 30))}
               disabled={roundTime <= 30}
-            >−30s</button>
+            >−30</button>
             <span className="time-display">{roundTime}s</span>
             <button
               className={`time-btn time-btn-plus${roundTime >= 300 ? " time-btn-disabled" : ""}`}
               onClick={() => setRoundTime((t) => Math.min(300, t + 30))}
               disabled={roundTime >= 300}
-            >+30s</button>
+            >+30</button>
           </div>
         </div>
 
