@@ -1314,18 +1314,10 @@ function SetupScreen({ onStart }) {
         </div>
 
         <div className="setup-section">
-
-          <button
-            className={`toggle-all-btn${allSelected ? " toggle-all-btn-active" : ""}`}
-            onClick={() => toggleCategory("all")}
-            style={{ 
-              width: '100%',
-              display: 'block'
-            }}
-          >
-            {allSelected ? "🎲 Alle categorieën" : "🎲 Alle categorieën"}
-          </button>
-
+          <label className="setup-label" style={{ textAlign: 'center', display: 'block', width: '100%' }}>
+            Categoriekeuze
+          </label>
+          
           <div className="category-grid">
             {CATEGORIES.map((cat) => (
               <button
@@ -1337,6 +1329,18 @@ function SetupScreen({ onStart }) {
               </button>
             ))}
           </div>
+
+          <button
+            className={`toggle-all-btn${allSelected ? " toggle-all-btn-active" : ""}`}
+            onClick={() => toggleCategory("all")}
+            style={{ 
+              width: '100%',
+              display: 'block'
+            }}
+          >
+            {allSelected ? "🎲 Alle categorieën" : "🎲 Alle categorieën"}
+          </button>
+          
         </div>
 
         <div className="names-label-row" style={{ justifyContent: 'center', width: '100%' }}>
