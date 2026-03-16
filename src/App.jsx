@@ -1284,7 +1284,6 @@ function SetupScreen({ onStart }) {
                 fontSize: '0.75rem',
                 fontWeight: '900',
                 letterSpacing: '1px',
-                boxShadow: '0 4px 10px rgba(74, 144, 226, 0.3)',
                 zIndex: 1
               }}>
                 TEAMS
@@ -1385,7 +1384,6 @@ function SetupScreen({ onStart }) {
                 fontSize: '0.75rem',
                 fontWeight: '900',
                 letterSpacing: '1px',
-                boxShadow: '0 4px 10px rgba(74, 144, 226, 0.3)',
                 zIndex: 1
               }}>
                 SPELERS
