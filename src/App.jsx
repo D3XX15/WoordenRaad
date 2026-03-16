@@ -1328,9 +1328,8 @@ function SetupScreen({ onStart }) {
               )}
             </div>
           ) : (
-            /* HIER IS DE BORDER EN BADGE NU GROEN GEMAAKT (#2ecc71) */
             <div className="teams-setup-wrapper" style={{
-              border: '3px solid #2ecc71',
+              border: '3px solid #4a90e2',
               borderRadius: '24px',
               padding: '25px',
               backgroundColor: 'rgba(0,0,0,0.02)', 
@@ -1341,14 +1340,14 @@ function SetupScreen({ onStart }) {
                 position: 'absolute',
                 top: '-14px',
                 left: '20px',
-                backgroundColor: '#2ecc71',
+                backgroundColor: '#4a90e2',
                 color: 'white',
                 padding: '4px 16px',
                 borderRadius: '12px',
                 fontSize: '0.75rem',
                 fontWeight: '900',
                 letterSpacing: '1px',
-                boxShadow: '0 4px 10px rgba(46, 204, 113, 0.3)',
+                boxShadow: '0 4px 10px rgba(74, 144, 226, 0.3)',
                 zIndex: 1
               }}>
                 SPELERS CONFIGURATIE
@@ -1356,6 +1355,7 @@ function SetupScreen({ onStart }) {
 
               <div className="names-grid">
                 {names.map((name, i) => (
+                  /* TOEVOEGEN VAN small-group KLASSE VOOR DEZELFDE GROOTTE */
                   <div key={i} className="player-input-group small-group">
                     <div className="player-name-container player-bg">
                       <span className="player-index-badge">{i + 1}</span>
@@ -1380,7 +1380,7 @@ function SetupScreen({ onStart }) {
                 ))}
                 {names.length < 10 && (
                   <button className="add-player-integrated" onClick={addPlayer}>
-                    <span className="plus-icon-box" style={{ backgroundColor: '#2ecc71' }}>+</span>
+                    <span className="plus-icon-box">+</span>
                     <span>Speler toevoegen</span>
                   </button>
                 )}
