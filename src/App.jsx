@@ -1299,35 +1299,40 @@ const removePlayer = (index) => {
     </div>
   ) : (
     /* --- INDIVIDUELE MODUS (Jouw hoofdvraag) --- */
-    <div className="names-grid">
-      {names.map((name, i) => (
-        <div key={i} className="name-input-wrapper">
-          <span className="name-num">{i + 1}</span>
-          <input
-            className="name-input"
-            placeholder="Naam invullen..."
-            value={name}
-            onChange={(e) => updateName(i, e.target.value)}
-            maxLength={16}
-          />
-          {names.length > 2 && (
-            <button className="delete-btn" onClick={() => removePlayer(i)} title="Verwijder speler">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                <path d="M18 6L6 18M6 6l12 12"/>
-              </svg>
-            </button>
-          )}
-        </div>
-      ))}
-
-      {/* De dynamische "Plus" input onderaan */}
-      {names.length < 10 && (
-        <button className="add-player-row dashed" onClick={addPlayer}>
-          <div className="plus-icon">+</div>
-          <span>Speler toevoegen</span>
+<div className="names-grid">
+  {names.map((name, i) => (
+    <div key={i} className="player-input-group">
+      <div className="player-name-container">
+        <span className="player-index-badge">{i + 1}</span>
+        <input
+          className="integrated-name-input"
+          placeholder="Naam invullen..."
+          value={name}
+          onChange={(e) => updateName(i, e.target.value)}
+          maxLength={16}
+        />
+      </div>
+      
+      {names.length > 2 && (
+        <button 
+          className="integrated-delete-btn" 
+          onClick={() => removePlayer(i)}
+          title="Verwijder speler"
+        >
+          ✕
         </button>
       )}
     </div>
+  ))}
+
+  {/* De plus-knop in dezelfde stijl */}
+  {names.length < 10 && (
+    <button className="add-player-integrated" onClick={addPlayer}>
+      <span className="plus-icon-box">+</span>
+      <span>Speler toevoegen</span>
+    </button>
+  )}
+</div>
   )}
 </div>
 
@@ -2490,53 +2495,90 @@ export default function App() {
           transition: all 0.25s;
           margin-top: 4px;
         }
-.name-input-wrapper {
-  position: relative;
+/* De container die de input en de knop samenvoegt */
+.player-input-group {
   display: flex;
-  align-items: center;
+  margin-bottom: 12px;
+  height: 48px; /* Of de hoogte die jij mooi vindt */
 }
 
-.delete-btn {
-  position: absolute;
-  right: 10px;
+/* Het linkergedeelte (de naam box) */
+.player-name-container {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px 0 0 12px; /* Alleen links afgerond */
+  padding: 0 12px;
+  flex-grow: 1;
+  transition: border-color 0.2s;
+}
+
+/* De input binnenin de box */
+.integrated-name-input {
+  background: transparent;
+  border: none;
+  color: white;
+  width: 100%;
+  height: 100%;
+  font-size: 1rem;
+  outline: none;
+  padding-left: 8px;
+}
+
+/* Het nummer voor de naam */
+.player-index-badge {
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: bold;
+  font-size: 0.85rem;
+  min-width: 20px;
+}
+
+/* De rechterkant (de verwijderknop) */
+.integrated-delete-btn {
   background: #ff4757;
   color: white;
   border: none;
-  border-radius: 50%;
-  width: 26px;
-  height: 26px;
+  border-radius: 0 12px 12px 0; /* Alleen rechts afgerond */
+  width: 48px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  transition: transform 0.2s;
+  font-size: 1.2rem;
+  transition: background 0.2s, width 0.2s;
 }
 
-.delete-btn:hover {
-  transform: scale(1.15);
+.integrated-delete-btn:hover {
   background: #ff2e44;
 }
 
-.add-player-row.dashed {
+/* De "Toevoegen" knop die de stijl van de boxen volgt */
+.add-player-integrated {
+  width: 100%;
+  height: 48px;
   background: rgba(255, 255, 255, 0.05);
-  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border: 2px dashed rgba(255, 255, 255, 0.15);
   border-radius: 12px;
-  padding: 12px;
-  color: #fff;
-  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  width: 100%;
-  margin-top: 10px;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
 }
 
-.add-player-row.dashed:hover {
+.add-player-integrated:hover {
+  background: rgba(255, 255, 255, 0.08);
   border-color: #4ade80;
   color: #4ade80;
-  background: rgba(74, 222, 128, 0.05);
+}
+
+.plus-icon-box {
+  font-size: 1.4rem;
+  font-weight: bold;
 }
         .time-control { display: flex; align-items: center; gap: 12px; }
         .time-btn {
