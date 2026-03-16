@@ -1087,39 +1087,56 @@ function SetupScreen({ onStart }) {
     });
   };
 
-  const updateCount = (n) => {
-    const clamped = Math.min(10, Math.max(2, n));
-    setCount(clamped);
-    if (teamMode) {
-      // Bereken nieuwe teamSizes synchroon op basis van huidige state
-      const newSizes = [...teamSizes.slice(0, clamped)];
-      while (newSizes.length < clamped) newSizes.push(2);
-      const total = newSizes.reduce((a, b) => a + b, 0);
+const addPlayer = () => {
+  if (teamMode) {
+    // In teamMode voegen we een heel team toe (standaard 2 personen)
+    if (teamSizes.length < 10) {
+      const newTeamSizes = [...teamSizes, 2];
+      setTeamSizes(newTeamSizes);
+      setTeamNames(prev => [...prev, `Team ${prev.length + 1}`]);
+      
+      // Update ook de namen-lijst (voeg 2 lege plekken toe voor het nieuwe team)
+      setNames(prev => [...prev, "", ""]);
+      // Update de count (aantal teams)
+      setCount(newTeamSizes.length);
+    }
+  } else {
+    // Individuele modus
+    if (names.length < 10) {
+      setNames(prev => [...prev, ""]);
+      setCount(prev => prev + 1);
+    }
+  }
+};
+
+const removePlayer = (index) => {
+  if (teamMode) {
+    // Verwijder een team op basis van team-index
+    if (teamSizes.length > 2) {
+      const newSizes = teamSizes.filter((_, i) => i !== index);
       setTeamSizes(newSizes);
-      setTeamNames((prev) => {
-        const next = [...prev.slice(0, clamped)];
-        while (next.length < clamped) next.push(`Team ${next.length + 1}`);
+      setTeamNames(prev => prev.filter((_, i) => i !== index));
+      
+      // Bereken welke namen uit de platte namenlijst weg moeten
+      let offset = 0;
+      for(let i = 0; i < index; i++) offset += teamSizes[i];
+      const numToRemove = teamSizes[index];
+      
+      setNames(prev => {
+        const next = [...prev];
+        next.splice(offset, numToRemove);
         return next;
       });
-      setNames((prevNames) => {
-        const next = [...prevNames];
-        while (next.length < total) next.push("");
-        const result = [];
-        let offset = 0;
-        for (let t = 0; t < clamped; t++) {
-          result.push(...next.slice(offset, offset + newSizes[t]));
-          offset += newSizes[t];
-        }
-        return result.slice(0, total);
-      });
-    } else {
-      setNames((prev) => {
-        const next = [...prev];
-        while (next.length < clamped) next.push("");
-        return next.slice(0, clamped);
-      });
+      setCount(newSizes.length);
     }
-  };
+  } else {
+    // Verwijder individuele speler
+    if (names.length > 2) {
+      setNames(prev => prev.filter((_, i) => i !== index));
+      setCount(prev => prev - 1);
+    }
+  }
+};
 
   // Voeg een speler toe aan team t
   const addPlayerToTeam = (t) => {
@@ -1223,79 +1240,96 @@ function SetupScreen({ onStart }) {
           </button>
         </div>
 
-        <div className="setup-section">
-{/*       <label className="setup-label" style={{textAlign: 'center'}}>
-            {teamMode ? "Aantal teams" : "Aantal spelers"}
-          </label> 
-*/}
-          <div className="time-control" style={{marginBottom: '20px'}}>
-            <button
-              className={`time-btn time-btn-minus${count <= 2 ? " time-btn-disabled" : ""}`}
-              onClick={() => updateCount(count - 1)}
-              disabled={count <= 2}
-            >−</button>
-            <span className="time-display">{count} {teamMode ? "teams" : "spelers"}</span>
-            <button
-              className={`time-btn time-btn-plus${count >= 10 ? " time-btn-disabled" : ""}`}
-              onClick={() => updateCount(count + 1)}
-              disabled={count >= 10}
-            >+</button>
-          </div>
-          {teamMode ? (
-            <div className="teams-grid">
-              {Array.from({ length: count }, (_, t) => {
-                const offset = getTeamOffset(t);
-                const size = teamSizes[t];
-                return (
-                  <div key={t} className="team-block">
-                    <div className="team-block-header">
-                      <input
-                        className="name-input team-name-input"
-                        value={teamNames[t] ?? `Team ${t + 1}`}
-                        onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
-                        maxLength={12}
-                      />
-                      <div className="team-size-controls">
-                        <button className={`team-size-btn team-size-remove${size <= 2 ? " team-size-btn-disabled" : ""}`} onClick={() => removePlayerFromTeam(t)} title="Speler verwijderen" disabled={size <= 2}>−1</button>
-                        <button className={`team-size-btn team-size-add${size >= 10 ? " team-size-btn-disabled" : ""}`} onClick={() => addPlayerToTeam(t)} title="Speler toevoegen" disabled={size >= 10}>+1</button>
-                      </div>
-                    </div>
-                    {Array.from({ length: size }, (_, p) => {
-                      const idx = offset + p;
-                      return (
-                        <div key={idx} className="name-input-wrap">
-                          <span className="name-num">{p + 1}</span>
-                          <input
-                            className="name-input"
-                            placeholder={`Speler ${p + 1}`}
-                            value={names[idx] ?? ""}
-                            onChange={(e) => updateName(idx, e.target.value)}
-                            maxLength={16}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })}
+<div className="setup-section">
+  {teamMode ? (
+    /* --- TEAM MODUS --- */
+    <div className="teams-grid">
+      {teamSizes.map((size, t) => {
+        const offset = getTeamOffset(t);
+        return (
+          <div key={t} className="team-block">
+            <div className="team-block-header">
+              <input
+                className="name-input team-name-input"
+                value={teamNames[t] ?? `Team ${t + 1}`}
+                onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
+                maxLength={12}
+              />
+              <div className="team-actions">
+                {/* Verwijder team knop (alleen als er > 2 teams zijn) */}
+                {teamSizes.length > 2 && (
+                  <button className="delete-btn-small" onClick={() => removePlayer(t)} title="Team verwijderen">✕</button>
+                )}
+              </div>
             </div>
-          ) : (
-            <div className="names-grid">
-              {names.map((name, i) => (
-                <div key={i} className="name-input-wrap">
-                  <span className="name-num">{i + 1}</span>
+            
+            {Array.from({ length: size }, (_, p) => {
+              const idx = offset + p;
+              return (
+                <div key={idx} className="name-input-wrap">
+                  <span className="name-num">{p + 1}</span>
                   <input
                     className="name-input"
-                    placeholder={`Speler ${i + 1}`}
-                    value={name}
-                    onChange={(e) => updateName(i, e.target.value)}
+                    placeholder={`Speler ${p + 1}`}
+                    value={names[idx] ?? ""}
+                    onChange={(e) => updateName(idx, e.target.value)}
                     maxLength={16}
                   />
+                  {/* Optioneel: -1 knop voor teamgrootte behouden zoals je had */}
                 </div>
-              ))}
-            </div>
+              );
+            })}
+            
+            {/* Knop om speler aan specifiek team toe te voegen */}
+            {size < 10 && (
+              <button className="add-player-inline" onClick={() => addPlayerToTeam(t)}>
+                + Speler toevoegen aan team
+              </button>
+            )}
+          </div>
+        );
+      })}
+      
+      {/* Knop om een heel nieuw team toe te voegen */}
+      {teamSizes.length < 6 && (
+        <button className="add-player-row dashed" onClick={addPlayer}>
+          <span className="plus-icon">+</span> Nieuw Team
+        </button>
+      )}
+    </div>
+  ) : (
+    /* --- INDIVIDUELE MODUS (Jouw hoofdvraag) --- */
+    <div className="names-grid">
+      {names.map((name, i) => (
+        <div key={i} className="name-input-wrapper">
+          <span className="name-num">{i + 1}</span>
+          <input
+            className="name-input"
+            placeholder="Naam invullen..."
+            value={name}
+            onChange={(e) => updateName(i, e.target.value)}
+            maxLength={16}
+          />
+          {names.length > 2 && (
+            <button className="delete-btn" onClick={() => removePlayer(i)} title="Verwijder speler">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                <path d="M18 6L6 18M6 6l12 12"/>
+              </svg>
+            </button>
           )}
         </div>
+      ))}
+
+      {/* De dynamische "Plus" input onderaan */}
+      {names.length < 10 && (
+        <button className="add-player-row dashed" onClick={addPlayer}>
+          <div className="plus-icon">+</div>
+          <span>Speler toevoegen</span>
+        </button>
+      )}
+    </div>
+  )}
+</div>
 
         <div className="setup-section">
 {/*       <label className="setup-label" style={{ textAlign: 'center', display: 'block', width: '100%' }}>
@@ -2456,6 +2490,54 @@ export default function App() {
           transition: all 0.25s;
           margin-top: 4px;
         }
+.name-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.delete-btn {
+  position: absolute;
+  right: 10px;
+  background: #ff4757;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+}
+
+.delete-btn:hover {
+  transform: scale(1.15);
+  background: #ff2e44;
+}
+
+.add-player-row.dashed {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 12px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.add-player-row.dashed:hover {
+  border-color: #4ade80;
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.05);
+}
         .time-control { display: flex; align-items: center; gap: 12px; }
         .time-btn {
           width: 64px; height: 44px;
