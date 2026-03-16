@@ -2754,7 +2754,7 @@ export default function App() {
 
 .player-bg {
   background: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid #ff4757;
+  border: none;
 }
 
 .btn-subtle {
