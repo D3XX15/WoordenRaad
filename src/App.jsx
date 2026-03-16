@@ -1212,14 +1212,14 @@ function SetupScreen({ onStart }) {
             style={{ margin: 0, flex: 1 }}
             onClick={() => !teamMode ? null : toggleTeamMode()}
           >
-            👤
+            👤 Individueel
           </button>
           <button
             className={`start-btn mode-toggle-btn${teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
             style={{ margin: 0, flex: 1 }}
             onClick={() => teamMode ? null : toggleTeamMode()}
           >
-            👥
+            👥 Teams
           </button>
         </div>
 
@@ -1229,8 +1229,8 @@ function SetupScreen({ onStart }) {
               border: '3px solid #4a90e2',
               borderRadius: '24px',
               padding: '25px',
-              background: 'linear-gradient(135deg, #f5f9ff 0%, #eef5ff 100%)',
-              boxShadow: '0 8px 24px rgba(74, 144, 226, 0.15)',
+              /* Achtergrond aangepast naar transparant/subtiel grijs zoals de rest */
+              backgroundColor: 'rgba(0,0,0,0.02)', 
               marginBottom: '20px',
               position: 'relative'
             }}>
@@ -1256,16 +1256,15 @@ function SetupScreen({ onStart }) {
                   const offset = getTeamOffset(t);
                   return (
                     <div key={t} className="team-section-container" style={{
-                      backgroundColor: 'white',
+                      /* Geen witte kaart meer, maar de standaard container look */
+                      backgroundColor: 'transparent',
                       borderRadius: '16px',
-                      padding: '15px',
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-                      border: '1px solid rgba(74, 144, 226, 0.1)'
+                      padding: '10px 0'
                     }}>
                       <div className="team-header-row">
                         <input
                           className="team-name-input-flat"
-                          style={{ fontWeight: 'bold', color: '#4a90e2' }}
+                          style={{ fontWeight: 'bold', color: '#4a90e2', background: 'transparent' }}
                           value={teamNames[t] ?? `Team ${t + 1}`}
                           onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
                           maxLength={12}
@@ -1281,7 +1280,7 @@ function SetupScreen({ onStart }) {
                           const idx = offset + p;
                           return (
                             <div key={idx} className="player-input-group small-group">
-                              <div className="player-name-container player-bg" style={{ backgroundColor: '#f8f9fa' }}>
+                              <div className="player-name-container player-bg">
                                 <span className="player-index-badge" style={{ backgroundColor: '#4a90e2' }}>{p + 1}</span>
                                 <input
                                   className="integrated-name-input"
@@ -1318,7 +1317,7 @@ function SetupScreen({ onStart }) {
                     marginTop: '15px', 
                     width: '100%', 
                     border: '2px dashed #4a90e2',
-                    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                    background: 'transparent',
                     color: '#4a90e2' 
                   }}
                 >
