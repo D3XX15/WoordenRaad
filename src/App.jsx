@@ -1234,7 +1234,7 @@ function SetupScreen({ onStart }) {
               onClick={() => updateCount(count - 1)}
               disabled={count <= 2}
             >−</button>
-            <span className="time-display">{count} spelers</span>
+            <span className="time-display">{count} {teamMode ? "teams" : "spelers"}</span>
             <button
               className={`time-btn time-btn-plus${count >= 10 ? " time-btn-disabled" : ""}`}
               onClick={() => updateCount(count + 1)}
