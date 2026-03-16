@@ -471,7 +471,7 @@ const WORDS_BY_CATEGORY = (() => {
     'implosie', 'mutatie', 'nihilisme', 'paradox', 'pesticide', 'onderzoeksinstituut', 'promotie',
     'relatief', 'vergiftiging', 'tijdreizen', 'utopie', 'stroomuitval', 'hersenspoeling',
     'isolatie', 'sprookje', 'plagiaat', 'barometer', 'geigerteller', 'bunsenbrander',
-    'stethoscoop', 'thermometer', 'vergrootglas', 'loep', 'magneet', 'metabolisme'
+    'stethoscoop', 'thermometer', 'vergrootglas', 'loep', 'magneet', 'metabolisme',
     'transistor', 'dwangbuis', 'scalpel', 'defibrillator', 'atoomkern',
     'nucleaire reactor', 'radioactiviteit', 'biologie', 'scheikunde', 'natuurkunde', 'wiskunde',
     'informatica', 'geologie', 'meteorologie', 'genetica', 'microbiologie', 'ecologie',
