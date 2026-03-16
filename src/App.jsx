@@ -2502,10 +2502,10 @@ export default function App() {
           transition: all 0.25s;
           margin-top: 4px;
         }
-/* --- BASIS INPUT STYLING (Voor zowel Individueel als Team spelers) --- */
+/* --- BASIS INPUT STYLING (Individueel & Team) --- */
 .player-input-group {
   display: flex;
-  margin-bottom: 12px;
+  margin-bottom: 6px; /* Ruimte tussen spelers verlaagd */
   height: 48px;
 }
 
@@ -2514,10 +2514,15 @@ export default function App() {
   align-items: center;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px 0 0 12px;
+  border-radius: 12px; /* Standaard overal rond */
   padding: 0 12px;
   flex-grow: 1;
   transition: border-color 0.2s;
+}
+
+/* Als er een delete-knop achter staat, de rechterkant van de box recht maken */
+.player-input-group:has(.integrated-delete-btn) .player-name-container {
+  border-radius: 12px 0 0 12px;
 }
 
 .integrated-name-input {
@@ -2549,7 +2554,7 @@ export default function App() {
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
-  transition: background 0.2s, width 0.2s;
+  transition: background 0.2s;
 }
 
 .integrated-delete-btn:hover {
@@ -2559,7 +2564,7 @@ export default function App() {
 /* --- TOEVOEG KNOPPEN (Dashed stijl) --- */
 .add-player-integrated {
   width: 100%;
-  height: 48px;
+  height: 44px; /* Iets compacter */
   background: rgba(255, 255, 255, 0.05);
   border: 2px dashed rgba(255, 255, 255, 0.15);
   border-radius: 12px;
@@ -2569,6 +2574,7 @@ export default function App() {
   justify-content: center;
   gap: 12px;
   cursor: pointer;
+  margin-top: 4px; /* Ruimte boven button verlaagd */
   transition: all 0.2s;
   font-size: 1rem;
 }
@@ -2584,10 +2590,10 @@ export default function App() {
   font-weight: bold;
 }
 
-/* --- NIEUWE TEAM STYLING (Zonder de grote boxen) --- */
+/* --- TEAM STYLING (Extra compact) --- */
 .team-section-container {
-  margin-bottom: 24px;
-  padding-bottom: 12px;
+  margin-bottom: 16px; /* Ruimte tussen teams verlaagd */
+  padding-bottom: 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -2595,7 +2601,7 @@ export default function App() {
   position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px; /* Ruimte onder teamnaam verlaagd */
 }
 
 .team-name-input-flat {
@@ -2603,17 +2609,12 @@ export default function App() {
   border: none !important;
   border-bottom: 2px solid rgba(66, 135, 245, 0.4) !important;
   color: #4287f5 !important;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 800;
   text-transform: uppercase;
-  padding: 4px 0;
+  padding: 2px 0;
   width: 100%;
   outline: none;
-  transition: border-color 0.2s;
-}
-
-.team-name-input-flat:focus {
-  border-color: #4287f5 !important;
 }
 
 .delete-btn-round {
@@ -2624,33 +2625,40 @@ export default function App() {
   color: white;
   border: none;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  transition: transform 0.2s;
-  z-index: 2;
-}
-
-.delete-btn-round:hover {
-  transform: scale(1.2);
 }
 
 .team-players-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px; /* Ruimte tussen spelers in team verlaagd */
   padding-left: 10px;
 }
 
 /* --- HULPMIDDELEN VOOR TEAMS --- */
 .small-group {
-  height: 38px !important;
-  margin-bottom: 8px;
+  height: 36px !important; /* Nog compacter voor teams */
+  margin-bottom: 4px !important;
+}
+
+.small-group .player-name-container {
+  border-radius: 10px; /* Iets subtielere hoeken voor kleine boxjes */
+}
+
+.small-group:has(.integrated-delete-btn) .player-name-container {
+  border-radius: 10px 0 0 10px;
+}
+
+.small-group .integrated-delete-btn {
+  border-radius: 0 10px 10px 0;
+  width: 36px !important;
 }
 
 .player-bg {
@@ -2660,23 +2668,16 @@ export default function App() {
 .btn-subtle {
   background: rgba(255, 255, 255, 0.1) !important;
   color: white !important;
-  width: 38px !important;
-}
-
-.btn-subtle:hover {
-  background: #ff4757 !important;
 }
 
 .small-add {
-  height: 34px !important;
-  font-size: 0.85rem !important;
-  margin-top: 5px;
-  border-style: solid !important;
-  border-width: 1px !important;
+  height: 32px !important;
+  font-size: 0.8rem !important;
+  margin-top: 2px !important;
 }
 
 .team-add-btn {
-  margin-top: 10px;
+  margin-top: 6px; /* Ruimte boven '+ Nieuw Team' verlaagd */
 }
         .time-control { display: flex; align-items: center; gap: 12px; }
         .time-btn {
