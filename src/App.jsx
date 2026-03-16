@@ -1361,7 +1361,7 @@ function SetupScreen({ onStart }) {
                     color: '#4a90e2' 
                   }}
                 >
-                  Nieuw Team
+                  TEAM TOEVOEGEN
                 </button>
               )}
             </div>
@@ -2687,7 +2687,7 @@ export default function App() {
   position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .team-name-input-flat {
@@ -2723,13 +2723,12 @@ export default function App() {
 .team-players-list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
 }
 
 /* --- HULPMIDDELEN VOOR TEAMS --- */
 .small-group {
   height: 38px !important;
-  margin-bottom: 6px !important;
+  margin-bottom: 4px !important;
 }
 
 .small-group .player-name-container {
