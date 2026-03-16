@@ -1287,7 +1287,7 @@ function SetupScreen({ onStart }) {
                 boxShadow: '0 4px 10px rgba(74, 144, 226, 0.3)',
                 zIndex: 1
               }}>
-                TEAM CONFIGURATIE
+                TEAMS
               </div>
 
               <div className="teams-grid">
@@ -1341,7 +1341,7 @@ function SetupScreen({ onStart }) {
                         <button 
                           className="add-player-integrated" 
                           onClick={() => addPlayerToTeam(t)}>
-                          + Speler toevoegen
+                          Speler toevoegen
                         </button>
                       )}
                     </div>
@@ -1361,7 +1361,7 @@ function SetupScreen({ onStart }) {
                     color: '#4a90e2' 
                   }}
                 >
-                  + Nieuw Team
+                  Nieuw Team
                 </button>
               )}
             </div>
@@ -1388,7 +1388,7 @@ function SetupScreen({ onStart }) {
                 boxShadow: '0 4px 10px rgba(74, 144, 226, 0.3)',
                 zIndex: 1
               }}>
-                SPELERS CONFIGURATIE
+                SPELERS
               </div>
 
               <div className="names-grid">
@@ -1419,7 +1419,7 @@ function SetupScreen({ onStart }) {
                 {names.length < 10 && (
                   <button className="add-player-integrated"
                     onClick={addPlayer}>
-                    + Speler toevoegen
+                    Speler toevoegen
                   </button>
                 )}
               </div>
@@ -2729,7 +2729,7 @@ export default function App() {
 /* --- HULPMIDDELEN VOOR TEAMS --- */
 .small-group {
   height: 38px !important;
-  margin-bottom: 8px !important;
+  margin-bottom: 6px !important;
 }
 
 .small-group .player-name-container {
