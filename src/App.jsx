@@ -1352,7 +1352,7 @@ function SetupScreen({ onStart }) {
               marginBottom: allSelected ? '0px' : '15px'
             }}
           >
-            {allSelected ? "🎲 Alle categorieën geselecteerd" : "⚙️ Pas categorieën aan"}
+            {allSelected ? "🎲 Alle categorieën" : "⚙️ Custom selectie"}
           </button>
 
           {/* GRID ONLY SHOWS IF NOT ALL SELECTED */}
