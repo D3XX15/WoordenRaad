@@ -2728,7 +2728,7 @@ export default function App() {
 /* --- HULPMIDDELEN VOOR TEAMS --- */
 .small-group {
   height: 38px !important;
-  margin-bottom: 4px !important;
+  margin-bottom: 8px !important;
 }
 
 .small-group .player-name-container {
