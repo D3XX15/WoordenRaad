@@ -2557,7 +2557,7 @@ export default function App() {
 /* --- BASIS INPUT STYLING (Individueel & Team) --- */
 .player-input-group {
   display: flex;
-  margin-bottom: 4px; 
+  margin-bottom: 0; 
   height: 48px;
   width: 100%;
 }
@@ -2690,8 +2690,7 @@ export default function App() {
 .team-players-list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding-left: 0;
+  gap: 10px;
 }
 
 /* --- HULPMIDDELEN VOOR TEAMS --- */
