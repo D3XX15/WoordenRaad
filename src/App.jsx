@@ -1066,20 +1066,20 @@ function SetupScreen({ onStart }) {
   const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
   const [teamMode, setTeamMode] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState(() => new Set(CATEGORIES.map((c) => c.id)));
-  // In team mode: teamSizes[t] = aantal spelers in team t
   const [teamSizes, setTeamSizes] = useState([2, 2]);
   const [teamNames, setTeamNames] = useState(["Team 1", "Team 2"]);
+
+  const allCategoryIds = CATEGORIES.map((c) => c.id);
+  const allSelected = allCategoryIds.every((id) => selectedCategories.has(id));
 
   const toggleTeamMode = () => {
     setTeamMode((prev) => {
       if (!prev) {
-        // Schakel over naar team-modus: 2 teams van elk 2 spelers
         setCount(2);
         setTeamSizes([2, 2]);
         setTeamNames(["Team 1", "Team 2"]);
         setNames(Array(4).fill(""));
       } else {
-        // Terug naar singles
         setCount(3);
         setNames(["Dennis", "Marion", "Theo"]);
       }
@@ -1087,58 +1087,47 @@ function SetupScreen({ onStart }) {
     });
   };
 
-const addPlayer = () => {
-  if (teamMode) {
-    // In teamMode voegen we een heel team toe (standaard 2 personen)
-    if (teamSizes.length < 10) {
-      const newTeamSizes = [...teamSizes, 2];
-      setTeamSizes(newTeamSizes);
-      setTeamNames(prev => [...prev, `Team ${prev.length + 1}`]);
-      
-      // Update ook de namen-lijst (voeg 2 lege plekken toe voor het nieuwe team)
-      setNames(prev => [...prev, "", ""]);
-      // Update de count (aantal teams)
-      setCount(newTeamSizes.length);
+  const addPlayer = () => {
+    if (teamMode) {
+      if (teamSizes.length < 10) {
+        const newTeamSizes = [...teamSizes, 2];
+        setTeamSizes(newTeamSizes);
+        setTeamNames(prev => [...prev, `Team ${prev.length + 1}`]);
+        setNames(prev => [...prev, "", ""]);
+        setCount(newTeamSizes.length);
+      }
+    } else {
+      if (names.length < 10) {
+        setNames(prev => [...prev, ""]);
+        setCount(prev => prev + 1);
+      }
     }
-  } else {
-    // Individuele modus
-    if (names.length < 10) {
-      setNames(prev => [...prev, ""]);
-      setCount(prev => prev + 1);
-    }
-  }
-};
+  };
 
-const removePlayer = (index) => {
-  if (teamMode) {
-    // Verwijder een team op basis van team-index
-    if (teamSizes.length > 2) {
-      const newSizes = teamSizes.filter((_, i) => i !== index);
-      setTeamSizes(newSizes);
-      setTeamNames(prev => prev.filter((_, i) => i !== index));
-      
-      // Bereken welke namen uit de platte namenlijst weg moeten
-      let offset = 0;
-      for(let i = 0; i < index; i++) offset += teamSizes[i];
-      const numToRemove = teamSizes[index];
-      
-      setNames(prev => {
-        const next = [...prev];
-        next.splice(offset, numToRemove);
-        return next;
-      });
-      setCount(newSizes.length);
+  const removePlayer = (index) => {
+    if (teamMode) {
+      if (teamSizes.length > 2) {
+        const newSizes = teamSizes.filter((_, i) => i !== index);
+        setTeamSizes(newSizes);
+        setTeamNames(prev => prev.filter((_, i) => i !== index));
+        let offset = 0;
+        for (let i = 0; i < index; i++) offset += teamSizes[i];
+        const numToRemove = teamSizes[index];
+        setNames(prev => {
+          const next = [...prev];
+          next.splice(offset, numToRemove);
+          return next;
+        });
+        setCount(newSizes.length);
+      }
+    } else {
+      if (names.length > 2) {
+        setNames(prev => prev.filter((_, i) => i !== index));
+        setCount(prev => prev - 1);
+      }
     }
-  } else {
-    // Verwijder individuele speler
-    if (names.length > 2) {
-      setNames(prev => prev.filter((_, i) => i !== index));
-      setCount(prev => prev - 1);
-    }
-  }
-};
+  };
 
-  // Voeg een speler toe aan team t
   const addPlayerToTeam = (t) => {
     if (teamSizes[t] >= 10) return;
     const offset = teamSizes.slice(0, t + 1).reduce((a, b) => a + b, 0);
@@ -1150,7 +1139,6 @@ const removePlayer = (index) => {
     });
   };
 
-  // Verwijder laatste speler uit team t (minimaal 2)
   const removePlayerFromTeam = (t) => {
     if (teamSizes[t] <= 2) return;
     const offset = teamSizes.slice(0, t + 1).reduce((a, b) => a + b, 0);
@@ -1167,7 +1155,6 @@ const removePlayer = (index) => {
 
   const canStart = names.every((n) => n.trim().length > 0) && selectedCategories.size > 0;
 
-  // Bouw teams array: [{ name: "Team 1", players: [...] }, ...]
   const buildTeams = () => {
     if (!teamMode) return null;
     const trimmed = names.map((n) => n.trim());
@@ -1189,13 +1176,12 @@ const removePlayer = (index) => {
   const absoluteTotalWords = CATEGORIES.reduce((total, cat) => {
     return total + (WORDS_BY_CATEGORY[cat.id]?.length || 0);
   }, 0);
-  const allCategoryIds = CATEGORIES.map((c) => c.id);
-  const allSelected = allCategoryIds.every((id) => selectedCategories.has(id));
 
   const toggleCategory = (id) => {
     setSelectedCategories((prev) => {
       if (id === "all") {
-        // Alles aan als nog niet alles aan, anders alles uit
+        // If all are selected, unselect all to show the list. 
+        // If not all are selected, select everything (which will hide the list).
         return allSelected ? new Set() : new Set(allCategoryIds);
       }
       const next = new Set(prev);
@@ -1211,7 +1197,6 @@ const removePlayer = (index) => {
     onStart(trimmed, roundTime, buildTeams(), selectedCategories);
   };
 
-  // Bereken naam-offset per team
   const getTeamOffset = (t) => teamSizes.slice(0, t).reduce((a, b) => a + b, 0);
 
   return (
@@ -1223,131 +1208,117 @@ const removePlayer = (index) => {
           <p className="logo-sub">Het raad- en uitbeeldspel</p>
         </div>
 
-        <div style={{display:'flex', gap:'12px', marginBottom:'30px'}}>
+        <div style={{ display: 'flex', gap: '12px', marginBottom: '30px' }}>
           <button
             className={`start-btn mode-toggle-btn${!teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
-            style={{margin:0, flex:1}}
+            style={{ margin: 0, flex: 1 }}
             onClick={() => !teamMode ? null : toggleTeamMode()}
           >
-            👤
+            👤 Individueel
           </button>
           <button
             className={`start-btn mode-toggle-btn${teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
-            style={{margin:0, flex:1}}
+            style={{ margin: 0, flex: 1 }}
             onClick={() => teamMode ? null : toggleTeamMode()}
           >
-            👥
+            👥 Teams
           </button>
         </div>
-
-<div className="setup-section">
-  {teamMode ? (
-    /* --- TEAM MODUS --- */
-<div className="teams-grid">
-  {teamSizes.map((size, t) => {
-    const offset = getTeamOffset(t);
-    return (
-      <div key={t} className="team-section-container">
-        {/* Team Header: Naam met een ronde zwevende X */}
-        <div className="team-header-row">
-          <input
-            className="team-name-input-flat"
-            value={teamNames[t] ?? `Team ${t + 1}`}
-            onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
-            maxLength={12}
-          />
-          {teamSizes.length > 2 && (
-            <button className="delete-btn-round" onClick={() => removePlayer(t)} title="Team verwijderen">
-              ✕
-            </button>
-          )}
-        </div>
-        
-        {/* Spelers binnen dit team (behouden de integrated look) */}
-        <div className="team-players-list">
-          {Array.from({ length: size }, (_, p) => {
-            const idx = offset + p;
-            return (
-              <div key={idx} className="player-input-group small-group">
-                <div className="player-name-container player-bg">
-                  <span className="player-index-badge">{p + 1}</span>
-                  <input
-                    className="integrated-name-input"
-                    placeholder={`Speler ${p + 1}`}
-                    value={names[idx] ?? ""}
-                    onChange={(e) => updateName(idx, e.target.value)}
-                    maxLength={16}
-                  />
-                </div>
-                {size > 2 && (
-                  <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayerFromTeam(t)}>
-                    −
-                  </button>
-                )}
-              </div>
-            );
-          })}
-        </div>
-        
-        {size < 10 && (
-          <button className="add-player-integrated small-add" onClick={() => addPlayerToTeam(t)}>
-            + Speler toevoegen
-          </button>
-        )}
-      </div>
-    );
-  })}
-  
-  {teamSizes.length < 6 && (
-    <button className="add-player-integrated dashed team-add-btn" onClick={addPlayer}>
-      <span className="plus-icon-box">+</span> Nieuw Team
-    </button>
-  )}
-</div>
-  ) : (
-/* --- INDIVIDUELE MODUS (Jouw hoofdvraag) --- */
-<div className="names-grid">
-  {names.map((name, i) => (
-    <div key={i} className="player-input-group">
-      <div className="player-name-container">
-        <span className="player-index-badge">{i + 1}</span>
-        <input
-          className="integrated-name-input"
-          placeholder="Naam invullen..."
-          value={name}
-          onChange={(e) => updateName(i, e.target.value)}
-          maxLength={16}
-        />
-      </div>
-      
-      {names.length > 2 && (
-        <button 
-          className="integrated-delete-btn" 
-          onClick={() => removePlayer(i)}
-          title="Verwijder speler"
-        >
-          ✕
-        </button>
-      )}
-    </div>
-  ))}
-
-  {/* De plus-knop in dezelfde stijl */}
-  {names.length < 10 && (
-    <button className="add-player-integrated" onClick={addPlayer}>
-      <span className="plus-icon-box">+</span>
-      <span>Speler toevoegen</span>
-    </button>
-  )}
-</div>
-  )}
-</div>
 
         <div className="setup-section">
-{/*       <label className="setup-label" style={{ textAlign: 'center', display: 'block', width: '100%' }}>
-            Tijd per ronde
-          </label>
-*/}
+          {teamMode ? (
+            <div className="teams-grid">
+              {teamSizes.map((size, t) => {
+                const offset = getTeamOffset(t);
+                return (
+                  <div key={t} className="team-section-container">
+                    <div className="team-header-row">
+                      <input
+                        className="team-name-input-flat"
+                        value={teamNames[t] ?? `Team ${t + 1}`}
+                        onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
+                        maxLength={12}
+                      />
+                      {teamSizes.length > 2 && (
+                        <button className="delete-btn-round" onClick={() => removePlayer(t)} title="Team verwijderen">
+                          ✕
+                        </button>
+                      )}
+                    </div>
+                    <div className="team-players-list">
+                      {Array.from({ length: size }, (_, p) => {
+                        const idx = offset + p;
+                        return (
+                          <div key={idx} className="player-input-group small-group">
+                            <div className="player-name-container player-bg">
+                              <span className="player-index-badge">{p + 1}</span>
+                              <input
+                                className="integrated-name-input"
+                                placeholder={`Speler ${p + 1}`}
+                                value={names[idx] ?? ""}
+                                onChange={(e) => updateName(idx, e.target.value)}
+                                maxLength={16}
+                              />
+                            </div>
+                            {size > 2 && (
+                              <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayerFromTeam(t)}>
+                                −
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {size < 10 && (
+                      <button className="add-player-integrated small-add" onClick={() => addPlayerToTeam(t)}>
+                        + Speler toevoegen
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+              {teamSizes.length < 6 && (
+                <button className="add-player-integrated dashed team-add-btn" onClick={addPlayer}>
+                  <span className="plus-icon-box">+</span> Nieuw Team
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="names-grid">
+              {names.map((name, i) => (
+                <div key={i} className="player-input-group">
+                  <div className="player-name-container">
+                    <span className="player-index-badge">{i + 1}</span>
+                    <input
+                      className="integrated-name-input"
+                      placeholder="Naam invullen..."
+                      value={name}
+                      onChange={(e) => updateName(i, e.target.value)}
+                      maxLength={16}
+                    />
+                  </div>
+                  {names.length > 2 && (
+                    <button
+                      className="integrated-delete-btn"
+                      onClick={() => removePlayer(i)}
+                      title="Verwijder speler"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              ))}
+              {names.length < 10 && (
+                <button className="add-player-integrated" onClick={addPlayer}>
+                  <span className="plus-icon-box">+</span>
+                  <span>Speler toevoegen</span>
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="setup-section">
           <div className="time-control">
             <button
               className={`time-btn time-btn-minus${roundTime <= 30 ? " time-btn-disabled" : ""}`}
@@ -1364,28 +1335,40 @@ const removePlayer = (index) => {
         </div>
 
         <div className="setup-section">
-{/*       <button
-            className={`toggle-all-btn${allSelected ? " toggle-all-btn-active" : ""}`}
+          {/* THE MASTER TOGGLE */}
+          <button
+            className={`toggle-all-btn ${allSelected ? "toggle-all-btn-active" : ""}`}
             onClick={() => toggleCategory("all")}
-            style={{ 
+            style={{
               width: '100%',
-              display: 'block'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              padding: '12px',
+              borderRadius: '12px',
+              border: '2px dashed #ccc',
+              background: allSelected ? 'rgba(74, 144, 226, 0.1)' : 'transparent',
+              marginBottom: allSelected ? '0px' : '15px'
             }}
           >
-            {allSelected ? "🎲 Alle categorieën" : "🎲 Alle categorieën"}
+            {allSelected ? "🎲 Alle categorieën geselecteerd" : "⚙️ Pas categorieën aan"}
           </button>
-*/}
-          <div className="category-grid">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.id}
-                className={`category-btn${selectedCategories.has(cat.id) ? " category-btn-active" : ""}`}
-                onClick={() => toggleCategory(cat.id)}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
+
+          {/* GRID ONLY SHOWS IF NOT ALL SELECTED */}
+          {!allSelected && (
+            <div className="category-grid">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  className={`category-btn${selectedCategories.has(cat.id) ? " category-btn-active" : ""}`}
+                  onClick={() => toggleCategory(cat.id)}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="names-label-row" style={{ justifyContent: 'center', width: '100%' }}>
