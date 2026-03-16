@@ -2647,7 +2647,7 @@ export default function App() {
   position: absolute;
   right: 0px; 
   top: 0px;
-  background: #transparent;
+  background: rgba(0,0,0,0.02);
   color: white;
   border: none;
   border-radius: 50%;
