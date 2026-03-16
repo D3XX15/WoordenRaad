@@ -71,7 +71,7 @@ const WORDS_BY_CATEGORY = (() => {
   const voedsel = [
     'aardappel', 'aardappelpuree', 'aardbei', 'abrikoos', 'amaretto', 'ananas',
     'andijvie', 'appelmoes', 'appelsap', 'appeltaart', 'asperges', 'avocado',
-    'bacon', 'bagel', 'baguette', 'balsamico', 'bami', 'banaan',
+    'bacon', 'bagel', 'baguette', 'balsamico', 'bami', 'banaan', 'k',
     'bananenbrood', 'basilicum', 'biefstuk', 'bier', 'bieslook', 'bietensalade',
     'bitterbal', 'bitterkoekje', 'bladerdeeg', 'blauwe bes', 'bloemkool', 'boerenkool',
     'bolognese', 'bonbons', 'bosbessen', 'boterham', 'bouillon', 'brandnetelsoep',
