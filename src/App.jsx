@@ -2677,7 +2677,7 @@ export default function App() {
 
 /* --- TEAM STYLING --- */
 .team-section-container {
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   padding-bottom: 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   width: 100%;
@@ -2687,7 +2687,7 @@ export default function App() {
   position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 
 .team-name-input-flat {
@@ -2723,6 +2723,7 @@ export default function App() {
 .team-players-list {
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
 
 /* --- HULPMIDDELEN VOOR TEAMS --- */
