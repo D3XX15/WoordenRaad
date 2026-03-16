@@ -1323,7 +1323,7 @@ function SetupScreen({ onStart }) {
                     color: '#4a90e2' 
                   }}
                 >
-                  <span className="plus-icon-box" style={{ background: 'transparent', border: '1px solid #ccc', color: '#666' }}>+</span> Nieuw Team
+                  <span className="plus-icon-box">+</span> Nieuw Team
                 </button>
               )}
             </div>
