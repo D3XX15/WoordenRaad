@@ -71,7 +71,7 @@ const WORDS_BY_CATEGORY = (() => {
   const voedsel = [
     'aardappel', 'aardappelpuree', 'aardbei', 'abrikoos', 'amaretto', 'ananas',
     'andijvie', 'appelmoes', 'appelsap', 'appeltaart', 'asperges', 'avocado',
-    'bacon', 'bagel', 'baguette', 'balsamico', 'bami', 'banaan', 'k',
+    'bacon', 'bagel', 'baguette', 'balsamico', 'bami', 'banaan',
     'bananenbrood', 'basilicum', 'biefstuk', 'bier', 'bieslook', 'bietensalade',
     'bitterbal', 'bitterkoekje', 'bladerdeeg', 'blauwe bes', 'bloemkool', 'boerenkool',
     'bolognese', 'bonbons', 'bosbessen', 'boterham', 'bouillon', 'brandnetelsoep',
@@ -1214,14 +1214,14 @@ function SetupScreen({ onStart }) {
             style={{ margin: 0, flex: 1 }}
             onClick={() => !teamMode ? null : toggleTeamMode()}
           >
-            👤 Individueel
+            👤
           </button>
           <button
             className={`start-btn mode-toggle-btn${teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
             style={{ margin: 0, flex: 1 }}
             onClick={() => teamMode ? null : toggleTeamMode()}
           >
-            👥 Teams
+            👥
           </button>
         </div>
 
