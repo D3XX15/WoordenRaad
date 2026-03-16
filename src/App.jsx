@@ -1229,7 +1229,6 @@ function SetupScreen({ onStart }) {
               border: '3px solid #4a90e2',
               borderRadius: '24px',
               padding: '25px',
-              /* Achtergrond aangepast naar transparant/subtiel grijs zoals de rest */
               backgroundColor: 'rgba(0,0,0,0.02)', 
               marginBottom: '20px',
               position: 'relative'
@@ -1256,7 +1255,6 @@ function SetupScreen({ onStart }) {
                   const offset = getTeamOffset(t);
                   return (
                     <div key={t} className="team-section-container" style={{
-                      /* Geen witte kaart meer, maar de standaard container look */
                       backgroundColor: 'transparent',
                       borderRadius: '16px',
                       padding: '10px 0'
@@ -1281,7 +1279,7 @@ function SetupScreen({ onStart }) {
                           return (
                             <div key={idx} className="player-input-group small-group">
                               <div className="player-name-container player-bg">
-                                <span className="player-index-badge" style={{ backgroundColor: '#4a90e2' }}>{p + 1}</span>
+                                <span className="player-index-badge">{p + 1}</span>
                                 <input
                                   className="integrated-name-input"
                                   placeholder={`Speler ${p + 1}`}
@@ -1300,7 +1298,11 @@ function SetupScreen({ onStart }) {
                         })}
                       </div>
                       {size < 10 && (
-                        <button className="add-player-integrated small-add" onClick={() => addPlayerToTeam(t)} style={{ color: '#4a90e2' }}>
+                        <button 
+                          className="add-player-integrated small-add" 
+                          onClick={() => addPlayerToTeam(t)} 
+                          style={{ color: '#2ecc71' }}
+                        >
                           + Speler toevoegen
                         </button>
                       )}
@@ -1321,7 +1323,7 @@ function SetupScreen({ onStart }) {
                     color: '#4a90e2' 
                   }}
                 >
-                  <span className="plus-icon-box" style={{ backgroundColor: '#4a90e2' }}>+</span> Nieuw Team
+                  <span className="plus-icon-box" style={{ background: 'transparent', border: '1px solid #ccc', color: '#666' }}>+</span> Nieuw Team
                 </button>
               )}
             </div>
