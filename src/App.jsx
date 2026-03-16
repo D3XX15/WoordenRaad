@@ -1212,113 +1212,120 @@ function SetupScreen({ onStart }) {
             style={{ margin: 0, flex: 1 }}
             onClick={() => !teamMode ? null : toggleTeamMode()}
           >
-            👤 Individueel
+            👤
           </button>
           <button
             className={`start-btn mode-toggle-btn${teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
             style={{ margin: 0, flex: 1 }}
             onClick={() => teamMode ? null : toggleTeamMode()}
           >
-            👥 Teams
+            👥
           </button>
         </div>
 
         <div className="setup-section">
-{teamMode ? (
-  /* NIEUW: Duidelijkere container met een stevigere rand */
-  <div className="teams-setup-wrapper" style={{
-    border: '3px solid #4a90e2',           // Een dikkere, blauwe rand
-    borderRadius: '24px',                   // Iets ronder voor een speels effect
-    padding: '25px',                        // Meer binnenruimte
-    backgroundColor: '#ffffff',             // Volledig wit voor maximale leesbaarheid
-    boxShadow: '0 8px 24px rgba(0,0,0,0.1)', // Subtiele schaduw voor diepte
-    marginBottom: '25px',
-    position: 'relative'
-  }}>
-    {/* Een klein labeltje op de rand voor extra duidelijkheid */}
-    <div style={{
-      position: 'absolute',
-      top: '-14px',
-      left: '20px',
-      backgroundColor: '#4a90e2',
-      color: 'white',
-      padding: '2px 12px',
-      borderRadius: '10px',
-      fontSize: '0.8rem',
-      fontWeight: 'bold'
-    }}>
-      TEAM CONFIGURATIE
-    </div>
+          {teamMode ? (
+            <div className="teams-setup-wrapper" style={{
+              border: '3px solid #4a90e2',
+              borderRadius: '24px',
+              padding: '25px',
+              background: 'linear-gradient(135deg, #f5f9ff 0%, #eef5ff 100%)',
+              boxShadow: '0 8px 24px rgba(74, 144, 226, 0.15)',
+              marginBottom: '20px',
+              position: 'relative'
+            }}>
+              <div style={{
+                position: 'absolute',
+                top: '-14px',
+                left: '20px',
+                backgroundColor: '#4a90e2',
+                color: 'white',
+                padding: '4px 16px',
+                borderRadius: '12px',
+                fontSize: '0.75rem',
+                fontWeight: '900',
+                letterSpacing: '1px',
+                boxShadow: '0 4px 10px rgba(74, 144, 226, 0.3)',
+                zIndex: 1
+              }}>
+                TEAM CONFIGURATIE
+              </div>
 
-    <div className="teams-grid">
-      {teamSizes.map((size, t) => {
-        const offset = getTeamOffset(t);
-        return (
-          <div key={t} className="team-section-container">
-            <div className="team-header-row">
-              <input
-                className="team-name-input-flat"
-                style={{ fontWeight: 'bold', color: '#4a90e2' }} // Teamnaam extra laten opvallen
-                value={teamNames[t] ?? `Team ${t + 1}`}
-                onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
-                maxLength={12}
-              />
-              {teamSizes.length > 2 && (
-                <button className="delete-btn-round" onClick={() => removePlayer(t)} title="Team verwijderen">
-                  ✕
+              <div className="teams-grid">
+                {teamSizes.map((size, t) => {
+                  const offset = getTeamOffset(t);
+                  return (
+                    <div key={t} className="team-section-container" style={{
+                      backgroundColor: 'white',
+                      borderRadius: '16px',
+                      padding: '15px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                      border: '1px solid rgba(74, 144, 226, 0.1)'
+                    }}>
+                      <div className="team-header-row">
+                        <input
+                          className="team-name-input-flat"
+                          style={{ fontWeight: 'bold', color: '#4a90e2' }}
+                          value={teamNames[t] ?? `Team ${t + 1}`}
+                          onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
+                          maxLength={12}
+                        />
+                        {teamSizes.length > 2 && (
+                          <button className="delete-btn-round" onClick={() => removePlayer(t)} title="Team verwijderen">
+                            ✕
+                          </button>
+                        )}
+                      </div>
+                      <div className="team-players-list">
+                        {Array.from({ length: size }, (_, p) => {
+                          const idx = offset + p;
+                          return (
+                            <div key={idx} className="player-input-group small-group">
+                              <div className="player-name-container player-bg" style={{ backgroundColor: '#f8f9fa' }}>
+                                <span className="player-index-badge" style={{ backgroundColor: '#4a90e2' }}>{p + 1}</span>
+                                <input
+                                  className="integrated-name-input"
+                                  placeholder={`Speler ${p + 1}`}
+                                  value={names[idx] ?? ""}
+                                  onChange={(e) => updateName(idx, e.target.value)}
+                                  maxLength={16}
+                                />
+                              </div>
+                              {size > 2 && (
+                                <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayerFromTeam(t)}>
+                                  −
+                                </button>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      {size < 10 && (
+                        <button className="add-player-integrated small-add" onClick={() => addPlayerToTeam(t)} style={{ color: '#4a90e2' }}>
+                          + Speler toevoegen
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {teamSizes.length < 6 && (
+                <button 
+                  className="add-player-integrated dashed team-add-btn" 
+                  onClick={addPlayer}
+                  style={{ 
+                    marginTop: '15px', 
+                    width: '100%', 
+                    border: '2px dashed #4a90e2',
+                    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+                    color: '#4a90e2' 
+                  }}
+                >
+                  <span className="plus-icon-box" style={{ backgroundColor: '#4a90e2' }}>+</span> Nieuw Team
                 </button>
               )}
             </div>
-            <div className="team-players-list">
-              {Array.from({ length: size }, (_, p) => {
-                const idx = offset + p;
-                return (
-                  <div key={idx} className="player-input-group small-group">
-                    <div className="player-name-container player-bg">
-                      <span className="player-index-badge">{p + 1}</span>
-                      <input
-                        className="integrated-name-input"
-                        placeholder={`Speler ${p + 1}`}
-                        value={names[idx] ?? ""}
-                        onChange={(e) => updateName(idx, e.target.value)}
-                        maxLength={16}
-                      />
-                    </div>
-                    {size > 2 && (
-                      <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayerFromTeam(t)}>
-                        −
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-            {size < 10 && (
-              <button className="add-player-integrated small-add" onClick={() => addPlayerToTeam(t)}>
-                + Speler toevoegen
-              </button>
-            )}
-          </div>
-        );
-      })}
-    </div>
-
-    {teamSizes.length < 6 && (
-      <button 
-        className="add-player-integrated dashed team-add-btn" 
-        onClick={addPlayer}
-        style={{ 
-          marginTop: '20px', 
-          width: '100%',
-          border: '2px dashed #4a90e2', // Match met de buitenste rand
-          color: '#4a90e2'
-        }}
-      >
-        <span className="plus-icon-box" style={{ backgroundColor: '#4a90e2' }}>+</span> 
-        <strong>Nieuw Team Toevoegen</strong>
-      </button>
-    )}
-  </div>
           ) : (
             <div className="names-grid">
               {names.map((name, i) => (
@@ -1354,7 +1361,6 @@ function SetupScreen({ onStart }) {
           )}
         </div>
 
-        {/* ... Rest van de code (tijd, categorieën, start button) blijft hetzelfde ... */}
         <div className="setup-section">
           <div className="time-control">
             <button
