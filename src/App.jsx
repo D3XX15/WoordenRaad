@@ -1361,7 +1361,7 @@ function SetupScreen({ onStart }) {
                     color: '#4a90e2' 
                   }}
                 >
-                  <span className="plus-icon-box">+</span> Nieuw Team
+                  + Nieuw Team
                 </button>
               )}
             </div>
@@ -1417,8 +1417,9 @@ function SetupScreen({ onStart }) {
                   </div>
                 ))}
                 {names.length < 10 && (
-                  <button className="add-player-integrated" onClick={addPlayer}>
-                    <span>+ Speler toevoegen</span>
+                  <button className="add-player-integrated"
+                    onClick={addPlayer}>
+                    + Speler toevoegen
                   </button>
                 )}
               </div>
