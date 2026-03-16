@@ -1243,62 +1243,73 @@ const removePlayer = (index) => {
 <div className="setup-section">
   {teamMode ? (
     /* --- TEAM MODUS --- */
-    <div className="teams-grid">
-      {teamSizes.map((size, t) => {
-        const offset = getTeamOffset(t);
-        return (
-          <div key={t} className="team-block">
-            <div className="team-block-header">
-              <input
-                className="name-input team-name-input"
-                value={teamNames[t] ?? `Team ${t + 1}`}
-                onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
-                maxLength={12}
-              />
-              <div className="team-actions">
-                {/* Verwijder team knop (alleen als er > 2 teams zijn) */}
-                {teamSizes.length > 2 && (
-                  <button className="delete-btn-small" onClick={() => removePlayer(t)} title="Team verwijderen">✕</button>
-                )}
-              </div>
-            </div>
-            
-            {Array.from({ length: size }, (_, p) => {
-              const idx = offset + p;
-              return (
-                <div key={idx} className="name-input-wrap">
-                  <span className="name-num">{p + 1}</span>
+<div className="teams-grid">
+  {teamSizes.map((size, t) => {
+    const offset = getTeamOffset(t);
+    return (
+      <div key={t} className="team-block-modern">
+        {/* Team Header met de 'Cut-off' verwijderknop */}
+        <div className="player-input-group team-header-group">
+          <div className="player-name-container team-bg">
+            <span className="player-index-badge">T{t + 1}</span>
+            <input
+              className="integrated-name-input team-name-input"
+              value={teamNames[t] ?? `Team ${t + 1}`}
+              onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
+              maxLength={12}
+            />
+          </div>
+          {teamSizes.length > 2 && (
+            <button className="integrated-delete-btn" onClick={() => removePlayer(t)}>✕</button>
+          )}
+        </div>
+        
+        {/* Spelers binnen dit team */}
+        <div className="team-players-list">
+          {Array.from({ length: size }, (_, p) => {
+            const idx = offset + p;
+            return (
+              <div key={idx} className="player-input-group small-group">
+                <div className="player-name-container player-bg">
+                  <span className="player-index-badge">{p + 1}</span>
                   <input
-                    className="name-input"
+                    className="integrated-name-input"
                     placeholder={`Speler ${p + 1}`}
                     value={names[idx] ?? ""}
                     onChange={(e) => updateName(idx, e.target.value)}
                     maxLength={16}
                   />
-                  {/* Optioneel: -1 knop voor teamgrootte behouden zoals je had */}
                 </div>
-              );
-            })}
-            
-            {/* Knop om speler aan specifiek team toe te voegen */}
-            {size < 10 && (
-              <button className="add-player-inline" onClick={() => addPlayerToTeam(t)}>
-                + Speler toevoegen aan team
-              </button>
-            )}
-          </div>
-        );
-      })}
-      
-      {/* Knop om een heel nieuw team toe te voegen */}
-      {teamSizes.length < 6 && (
-        <button className="add-player-row dashed" onClick={addPlayer}>
-          <span className="plus-icon">+</span> Nieuw Team
-        </button>
-      )}
-    </div>
+                {/* Verwijder speler uit team (alleen als team > 2 leden heeft) */}
+                {size > 2 && (
+                  <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayerFromTeam(t)}>
+                    −
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        
+        {/* Speler toevoegen aan DIT team */}
+        {size < 10 && (
+          <button className="add-player-integrated small-add" onClick={() => addPlayerToTeam(t)}>
+            + Speler toevoegen
+          </button>
+        )}
+      </div>
+    );
+  })}
+  
+  {/* Nieuw Team Toevoegen knop */}
+  {teamSizes.length < 6 && (
+    <button className="add-player-integrated dashed team-add-btn" onClick={addPlayer}>
+      <span className="plus-icon-box">+</span> Nieuw Team
+    </button>
+  )}
+</div>
   ) : (
-    /* --- INDIVIDUELE MODUS (Jouw hoofdvraag) --- */
+/* --- INDIVIDUELE MODUS (Jouw hoofdvraag) --- */
 <div className="names-grid">
   {names.map((name, i) => (
     <div key={i} className="player-input-group">
@@ -2579,6 +2590,56 @@ export default function App() {
 .plus-icon-box {
   font-size: 1.4rem;
   font-weight: bold;
+}
+/* Specifieke styling voor de team-blokken */
+.team-block-modern {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 15px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.team-bg {
+  background: rgba(66, 135, 245, 0.15) !important; /* Subtiel blauw voor teams */
+  border-color: rgba(66, 135, 245, 0.3) !important;
+}
+
+.player-bg {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Kleinere inputs voor de spelers binnen een team */
+.small-group {
+  height: 38px !important;
+  margin-bottom: 8px;
+}
+
+.small-group .integrated-name-input {
+  font-size: 0.9rem;
+}
+
+.btn-subtle {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  width: 38px !important;
+}
+
+.btn-subtle:hover {
+  background: #ff4757 !important; /* Wordt pas rood bij hover */
+}
+
+.small-add {
+  height: 34px !important;
+  font-size: 0.85rem !important;
+  margin-top: 5px;
+  border-style: solid !important;
+  border-width: 1px !important;
+}
+
+.team-add-btn {
+  margin-top: 10px;
+  border-width: 2px !important;
 }
         .time-control { display: flex; align-items: center; gap: 12px; }
         .time-btn {
