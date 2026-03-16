@@ -1197,7 +1197,7 @@ function SetupScreen({ onStart }) {
 
   const getTeamOffset = (t) => teamSizes.slice(0, t).reduce((a, b) => a + b, 0);
 
-return (
+  return (
     <div className="screen">
       <div className="setup-card">
         <div className="logo-area">
@@ -1225,7 +1225,6 @@ return (
 
         <div className="setup-section">
           {teamMode ? (
-            /* --- TEAM MODUS (BLAUW) --- */
             <div className="teams-setup-wrapper" style={{
               border: '3px solid #4a90e2',
               borderRadius: '24px',
@@ -1329,74 +1328,36 @@ return (
               )}
             </div>
           ) : (
-            /* --- SINGLES MODUS (GROEN) --- */
-            <div className="singles-setup-wrapper" style={{
-              border: '3px solid #2ecc71',
-              borderRadius: '24px',
-              padding: '25px',
-              backgroundColor: 'rgba(0,0,0,0.02)', 
-              marginBottom: '20px',
-              position: 'relative'
-            }}>
-              <div style={{
-                position: 'absolute',
-                top: '-14px',
-                left: '20px',
-                backgroundColor: '#2ecc71',
-                color: 'white',
-                padding: '4px 16px',
-                borderRadius: '12px',
-                fontSize: '0.75rem',
-                fontWeight: '900',
-                letterSpacing: '1px',
-                boxShadow: '0 4px 10px rgba(46, 204, 113, 0.3)',
-                zIndex: 1
-              }}>
-                SPELER CONFIGURATIE
-              </div>
-
-              <div className="names-grid">
-                {names.map((name, i) => (
-                  <div key={i} className="player-input-group">
-                    <div className="player-name-container">
-                      <span className="player-index-badge" style={{ backgroundColor: '#2ecc71' }}>{i + 1}</span>
-                      <input
-                        className="integrated-name-input"
-                        placeholder="Naam invullen..."
-                        value={name}
-                        onChange={(e) => updateName(i, e.target.value)}
-                        maxLength={16}
-                      />
-                    </div>
-                    {names.length > 2 && (
-                      <button
-                        className="integrated-delete-btn"
-                        onClick={() => removePlayer(i)}
-                        title="Verwijder speler"
-                      >
-                        ✕
-                      </button>
-                    )}
+            <div className="names-grid">
+              {names.map((name, i) => (
+                <div key={i} className="player-input-group">
+                  <div className="player-name-container">
+                    <span className="player-index-badge">{i + 1}</span>
+                    <input
+                      className="integrated-name-input"
+                      placeholder="Naam invullen..."
+                      value={name}
+                      onChange={(e) => updateName(i, e.target.value)}
+                      maxLength={16}
+                    />
                   </div>
-                ))}
-                
-                {names.length < 10 && (
-                  <button 
-                    className="add-player-integrated dashed" 
-                    onClick={addPlayer}
-                    style={{ 
-                      marginTop: '10px',
-                      width: '100%',
-                      border: '2px dashed #2ecc71',
-                      background: 'transparent',
-                      color: '#2ecc71'
-                    }}
-                  >
-                    <span className="plus-icon-box" style={{ backgroundColor: '#2ecc71' }}>+</span>
-                    <span>Speler toevoegen</span>
-                  </button>
-                )}
-              </div>
+                  {names.length > 2 && (
+                    <button
+                      className="integrated-delete-btn"
+                      onClick={() => removePlayer(i)}
+                      title="Verwijder speler"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              ))}
+              {names.length < 10 && (
+                <button className="add-player-integrated" onClick={addPlayer}>
+                  <span className="plus-icon-box">+</span>
+                  <span>Speler toevoegen</span>
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -1468,6 +1429,7 @@ return (
       </div>
     </div>
   );
+}
 
 function HandoffScreen({ player, teamName, onReady }) {
   return (
