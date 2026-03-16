@@ -2505,9 +2505,9 @@ export default function App() {
 /* --- BASIS INPUT STYLING (Individueel & Team) --- */
 .player-input-group {
   display: flex;
-  margin-bottom: 6px; 
+  margin-bottom: 4px; 
   height: 48px;
-  width: 100%; /* Zorgt voor volledige breedte */
+  width: 100%;
 }
 
 .player-name-container {
@@ -2521,7 +2521,6 @@ export default function App() {
   transition: border-color 0.2s;
 }
 
-/* De rechterkant recht maken als er een delete-knop volgt */
 .player-input-group:has(.integrated-delete-btn) .player-name-container {
   border-radius: 12px 0 0 12px;
 }
@@ -2562,14 +2561,14 @@ export default function App() {
   background: #ff2e44;
 }
 
-/* --- TOEVOEG KNOPPEN (Dashed stijl) --- */
+/* --- TOEVOEG KNOPPEN (Altijd Groen) --- */
 .add-player-integrated {
   width: 100%;
   height: 44px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px dashed rgba(255, 255, 255, 0.15);
+  background: rgba(74, 222, 128, 0.05); /* Subtiele groene gloed */
+  border: 2px dashed #4ade80; /* Altijd groene rand */
   border-radius: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  color: #4ade80; /* Altijd groene tekst/icoon */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2578,12 +2577,12 @@ export default function App() {
   margin-top: 4px;
   transition: all 0.2s;
   font-size: 1rem;
+  font-weight: 600;
 }
 
 .add-player-integrated:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: #4ade80;
-  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12); /* Iets feller bij hover */
+  transform: translateY(-1px); /* Subtiel effect */
 }
 
 .plus-icon-box {
@@ -2591,7 +2590,7 @@ export default function App() {
   font-weight: bold;
 }
 
-/* --- TEAM STYLING (Extra compact & Geen Inspringing) --- */
+/* --- TEAM STYLING --- */
 .team-section-container {
   margin-bottom: 16px;
   padding-bottom: 8px;
@@ -2621,7 +2620,7 @@ export default function App() {
 
 .delete-btn-round {
   position: absolute;
-  right: 0px; /* Strak aan de rechterkant */
+  right: 0px; 
   top: 0px;
   background: #ff4757;
   color: white;
@@ -2641,12 +2640,12 @@ export default function App() {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding-left: 0; /* INSPRINGING VERWIJDERD: Nu lijnen spelers uit met de knop */
+  padding-left: 0;
 }
 
 /* --- HULPMIDDELEN VOOR TEAMS --- */
 .small-group {
-  height: 36px !important;
+  height: 38px !important;
   margin-bottom: 4px !important;
 }
 
@@ -2660,7 +2659,7 @@ export default function App() {
 
 .small-group .integrated-delete-btn {
   border-radius: 0 10px 10px 0;
-  width: 36px !important;
+  width: 38px !important;
 }
 
 .player-bg {
@@ -2673,13 +2672,15 @@ export default function App() {
 }
 
 .small-add {
-  height: 32px !important;
-  font-size: 0.8rem !important;
-  margin-top: 2px !important;
+  height: 38px !important;
+  font-size: 0.85rem !important;
+  margin-top: 4px !important;
+  border-radius: 10px !important;
+  /* Deze erft de groene kleur nu automatisch over van .add-player-integrated */
 }
 
 .team-add-btn {
-  margin-top: 6px;
+  margin-top: 8px;
 }
         .time-control { display: flex; align-items: center; gap: 12px; }
         .time-btn {
