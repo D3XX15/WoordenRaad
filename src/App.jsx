@@ -1355,7 +1355,8 @@ function SetupScreen({ onStart }) {
 
               <div className="names-grid">
                 {names.map((name, i) => (
-                  <div key={i} className="player-input-group">
+                  /* TOEVOEGEN VAN small-group KLASSE VOOR DEZELFDE GROOTTE */
+                  <div key={i} className="player-input-group small-group">
                     <div className="player-name-container player-bg">
                       <span className="player-index-badge">{i + 1}</span>
                       <input
@@ -1367,7 +1368,6 @@ function SetupScreen({ onStart }) {
                       />
                     </div>
                     {names.length > 2 && (
-                      /* HIER IS DE KNOP NU SUBTIELER GEMAAKT */
                       <button
                         className="integrated-delete-btn btn-subtle"
                         onClick={() => removePlayer(i)}
