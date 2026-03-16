@@ -1339,10 +1339,8 @@ function SetupScreen({ onStart }) {
                       </div>
                       {size < 10 && (
                         <button 
-                          className="add-player-integrated small-add" 
-                          onClick={() => addPlayerToTeam(t)} 
-                          style={{ color: '#2ecc71' }}
-                        >
+                          className="add-player-integrated" 
+                          onClick={() => addPlayerToTeam(t)}>
                           + Speler toevoegen
                         </button>
                       )}
@@ -1420,8 +1418,7 @@ function SetupScreen({ onStart }) {
                 ))}
                 {names.length < 10 && (
                   <button className="add-player-integrated" onClick={addPlayer}>
-                    <span className="plus-icon-box">+</span>
-                    <span>Speler toevoegen</span>
+                    <span>+ Speler toevoegen</span>
                   </button>
                 )}
               </div>
@@ -2677,11 +2674,6 @@ export default function App() {
   transform: translateY(-1px); /* Subtiel effect */
 }
 
-.plus-icon-box {
-  font-size: 1.4rem;
-  font-weight: bold;
-}
-
 /* --- TEAM STYLING --- */
 .team-section-container {
   margin-bottom: 16px;
@@ -2760,14 +2752,6 @@ export default function App() {
 .btn-subtle {
   background: rgba(255, 255, 255, 0.1) !important;
   color: white !important;
-}
-
-.small-add {
-  height: 38px !important;
-  font-size: 0.85rem !important;
-  margin-top: 4px !important;
-  border-radius: 10px !important;
-  /* Deze erft de groene kleur nu automatisch over van .add-player-integrated */
 }
 
 .team-add-btn {
