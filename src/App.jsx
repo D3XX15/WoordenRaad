@@ -1223,7 +1223,7 @@ const removePlayer = (index) => {
           <p className="logo-sub">Het raad- en uitbeeldspel</p>
         </div>
 
-        <div style={{display:'flex', gap:'12px', marginBottom:'20px'}}>
+        <div style={{display:'flex', gap:'12px', marginBottom:'40px'}}>
           <button
             className={`start-btn mode-toggle-btn${!teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
             style={{margin:0, flex:1}}
@@ -2715,7 +2715,6 @@ export default function App() {
         }
         .start-btn.ready:hover { background: rgba(167,139,250,0.15); }
         .mode-toggle-btn {
-          margin-bottom: 48px;
           border: 3px solid rgba(255,255,255,0.2);
         }
         .mode-toggle-singles {
