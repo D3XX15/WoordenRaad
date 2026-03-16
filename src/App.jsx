@@ -2505,8 +2505,9 @@ export default function App() {
 /* --- BASIS INPUT STYLING (Individueel & Team) --- */
 .player-input-group {
   display: flex;
-  margin-bottom: 6px; /* Ruimte tussen spelers verlaagd */
+  margin-bottom: 6px; 
   height: 48px;
+  width: 100%; /* Zorgt voor volledige breedte */
 }
 
 .player-name-container {
@@ -2514,13 +2515,13 @@ export default function App() {
   align-items: center;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px; /* Standaard overal rond */
+  border-radius: 12px; 
   padding: 0 12px;
   flex-grow: 1;
   transition: border-color 0.2s;
 }
 
-/* Als er een delete-knop achter staat, de rechterkant van de box recht maken */
+/* De rechterkant recht maken als er een delete-knop volgt */
 .player-input-group:has(.integrated-delete-btn) .player-name-container {
   border-radius: 12px 0 0 12px;
 }
@@ -2564,7 +2565,7 @@ export default function App() {
 /* --- TOEVOEG KNOPPEN (Dashed stijl) --- */
 .add-player-integrated {
   width: 100%;
-  height: 44px; /* Iets compacter */
+  height: 44px;
   background: rgba(255, 255, 255, 0.05);
   border: 2px dashed rgba(255, 255, 255, 0.15);
   border-radius: 12px;
@@ -2574,7 +2575,7 @@ export default function App() {
   justify-content: center;
   gap: 12px;
   cursor: pointer;
-  margin-top: 4px; /* Ruimte boven button verlaagd */
+  margin-top: 4px;
   transition: all 0.2s;
   font-size: 1rem;
 }
@@ -2590,18 +2591,19 @@ export default function App() {
   font-weight: bold;
 }
 
-/* --- TEAM STYLING (Extra compact) --- */
+/* --- TEAM STYLING (Extra compact & Geen Inspringing) --- */
 .team-section-container {
-  margin-bottom: 16px; /* Ruimte tussen teams verlaagd */
+  margin-bottom: 16px;
   padding-bottom: 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  width: 100%;
 }
 
 .team-header-row {
   position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: 8px; /* Ruimte onder teamnaam verlaagd */
+  margin-bottom: 8px;
 }
 
 .team-name-input-flat {
@@ -2619,7 +2621,7 @@ export default function App() {
 
 .delete-btn-round {
   position: absolute;
-  right: -5px;
+  right: 0px; /* Strak aan de rechterkant */
   top: 0px;
   background: #ff4757;
   color: white;
@@ -2638,18 +2640,18 @@ export default function App() {
 .team-players-list {
   display: flex;
   flex-direction: column;
-  gap: 4px; /* Ruimte tussen spelers in team verlaagd */
-  padding-left: 10px;
+  gap: 4px;
+  padding-left: 0; /* INSPRINGING VERWIJDERD: Nu lijnen spelers uit met de knop */
 }
 
 /* --- HULPMIDDELEN VOOR TEAMS --- */
 .small-group {
-  height: 36px !important; /* Nog compacter voor teams */
+  height: 36px !important;
   margin-bottom: 4px !important;
 }
 
 .small-group .player-name-container {
-  border-radius: 10px; /* Iets subtielere hoeken voor kleine boxjes */
+  border-radius: 10px;
 }
 
 .small-group:has(.integrated-delete-btn) .player-name-container {
@@ -2677,7 +2679,7 @@ export default function App() {
 }
 
 .team-add-btn {
-  margin-top: 6px; /* Ruimte boven '+ Nieuw Team' verlaagd */
+  margin-top: 6px;
 }
         .time-control { display: flex; align-items: center; gap: 12px; }
         .time-btn {
