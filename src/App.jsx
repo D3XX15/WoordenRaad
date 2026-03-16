@@ -1328,7 +1328,6 @@ function SetupScreen({ onStart }) {
               )}
             </div>
           ) : (
-            /* HIER IS DE STIJL NU GELIJK GETROKKEN AAN TEAMMODE */
             <div className="teams-setup-wrapper" style={{
               border: '3px solid #4a90e2',
               borderRadius: '24px',
@@ -1368,12 +1367,13 @@ function SetupScreen({ onStart }) {
                       />
                     </div>
                     {names.length > 2 && (
+                      /* HIER IS DE KNOP NU SUBTIELER GEMAAKT */
                       <button
-                        className="integrated-delete-btn"
+                        className="integrated-delete-btn btn-subtle"
                         onClick={() => removePlayer(i)}
                         title="Verwijder speler"
                       >
-                        ✕
+                        −
                       </button>
                     )}
                   </div>
