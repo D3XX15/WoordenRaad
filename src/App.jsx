@@ -1247,24 +1247,23 @@ const removePlayer = (index) => {
   {teamSizes.map((size, t) => {
     const offset = getTeamOffset(t);
     return (
-      <div key={t} className="team-block-modern">
-        {/* Team Header met de 'Cut-off' verwijderknop */}
-        <div className="player-input-group team-header-group">
-          <div className="player-name-container team-bg">
-            <span className="player-index-badge">T{t + 1}</span>
-            <input
-              className="integrated-name-input team-name-input"
-              value={teamNames[t] ?? `Team ${t + 1}`}
-              onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
-              maxLength={12}
-            />
-          </div>
+      <div key={t} className="team-section-container">
+        {/* Team Header: Naam met een ronde zwevende X */}
+        <div className="team-header-row">
+          <input
+            className="team-name-input-flat"
+            value={teamNames[t] ?? `Team ${t + 1}`}
+            onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
+            maxLength={12}
+          />
           {teamSizes.length > 2 && (
-            <button className="integrated-delete-btn" onClick={() => removePlayer(t)}>✕</button>
+            <button className="delete-btn-round" onClick={() => removePlayer(t)} title="Team verwijderen">
+              ✕
+            </button>
           )}
         </div>
         
-        {/* Spelers binnen dit team */}
+        {/* Spelers binnen dit team (behouden de integrated look) */}
         <div className="team-players-list">
           {Array.from({ length: size }, (_, p) => {
             const idx = offset + p;
@@ -1280,7 +1279,6 @@ const removePlayer = (index) => {
                     maxLength={16}
                   />
                 </div>
-                {/* Verwijder speler uit team (alleen als team > 2 leden heeft) */}
                 {size > 2 && (
                   <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayerFromTeam(t)}>
                     −
@@ -1291,7 +1289,6 @@ const removePlayer = (index) => {
           })}
         </div>
         
-        {/* Speler toevoegen aan DIT team */}
         {size < 10 && (
           <button className="add-player-integrated small-add" onClick={() => addPlayerToTeam(t)}>
             + Speler toevoegen
@@ -1301,7 +1298,6 @@ const removePlayer = (index) => {
     );
   })}
   
-  {/* Nieuw Team Toevoegen knop */}
   {teamSizes.length < 6 && (
     <button className="add-player-integrated dashed team-add-btn" onClick={addPlayer}>
       <span className="plus-icon-box">+</span> Nieuw Team
@@ -2506,30 +2502,28 @@ export default function App() {
           transition: all 0.25s;
           margin-top: 4px;
         }
-/* De container die de input en de knop samenvoegt */
+/* --- BASIS INPUT STYLING (Voor zowel Individueel als Team spelers) --- */
 .player-input-group {
   display: flex;
   margin-bottom: 12px;
-  height: 48px; /* Of de hoogte die jij mooi vindt */
+  height: 48px;
 }
 
-/* Het linkergedeelte (de naam box) */
 .player-name-container {
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px 0 0 12px; /* Alleen links afgerond */
+  border-radius: 12px 0 0 12px;
   padding: 0 12px;
   flex-grow: 1;
   transition: border-color 0.2s;
 }
 
-/* De input binnenin de box */
 .integrated-name-input {
-  background: transparent;
-  border: none;
-  color: white;
+  background: transparent !important;
+  border: none !important;
+  color: white !important;
   width: 100%;
   height: 100%;
   font-size: 1rem;
@@ -2537,7 +2531,6 @@ export default function App() {
   padding-left: 8px;
 }
 
-/* Het nummer voor de naam */
 .player-index-badge {
   color: rgba(255, 255, 255, 0.3);
   font-weight: bold;
@@ -2545,12 +2538,11 @@ export default function App() {
   min-width: 20px;
 }
 
-/* De rechterkant (de verwijderknop) */
 .integrated-delete-btn {
   background: #ff4757;
   color: white;
   border: none;
-  border-radius: 0 12px 12px 0; /* Alleen rechts afgerond */
+  border-radius: 0 12px 12px 0;
   width: 48px;
   cursor: pointer;
   display: flex;
@@ -2564,7 +2556,7 @@ export default function App() {
   background: #ff2e44;
 }
 
-/* De "Toevoegen" knop die de stijl van de boxen volgt */
+/* --- TOEVOEG KNOPPEN (Dashed stijl) --- */
 .add-player-integrated {
   width: 100%;
   height: 48px;
@@ -2591,32 +2583,78 @@ export default function App() {
   font-size: 1.4rem;
   font-weight: bold;
 }
-/* Specifieke styling voor de team-blokken */
-.team-block-modern {
-  background: rgba(255, 255, 255, 0.03);
-  padding: 15px;
-  border-radius: 16px;
-  margin-bottom: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+
+/* --- NIEUWE TEAM STYLING (Zonder de grote boxen) --- */
+.team-section-container {
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.team-bg {
-  background: rgba(66, 135, 245, 0.15) !important; /* Subtiel blauw voor teams */
-  border-color: rgba(66, 135, 245, 0.3) !important;
+.team-header-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
-.player-bg {
-  background: rgba(255, 255, 255, 0.05) !important;
+.team-name-input-flat {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid rgba(66, 135, 245, 0.4) !important;
+  color: #4287f5 !important;
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 4px 0;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
 }
 
-/* Kleinere inputs voor de spelers binnen een team */
+.team-name-input-flat:focus {
+  border-color: #4287f5 !important;
+}
+
+.delete-btn-round {
+  position: absolute;
+  right: -5px;
+  top: 0px;
+  background: #ff4757;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+  z-index: 2;
+}
+
+.delete-btn-round:hover {
+  transform: scale(1.2);
+}
+
+.team-players-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 10px;
+}
+
+/* --- HULPMIDDELEN VOOR TEAMS --- */
 .small-group {
   height: 38px !important;
   margin-bottom: 8px;
 }
 
-.small-group .integrated-name-input {
-  font-size: 0.9rem;
+.player-bg {
+  background: rgba(255, 255, 255, 0.05) !important;
 }
 
 .btn-subtle {
@@ -2626,7 +2664,7 @@ export default function App() {
 }
 
 .btn-subtle:hover {
-  background: #ff4757 !important; /* Wordt pas rood bij hover */
+  background: #ff4757 !important;
 }
 
 .small-add {
@@ -2639,7 +2677,6 @@ export default function App() {
 
 .team-add-btn {
   margin-top: 10px;
-  border-width: 2px !important;
 }
         .time-control { display: flex; align-items: center; gap: 12px; }
         .time-btn {
