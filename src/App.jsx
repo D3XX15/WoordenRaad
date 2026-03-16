@@ -494,7 +494,7 @@ const WORDS_BY_CATEGORY = (() => {
     'taartdiagram', 'pH-waarde', 'zuurgraad', 'base', 'zuur', 'zout',
     'oxidatie', 'reductie', 'straling', 'kernfusie', 'kernsplijting', 'deeltjesversneller',
     'supergeluid', 'ondertoon', 'boventoon', 'infrarood', 'ultraviolet',
-    'hologram', 'laser', 'bloedgroep', 'plasma', 'enzym',
+    'hologram', 'laser', 'bloedgroep', 'plasma', 'enzym'
   ];
 
   const politiek = [
