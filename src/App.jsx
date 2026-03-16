@@ -1328,36 +1328,63 @@ function SetupScreen({ onStart }) {
               )}
             </div>
           ) : (
-            <div className="names-grid">
-              {names.map((name, i) => (
-                <div key={i} className="player-input-group">
-                  <div className="player-name-container">
-                    <span className="player-index-badge">{i + 1}</span>
-                    <input
-                      className="integrated-name-input"
-                      placeholder="Naam invullen..."
-                      value={name}
-                      onChange={(e) => updateName(i, e.target.value)}
-                      maxLength={16}
-                    />
+            /* HIER IS DE STIJL NU GELIJK GETROKKEN AAN TEAMMODE */
+            <div className="teams-setup-wrapper" style={{
+              border: '3px solid #4a90e2',
+              borderRadius: '24px',
+              padding: '25px',
+              backgroundColor: 'rgba(0,0,0,0.02)', 
+              marginBottom: '20px',
+              position: 'relative'
+            }}>
+              <div style={{
+                position: 'absolute',
+                top: '-14px',
+                left: '20px',
+                backgroundColor: '#4a90e2',
+                color: 'white',
+                padding: '4px 16px',
+                borderRadius: '12px',
+                fontSize: '0.75rem',
+                fontWeight: '900',
+                letterSpacing: '1px',
+                boxShadow: '0 4px 10px rgba(74, 144, 226, 0.3)',
+                zIndex: 1
+              }}>
+                SPELERS CONFIGURATIE
+              </div>
+
+              <div className="names-grid">
+                {names.map((name, i) => (
+                  <div key={i} className="player-input-group">
+                    <div className="player-name-container player-bg">
+                      <span className="player-index-badge">{i + 1}</span>
+                      <input
+                        className="integrated-name-input"
+                        placeholder="Naam invullen..."
+                        value={name}
+                        onChange={(e) => updateName(i, e.target.value)}
+                        maxLength={16}
+                      />
+                    </div>
+                    {names.length > 2 && (
+                      <button
+                        className="integrated-delete-btn"
+                        onClick={() => removePlayer(i)}
+                        title="Verwijder speler"
+                      >
+                        ✕
+                      </button>
+                    )}
                   </div>
-                  {names.length > 2 && (
-                    <button
-                      className="integrated-delete-btn"
-                      onClick={() => removePlayer(i)}
-                      title="Verwijder speler"
-                    >
-                      ✕
-                    </button>
-                  )}
-                </div>
-              ))}
-              {names.length < 10 && (
-                <button className="add-player-integrated" onClick={addPlayer}>
-                  <span className="plus-icon-box">+</span>
-                  <span>Speler toevoegen</span>
-                </button>
-              )}
+                ))}
+                {names.length < 10 && (
+                  <button className="add-player-integrated" onClick={addPlayer}>
+                    <span className="plus-icon-box">+</span>
+                    <span>Speler toevoegen</span>
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>
