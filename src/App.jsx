@@ -2510,11 +2510,11 @@ export default function App() {
 
         .add-player-integrated {
           width: 100%; height: 44px; margin-top: 4px;
-          background: transparent; border: 2px dashed #34d399; border-radius: 12px;
+          background: rgba(52, 211, 153, 0.1); border: 2px dashed #34d399; border-radius: 12px;
           color: #34d399; display: flex; align-items: center; justify-content: center; gap: 12px;
           cursor: pointer; font-size: 1rem; font-weight: 600;
         }
-        .add-player-integrated:hover { background: rgba(52, 211, 153, 0.1); }
+        .add-player-integrated:hover { background: rgba(52, 211, 153, 0.2); }
 
         /* ── Team Layout ── */
         .teams-setup-wrapper {
