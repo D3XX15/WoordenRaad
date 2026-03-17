@@ -1248,13 +1248,13 @@ function SetupScreen({ onStart }) {
 
         <div className="setup-mode-toggle-group">
           <button
-            className={`start-btn mode-toggle-btn mode-toggle-btn-half${!teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
+            className={`start-btn mode-toggle-btn mode-toggle-btn-half ${!teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
             onClick={() => !teamMode ? null : toggleTeamMode()}
           >
             👤
           </button>
           <button
-            className={`start-btn mode-toggle-btn mode-toggle-btn-half${teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
+            className={`start-btn mode-toggle-btn mode-toggle-btn-half ${teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
             onClick={() => teamMode ? null : toggleTeamMode()}
           >
             👥
