@@ -2542,7 +2542,7 @@ export default function App() {
           cursor: pointer; font-size: 10px;
         }
         .team-players-list { display: flex; flex-direction: column; gap: 4px; }
-        .team-add-btn { margin-top: 15px; border-color: #4a90e2; color: #4a90e2; background: 74, 144, 226, 0.1; }
+        .team-add-btn { margin-top: 15px; border-color: #4a90e2; color: #4a90e2; background: rgba(74, 144, 226, 0.1); }
         .team-add-btn:hover { background: rgba(74, 144, 226, 0.2); }
 
         .small-group { height: 38px !important; margin-bottom: 4px !important; }
