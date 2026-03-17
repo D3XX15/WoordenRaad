@@ -1327,7 +1327,7 @@ function SetupScreen({ onStart }) {
                   className="add-player-integrated dashed team-add-btn" 
                   onClick={addPlayer}
                 >
-                  TEAM TOEVOEGEN
+                  Team toevoegen
                 </button>
               )}
             </div>
