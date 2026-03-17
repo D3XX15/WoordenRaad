@@ -2448,12 +2448,6 @@ export default function App() {
 
         /* ── Toggles & Buttons ── */
         .setup-mode-toggle-group { display: flex; gap: 12px; margin-bottom: 30px; }
-        .mode-toggle-btn { border: 3px solid rgba(255,255,255,0.2); }
-        .mode-toggle-btn-half { margin: 0; flex: 1; }
-        .mode-toggle-singles { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); }
-        .mode-toggle-singles:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.35); }
-        .mode-toggle-teams { background: rgba(52,211,153,0.08); color: #34d399; border-color: #34d399; }
-        .mode-toggle-teams:hover { background: rgba(52,211,153,0.15); }
 
         .start-btn {
           width: 100%;
@@ -2472,6 +2466,13 @@ export default function App() {
         .start-btn.ready { border-color: #a78bfa; background: rgba(167,139,250,0.08); color: #a78bfa; }
         .start-btn.ready:hover { background: rgba(167,139,250,0.15); }
 
+        .mode-toggle-btn { border: 3px solid rgba(255,255,255,0.2); }
+        .mode-toggle-btn-half { margin: 0; flex: 1; }
+        .mode-toggle-singles { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); }
+        .mode-toggle-singles:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.35); }
+        .mode-toggle-teams { background: rgba(52,211,153,0.08); color: #34d399; border-color: #34d399; }
+        .mode-toggle-teams:hover { background: rgba(52,211,153,0.15); }
+        
         .toggle-all-btn {
           width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
           padding: 12px; border-radius: 12px; border: 2px dashed #ccc; background: transparent;
