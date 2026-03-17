@@ -2480,8 +2480,8 @@ export default function App() {
           cursor: pointer; color: rgba(255,255,255,0.45); transition: all 0.25s;
         }
         .toggle-all-btn:hover { background: rgba(255,255,255,0.1); }
-        .toggle-all-btn-active { background: rgba(74, 144, 226, 0.1); border-color: #4a90e2; color: #4a90e2; margin-bottom: 0; }
-        .toggle-all-btn-active:hover { background: rgba(74, 144, 226, 0.2); }
+        .toggle-all-btn-active { background: rgba(52, 211, 153, 0.1); border-color: #34d399; color: #34d399; margin-bottom: 0; }
+        .toggle-all-btn-active:hover { background: rgba(52, 211, 153, 0.2); }
 
         /* ── Player Inputs (Individual & Teams) ── */
         .player-input-group { display: flex; margin-bottom: 4px; height: 48px; width: 100%; }
