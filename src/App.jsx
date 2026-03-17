@@ -2471,7 +2471,7 @@ export default function App() {
         .mode-toggle-singles { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); }
         .mode-toggle-singles:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.35); }
         .mode-toggle-teams { background: rgba(74, 144, 226, 0.1); color: #4a90e2; border-color: #4a90e2; }
-        .mode-toggle-teams:hover { background: rgba(52,211,153,0.15); }
+        .mode-toggle-teams:hover { background: rgba(74, 144, 226, 0.2); }
         
         .toggle-all-btn {
           width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
