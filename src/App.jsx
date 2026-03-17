@@ -136,7 +136,7 @@ const WORDS_BY_CATEGORY = (() => {
     'dermatoloog', 'detective', 'dierenarts', 'dierentrainer', 'diplomaat', 'documentairemaker',
     'dokter', 'dronepiloot', 'duikinstructeur', 'econoom', 'ethisch hacker', 'examinator',
     'farmaceut', 'filosoof', 'fotograaf', 'fysiotherapeut', 'gameontwikkelaar', 'gastronoom',
-    'geograaf', 'geoloog', 'gids', 'glazenwasser', 'goochelaar', 'grafisch ontwerper',
+    'geograaf', 'geoloog', 'gids', 'glazenwasser', 'illusionist', 'grafisch ontwerper',
     'gynaecoloog', 'handelaar', 'heks', 'hersenchirurg', 'hovenier', 'hypnotherapeut',
     'illustrator', 'immunoloog', 'informaticus', 'ingenieur', 'inspecteur',
     'jager', 'jongleur', 'journalist', 'juwelier',
