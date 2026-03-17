@@ -1246,17 +1246,15 @@ function SetupScreen({ onStart }) {
           <p className="logo-sub">Het raad- en uitbeeldspel</p>
         </div>
 
-        <div style={{ display: 'flex', gap: '12px', marginBottom: '30px' }}>
+        <div className="setup-mode-toggle-group">
           <button
-            className={`start-btn mode-toggle-btn${!teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
-            style={{ margin: 0, flex: 1 }}
+            className={`start-btn mode-toggle-btn mode-toggle-btn-half${!teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
             onClick={() => !teamMode ? null : toggleTeamMode()}
           >
             👤
           </button>
           <button
-            className={`start-btn mode-toggle-btn${teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
-            style={{ margin: 0, flex: 1 }}
+            className={`start-btn mode-toggle-btn mode-toggle-btn-half${teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
             onClick={() => teamMode ? null : toggleTeamMode()}
           >
             👥
@@ -1265,27 +1263,8 @@ function SetupScreen({ onStart }) {
 
         <div className="setup-section">
           {teamMode ? (
-            <div className="teams-setup-wrapper" style={{
-              border: '3px solid #4a90e2',
-              borderRadius: '24px',
-              padding: '25px',
-              backgroundColor: 'rgba(0,0,0,0.02)', 
-              marginBottom: '20px',
-              position: 'relative'
-            }}>
-              <div style={{
-                position: 'absolute',
-                top: '-14px',
-                left: '20px',
-                backgroundColor: '#4a90e2',
-                color: 'white',
-                padding: '4px 16px',
-                borderRadius: '12px',
-                fontSize: '0.75rem',
-                fontWeight: '900',
-                letterSpacing: '1px',
-                zIndex: 1
-              }}>
+            <div className="teams-setup-wrapper">
+              <div className="setup-wrapper-badge">
                 TEAMS
               </div>
 
@@ -1293,15 +1272,10 @@ function SetupScreen({ onStart }) {
                 {teamSizes.map((size, t) => {
                   const offset = getTeamOffset(t);
                   return (
-                    <div key={t} className="team-section-container" style={{
-                      backgroundColor: 'transparent',
-                      borderRadius: '16px',
-                      padding: '10px 0'
-                    }}>
+                    <div key={t} className="team-section-container">
                       <div className="team-header-row">
                         <input
                           className="team-name-input-flat"
-                          style={{ fontWeight: 'bold', color: '#4a90e2', background: 'transparent' }}
                           value={teamNames[t] ?? `Team ${t + 1}`}
                           onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
                           maxLength={12}
@@ -1352,40 +1326,14 @@ function SetupScreen({ onStart }) {
                 <button 
                   className="add-player-integrated dashed team-add-btn" 
                   onClick={addPlayer}
-                  style={{ 
-                    marginTop: '15px', 
-                    width: '100%', 
-                    border: '2px dashed #4a90e2',
-                    background: 'transparent',
-                    color: '#4a90e2' 
-                  }}
                 >
                   TEAM TOEVOEGEN
                 </button>
               )}
             </div>
           ) : (
-            <div className="teams-setup-wrapper" style={{
-              border: '3px solid #4a90e2',
-              borderRadius: '24px',
-              padding: '25px',
-              backgroundColor: 'rgba(0,0,0,0.02)', 
-              marginBottom: '20px',
-              position: 'relative'
-            }}>
-              <div style={{
-                position: 'absolute',
-                top: '-14px',
-                left: '20px',
-                backgroundColor: '#4a90e2',
-                color: 'white',
-                padding: '4px 16px',
-                borderRadius: '12px',
-                fontSize: '0.75rem',
-                fontWeight: '900',
-                letterSpacing: '1px',
-                zIndex: 1
-              }}>
+            <div className="teams-setup-wrapper">
+              <div className="setup-wrapper-badge">
                 SPELERS
               </div>
 
@@ -1445,18 +1393,6 @@ function SetupScreen({ onStart }) {
           <button
             className={`toggle-all-btn ${allSelected ? "toggle-all-btn-active" : ""}`}
             onClick={() => toggleCategory("all")}
-            style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              padding: '12px',
-              borderRadius: '12px',
-              border: '2px dashed #ccc',
-              background: allSelected ? 'rgba(74, 144, 226, 0.1)' : 'transparent',
-              marginBottom: allSelected ? '0px' : '15px'
-            }}
           >
             {allSelected ? "🎲 Alle categorieën" : "⚙️ Custom selectie"}
           </button>
@@ -1476,8 +1412,8 @@ function SetupScreen({ onStart }) {
           )}
         </div>
 
-        <div className="names-label-row" style={{ justifyContent: 'center', width: '100%' }}>
-          <label className="setup-label" style={{ textAlign: 'center', width: '100%' }}>
+        <div className="names-label-row center-labels">
+          <label className="setup-label center-label">
             {totalWordsCount}/{absoluteTotalWords} woorden in het spel
           </label>
         </div>
@@ -1688,6 +1624,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
           <svg width="100" height="100" viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="8"/>
             <circle
+              className="timer-circle-progress"
               cx="50" cy="50" r="44"
               fill="none"
               stroke={timerColor}
@@ -1696,7 +1633,6 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
               strokeDashoffset={timesUp ? circumference : circumference * (1 - pct)}
               strokeLinecap="round"
               transform="rotate(-90 50 50)"
-              style={{ transition: "stroke 0.5s" }}
             />
             <text x="50" y="56" textAnchor="middle" fill="white" fontSize="22" fontWeight="700" fontFamily="inherit"
               className={timesUp ? "timer-ring" : ""}>
@@ -1735,7 +1671,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
             <div className="word-anchor">
               <div className="word-counter">woord {wordIndex + 1}</div>
               <div key={wordIndex} className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ? hyphenateWord(currentWord) : "— geen woorden meer —"}</div>
-              <div className={`times-up-banner${isCurrentBonus && !timesUp ? ' bonus-banner' : ''}`} style={{visibility: (timesUp || isCurrentBonus) ? 'visible' : 'hidden'}}>
+              <div className={`times-up-banner${isCurrentBonus && !timesUp ? ' bonus-banner' : ''} ${(timesUp || isCurrentBonus) ? 'is-visible' : 'is-hidden'}`}>
                 {timesUp ? '⏰ Tijd is om — maak dit woord nog af!' : `⭐ BONUSGEZEGDE — 3 punten!`}
               </div>
             </div>
@@ -1806,24 +1742,8 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
         <h2 className="score-title">{isLast ? "🏆 Eindstand" : `Stand na ronde ${currentRound}`}</h2>
         {isLast && tiedPlayerIndices && (
           <button
+            className="tiebreaker-start-btn"
             onClick={() => onStartTiebreaker(tiedPlayerIndices)}
-            style={{
-              width:'100%',
-              background:'rgba(251,191,36,0.1)',
-              border:'3px solid rgba(251,191,36,0.3)',
-              borderRadius:'14px',
-              padding:'10px 16px',
-              marginBottom:'14px',
-              textAlign:'center',
-              fontSize:'14px',
-              fontWeight:700,
-              color:'#fbbf24',
-              cursor:'pointer',
-              fontFamily:'inherit',
-              transition:'background 0.15s, border-color 0.15s',
-            }}
-            onMouseOver={e => { e.currentTarget.style.background='rgba(251,191,36,0.22)'; e.currentTarget.style.borderColor='rgba(251,191,36,0.6)'; }}
-            onMouseOut={e => { e.currentTarget.style.background='rgba(251,191,36,0.1)'; e.currentTarget.style.borderColor='rgba(251,191,36,0.3)'; }}
           >
             🤝 Gelijkspel! Start een tie-breaker.
           </button>
@@ -1853,9 +1773,9 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
                         <span className="score-name">{team.name}</span>
                         <span className="score-members">{team.players.join(", ")}</span>
                       </div>
-                      <div style={{textAlign:'right'}}>
+                      <div className="score-row-right">
                         <span className="score-pts">{team.avgScore} pt</span>
-                        <div style={{fontSize:'11px', opacity:0.5, marginTop:'2px'}}>gem. per speler · totaal {team.totalScore}</div>
+                        <div className="score-row-subtext">gem. per speler · totaal {team.totalScore}</div>
                       </div>
                     </div>
                   );
@@ -1886,9 +1806,8 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
                   return (
                     <div
                       key={p.name}
-                      className={rowClass}
+                      className={rowClass + (isLast ? " cursor-pointer" : "")}
                       onClick={isLast ? () => onShowStats(originalIdx) : undefined}
-                      style={isLast ? {cursor:'pointer'} : undefined}
                     >
                       <span className="rank-badge">{badge}</span>
                       <span className="score-name">{p.name}</span>
@@ -1942,21 +1861,14 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, onBack }) {
   return (
     <div className="screen">
       <div className="stats-card">
-        <div style={{display:"flex", alignItems:"center", marginBottom:16}}>
+        <div className="stats-header-row">
           <button
+            className="stats-back-btn"
             onClick={onBack}
-            style={{
-              background:"rgba(255,255,255,0.08)", border:"2.5px solid rgba(255,255,255,0.15)",
-              borderRadius:12, color:"rgba(255,255,255,0.75)", fontSize:18,
-              width:36, height:36, display:"flex", alignItems:"center", justifyContent:"center",
-              cursor:"pointer", flexShrink:0, transition:"all 0.15s"
-            }}
-            onMouseOver={e=>{e.currentTarget.style.background="rgba(255,255,255,0.15)";e.currentTarget.style.color="#fff"}}
-            onMouseOut={e=>{e.currentTarget.style.background="rgba(255,255,255,0.08)";e.currentTarget.style.color="rgba(255,255,255,0.75)"}}
             title="Terug naar scorebord"
-          ><span style={{display:"inline-block", transform:"scaleX(-1)", lineHeight:1, verticalAlign:"middle"}}>➜</span></button>
-          <h2 className="score-title" style={{margin:0, flex:1, textAlign:"center"}}>📊 Statistieken</h2>
-          <div style={{width:36, flexShrink:0}} />
+          ><span className="stats-back-icon">➜</span></button>
+          <h2 className="score-title stats-header-title">📊 Statistieken</h2>
+          <div className="stats-header-spacer" />
         </div>
 
         {/* Player tabs */}
@@ -2038,28 +1950,16 @@ function TiebreakerCategoryPicker({ candidateCategories, onCategoryChosen }) {
   return (
     <div className="screen">
       <div className="score-card">
-        <h2 className="score-title" style={{marginBottom:'6px'}}>⚡ Tie-breaker</h2>
-        <p style={{textAlign:'center', color:'rgba(255,255,255,0.5)', fontSize:'13px', marginBottom:'22px', lineHeight:'1.5'}}>
+        <h2 className="score-title tiebreaker-title">⚡ Tie-breaker</h2>
+        <p className="tiebreaker-subtitle">
           Kies samen een categorie.<br/>Alle spelers krijgen een woord uit dezelfde categorie.
         </p>
-        <div style={{display:'flex', flexDirection:'column', gap:'12px', marginBottom:'24px'}}>
+        <div className="tiebreaker-cat-list">
           {(candidateCategories || []).map(cat => (
             <button
               key={cat.id}
               onClick={() => onCategoryChosen(cat.id)}
-              style={{
-                width:'100%', padding:'18px 20px',
-                borderRadius:'18px',
-                background:'rgba(167,139,250,0.1)',
-                border:'2.5px solid rgba(167,139,250,0.3)',
-                color:'white', fontFamily:'inherit',
-                fontSize:'20px', fontWeight:800,
-                cursor:'pointer', textAlign:'left',
-                transition:'all 0.15s',
-                display:'flex', alignItems:'center', gap:'12px',
-              }}
-              onMouseOver={e => { e.currentTarget.style.background='rgba(167,139,250,0.25)'; e.currentTarget.style.borderColor='rgba(167,139,250,0.7)'; }}
-              onMouseOut={e => { e.currentTarget.style.background='rgba(167,139,250,0.1)'; e.currentTarget.style.borderColor='rgba(167,139,250,0.3)'; }}
+              className="tiebreaker-cat-btn"
             >
               {cat.label}
             </button>
@@ -2131,20 +2031,13 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
       <div className="screen">
         <div className="score-card">
           <h2 className="score-title">⚡ Tie-breaker resultaten</h2>
-          <div style={{
-            margin:'0 0 16px',
-            padding:'10px 16px',
-            borderRadius:'14px',
-            background: hasJointWinner ? 'rgba(251,191,36,0.08)' : 'rgba(74,222,128,0.08)',
-            border: `2.5px solid ${hasJointWinner ? 'rgba(251,191,36,0.3)' : 'rgba(74,222,128,0.3)'}`,
-            textAlign:'center',
-          }}>
+          <div className={`tiebreaker-result-banner ${hasJointWinner ? 'tiebreaker-result-tied' : 'tiebreaker-result-winner'}`}>
             {hasJointWinner ? (
-              <span style={{color:'#fbbf24', fontWeight:800, fontSize:'14px'}}>
+              <span className="tiebreaker-result-text-tied">
                 🤝 Nog steeds gelijkspel!
               </span>
             ) : (
-              <span style={{color:'#4ade80', fontWeight:800, fontSize:'14px'}}>
+              <span className="tiebreaker-result-text-winner">
                 🏆 {results[0].name} wint de tie-breaker!
               </span>
             )}
@@ -2156,7 +2049,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
                 <div key={r.name} className={`score-row rank-${i + 1} rank-final`}>
                   <span className="rank-badge">{tieBadges[i] ?? i + 1}</span>
                   <span className="score-name">{r.name}</span>
-                  <span className="score-pts" style={{fontSize:'17px'}}>
+                  <span className="score-pts tiebreaker-pts">
                     {r.time.toFixed(1)}s
                   </span>
                 </div>
@@ -2177,12 +2070,12 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
       <div className="screen handoff-screen">
         <div className="handoff-card">
           <div className="handoff-icon">⚡</div>
-          <p className="handoff-sub" style={{color:'#fbbf24', fontWeight:800, letterSpacing:'0.06em', fontSize:'13px'}}>
+          <p className="handoff-sub tiebreaker-handoff-sub">
             TIE-BREAKER · {currentStep + 1}/{tiedPlayerIndices.length}
           </p>
           <h2 className="handoff-name">{players[currentPlayerIdx]}</h2>
-          <p className="handoff-tip" style={{marginBottom:'2px'}}>Raad z.s.m. het random woord</p>
-          <p className="handoff-tip" style={{marginTop:'0px'}}>in de categorie: {categoryLabel}</p>
+          <p className="handoff-tip mb-2">Raad z.s.m. het random woord</p>
+          <p className="handoff-tip mt-0">in de categorie: {categoryLabel}</p>
           <button className="handoff-btn" onClick={startRound}>
             Start tie-breaker!
           </button>
@@ -2210,18 +2103,18 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
             <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="8"/>
             {/* Yellow/orange fill — grows from 0 to full over 60s */}
             <circle cx="50" cy="50" r="44" fill="none" stroke="#fbbf24" strokeWidth="8"
+              className="tiebreaker-timer-circle"
               strokeDasharray={circumference}
               strokeDashoffset={yellowOffset}
               strokeLinecap="round"
               transform="rotate(-90 50 50)"
-              style={{transition:'stroke-dashoffset 0.05s linear'}}
             />
             <text x="50" y="50" textAnchor="middle" fill="white" fontSize="15" fontWeight="700" fontFamily="inherit" dy="0">{secs}</text>
             <text x="50" y="65" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="11" fontFamily="inherit">.{tenths}s</text>
           </svg>
         </div>
         <div className="round-stats">
-          <span style={{fontSize:'12px', color:'rgba(255,255,255,0.4)'}}>{categoryLabel}</span>
+          <span className="round-stats-cat">{categoryLabel}</span>
         </div>
       </div>
 
@@ -2229,12 +2122,12 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
         <div className="word-anchor">
           <div className="word-counter">leg z.s.m. uit</div>
           <div className="current-word">{hyphenateWord(currentWord)}</div>
-          <div className="times-up-banner" style={{visibility:'hidden'}}>placeholder</div>
+          <div className="times-up-banner is-hidden">placeholder</div>
         </div>
       </div>
 
       <div className="action-row">
-        <button className="action-btn correct-btn" style={{flex:1}} onClick={handleGuessed}>
+        <button className="action-btn correct-btn" onClick={handleGuessed}>
           <span className="btn-icon">✓</span>
           <span className="btn-label">Goed geraden!</span>
         </button>
@@ -2467,7 +2360,7 @@ export default function App() {
 
   return (
     <>
-      <style>{`
+<style>{`
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Righteous&display=swap');
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -2519,17 +2412,19 @@ export default function App() {
 
         .screen > * { position: relative; z-index: 1; }
 
-        /* ── Setup ── */
-        .setup-card {
+        /* ── Cards & Layout ── */
+        .setup-card, .score-card, .stats-card {
           background: rgba(255,255,255,0.06);
           border: 3px solid rgba(255,255,255,0.12);
           border-radius: 24px;
           padding: 28px 20px;
           width: 100%;
-          max-width: 480px;
           backdrop-filter: blur(20px);
           overflow: hidden;
         }
+        .setup-card { max-width: 480px; }
+        .score-card { max-width: 440px; }
+        .stats-card { max-width: 480px; overflow-y: auto; max-height: 92vh; }
 
         .logo-area { text-align: center; margin-bottom: 36px; }
         .logo-icon { font-size: 52px; margin-bottom: 8px; }
@@ -2545,36 +2440,20 @@ export default function App() {
 
         .setup-section { margin-bottom: 28px; }
         .setup-label { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
-
+        
         .names-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         .names-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-        .names-label-row .setup-label { margin-bottom: 4px; }
-        .toggle-all-btn {
-          width: 100%;
-          padding: 18px;
-          border-radius: 16px;
-          border: 3px solid rgba(255,255,255,0.2);
-          font-family: 'Righteous', cursive;
-          font-size: 20px;
-          letter-spacing: 0.04em;
-          cursor: pointer;
-          background: rgba(255,255,255,0.05);
-          color: rgba(255,255,255,0.45);
-          transition: all 0.25s;
-          margin-bottom: 16px;
-        }
-        .toggle-all-btn:hover { background: rgba(255,255,255,0.1); }
-        .toggle-all-btn-active {
-          background: rgba(52,211,153,0.08);
-          color: #34d399;
-          border-color: #34d399;
-        }
-        .toggle-all-btn-active:hover { background: rgba(52,211,153,0.18); }
-        .name-input-wrap { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 2.5px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 0 12px; transition: border-color 0.2s; }
-        .name-input-wrap:focus-within { border-color: #60a5fa; background: rgba(96,165,250,0.06); }
-        .name-num { font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.3); min-width: 14px; }
-        .name-input { flex: 1; background: none; border: none; outline: none; color: white; font-family: inherit; font-size: 14px; font-weight: 600; padding: 12px 0; }
-        .name-input::placeholder { color: rgba(255,255,255,0.25); }
+        .center-labels { justify-content: center; width: 100%; }
+        .center-label { text-align: center; width: 100%; }
+
+        /* ── Toggles & Buttons ── */
+        .setup-mode-toggle-group { display: flex; gap: 12px; margin-bottom: 30px; }
+        .mode-toggle-btn { border: 3px solid rgba(255,255,255,0.2); }
+        .mode-toggle-btn-half { margin: 0; flex: 1; }
+        .mode-toggle-singles { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); }
+        .mode-toggle-singles:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.35); }
+        .mode-toggle-teams { background: rgba(52,211,153,0.08); color: #34d399; border-color: #34d399; }
+        .mode-toggle-teams:hover { background: rgba(52,211,153,0.15); }
 
         .start-btn {
           width: 100%;
@@ -2590,430 +2469,208 @@ export default function App() {
           transition: all 0.25s;
           margin-top: 4px;
         }
-/* --- BASIS INPUT STYLING (Individueel & Team) --- */
-.player-input-group {
-  display: flex;
-  margin-bottom: 4px; 
-  height: 48px;
-  width: 100%;
-}
+        .start-btn.ready { border-color: #a78bfa; background: rgba(167,139,250,0.08); color: #a78bfa; }
+        .start-btn.ready:hover { background: rgba(167,139,250,0.15); }
 
-.player-name-container {
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px; 
-  padding: 0 12px;
-  flex-grow: 1;
-  transition: border-color 0.2s;
-}
+        .toggle-all-btn {
+          width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+          padding: 12px; border-radius: 12px; border: 2px dashed #ccc; background: transparent;
+          margin-bottom: 15px; font-family: 'Righteous', cursive; font-size: 20px; letter-spacing: 0.04em;
+          cursor: pointer; color: rgba(255,255,255,0.45); transition: all 0.25s;
+        }
+        .toggle-all-btn:hover { background: rgba(255,255,255,0.1); }
+        .toggle-all-btn-active { background: rgba(74, 144, 226, 0.1); border-color: #4a90e2; color: #4a90e2; margin-bottom: 0; }
+        .toggle-all-btn-active:hover { background: rgba(74, 144, 226, 0.2); }
 
-.player-input-group:has(.integrated-delete-btn) .player-name-container {
-  border-radius: 12px 0 0 12px;
-}
+        /* ── Player Inputs (Individual & Teams) ── */
+        .player-input-group { display: flex; margin-bottom: 4px; height: 48px; width: 100%; }
+        .player-name-container {
+          display: flex; align-items: center;
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 12px; padding: 0 12px;
+          flex-grow: 1; transition: border-color 0.2s;
+        }
+        .player-input-group:has(.integrated-delete-btn) .player-name-container { border-radius: 12px 0 0 12px; }
+        .player-bg { background: rgba(255, 255, 255, 0.06) !important; border: none; }
+        .player-index-badge { color: rgba(255, 255, 255, 0.3); font-weight: bold; font-size: 0.85rem; min-width: 20px; }
+        
+        .integrated-name-input {
+          background: transparent !important; border: none !important; color: white !important;
+          width: 100%; height: 100%; font-size: 1rem; outline: none; padding-left: 8px;
+        }
+        .integrated-delete-btn {
+          background: #ff4757; color: white; border: none; border-radius: 0 12px 12px 0;
+          width: 48px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+          font-size: 1.2rem; transition: background 0.2s;
+        }
+        .integrated-delete-btn:hover { background: #ff2e44; }
+        .btn-subtle { background: rgba(255, 255, 255, 0.1) !important; color: white !important; }
 
-.integrated-name-input {
-  background: transparent !important;
-  border: none !important;
-  color: white !important;
-  width: 100%;
-  height: 100%;
-  font-size: 1rem;
-  outline: none;
-  padding-left: 8px;
-}
+        .add-player-integrated {
+          width: 100%; height: 44px; margin-top: 4px;
+          background: rgba(74, 222, 128, 0.05); border: 2px dashed #4ade80; border-radius: 12px;
+          color: #4ade80; display: flex; align-items: center; justify-content: center; gap: 12px;
+          cursor: pointer; transition: all 0.2s; font-size: 1rem; font-weight: 600;
+        }
+        .add-player-integrated:hover { background: rgba(74, 222, 128, 0.12); transform: translateY(-1px); }
 
-.player-index-badge {
-  color: rgba(255, 255, 255, 0.3);
-  font-weight: bold;
-  font-size: 0.85rem;
-  min-width: 20px;
-}
+        /* ── Team Layout ── */
+        .teams-setup-wrapper {
+          border: 3px solid #4a90e2; border-radius: 24px; padding: 25px;
+          background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative;
+        }
+        .setup-wrapper-badge {
+          position: absolute; top: -14px; left: 20px; background-color: #4a90e2; color: white;
+          padding: 4px 16px; border-radius: 12px; font-size: 0.75rem; font-weight: 900; letter-spacing: 1px; z-index: 1;
+        }
+        .teams-grid { display: flex; flex-direction: column; gap: 14px; }
+        .team-section-container {
+          margin-bottom: 14px; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          width: 100%; background-color: transparent; border-radius: 16px;
+        }
+        .team-header-row { position: relative; display: flex; align-items: center; margin-bottom: 8px; }
+        .team-name-input-flat {
+          background: transparent !important; border: none !important; border-bottom: 2px solid rgba(74, 144, 226, 0.4) !important;
+          color: #4a90e2 !important; font-size: 1.1rem; font-weight: bold; text-transform: uppercase;
+          padding: 2px 0; width: 100%; outline: none;
+        }
+        .delete-btn-round {
+          position: absolute; right: 0; top: 0; background: rgba(0,0,0,0.02); color: white; border: none;
+          border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+          cursor: pointer; font-size: 10px;
+        }
+        .team-players-list { display: flex; flex-direction: column; gap: 4px; }
+        .team-add-btn { margin-top: 15px; border-color: #4a90e2; color: #4a90e2; background: transparent; }
+        .team-add-btn:hover { background: rgba(74, 144, 226, 0.1); }
 
-.integrated-delete-btn {
-  background: #ff4757;
-  color: white;
-  border: none;
-  border-radius: 0 12px 12px 0;
-  width: 48px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  transition: background 0.2s;
-}
+        .small-group { height: 38px !important; margin-bottom: 4px !important; }
+        .small-group .player-name-container { border-radius: 10px; }
+        .small-group:has(.integrated-delete-btn) .player-name-container { border-radius: 10px 0 0 10px; }
+        .small-group .integrated-delete-btn { border-radius: 0 10px 10px 0; width: 38px !important; }
 
-.integrated-delete-btn:hover {
-  background: #ff2e44;
-}
-
-/* --- TOEVOEG KNOPPEN (Altijd Groen) --- */
-.add-player-integrated {
-  width: 100%;
-  height: 44px;
-  background: rgba(74, 222, 128, 0.05); /* Subtiele groene gloed */
-  border: 2px dashed #4ade80; /* Altijd groene rand */
-  border-radius: 12px;
-  color: #4ade80; /* Altijd groene tekst/icoon */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  cursor: pointer;
-  margin-top: 4px;
-  transition: all 0.2s;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.add-player-integrated:hover {
-  background: rgba(74, 222, 128, 0.12); /* Iets feller bij hover */
-  transform: translateY(-1px); /* Subtiel effect */
-}
-
-/* --- TEAM STYLING --- */
-.team-section-container {
-  margin-bottom: 14px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  width: 100%;
-}
-
-.team-header-row {
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.team-name-input-flat {
-  background: transparent !important;
-  border: none !important;
-  border-bottom: 2px solid rgba(66, 135, 245, 0.4) !important;
-  color: #4287f5 !important;
-  font-size: 1.1rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  padding: 2px 0;
-  width: 100%;
-  outline: none;
-}
-
-.delete-btn-round {
-  position: absolute;
-  right: 0px; 
-  top: 0px;
-  background: rgba(0,0,0,0.02);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 10px;
-}
-
-.team-players-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* --- HULPMIDDELEN VOOR TEAMS --- */
-.small-group {
-  height: 38px !important;
-  margin-bottom: 4px !important;
-}
-
-.small-group .player-name-container {
-  border-radius: 10px;
-}
-
-.small-group:has(.integrated-delete-btn) .player-name-container {
-  border-radius: 10px 0 0 10px;
-}
-
-.small-group .integrated-delete-btn {
-  border-radius: 0 10px 10px 0;
-  width: 38px !important;
-}
-
-.player-bg {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: none;
-}
-
-.btn-subtle {
-  background: rgba(255, 255, 255, 0.1) !important;
-  color: white !important;
-}
-
-.team-add-btn {
-  margin-top: 8px;
-}
+        /* ── Time Control ── */
         .time-control { display: flex; align-items: center; gap: 12px; }
         .time-btn {
-          width: 64px; height: 44px;
-          border-radius: 12px;
-          border: 3px solid #34d399;
-          background: rgba(52,211,153,0.08);
-          color: #34d399;
-          font-family: inherit;
-          font-size: 15px;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all 0.18s;
+          width: 64px; height: 44px; border-radius: 12px; border: 3px solid #34d399;
+          background: rgba(52,211,153,0.08); color: #34d399; font-family: inherit; font-size: 15px;
+          font-weight: 700; cursor: pointer; transition: all 0.18s;
         }
         .time-btn-plus:hover:not(:disabled) { background: rgba(52,211,153,0.18); }
         .time-btn-minus { border-color: #f87171; background: rgba(248,113,113,0.08); color: #f87171; }
         .time-btn-minus:hover:not(:disabled) { background: rgba(248,113,113,0.18); }
         .time-btn:disabled { opacity: 0.3; cursor: default; }
         .time-btn-disabled { opacity: 1 !important; cursor: not-allowed !important; pointer-events: none; background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.35) !important; }
-        .time-display {
-          flex: 1;
-          text-align: center;
-          font-family: 'Righteous', cursive;
-          font-size: 24px;
-          color: rgba(255,255,255,0.9);
-        }
+        .time-display { flex: 1; text-align: center; font-family: 'Righteous', cursive; font-size: 24px; color: rgba(255,255,255,0.9); }
 
-        .start-btn.ready {
-          border: 3px solid #a78bfa;
-          background: rgba(167,139,250,0.08);
-          color: #a78bfa;
+        /* ── Categories ── */
+        .category-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+        .category-btn {
+          padding: 8px 14px; border-radius: 20px; border: 3px solid rgba(255,255,255,0.2);
+          background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 700;
+          font-family: inherit; cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s; user-select: none;
         }
-        .start-btn.ready:hover { background: rgba(167,139,250,0.15); }
-        .mode-toggle-btn {
-          border: 3px solid rgba(255,255,255,0.2);
-        }
-        .mode-toggle-singles {
-          background: rgba(255,255,255,0.06);
-          color: rgba(255,255,255,0.7);
-          border-color: rgba(255,255,255,0.2);
-        }
-        .mode-toggle-singles:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.35); }
-        .mode-toggle-teams {
-          background: rgba(52,211,153,0.08);
-          color: #34d399;
-          border-color: #34d399;
-        }
-        .mode-toggle-teams:hover { background: rgba(52,211,153,0.15); }
+        .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
+        .category-btn-active { background: rgba(52,211,153,0.08); border-color: #34d399; color: #34d399; }
+        .category-btn-active:hover { background: rgba(52,211,153,0.18); border-color: #34d399; }
 
-        /* ── Handoff ── */
+        /* ── Handoff Screen ── */
         .handoff-screen { background: none; }
         .handoff-card {
-          text-align: center;
-          padding: 40px 24px;
-          background: rgba(255,255,255,0.06);
-          border: 3px solid rgba(255,255,255,0.12);
-          border-radius: 28px;
-          max-width: 400px;
-          width: 100%;
-          backdrop-filter: blur(20px);
+          text-align: center; padding: 40px 24px; background: rgba(255,255,255,0.06);
+          border: 3px solid rgba(255,255,255,0.12); border-radius: 28px; max-width: 400px;
+          width: 100%; backdrop-filter: blur(20px);
         }
         .handoff-icon { font-size: 52px; margin-bottom: 16px; animation: bounce 1.5s infinite; }
-        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
         .handoff-sub { font-size: 12px; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; margin-bottom: 10px; }
         .handoff-name { font-family: 'Righteous', cursive; font-size: clamp(28px, 8vw, 42px); color: #a78bfa; margin-bottom: 24px; word-break: break-word; }
         .handoff-team { font-size: 13px; color: #34d399; font-weight: 800; letter-spacing: 0.06em; margin-top: -10px; margin-bottom: 16px; }
         .handoff-tip { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
         .handoff-btn {
-          padding: 16px 32px;
-          border-radius: 16px;
-          border: 3px solid #a78bfa;
-          background: rgba(167,139,250,0.08);
-          color: #a78bfa;
-          font-family: 'Righteous', cursive;
-          font-size: 18px;
-          cursor: pointer;
-          transition: all 0.2s;
+          padding: 16px 32px; border-radius: 16px; border: 3px solid #a78bfa; background: rgba(167,139,250,0.08);
+          color: #a78bfa; font-family: 'Righteous', cursive; font-size: 18px; cursor: pointer; transition: all 0.2s;
         }
         .handoff-btn:hover { background: rgba(167,139,250,0.15); }
 
-        /* ── Round ── */
-        .round-screen {
-          flex-direction: column;
-          background: none;
-          transition: background 0.2s;
-          padding-top: max(28px, env(safe-area-inset-top));
-        }
+        /* ── Round Screen ── */
+        .round-screen { flex-direction: column; background: none; transition: background 0.2s; padding-top: max(28px, env(safe-area-inset-top)); }
         .round-screen.flash-correct { animation: flashGreen 0.4s ease; }
         .round-screen.flash-skip { animation: flashOrange 0.4s ease; }
-        @keyframes flashGreen { 0%{background:rgba(74,222,128,0.3)} 100%{background:transparent} }
-        @keyframes flashOrange { 0%{background:rgba(251,191,36,0.2)} 100%{background:transparent} }
         .round-screen.round-done { opacity: 0.6; }
 
         .round-top {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          width: 100%;
-          max-width: 520px;
-          padding: 28px 0 12px;
-          gap: 8px;
-          flex-shrink: 0;
-          position: relative;
+          display: flex; align-items: center; justify-content: space-between; width: 100%;
+          max-width: 520px; padding: 28px 0 12px; gap: 8px; flex-shrink: 0; position: relative;
         }
-
         .round-player { font-family: 'Righteous', cursive; font-size: clamp(14px, 4vw, 20px); color: #a78bfa; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
         .timer-wrap { position: absolute; left: 50%; transform: translateX(-50%); flex-shrink: 0; }
+        .timer-circle-progress { transition: stroke 0.5s; }
+        .timer-ring { animation: ring 0.5s infinite; transform-origin: 50px 50px; }
 
         .round-stats { display: flex; gap: 8px; flex-shrink: 0; margin-left: auto; }
         .stat { font-size: 14px; font-weight: 800; padding: 5px 10px; border-radius: 20px; white-space: nowrap; }
         .correct-stat { background: rgba(74,222,128,0.2); color: #4ade80; }
         .skip-stat { background: rgba(251,191,36,0.15); color: #fbbf24; }
+        .round-stats-cat { font-size: 12px; color: rgba(255,255,255,0.4); }
 
         .word-stage {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          max-width: 520px;
-          width: 100%;
-          gap: 0;
-          padding: 20px;
+          flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+          text-align: center; max-width: 520px; width: 100%; gap: 0; padding: 20px;
         }
-
-        .word-anchor {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-
+        .word-anchor { display: flex; flex-direction: column; align-items: center; }
         .word-counter { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 10px; }
 
         .current-word {
-          font-family: 'Righteous', cursive;
-          font-size: clamp(38px, 11vw, 80px);
-          background: linear-gradient(135deg, #f9fafb, #a78bfa);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          line-height: 1.15;
-          animation: wordIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-          word-break: break-word;
-          overflow-wrap: break-word;
-          hyphens: manual;
-          -webkit-hyphens: manual;
-          max-width: 100%;
-          padding: 0 8px;
-          text-align: center;
+          font-family: 'Righteous', cursive; font-size: clamp(38px, 11vw, 80px);
+          background: linear-gradient(135deg, #f9fafb, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text; line-height: 1.15; animation: wordIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+          word-break: break-word; overflow-wrap: break-word; hyphens: manual; -webkit-hyphens: manual;
+          max-width: 100%; padding: 0 8px; text-align: center;
         }
-        @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
+        .current-word.bonus-word {
+          background: linear-gradient(135deg, #fb923c, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
 
-
-        .penalty-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-        .penalty-label {
-          font-family: 'Righteous', cursive;
-          font-size: clamp(15px, 4vw, 18px);
-          color: #fbbf24;
-          letter-spacing: 0.04em;
-        }
-        .penalty-bar-track {
-          width: 220px;
-          height: 6px;
-          background: rgba(251,191,36,0.15);
-          border-radius: 3px;
-          overflow: hidden;
-        }
-        .penalty-bar-fill {
-          height: 100%;
-          background: #fbbf24;
-          border-radius: 3px;
-          width: 100%;
-          animation: penalty-drain 3s linear forwards;
-        }
-        @keyframes penalty-drain {
-          from { width: 100%; }
-          to   { width: 0%; }
-        }
-        .penalty-sublabel {
-          font-size: clamp(12px, 3vw, 14px);
-          color: rgba(255,255,255,0.45);
-          font-weight: 600;
-          letter-spacing: 0.02em;
-        }
-        .btn-disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
         .times-up-banner {
-          font-family: 'Righteous', cursive;
-          font-size: clamp(13px, 3.5vw, 16px);
-          color: #f87171;
-          background: rgba(248,113,113,0.12);
-          border: 3px solid rgba(248,113,113,0.35);
-          border-radius: 12px;
-          padding: 8px 16px;
-          text-align: center;
-          min-height: 40px;
-          margin-top: 20px;
+          font-family: 'Righteous', cursive; font-size: clamp(13px, 3.5vw, 16px); color: #f87171;
+          background: rgba(248,113,113,0.12); border: 3px solid rgba(248,113,113,0.35); border-radius: 12px;
+          padding: 8px 16px; text-align: center; min-height: 40px; margin-top: 20px;
           animation: pulse-red-banner 1.2s ease-in-out infinite;
         }
-        @keyframes pulse-red-banner {
-          0%, 100% { box-shadow: 0 0 6px rgba(248,113,113,0.4); }
-          50% { box-shadow: 0 0 14px rgba(248,113,113,0.8); }
-        }
         .times-up-banner.bonus-banner {
-          color: #fb923c;
-          background: rgba(251,146,60,0.12);
-          border-color: rgba(251,146,60,0.35);
+          color: #fb923c; background: rgba(251,146,60,0.12); border-color: rgba(251,146,60,0.35);
           animation: pulse-orange-banner 1.2s ease-in-out infinite;
         }
-        @keyframes pulse-orange-banner {
-          0%, 100% { box-shadow: 0 0 6px rgba(251,146,60,0.4); }
-          50% { box-shadow: 0 0 14px rgba(251,146,60,0.8); }
-        }
+        .is-visible { visibility: visible; }
+        .is-hidden { visibility: hidden; }
+
+        .penalty-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+        .penalty-label { font-family: 'Righteous', cursive; font-size: clamp(15px, 4vw, 18px); color: #fbbf24; letter-spacing: 0.04em; }
+        .penalty-bar-track { width: 220px; height: 6px; background: rgba(251,191,36,0.15); border-radius: 3px; overflow: hidden; }
+        .penalty-bar-fill { height: 100%; background: #fbbf24; border-radius: 3px; width: 100%; animation: penalty-drain 3s linear forwards; }
+        .penalty-sublabel { font-size: clamp(12px, 3vw, 14px); color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 0.02em; }
+
         .word-done-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: -80px; }
         .word-done-count { font-size: clamp(18px, 5vw, 26px); color: rgba(255,255,255,0.6); font-family: 'Righteous', cursive; letter-spacing: 0.03em; }
         .word-done-msg { font-family: 'Righteous', cursive; font-size: clamp(36px, 10vw, 72px); text-align: center; word-break: break-word; line-height: 1.15; }
         .word-done-msg.tier-poor { color: #f87171; }
         .word-done-msg.tier-ok { color: #fbbf24; }
         .word-done-msg.tier-great { color: #4ade80; }
-        @keyframes pulse { from{transform:scale(1)} to{transform:scale(1.06)} }
-        .timer-ring { animation: ring 0.5s infinite; transform-origin: 50px 50px; }
-        @keyframes ring {
-          0%   { transform: rotate(0deg); }
-          15%  { transform: rotate(18deg); }
-          30%  { transform: rotate(-16deg); }
-          45%  { transform: rotate(14deg); }
-          60%  { transform: rotate(-10deg); }
-          75%  { transform: rotate(6deg); }
-          90%  { transform: rotate(-3deg); }
-          100% { transform: rotate(0deg); }
-        }
 
+        /* Action Row */
         .action-row {
-          display: flex;
-          gap: 12px;
-          width: 100%;
-          max-width: 520px;
-          padding: 0 0 max(24px, env(safe-area-inset-bottom));
-          flex-shrink: 0;
+          display: flex; gap: 12px; width: 100%; max-width: 520px;
+          padding: 0 0 max(24px, env(safe-area-inset-bottom)); flex-shrink: 0;
         }
-
         .action-btn {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 6px;
-          padding: 20px 12px;
-          border-radius: 20px;
-          border: none;
-          cursor: pointer;
-          font-family: 'Righteous', cursive;
-          transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
-          -webkit-tap-highlight-color: transparent;
-          min-width: 0;
+          flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
+          padding: 20px 12px; border-radius: 20px; border: none; cursor: pointer;
+          font-family: 'Righteous', cursive; transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+          -webkit-tap-highlight-color: transparent; min-width: 0;
         }
         .action-btn:focus { outline: none; }
         .action-btn:active { transform: scale(0.93); }
+        .btn-disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
         .btn-icon { font-size: 28px; }
         .btn-label { font-size: clamp(13px, 3.5vw, 16px); white-space: nowrap; }
 
@@ -3025,239 +2682,102 @@ export default function App() {
           .correct-btn:hover { background: rgba(74,222,128,0.35); }
         }
 
-        .teams-grid { display: flex; flex-direction: column; gap: 14px; }
-        .team-block {
-          background: rgba(167,139,250,0.05);
-          border: 2.5px solid rgba(167,139,250,0.25);
-          border-radius: 16px;
-          padding: 12px 14px;
-        }
-        .team-block-header {
-          font-size: 11px;
-          font-weight: 800;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: #a78bfa;
-          margin-bottom: 10px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-        .team-name-input {
-          font-size: 13px !important;
-          font-weight: 800 !important;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: #a78bfa !important;
-          padding: 6px 10px !important;
-          flex: none !important;
-          width: 160px;
-          background: rgba(167,139,250,0.06) !important;
-          border: 2.5px solid rgba(167,139,250,0.35) !important;
-          border-radius: 8px !important;
-        }
-        .team-name-input:focus { border-color: #a78bfa !important; background: rgba(167,139,250,0.1) !important; }
-        .team-name-input::placeholder { color: rgba(167,139,250,0.4) !important; }
-        .team-size-controls { display: flex; gap: 6px; }
-        .team-size-btn {
-          padding: 3px 10px;
-          border-radius: 8px;
-          border: 2.5px solid #34d399;
-          background: rgba(52,211,153,0.08);
-          color: #34d399;
-          font-size: 12px;
-          font-weight: 800;
-          font-family: inherit;
-          cursor: pointer;
-          transition: all 0.15s;
-          line-height: 1.4;
-        }
-        .team-size-btn:hover:not(.team-size-btn-disabled) { background: rgba(52,211,153,0.18); }
-        .team-size-remove { border-color: #f87171; border-width: 2.5px; background: rgba(248,113,113,0.08); color: #f87171; }
-        .team-size-remove:hover:not(.team-size-btn-disabled) { background: rgba(248,113,113,0.18); }
-        .team-size-btn-disabled { opacity: 1; cursor: not-allowed; pointer-events: none; background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.35) !important; }
-
-        .team-block .name-input-wrap { margin-bottom: 6px; }
-        .team-block .name-input-wrap:last-child { margin-bottom: 0; }
-
-        .score-name-block { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
-        .score-members { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        .score-card {
-          background: rgba(255,255,255,0.06);
-          border: 3px solid rgba(255,255,255,0.12);
-          border-radius: 24px;
-          padding: 28px 20px;
-          width: 100%;
-          max-width: 440px;
-          backdrop-filter: blur(20px);
-          overflow: hidden;
-        }
+        /* ── Score Screen ── */
         .score-title { font-family: 'Righteous', cursive; font-size: clamp(22px, 6vw, 28px); text-align: center; margin-bottom: 20px; }
         .scores-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
         .score-row {
-          display: flex;
-          align-items: center;
-          gap: 14px;
-          padding: 14px 16px;
-          border-radius: 16px;
-          background: rgba(255,255,255,0.05);
-          border: 3px solid rgba(255,255,255,0.07);
-          animation: slideIn 0.4s ease both;
+          display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px;
+          background: rgba(255,255,255,0.05); border: 3px solid rgba(255,255,255,0.07); animation: slideIn 0.4s ease both;
         }
+        .score-row-right { text-align: right; }
+        .score-row-subtext { font-size: 11px; opacity: 0.5; margin-top: 2px; }
+        .cursor-pointer { cursor: pointer; }
+        .score-row.cursor-pointer:hover { filter: brightness(1.25); }
+
+        /* Basic row ranks */
         .score-row.rank-1 { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
         .score-row.rank-2 { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
         .score-row.rank-3 { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
 
-        /* Tussenstand: alleen #1 groen, rest neutraal */
+        /* Tussenstand */
         .score-row.rank-1.rank-interim { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
-        .score-row.rank-2.rank-interim { background: rgba(255,255,255,0.05); border: 3px solid rgba(255,255,255,0.14); }
-        .score-row.rank-3.rank-interim { background: rgba(255,255,255,0.05); border: 3px solid rgba(255,255,255,0.14); }
-        /* Tussenstand gelijkspel: alle gedeelde eersten groen */
+        .score-row.rank-1.rank-interim .score-pts { color: #4ade80; }
+        .score-row.rank-2.rank-interim, .score-row.rank-3.rank-interim { background: rgba(255,255,255,0.05); border: 3px solid rgba(255,255,255,0.14); }
+        
         .score-row.rank-interim-tied { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
         .score-row.rank-interim-tied .score-pts { color: #4ade80; }
+        
         .score-row.rank-interim-played { background: rgba(167,139,250,0.08); border: 3px solid rgba(167,139,250,0.5); }
         .score-row.rank-interim-played .score-pts { color: #a78bfa; }
 
-        /* Eindstand: goud / zilver / brons */
+        /* Eindstand */
         .score-row.rank-1.rank-final { background: rgba(251,191,36,0.08); border: 3px solid #fbbf24; }
+        .score-row.rank-1.rank-final .score-pts { color: #fbbf24; }
         .score-row.rank-2.rank-final { background: rgba(192,192,192,0.1); border: 3px solid #c0c0c0; }
+        .score-row.rank-2.rank-final .score-pts { color: #c0c0c0; }
         .score-row.rank-3.rank-final { background: rgba(205,127,50,0.08); border: 3px solid #cd7f32; }
+        .score-row.rank-3.rank-final .score-pts { color: #cd7f32; }
         .score-row.rank-4.rank-final, .score-row.rank-5.rank-final, .score-row.rank-6.rank-final,
         .score-row.rank-7.rank-final, .score-row.rank-8.rank-final, .score-row.rank-9.rank-final,
         .score-row.rank-10.rank-final { background: rgba(167,139,250,0.08); border: 3px solid rgba(167,139,250,0.5); }
+        .score-row.rank-final:not(.rank-1):not(.rank-2):not(.rank-3) .score-pts { color: #a78bfa; }
+
         .score-row.rank-tied { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
         .score-row.rank-tied .score-pts { color: #4ade80; }
         .score-row.rank-tied .score-name { color: #4ade80; }
-        .score-row[style*="pointer"]:hover { filter: brightness(1.25); }
-        @keyframes slideIn { from{transform:translateX(-20px);opacity:0} to{transform:translateX(0);opacity:1} }
-        .score-row:nth-child(1){animation-delay:0.05s}
-        .score-row:nth-child(2){animation-delay:0.1s}
-        .score-row:nth-child(3){animation-delay:0.15s}
-        .score-row:nth-child(4){animation-delay:0.2s}
-        .score-row:nth-child(5){animation-delay:0.25s}
-        .score-row:nth-child(6){animation-delay:0.3s}
 
         .rank-badge { font-size: 20px; min-width: 28px; text-align: center; flex-shrink: 0; }
+        .score-name-block { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
         .score-name { flex: 1; font-size: clamp(14px, 4vw, 18px); font-weight: 700; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .score-members { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .score-pts { font-family: 'Righteous', cursive; font-size: clamp(16px, 4vw, 20px); color: rgba(255,255,255,0.9); flex-shrink: 0; }
-        .score-row.rank-1.rank-interim .score-pts { color: #4ade80; }
-        .score-row.rank-1.rank-final .score-pts { color: #fbbf24; }
-        .score-row.rank-2.rank-final .score-pts { color: #c0c0c0; }
-        .score-row.rank-3.rank-final .score-pts { color: #cd7f32; }
-        .score-row.rank-4.rank-final .score-pts, .score-row.rank-5.rank-final .score-pts,
-        .score-row.rank-6.rank-final .score-pts, .score-row.rank-7.rank-final .score-pts,
-        .score-row.rank-8.rank-final .score-pts, .score-row.rank-9.rank-final .score-pts,
-        .score-row.rank-10.rank-final .score-pts { color: #a78bfa; }
 
         .score-btn {
-          width: 100%;
-          padding: 18px;
-          border-radius: 16px;
-          border: none;
-          font-family: 'Righteous', cursive;
-          font-size: 20px;
-          cursor: pointer;
-          transition: filter 0.18s;
+          width: 100%; padding: 18px; border-radius: 16px; border: none; font-family: 'Righteous', cursive;
+          font-size: 20px; cursor: pointer; transition: filter 0.18s;
         }
         .next-btn { background: rgba(167,139,250,0.08); color: #a78bfa; border: 3px solid #a78bfa; }
         .next-btn:hover { background: rgba(167,139,250,0.15); }
-        .restart-btn { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); border: 3px solid rgba(255,255,255,0.2); }
-        .restart-btn:hover { background: rgba(255,255,255,0.14); }
         .continue-btn { background: rgba(52,211,153,0.1); color: #34d399; border: 3px solid rgba(52,211,153,0.35); margin-bottom: 10px; }
         .continue-btn:hover { background: rgba(52,211,153,0.18); }
+        .restart-btn { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); border: 3px solid rgba(255,255,255,0.2); }
+        .restart-btn:hover { background: rgba(255,255,255,0.14); }
         .stats-btn { background: rgba(251,191,36,0.1); color: #fbbf24; border: 3px solid rgba(251,191,36,0.35); margin-bottom: 10px; }
         .stats-btn:hover { background: rgba(251,191,36,0.18); }
         .final-btns { display: flex; flex-direction: column; }
 
-        /* ── Category picker ── */
-        .category-grid {
-          display: flex; flex-wrap: wrap; gap: 8px;
+        /* ── Stats Screen ── */
+        .stats-header-row { display: flex; align-items: center; margin-bottom: 16px; }
+        .stats-back-btn {
+          background: rgba(255,255,255,0.08); border: 2.5px solid rgba(255,255,255,0.15);
+          border-radius: 12px; color: rgba(255,255,255,0.75); font-size: 18px; width: 36px; height: 36px;
+          display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all 0.15s;
         }
-        .category-btn {
-          padding: 8px 14px; border-radius: 20px;
-          border: 3px solid rgba(255,255,255,0.2);
-          background: rgba(255,255,255,0.05);
-          color: rgba(255,255,255,0.7);
-          font-size: 13px; font-weight: 700; font-family: inherit;
-          cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s;
-          user-select: none;
-        }
-        .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
-        .category-btn-active {
-          background: rgba(52,211,153,0.08);
-          border-color: #34d399;
-          color: #34d399;
-        }
-        .category-btn-active:hover {
-          background: rgba(52,211,153,0.18);
-          border-color: #34d399;
-        }
+        .stats-back-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+        .stats-back-icon { display: inline-block; transform: scaleX(-1); line-height: 1; vertical-align: middle; }
+        .stats-header-title { margin: 0; flex: 1; text-align: center; }
+        .stats-header-spacer { width: 36px; flex-shrink: 0; }
 
-        /* ── Bonus word ── */
-        @keyframes pulse-gold {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(251,191,36,0.4); }
-          50% { box-shadow: 0 0 0 8px rgba(251,191,36,0); }
-        }
-        .current-word.bonus-word {
-          background: linear-gradient(135deg, #fb923c, #f97316);
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-        .flash-bonus { animation: flash-bonus-anim 0.4s ease; }
-        @keyframes flash-bonus-anim {
-          0% { background: rgba(251,146,60,0); }
-          30% { background: rgba(251,146,60,0.2); }
-          100% { background: rgba(251,146,60,0); }
-        }
-
-        /* ── Stats screen ── */
-        .stats-card {
-          background: rgba(255,255,255,0.06);
-          border: 3px solid rgba(255,255,255,0.12);
-          border-radius: 24px; padding: 28px 20px;
-          width: 100%; max-width: 480px;
-          backdrop-filter: blur(20px);
-          overflow-y: auto; max-height: 92vh;
-        }
-        .stats-tabs {
-          display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;
-        }
+        .stats-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
         .stats-tab {
-          padding: 6px 14px; border-radius: 20px;
-          border: 2.5px solid rgba(255,255,255,0.15);
-          background: rgba(255,255,255,0.06);
-          color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 700;
+          padding: 6px 14px; border-radius: 20px; border: 2.5px solid rgba(255,255,255,0.15);
+          background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 700;
           font-family: inherit; cursor: pointer; transition: all 0.15s;
         }
-        .stats-tab-active {
-          background: rgba(167,139,250,0.25);
-          border-color: rgba(167,139,250,0.6); color: #a78bfa;
-        }
-        .stats-player-name {
-          font-family: 'Righteous', cursive; font-size: 22px; margin-bottom: 2px;
-        }
-        .stats-total-score {
-          color: #a78bfa; font-size: 14px; font-weight: 700; margin-bottom: 16px;
-        }
-        .stats-grid {
-          display: grid; grid-template-columns: 1fr 1fr;
-          gap: 10px; margin-bottom: 14px;
-        }
-        .stats-cell {
-          background: rgba(255,255,255,0.06);
-          border: 2.5px solid rgba(255,255,255,0.1);
-          border-radius: 16px; padding: 12px;
-          text-align: center;
-        }
+        .stats-tab-active { background: rgba(167,139,250,0.25); border-color: rgba(167,139,250,0.6); color: #a78bfa; }
+        .stats-player-name { font-family: 'Righteous', cursive; font-size: 22px; margin-bottom: 2px; }
+        .stats-total-score { color: #a78bfa; font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+        
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+        .stats-cell { background: rgba(255,255,255,0.06); border: 2.5px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 12px; text-align: center; }
         .stats-cell-gold { border-color: rgba(251,146,60,0.35); background: rgba(251,146,60,0.08); }
         .stats-cell-val { font-family: 'Righteous', cursive; font-size: 26px; }
         .stats-cell-lbl { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); margin-top: 2px; }
         .stats-best {
-          font-size: 13px; font-weight: 700; color: #fbbf24;
-          background: rgba(251,191,36,0.1); border: 2.5px solid rgba(251,191,36,0.25);
-          border-radius: 12px; padding: 10px 14px; margin-bottom: 14px;
+          font-size: 13px; font-weight: 700; color: #fbbf24; background: rgba(251,191,36,0.1);
+          border: 2.5px solid rgba(251,191,36,0.25); border-radius: 12px; padding: 10px 14px; margin-bottom: 14px;
         }
+        
         .stats-words-section { display: flex; gap: 10px; margin-bottom: 4px; }
         .stats-words-col { flex: 1; min-width: 0; }
         .stats-words-title { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
@@ -3265,14 +2785,63 @@ export default function App() {
         .stats-red { color: #f87171; }
         .stats-words-list { display: flex; flex-wrap: wrap; gap: 4px; }
         .stats-word-chip {
-          font-size: 11px; font-weight: 700; padding: 3px 8px;
-          border-radius: 10px; background: rgba(74,222,128,0.1);
+          font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 10px; background: rgba(74,222,128,0.1);
           border: 2.5px solid rgba(74,222,128,0.25); color: #4ade80;
         }
         .stats-word-bonus { background: rgba(251,146,60,0.12); border-color: rgba(251,146,60,0.4); color: #fb923c; }
         .stats-word-skipped { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.25); color: #f87171; }
         .stats-word-more { font-size: 11px; color: rgba(255,255,255,0.4); align-self: center; }
 
+        /* ── Tiebreaker Screen ── */
+        .tiebreaker-start-btn {
+          width: 100%; background: rgba(251,191,36,0.1); border: 3px solid rgba(251,191,36,0.3);
+          border-radius: 14px; padding: 10px 16px; margin-bottom: 14px; text-align: center;
+          font-size: 14px; font-weight: 700; color: #fbbf24; cursor: pointer; font-family: inherit;
+          transition: background 0.15s, border-color 0.15s;
+        }
+        .tiebreaker-start-btn:hover { background: rgba(251,191,36,0.22); border-color: rgba(251,191,36,0.6); }
+        .tiebreaker-title { margin-bottom: 6px; }
+        .tiebreaker-subtitle { text-align: center; color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 22px; line-height: 1.5; }
+        .tiebreaker-cat-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+        .tiebreaker-cat-btn {
+          width: 100%; padding: 18px 20px; border-radius: 18px; background: rgba(167,139,250,0.1);
+          border: 2.5px solid rgba(167,139,250,0.3); color: white; font-family: inherit; font-size: 20px;
+          font-weight: 800; cursor: pointer; text-align: left; transition: all 0.15s; display: flex; align-items: center; gap: 12px;
+        }
+        .tiebreaker-cat-btn:hover { background: rgba(167,139,250,0.25); border-color: rgba(167,139,250,0.7); }
+
+        .tiebreaker-result-banner { margin: 0 0 16px; padding: 10px 16px; border-radius: 14px; text-align: center; border: 2.5px solid; }
+        .tiebreaker-result-tied { background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.3); }
+        .tiebreaker-result-winner { background: rgba(74,222,128,0.08); border-color: rgba(74,222,128,0.3); }
+        .tiebreaker-result-text-tied { color: #fbbf24; font-weight: 800; font-size: 14px; }
+        .tiebreaker-result-text-winner { color: #4ade80; font-weight: 800; font-size: 14px; }
+        .tiebreaker-pts { font-size: 17px; }
+        .tiebreaker-handoff-sub { color: #fbbf24; font-weight: 800; letter-spacing: 0.06em; font-size: 13px; }
+        .mb-2 { margin-bottom: 2px; }
+        .mt-0 { margin-top: 0px; }
+        .tiebreaker-timer-circle { transition: stroke-dashoffset 0.05s linear; }
+
+        /* ── Animations ── */
+        @keyframes slideIn { from{transform:translateX(-20px);opacity:0} to{transform:translateX(0);opacity:1} }
+        .score-row:nth-child(1) { animation-delay: 0.05s }
+        .score-row:nth-child(2) { animation-delay: 0.1s }
+        .score-row:nth-child(3) { animation-delay: 0.15s }
+        .score-row:nth-child(4) { animation-delay: 0.2s }
+        .score-row:nth-child(5) { animation-delay: 0.25s }
+        .score-row:nth-child(6) { animation-delay: 0.3s }
+        
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        @keyframes flashGreen { 0%{background:rgba(74,222,128,0.3)} 100%{background:transparent} }
+        @keyframes flashOrange { 0%{background:rgba(251,191,36,0.2)} 100%{background:transparent} }
+        @keyframes flash-bonus-anim { 0% { background: rgba(251,146,60,0); } 30% { background: rgba(251,146,60,0.2); } 100% { background: rgba(251,146,60,0); } }
+        @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
+        @keyframes penalty-drain { from { width: 100%; } to { width: 0%; } }
+        @keyframes pulse-red-banner { 0%, 100% { box-shadow: 0 0 6px rgba(248,113,113,0.4); } 50% { box-shadow: 0 0 14px rgba(248,113,113,0.8); } }
+        @keyframes pulse-orange-banner { 0%, 100% { box-shadow: 0 0 6px rgba(251,146,60,0.4); } 50% { box-shadow: 0 0 14px rgba(251,146,60,0.8); } }
+        @keyframes ring { 0% { transform: rotate(0deg); } 15% { transform: rotate(18deg); } 30% { transform: rotate(-16deg); } 45% { transform: rotate(14deg); } 60% { transform: rotate(-10deg); } 75% { transform: rotate(6deg); } 90% { transform: rotate(-3deg); } 100% { transform: rotate(0deg); } }
+        @keyframes pulse-gold { 0%, 100% { box-shadow: 0 0 0 0 rgba(251,191,36,0.4); } 50% { box-shadow: 0 0 0 8px rgba(251,191,36,0); } }
+
+        /* ── Media Queries ── */
         @media (max-width: 380px) {
           .names-grid { grid-template-columns: 1fr; }
           .logo-title { font-size: 28px; }
