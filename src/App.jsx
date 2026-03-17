@@ -2510,11 +2510,11 @@ export default function App() {
 
         .add-player-integrated {
           width: 100%; height: 44px; margin-top: 4px;
-          background: rgba(74, 222, 128, 0.05); border: 2px dashed #4ade80; border-radius: 12px;
-          color: #4ade80; display: flex; align-items: center; justify-content: center; gap: 12px;
-          cursor: pointer; transition: all 0.2s; font-size: 1rem; font-weight: 600;
+          background: rgba(52, 211, 153, 0.1); border: 2px dashed #34d399; border-radius: 12px;
+          color: #34d399; display: flex; align-items: center; justify-content: center; gap: 12px;
+          cursor: pointer; font-size: 1rem; font-weight: 600;
         }
-        .add-player-integrated:hover { background: rgba(74, 222, 128, 0.12); transform: translateY(-1px); }
+        .add-player-integrated:hover { background: rgba(52, 211, 153, 0.2); }
 
         /* ── Team Layout ── */
         .teams-setup-wrapper {
@@ -2557,9 +2557,9 @@ export default function App() {
           background: rgba(52,211,153,0.08); color: #34d399; font-family: inherit; font-size: 15px;
           font-weight: 700; cursor: pointer; transition: all 0.18s;
         }
-        .time-btn-plus:hover:not(:disabled) { background: rgba(52,211,153,0.18); }
-        .time-btn-minus { border-color: #f87171; background: rgba(248,113,113,0.08); color: #f87171; }
-        .time-btn-minus:hover:not(:disabled) { background: rgba(248,113,113,0.18); }
+        .time-btn-plus:hover:not(:disabled) { background: rgba(52,211,153,0.2); }
+        .time-btn-minus { border-color: #f87171; background: rgba(248,113,113,0.1); color: #f87171; }
+        .time-btn-minus:hover:not(:disabled) { background: rgba(248,113,113,0.2); }
         .time-btn:disabled { opacity: 0.3; cursor: default; }
         .time-btn-disabled { opacity: 1 !important; cursor: not-allowed !important; pointer-events: none; background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.35) !important; }
         .time-display { flex: 1; text-align: center; font-family: 'Righteous', cursive; font-size: 24px; color: rgba(255,255,255,0.9); }
