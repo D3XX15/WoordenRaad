@@ -2463,14 +2463,14 @@ export default function App() {
           transition: all 0.25s;
           margin-top: 4px;
         }
-        .start-btn.ready { border-color: #a78bfa; background: rgba(167,139,250,0.08); color: #a78bfa; }
-        .start-btn.ready:hover { background: rgba(167,139,250,0.15); }
+        .start-btn.ready { border-color: #a78bfa; background: rgba(167,139,250,0.1); color: #a78bfa; }
+        .start-btn.ready:hover { background: rgba(167,139,250,0.2); }
 
         .mode-toggle-btn { border: 3px solid rgba(255,255,255,0.2); }
         .mode-toggle-btn-half { margin: 0; flex: 1; }
         .mode-toggle-singles { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); }
         .mode-toggle-singles:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.35); }
-        .mode-toggle-teams { background: rgba(52,211,153,0.08); color: #34d399; border-color: #34d399; }
+        .mode-toggle-teams { background: rgba(74, 144, 226, 0.1); color: #4a90e2; border-color: #4a90e2; }
         .mode-toggle-teams:hover { background: rgba(52,211,153,0.15); }
         
         .toggle-all-btn {
@@ -2480,8 +2480,8 @@ export default function App() {
           cursor: pointer; color: rgba(255,255,255,0.45); transition: all 0.25s;
         }
         .toggle-all-btn:hover { background: rgba(255,255,255,0.1); }
-        .toggle-all-btn-active { background: rgba(52, 211, 153, 0.1); border-color: #34d399; color: #34d399; margin-bottom: 0; }
-        .toggle-all-btn-active:hover { background: rgba(52, 211, 153, 0.2); }
+        .toggle-all-btn-active { background: rgba(74, 144, 226, 0.1); border-color: #4a90e2; color: #4a90e2; margin-bottom: 0; }
+        .toggle-all-btn-active:hover { background: rgba(74, 144, 226, 0.2); }
 
         /* ── Player Inputs (Individual & Teams) ── */
         .player-input-group { display: flex; margin-bottom: 4px; height: 48px; width: 100%; }
