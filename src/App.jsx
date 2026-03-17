@@ -2510,11 +2510,11 @@ export default function App() {
 
         .add-player-integrated {
           width: 100%; height: 44px; margin-top: 4px;
-          background: rgba(52, 211, 153, 0.1); border: 2px dashed #34d399; border-radius: 12px;
+          background: transparent; border: 2px dashed #34d399; border-radius: 12px;
           color: #34d399; display: flex; align-items: center; justify-content: center; gap: 12px;
           cursor: pointer; font-size: 1rem; font-weight: 600;
         }
-        .add-player-integrated:hover { background: rgba(52, 211, 153, 0.2); }
+        .add-player-integrated:hover { background: rgba(52, 211, 153, 0.1); }
 
         /* ── Team Layout ── */
         .teams-setup-wrapper {
@@ -2543,7 +2543,7 @@ export default function App() {
         }
         .team-players-list { display: flex; flex-direction: column; gap: 4px; }
         .team-add-btn { margin-top: 15px; border-color: #4a90e2; color: #4a90e2; background: transparent; }
-        .team-add-btn:hover { background: rgba(74, 144, 226, 0.1); }
+        .team-add-btn:hover { background: rgba(74, 144, 226, 0.2); }
 
         .small-group { height: 38px !important; margin-bottom: 4px !important; }
         .small-group .player-name-container { border-radius: 10px; }
