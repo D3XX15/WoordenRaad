@@ -548,7 +548,7 @@ const WORDS_BY_CATEGORY = (() => {
     'kabinetsformatie', 'regeerakkoord', 'troonrede', 'prinsjesdag', 'miljoenennota',
     'belastingaangifte', 'toeslagen', 'uitkering', 'pensioen', 'zorgverzekering',
     'hypotheekrenteaftrek', 'minimumloon', 'cao', 'vakbond', 'werkgeversorganisatie', 'stakingsrecht',
-    'collectieve actie', 'petitie', 'demonstratie', 'burgerrechten', 'grondrechten', 'privacywet',
+    'petitie', 'demonstratie', 'burgerrechten', 'grondrechten', 'privacywet',
     'desinformatie', 'transparantie', 'integriteit', 'gedragscode', 'pressiegroep',
     'denktank', 'adviesraad', 'raad van state', 'nationale ombudsman', 'rekenkamer', 'hoge raad',
     'constitutioneel hof', 'europees hof', 'internationaal strafhof', 'arbitrage', 'mediation',
@@ -2314,7 +2314,7 @@ export default function App() {
     // Always show exactly 3 categories.
     // Priority: categories used in this game (excl. spreekwoorden) come first,
     // then fill up with random safe categories not yet in the list.
-    const safeCats = ['dieren', 'voedsel', 'beroepen', 'sport', 'objecten', 'natuur', 'landen', 'vervoer', 'plaatsen', 'muziek', 'acties', 'gereedschap', 'wetenschap', 'ruimte', 'militair', 'politiek', 'huishouden'];
+    const safeCats = ['dieren', 'voedsel', 'beroepen', 'sport', 'objecten', 'natuur', 'emoties', 'landen', 'vervoer', 'plaatsen', 'muziek', 'acties', 'gereedschap', 'wetenschap', 'ruimte', 'militair', 'politiek', 'huishouden'];
     const catSet = selectedCategory instanceof Set ? selectedCategory : new Set();
     const allIds = CATEGORIES.map(c => c.id);
     const allSelected = catSet.size === 0 || allIds.every(id => catSet.has(id));
