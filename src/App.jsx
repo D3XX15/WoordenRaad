@@ -860,6 +860,8 @@ const WORDS_BY_CATEGORY = (() => {
     'spreken is zilver zwijgen is goud',
     'Rome is niet in een dag gebouwd',
     'stille wateren hebben diepe gronden',
+    'van hetzelfde laken een pak',
+    'ergens je plasje over doen',
     'tijd is geld',
     'schijn bedriegt',
     'uit het oog uit het hart',
