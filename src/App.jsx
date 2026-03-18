@@ -290,7 +290,7 @@ const WORDS_BY_CATEGORY = (() => {
     'zonnebloem', 'koolzaad', 'heide', 'waterlelie', 'riet', 'stroompje',
     'bosrand', 'bosje', 'struikgewas', 'braamstruik', 'vlierbes',
     'es', 'iep', 'beuk', 'hulst', 'klimop', 'varens',
-    'winter', 'wind', 'zon', 'sloot', 'schuw,
+    'winter', 'wind', 'zon', 'sloot', 'schuw',
     'steen', 'zeegras', 'braam', 'eikel', 'dennenappel', 'framboos',
     'boomgaard', 'boterbloem', 'madeliefje', 'distel', 'archipel',
     'ravijn', 'krater', 'stroomversnelling', 'hars', 'loof',
