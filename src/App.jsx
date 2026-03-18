@@ -679,7 +679,7 @@ const WORDS_BY_CATEGORY = (() => {
     'koelkast', 'vriezer', 'magnetron', 'sierkussen', 'kookpan', 'schoonmaakmiddel',
     'barbecue', 'borrelplank', 'snijplank', 'airfryer', 'blender', 'koekenpan',
     'pan', 'pollepel', 'soeplepel', 'theemuts', 'kookplaat',
-    'oven', 'broodrooster', 'waterkoker', 'mixer' 'sapcentrifuge', 'keukenmachine',
+    'oven', 'broodrooster', 'waterkoker', 'mixer', 'sapcentrifuge', 'keukenmachine',
     'rijstkoker', 'slowcooker', 'wokpan', 'braadpan', 'steelpan', 'grillpan',
     'maatbeker', 'keukendoek', 'ovenwant', 'rasp', 'zeef', 'vergiet',
     'pizzasnijder', 'stamper', 'handdoek', 'badmat', 'douchegordijn',
