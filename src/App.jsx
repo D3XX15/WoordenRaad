@@ -442,7 +442,7 @@ const WORDS_BY_CATEGORY = (() => {
     'gefixeerd', 'creatief', 'dromerig', 'empathisch', 'zorgzaam', 'afstandelijk', 'onbeleefd',
     'kritisch', 'behulpzaam', 'perfectionistisch', 'zenuwachtig', 'bang', 'verrast', 'vrolijk',
     'verlegen', 'geduldig', 'eigenwijs', 'moedig', 'vergevingsgezind', 'afwezig',
-    'euforisch', 'vreedzaam', 'gepassioneerd', 'radeloos', 'gastvrij', 'suf',
+    'euforisch', 'vreedzaam', 'gepassioneerd', 'radeloos', 'gastvrij', 'suf', 'wraakzuchtig',
     'ambitieus', 'zorgeloos', 'roekeloos', 'gul', 'vrijgevig', 'gierig', 'nonchalant',
     'fanatiek', 'betrouwbaar', 'onverschillig', 'assertief', 'cynisch', 'verstrooid'
   ];
