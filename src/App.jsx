@@ -6,6 +6,7 @@ const CATEGORIES = [
   { id: "voedsel",       label: "🍕 Eten & Drinken" },
   { id: "sport",         label: "⚽ Sport & Hobby" },
   { id: "acties",        label: "🏃 Werkwoorden" },
+  { id: "emoties",       label: "🎭 Emoties en Gedrag" },
   { id: "beroepen",      label: "👷 Beroepen" },
   { id: "plaatsen",      label: "🧭 Plaatsen" },
   { id: "vervoer",       label: "🚗 Vervoer" },
@@ -422,6 +423,29 @@ const WORDS_BY_CATEGORY = (() => {
     'downloaden', 'kleien', 'updaten', 'blaffen', 'grazen', 'grommen', 'kauwen',
     'slikken', 'spugen', 'beslissen', 'fantaseren', 'inbeelden',
     'organiseren', 'peinzen', 'raden', 'vergelijken', 'voorspellen'
+  ];
+
+  const emoties = [
+    'blij', 'tevreden', 'angstig', 'enthousiast', 'opgewonden', 'ontspannen',
+    'alert', 'gestrest', 'paniekerig', 'energiek', 'traag', 'actief', 'bescheiden',
+    'leergierig', 'nieuwsgierig', 'onzeker', 'jaloers', 'gefrustreerd', 'verdrietig',
+    'somber', 'teleurgesteld', 'eenzaam', 'verveeld', 'opgelucht', 'trots', 'egoïstisch',
+    'beschaamd', 'schuldig', 'wantrouwig', 'achterdochtig', 'hoopvol', 'gespannen',
+    'overprikkeld', 'nerveus', 'onrustig', 'overbelast', 'prikkelbaar', 'uitgeput',
+    'speels', 'sociaal', 'teruggetrokken', 'vermijdend', 'aanhankelijk', 'onafhankelijk',
+    'gehoorzaam', 'koppig', 'impulsief', 'voorzichtig', 'onderzoekend', 'afwachtend',
+    'confronterend', 'meegaand', 'dominant', 'agressief', 'onderdanig', 'hyperactief',
+    'loom', 'passief', 'gefocust', 'afgeleid', 'doelgericht', 'lui', 'arrogant', 'eerlijk',
+    'volhardend', 'dankbaar', 'voldaan', 'content', 'geïnspireerd', 'verbonden',
+    'geliefd', 'optimistisch', 'zelfverzekerd', 'boos', 'woedend', 'geïrriteerd',
+    'wanhopig', 'machteloos', 'gekwetst', 'ontmoedigd', 'minderwaardig', 'opgefokt',
+    'overweldigd', 'kalm', 'slaperig', 'futloos', 'verward', 'besluiteloos', 'pessimistisch',
+    'gefixeerd', 'creatief', 'dromerig', 'empathisch', 'zorgzaam', 'afstandelijk', 'onbeleefd',
+    'kritisch', 'behulpzaam', 'perfectionistisch', 'zenuwachtig', 'bang', 'verrast', 'vrolijk',
+    'verlegen', 'geduldig', 'eigenwijs', 'moedig', 'vergevingsgezind', 'afwezig',
+    'euforisch', 'vreedzaam', 'gepassioneerd', 'radeloos', 'gastvrij', 'suf',
+    'ambitieus', 'zorgeloos', 'roekeloos', 'gul', 'vrijgevig', 'gierig', 'nonchalant',
+    'fanatiek', 'betrouwbaar', 'onverschillig', 'assertief', 'cynisch', 'verstrooid'
   ];
 
   const landen = [
@@ -933,7 +957,7 @@ const WORDS_BY_CATEGORY = (() => {
     'iets uit de duim zuigen'
   ];
 
-  const map = { dieren, voedsel, beroepen, sport, objecten, huishouden, natuur, vervoer, plaatsen, acties, landen, gereedschap, muziek, militair, ruimte, wetenschap, politiek, spreekwoorden };
+  const map = { dieren, voedsel, beroepen, sport, objecten, huishouden, natuur, vervoer, plaatsen, acties, emoties, landen, gereedschap, muziek, militair, ruimte, wetenschap, politiek, spreekwoorden };
   
   // FLAT alle woorden tot 1 array, filter dubbele (zoals 'vissen') eruit:
   const allWords = [...new Set(Object.values(map).flat())];
