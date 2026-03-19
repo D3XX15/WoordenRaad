@@ -788,7 +788,7 @@ const WORDS_BY_CATEGORY = (() => {
     'over de rooie gaan',
     'over een kam scheren',
     'roet in het eten gooien',
-    'slapende honden wakker maken',
+    'geen slapende honden wakker maken',
     'muggenziften',
     'tegen de stroom ingaan',
     'twee honden vechten om een been',
