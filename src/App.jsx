@@ -7,20 +7,21 @@ const CATEGORIES = [
   { id: "sport",         label: "⚽ Sport & Hobby" },
   { id: "acties",        label: "🏃 Werkwoorden" },
   { id: "emoties",       label: "🎭 Emoties & Gedrag" },
-  { id: "misdaad",       label: "🚔 Misdaad & Justitie" },
-  { id: "vervoer",       label: "🚗 Vervoer" },
-  { id: "natuur",        label: "🌿 Natuur" },
   { id: "beroepen",      label: "👷 Beroepen" },
   { id: "plaatsen",      label: "🧭 Plaatsen" },
   { id: "religie",       label: "🕍 Religie" },
   { id: "filosofie",     label: "🤔 Filosofie" },
+  { id: "vervoer",       label: "🚗 Vervoer" },
   { id: "huishouden",    label: "🏠 Huishouden" },
+  { id: "natuur",        label: "🌿 Natuur" },
   { id: "muziek",        label: "🎤 Muziek" },
   { id: "fictie",        label: "🧙 Fictie" },
   { id: "objecten",      label: "📦 Objecten" },
   { id: "militair",      label: "🪖 Militair" },
+  { id: "misdaad",       label: "🚔 Misdaad & Justitie" },
   { id: "ruimte",        label: "🚀 Ruimte" },
-  { id: "wetenschap",    label: "🔬 Wetenschap & Geneeskunde" },
+  { id: "wetenschap",    label: "🔬 Wetenschap" },
+  { id: "geneeskunde",   label: "🩺 Geneeskunde" },
   { id: "gereedschap",   label: "🔧 Gereedschap" },
   { id: "politiek",      label: "⚖️ Politiek" },
   { id: "landen",        label: "🌍 Landen" },
@@ -190,15 +191,15 @@ const WORDS_BY_CATEGORY = (() => {
     'langebaanschaatsen', 'longboarden', 'marathon', 'minigolf', 'motorcross', 'motorsport',
     'mountainbiken', 'netbal', 'nordic walking', 'paardrijden', 'padel', 'paintball',
     'parachutespringen', 'parcours', 'pétanque', 'polo', 'polsstokhoogspringen', 'powerlifting',
-    'ringsteken', 'rodeo', 'roeien', 'rolschaatsen', 'rugby',
+    'ringsteken', 'rodeo', 'roeien', 'rolschaatsen', 'rugby', 'trampolinespringen',
     'schaatsen', 'schaken', 'schansspringen', 'scrabble', 'sjoelen', 'skeeleren',
     'skeleton', 'skiën', 'skislalom', 'snowboarden', 'softbal', 'speerwerpen',
     'spijkerpoepen', 'squash', 'stoeien', 'suppen', 'surfen', 'synchroonzwemmen',
-    'taekwondo', 'tafeltennis', 'tennis', 'touwtrekken', 'trail running', 'trampolinespringen',
+    'taekwondo', 'tafeltennis', 'tennis', 'touwtrekken', 'trail running',
     'trefbal', 'triatlon', 'turnen', 'varen', 'veldrijden', 'verspringen',
     'vliegeren', 'vliegvissen', 'voetbal', 'volleybal', 'wandelen',
     'waterpolo', 'waterskiën', 'wakeboarden', 'wedstrijdvissen', 'wielrennen', 'worstelen',
-    'yoga', 'zeilen', 'zwemmen', 'schermen', 'kaartspelen', 'kwartetten',
+    'yoga', 'zeilen', 'zwemmen', 'schermen', 'kaartspelen', 'kwartetten', 'sumoworstelen',
     'tekenen', 'abseilen', 'kampioensbeker', 'medaille', 'stopwatch',
     'dartpijl', 'flipperkast', 'gele kaart', 'rode kaart', 'schaakbord',
     'trampoline', 'fotograferen', 'vogelspotten', 'stoepkrijten',
@@ -210,8 +211,7 @@ const WORDS_BY_CATEGORY = (() => {
     'windsurfen', 'jagen', 'snorkelen', 'estafettelopen', 'fierljeppen', 'kogelslingeren',
     'puzzelen', 'bordspel', 'videospellen', 'kamperen', 'crossfit', 'boot camp',
     'spinning', 'kickboksen', 'speedklimmen', 'zaalvoetbal', 'rolstoeltennis', 'paragliding',
-    'tafeltennistafel', 'voetbalnet', 'basketbalring', 'hockeystick', 'tennisracket',
-    'sumoworstelen'
+    'tafeltennistafel', 'voetbalnet', 'basketbalring', 'hockeystick', 'tennisracket'
   ];
 
   const objecten = [
@@ -249,8 +249,7 @@ const WORDS_BY_CATEGORY = (() => {
     'wol', 'haaknaald', 'breinaald', 'vlag',
     'dvd', 'blu-ray', 'lenzen', 'gehoorapparaat', 'kruk', 'wandelstok',
     'aktetas', 'heuptas', 'zonnescherm', 'vouwstoel', 'campingstoel',
-    'trechter', 'stekker',
-    'schakelaar', 'batterij', 'rits', 'gesp',
+    'schakelaar', 'batterij', 'rits', 'gesp', 'trechter', 'stekker',
     'muurschildering', 'beeldje', 'schaal', 'kom', 'kan', 'urn',
     'kruik', 'theeglas', 'shotglas', 'bierglas', 'champagneglas', 'trofee',
     'olielamp', 'kalender', 'dagboek', 'fotoalbum', 'poster',
@@ -383,8 +382,8 @@ const WORDS_BY_CATEGORY = (() => {
     'moskee', 'synagoge', 'tempel', 'kapel', 'orthodox', 'heiden', 'begrafenis',
     'christendom', 'islam', 'jodendom', 'hindoeisme', 'sikhisme', 'calvinisme',
     'taoisme', 'reformatie', 'protestantisme', 'katholicisme', 'maarten luther',
-    'gebed', 'zonde', 'genade', 'verlossing', 'hemel', 'hel', 'Maria',
-    'vagevuur', 'paradijs', 'karma', 'nirvana', 'ziel', 'heilige geest',
+    'gebed', 'zonde', 'genade', 'verlossing', 'hemel', 'hel', 'Maria', 'beeldenstorm',
+    'vagevuur', 'paradijs', 'karma', 'nirvana', 'ziel', 'heilige geest', 'hagenpreek',
     'schepping', 'doop', 'biecht', 'mis', 'besnijdenis', 'offer', 'zegening',
     'pelgrimstocht', 'bedevaart', 'vasten', 'wierook', 'ramadan', 'kruistocht',
     'exorcisme', 'bar mitswa', 'hekserij', 'paus', 'bisschop', 'priester',
@@ -449,7 +448,7 @@ const WORDS_BY_CATEGORY = (() => {
     'vallen', 'vangen', 'verstoppen', 'vliegen', 'vouwen', 'waggelen',
     'wiebelen', 'afrekenen', 'afscheid nemen', 'bakken', 'bellen', 'betalen',
     'bewaken', 'bidden', 'blozen', 'branden', 'brengen', 'breken', 'buigen',
-    'dagdromen', 'delen', 'douchen', 'drinken', 'duwen',
+    'dagdromen', 'delen', 'douchen', 'drinken', 'duwen', 'ademhalen',
     'eten', 'fluiten', 'gapen', 'geven', 'giechelen', 'gillen',
     'gluren', 'groeten', 'hangen', 'helpen', 'hijsen', 'huilen',
     'inschenken', 'inslapen', 'juichen', 'kijken', 'klagen', 'kloppen',
@@ -464,7 +463,7 @@ const WORDS_BY_CATEGORY = (() => {
     'verzorgen', 'vluchten', 'volgen', 'wachten', 'wassen', 'weggooien', 'inhalen',
     'werken', 'winnen', 'wroeten', 'zoeken', 'zwaaien', 'niezen', 'veroveren',
     'sluipen', 'brand blussen', 'eerste hulp verlenen', 'blindoeken', 'een geheim bewaren',
-    'misleiden', 'in de rij staan', 'rijbewijs halen',
+    'misleiden', 'in de rij staan', 'rijbewijs halen', 'piekeren', 'cyberpesten',
     'verslikken', 'hinkelen', 'touwtjesspringen', 'zwijgen', 'triomferen', 'takelen',
     'haasten', 'vervelen', 'achtervolgen', 'bazelen', 'broeden', 'sleutels verliezen',
     'bedanken', 'begroeten', 'beschermen', 'bewonderen', 'boeren', 'controleren',
@@ -475,7 +474,6 @@ const WORDS_BY_CATEGORY = (() => {
     'wentelen', 'woelen', 'zuchten', 'reizen', 'bewijzen', 'dromen', 'schipbreuk lijden',
     'herinneren', 'liefhebben', 'oplossen', 'pech hebben', 'teweegbrengen', 'aarzelen',
     'roddelen', 'rusten', 'vertrouwen', 'markeren', 'imiteren', 'afwachten',
-    'piekeren', 'cyberpesten',
     'sms-en', 'appen', 'mailen', 'posten', 'liken', 'kwetsen',
     'googelen', 'typen', 'kopiëren', 'plakken', 'opslaan', 'printen', 'uitbuiten', 
     'filmen', 'livestreamen', 'opnemen', 'afspelen', 'pauzeren', 'openen',
@@ -546,41 +544,42 @@ const WORDS_BY_CATEGORY = (() => {
   ];
 
   const wetenschap = [
+    'algoritme', 'ampere', 'antropologie', 'atoom', 'atoomkern', 'barometer',
+    'bibliografie', 'biologie', 'boventoon', 'brainstorm', 'bunsenbrander',
+    'causaliteit', 'celsius', 'celkern', 'centrifuge', 'chromosoom', 'citatie',
+    'controlegroep', 'correlatie', 'deeltjesversneller', 'DNA', 'ecologie', 'elektriciteit',
+    'elektron', 'element', 'evolutie', 'experiment', 'fotosynthese', 'fout', 'thermometer',
+    'foutmarge', 'frequentie', 'frictie', 'geigerteller', 'geleider', 'gemiddelde',
+    'gen', 'genetica', 'geologie', 'golflengte', 'grafiek', 'histogram',
+    'hologram', 'hypothese', 'implosie', 'infrarood', 'informatica', 'isolatie',
+    'joule', 'kelvin', 'kernfusie', 'kernsplijting', 'kilogram', 'kleur',
+    'laboratorium', 'laboratoriumjas', 'laser', 'licht', 'loep', 'magneet',
+    'mediaan', 'meting', 'meteorologie', 'meter', 'microbiologie', 'microscoop',
+    'mitochondriën', 'modus', 'molecuul', 'mutatie', 'mysterie', 'nauwkeurigheid',
+    'natuurkunde', 'neutron', 'nucleaire reactor', 'observatie', 'ondertoon', 'onderzoeksinstituut',
+    'oxidatie', 'pesticide', 'pH-waarde', 'pipet', 'plagiaat', 'precisie',
+    'proefopstelling', 'proton', 'publicatie', 'radioactiviteit', 'reactie', 'reageerbuisje',
+    'reductie', 'relatief', 'replica', 'RNA', 'scheikunde', 'spanning', 'straling',
+    'spectrum', 'staafdiagram', 'standaard', 'statistiek', 'steekproef', 'stroom',
+    'supergeleider', 'supergeluid', 'taartdiagram', 'theorie', 'transistor', 'trilling',
+    'ultraviolet', 'variabele', 'verbinding', 'vergrootglas', 'watt', 'weerspiegeling',
+    'weerstand', 'wiskunde', 'zuurgraad',
+  ];
+
+  const geneeskunde = [
     'acupunctuur', 'ader', 'adrenaline', 'allergie', 'amputatie', 'anesthesie',
-    'autopsie', 'bewusteloos', 'bloedarmoede', 'beroerte', 'celsius', 'cholesterol',
-    'claustrofobie', 'coma', 'dementie', 'depressie', 'desinfecteren', 'dialyse',
-    'doofstom', 'epidemie', 'geheugenverlies', 'hallucinatie',
-    'hartstilstand', 'hersenletsel', 'homeopathie', 'hoogtevrees', 'hormoon', 'hypnose',
-    'hysterie', 'illusie', 'immuunsysteem', 'injectie', 'keizersnede', 'hersenspoeling',
-    'migraine', 'narcisme', 'obsessie', 'onderbewustzijn',
-    'overlevingsdrang', 'pandemie', 'paranoia', 'persoonlijkheid', 'PTSS', 'psychiatrie',
-    'quarantaine', 'reflectie', 'rehabilitatie', 'schizofrenie', 'stigma', 'relatief',
-    'surrogaatmoeder', 'transplantatie', 'tunnelvisie', 'vaccinatie','watt', 'stoornis',
-    'laboratorium', 'algoritme', 'brainstorm', 'evolutie', 'frictie', 'grafiek', 'joule',
-    'implosie', 'mutatie', 'pesticide', 'onderzoeksinstituut', 'meter', 'ampere', 'kelvin',
-    'isolatie', 'plagiaat', 'barometer', 'geigerteller', 'bunsenbrander', 'overdosis',
-    'stethoscoop', 'thermometer', 'vergrootglas', 'loep', 'magneet', 'metabolisme',
-    'transistor', 'dwangbuis', 'scalpel', 'defibrillator', 'atoomkern', 'DNA', 'RNA', 'gen',
-    'nucleaire reactor', 'radioactiviteit', 'biologie', 'scheikunde', 'natuurkunde', 'wiskunde',
-    'informatica', 'geologie', 'meteorologie', 'genetica', 'microbiologie', 'ecologie',
-    'antropologie', 'hypothese', 'theorie', 'experiment', 'observatie', 'controlegroep',
-    'steekproef', 'statistiek', 'variabele', 'correlatie', 'causaliteit', 'replica',
-    'publicatie', 'operatie', 'diagnose', 'symptoom', 'behandeling', 'medicijn',
-    'vaccin', 'antibiotica', 'pijnstiller', 'bloeddruk', 'pols', 'ECG',
-    'MRI', 'röntgenfoto', 'echo', 'bloedonderzoek', 'besmetting', 'infectie',
-    'virus', 'bacterie', 'microscoop', 'centrifuge', 'reageerbuisje', 'pipet',
-    'citatie', 'bibliografie', 'laboratoriumjas', 'proefopstelling', 'meting', 'fout',
-    'nauwkeurigheid', 'precisie', 'standaard', 'kilogram', 'receptor', 'reflex',
-    'frequentie', 'golflengte', 'trilling', 'geluid', 'licht', 'kleur',
-    'spectrum', 'weerspiegeling', 'elektriciteit', 'magnetisme', 'stroom',
-    'spanning', 'weerstand', 'geleider', 'supergeleider', 'mysterie',
-    'celkern', 'mitochondriën', 'fotosynthese', 'ademhaling', 'reactie', 'verbinding',
-    'element', 'molecuul', 'atoom', 'elektron', 'proton', 'neutron',
-    'foutmarge', 'gemiddelde', 'mediaan', 'modus', 'histogram', 'staafdiagram',
-    'taartdiagram', 'pH-waarde', 'zuurgraad', 'base', 'chromosoom',
-    'oxidatie', 'reductie', 'straling', 'kernfusie', 'kernsplijting', 'deeltjesversneller',
-    'supergeluid', 'ondertoon', 'boventoon', 'infrarood', 'ultraviolet',
-    'hologram', 'laser', 'bloedgroep', 'plasma', 'enzym'
+    'antibiotica', 'autopsie', 'behandeling', 'beroerte', 'besmetting', 'bewusteloos',
+    'bloedarmoede', 'bloeddruk', 'bloedgroep', 'bloedonderzoek', 'claustrofobie', 'coma',
+    'defibrillator', 'dementie', 'depressie', 'desinfecteren', 'diagnose', 'dialyse',
+    'doofstom', 'dwangbuis', 'ECG', 'echo', 'enzym', 'epidemie', 'homeopathie', 'bacterie',
+    'geheugenverlies', 'hallucinatie', 'hartstilstand', 'hersenletsel', 'hersenspoeling',
+    'hoogtevrees', 'hormoon', 'hypnose', 'hysterie', 'immuunsysteem', 'infectie',
+    'injectie', 'keizersnede', 'medicijn', 'migraine', 'MRI', 'narcisme', 'virus',
+    'obsessie', 'onderbewustzijn', 'operatie', 'overdosis', 'overlevingsdrang', 'pandemie',
+    'paranoia', 'persoonlijkheid', 'pijnstiller', 'plasma', 'pols', 'psychiatrie',
+    'PTSS', 'quarantaine', 'receptor', 'reflex', 'reflectie', 'rehabilitatie',
+    'röntgenfoto', 'scalpel', 'schizofrenie', 'stethoscoop', 'stigma', 'stoornis',
+    'surrogaatmoeder', 'symptoom', 'transplantatie', 'tunnelvisie', 'vaccinatie', 'vaccin',
   ];
 
   const politiek = [
@@ -669,7 +668,7 @@ const WORDS_BY_CATEGORY = (() => {
     'kanon', 'kanonskogel', 'katapult', 'handgranaat', 'explosief', 'bajonet',
     'munitie', 'torpedo', 'landmijn', 'bom', 'nucleaire bom', 'harnas', 'boog',
     'schild', 'wapenschild', 'helm', 'kogelvrij vest', 'gasmasker', 'camouflagepak',
-    'bazooka', 'morse', 'vuurpijl', 'harpoen',
+    'bazooka', 'morse', 'vuurpijl', 'harpoen', 'antitankwapen', 'amfibievoertuig',
     'guillotine', 'tank', 'pantservoertuig', 'onderzeeboot', 'vliegdekschip', 'oorlogsschip', 
     'commandopost', 'militaire basis', 'loopgraaf', 'mijnenveld', 'patrouilleboot', 'schieten',
     'invasie', 'guerrilla oorlog', 'coup', 'oorlogsmisdaad', 'wapenhandel', 'burgerwacht',
@@ -691,7 +690,6 @@ const WORDS_BY_CATEGORY = (() => {
     'reservist', 'veteraan', 'krijgsgevangene', 'onderscheiding', 'verdedigingslinie', 'terugtrekken',
     'oorlogsgraf', 'herdenkingsmonument', 'militaire parade', 'militaire politie',
     'inlichtingendienst', 'geheime dienst', 'informatieoorlog', 'wapenuitrusting', 'lans',
-    'antitankwapen', 'amfibievoertuig',
     'scherpschutter', 'bomopruimer', 'pantserdivisie', 'granaatwerper', 'mortier',
     'konvooi', 'luchtaanval', 'bombardement', 'beschietingen', 'salvo', 'uniform',
     'landkaart', 'leger', 'gevecht', 'oorlog', 'strijd', 'concentratiekamp'
@@ -1016,7 +1014,7 @@ const WORDS_BY_CATEGORY = (() => {
     'iets uit de duim zuigen'
   ];
 
-  const map = { dieren, voedsel, beroepen, sport, objecten, huishouden, natuur, vervoer, plaatsen, filosofie, religie, fictie, acties, misdaad, emoties, landen, gereedschap, muziek, militair, ruimte, wetenschap, politiek, spreekwoorden };
+  const map = { dieren, voedsel, beroepen, sport, objecten, huishouden, natuur, vervoer, plaatsen, filosofie, religie, fictie, acties, misdaad, emoties, landen, gereedschap, muziek, militair, ruimte, wetenschap, geneeskunde, politiek, spreekwoorden };
   
   // FLAT alle woorden tot 1 array, filter dubbele (zoals 'vissen') eruit:
   const allWords = [...new Set(Object.values(map).flat())];
@@ -2386,7 +2384,7 @@ export default function App() {
     // Always show exactly 3 categories.
     // Priority: categories used in this game (excl. spreekwoorden) come first,
     // then fill up with random safe categories not yet in the list.
-    const safeCats = ['dieren', 'voedsel', 'beroepen', 'sport', 'objecten', 'natuur', 'emoties', 'landen', 'vervoer', 'plaatsen', 'filosofie', 'religie', 'fictie', 'muziek', 'acties', 'gereedschap', 'wetenschap', 'ruimte', 'militair', 'misdaad', 'politiek', 'huishouden'];
+    const safeCats = ['dieren', 'voedsel', 'beroepen', 'sport', 'objecten', 'natuur', 'emoties', 'landen', 'vervoer', 'plaatsen', 'filosofie', 'religie', 'fictie', 'muziek', 'acties', 'gereedschap', 'wetenschap', 'geneeskunde', 'ruimte', 'militair', 'misdaad', 'politiek', 'huishouden'];
     const catSet = selectedCategory instanceof Set ? selectedCategory : new Set();
     const allIds = CATEGORIES.map(c => c.id);
     const allSelected = catSet.size === 0 || allIds.every(id => catSet.has(id));
