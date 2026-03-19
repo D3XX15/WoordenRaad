@@ -1110,6 +1110,14 @@ const BONUS_WORDS_SET = new Set(
 // Spreekwoorden geven +2 extra punten (totaal 3); gewone woorden 0
 const getBonusPoints = (word) => BONUS_WORDS_SET.has(word) ? 2 : 0;
 
+// Lookup: woord → categorie-object (voor categorielabel in de banner)
+const WORD_TO_CATEGORY = {};
+for (const cat of CATEGORIES) {
+  for (const word of (WORDS_BY_CATEGORY[cat.id] || [])) {
+    if (!WORD_TO_CATEGORY[word]) WORD_TO_CATEGORY[word] = cat;
+  }
+}
+
 const DEFAULT_ROUND_TIME = 120;
 
 function shuffle(arr) {
@@ -1695,8 +1703,12 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
             <div className="word-anchor">
               <div className="word-counter">woord {wordIndex + 1}</div>
               <div key={wordIndex} className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ? hyphenateWord(currentWord) : "— geen woorden meer —"}</div>
-              <div className={`times-up-banner${isCurrentBonus && !timesUp ? ' bonus-banner' : ''} ${(timesUp || isCurrentBonus) ? 'is-visible' : 'is-hidden'}`}>
-                {timesUp ? '⏰ Tijd is om — maak dit woord nog af!' : `⭐ BONUSGEZEGDE — 3 punten!`}
+              <div className={`times-up-banner${timesUp ? '' : isCurrentBonus ? ' bonus-banner' : ' category-banner'}`}>
+                {timesUp
+                  ? '⏰ Tijd is om — maak dit woord nog af!'
+                  : isCurrentBonus
+                    ? '⭐ BONUSGEZEGDE — 3 punten!'
+                    : currentWord ? (WORD_TO_CATEGORY[currentWord]?.label ?? '📦 Categorie') : ''}
               </div>
             </div>
           </>
@@ -2665,6 +2677,10 @@ export default function App() {
         .times-up-banner.bonus-banner {
           color: #fb923c; background: rgba(251,146,60,0.12); border-color: rgba(251,146,60,0.35);
           animation: pulse-orange-banner 1.2s ease-in-out infinite;
+        }
+        .times-up-banner.category-banner {
+          color: #a78bfa; background: rgba(167,139,250,0.10); border-color: rgba(167,139,250,0.30);
+          animation: none; font-size: clamp(12px, 3.2vw, 15px);
         }
         .is-visible { visibility: visible; }
         .is-hidden { visibility: hidden; }
