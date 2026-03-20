@@ -24,7 +24,6 @@ const CATEGORIES = [
   { id: "wetenschap",    label: "🔬 Wetenschap" },
   { id: "geneeskunde",   label: "🩺 Geneeskunde" },
   { id: "gereedschap",   label: "🔧 Gereedschap" },
-  { id: "objecten",      label: "📦 Objecten" },
   { id: "politiek",      label: "⚖️ Politiek & Maatschappij" },
   { id: "plaatsen",      label: "🧭 Plaatsen" },
   { id: "landen",        label: "🌍 Landen" },
@@ -195,31 +194,6 @@ const WORDS_BY_CATEGORY = (() => {
     'puzzelen', 'bordspel', 'videospellen', 'kamperen', 'crossfit', 'boot camp', 'lasergame',
     'spinning', 'kickboksen', 'speedklimmen', 'zaalvoetbal', 'rolstoeltennis', 'paragliding',
     'tafeltennistafel', 'voetbalnet', 'basketbalring', 'hockeystick', 'tennisracket'
-  ];
-
-  const objecten = [
-    'aansteker', 'actiefiguur', 'afstandsbediening', 'alarmbel', 'anker', 'ansichtkaart',
-    'antiek', 'ballon', 'balustrade', 'lampion', 'laserpointer', 'luchtballon', 'kaars',
-    'boomerang', 'briefopener', 'computer', 'dakpan', 'roltrap', 'fakkel', 'föhn',
-    'ganzenbord', 'haardroger', 'hangmat', 'ijsklontje', 'elastiekje', 'kurk', 'pakketje',
-    'megafoon', 'molen', 'neonlamp', 'paraplu', 'krijtbord', 'papier', 'pen', 'trouwring',
-    'printer', 'projector', 'kompas', 'kubus', 'lasso', 'portemonnee', 'spaarpot', 'wiel',
-    'robot', 'rubberen eend', 'sarcofaag', 'scheepsschroef', 'scheermes', 'tandenstoker',
-    'schijf van vijf', 'schommel', 'speelgoed', 'sphinx', 'zetel', 'zonnewijzer', 'zweep',
-    'springveer', 'stoommachine', 'tandenborstel', 'tandpasta', 'tent', 'zandloper',
-    'antenne', 'smartphone', 'tablet', 'laptop', 'toetsenbord', 'muis', 'veiligheidsspeld',
-    'monitor', 'usb-stick', 'harde schijf', 'powerbank', 'oplader', 'zaklamp', 'lantaarnpaal',
-    'smartwatch', 'drone', 'spelcomputer', 'gum', 'schrift', 'zeeppomp', 'brief', 'bierglas',
-    'map', 'ordner', 'plakband', 'paperclip', 'nieter', 'perforator', 'champagneglas',
-    'tol', 'jojo', 'vlieger', 'blokken', 'knuffelbeer', 'zeepbel', 'envelop', 'postzegel',
-    'modeltrein', 'legoblokje', 'puzzelstuk', 'kaarten', 'monopoly', 'dobbelsteen',
-    'domino', 'memory', 'naald', 'draad', 'fles', 'blik', 'zak', 'doos', 'krat', 'cadeau',
-    'wol', 'haaknaald', 'breinaald', 'vlag', 'olielamp', 'kalender', 'fotoalbum', 'poster',
-    'dvd', 'blu-ray', 'lenzen', 'gehoorapparaat', 'kruk', 'tuinkabouter', 'tunnel', 'trofee',
-    'aktetas', 'zonnescherm', 'vouwstoel', 'campingstoel', 'whiteboard', 'Post-it', 'agenda',
-    'schakelaar', 'batterij', 'trechter', 'stekker', 'schaal', 'kom', 'kan', 'urn', 'kruik',
-    'asbak', 'deurklink', 'lampenkap', 'achteruitkijkspiegel', 'shotglas', 'theeglas',
-    'brandblusser', 'fietspomp', 'nietmachine', 'rekenmachine', 'stempel'
   ];
 
   const natuur = [
@@ -656,9 +630,17 @@ const WORDS_BY_CATEGORY = (() => {
     'koffer', 'kroon', 'maillot', 'manchetknoop', 'masker', 'rugzak',
     'naaldhak', 'reddingsvest', 'regenjas', 'spijkerbroek', 'muts',
     'zonnebril', 'kleerhanger', 'boodschappentas', 'broek', 'hoed',
-    'riem', 'schoen', 'stropdas', 'sjaal', 'shirt', 'wandelstok',
-    'handschoenen', 'pet', 'bril', 'vest', 'trui', 'heuptas',
-    'rits', 'gesp', 'camouflagepak', 'helm', 'uniform'
+    'riem', 'schoen', 'stropdas', 'sjaal', 'shirt', 'wandelstok', 'sandaal',
+    'handschoenen', 'pet', 'bril', 'vest', 'trui', 'heuptas', 'sneaker',
+    'rits', 'gesp', 'camouflagepak', 'helm', 'uniform', 'bodywarmer',
+    'blouse', 'rok', 'jurk', 'minirok', 'jumpsuit', 'tuinbroek',
+    'colbert', 'pak', 'smoking', 'kamerjas', 'badpak', 'zwembroek',
+    'badjas', 'pyjama', 'ochtendjas', 'poncho', 'cape', 'bontjas',
+    'tanktop', 'longsleeve', 'polo', 'legging', 'beenwarmers', 'slipper',
+    'sokken', 'kniekous', 'ondergoed', 'beha', 'bikini', 'hoofdband', 'laars',
+    'oorbel', 'trouwring', 'vlinderdas', 'bretels', 'polsband', 'pantoffel',
+    'nekwarmer', 'wanten', 'baret', 'tulband', 'haarband', 'haarspeld',
+    'zonneklep', 'portemonnee', 'sleutelhanger', 'piercing'
   ];
 
   const militair = [
@@ -788,7 +770,30 @@ const WORDS_BY_CATEGORY = (() => {
     'plank', 'rek', 'bak', 'radiator', 'thermostaatknop', 'rookmelder',
     'sleutelhaak', 'brievenbus', 'buitenlamp', 'wandspiegel', 'kaarsenhouder',
     'tafelkleed', 'badkamerspiegel', 'wasknijper', 'bakplaat', 'beslagkom', 'spons', 'washandje',
-    'kaasschaaf', 'knoflookpers', 'onderzetter', 'pepermolen', 'badjas', 'douchekop'
+    'kaasschaaf', 'knoflookpers', 'onderzetter', 'pepermolen', 'douchekop',
+
+    'aansteker', 'actiefiguur', 'afstandsbediening', 'alarmbel', 'anker', 'ansichtkaart',
+    'antiek', 'ballon', 'balustrade', 'lampion', 'laserpointer', 'luchtballon', 'kaars',
+    'boomerang', 'briefopener', 'computer', 'dakpan', 'roltrap', 'fakkel', 'föhn',
+    'ganzenbord', 'haardroger', 'hangmat', 'ijsklontje', 'elastiekje', 'kurk', 'pakketje',
+    'megafoon', 'molen', 'neonlamp', 'paraplu', 'krijtbord', 'papier', 'pen',
+    'printer', 'projector', 'kompas', 'kubus', 'lasso', 'spaarpot', 'wiel',
+    'robot', 'rubberen eend', 'sarcofaag', 'scheepsschroef', 'scheermes', 'tandenstoker',
+    'schijf van vijf', 'schommel', 'speelgoed', 'sphinx', 'zetel', 'zonnewijzer', 'zweep',
+    'springveer', 'stoommachine', 'tandenborstel', 'tandpasta', 'tent', 'zandloper',
+    'antenne', 'smartphone', 'tablet', 'laptop', 'toetsenbord', 'muis', 'veiligheidsspeld',
+    'monitor', 'usb-stick', 'harde schijf', 'powerbank', 'oplader', 'zaklamp', 'lantaarnpaal',
+    'smartwatch', 'drone', 'spelcomputer', 'gum', 'schrift', 'zeeppomp', 'brief', 'bierglas',
+    'map', 'ordner', 'plakband', 'paperclip', 'nieter', 'perforator', 'champagneglas',
+    'tol', 'jojo', 'vlieger', 'blokken', 'knuffelbeer', 'zeepbel', 'envelop', 'postzegel',
+    'modeltrein', 'legoblokje', 'puzzelstuk', 'kaarten', 'monopoly', 'dobbelsteen',
+    'domino', 'memory', 'naald', 'draad', 'fles', 'blik', 'zak', 'doos', 'krat', 'cadeau',
+    'wol', 'haaknaald', 'breinaald', 'vlag', 'olielamp', 'kalender', 'fotoalbum', 'poster',
+    'dvd', 'blu-ray', 'lenzen', 'gehoorapparaat', 'kruk', 'tuinkabouter', 'tunnel', 'trofee',
+    'aktetas', 'zonnescherm', 'vouwstoel', 'campingstoel', 'whiteboard', 'Post-it', 'agenda',
+    'schakelaar', 'batterij', 'trechter', 'stekker', 'schaal', 'kom', 'kan', 'urn', 'kruik',
+    'asbak', 'deurklink', 'lampenkap', 'achteruitkijkspiegel', 'shotglas', 'theeglas',
+    'brandblusser', 'fietspomp', 'nietmachine', 'rekenmachine', 'stempel'
   ];
 
   const spreekwoorden = [
@@ -1011,7 +1016,7 @@ const WORDS_BY_CATEGORY = (() => {
     'iets uit de duim zuigen'
   ];
 
-  const map = { dieren, voedsel, beroepen, sport, objecten, huishouden, natuur, vervoer, plaatsen, kunst, kleding, filosofie, religie, fictie, literatuur, acties, misdaad, emoties, landen, gereedschap, muziek, militair, ruimte, wetenschap, geneeskunde, politiek, spreekwoorden };
+  const map = { dieren, voedsel, beroepen, sport, huishouden, natuur, vervoer, plaatsen, kunst, kleding, filosofie, religie, fictie, literatuur, acties, misdaad, emoties, landen, gereedschap, muziek, militair, ruimte, wetenschap, geneeskunde, politiek, spreekwoorden };
   
   // FLAT alle woorden tot 1 array, filter dubbele (zoals 'vissen') eruit:
   const allWords = [...new Set(Object.values(map).flat())];
@@ -2381,7 +2386,7 @@ export default function App() {
     // Always show exactly 3 categories.
     // Priority: categories used in this game (excl. spreekwoorden) come first,
     // then fill up with random safe categories not yet in the list.
-    const safeCats = ['dieren', 'voedsel', 'beroepen', 'sport', 'objecten', 'natuur', 'emoties', 'landen', 'vervoer', 'plaatsen', 'kunst', 'kleding', 'filosofie', 'religie', 'fictie', 'literatuur', 'muziek', 'acties', 'gereedschap', 'wetenschap', 'geneeskunde', 'ruimte', 'militair', 'misdaad', 'politiek', 'huishouden', 'spreekwoorden'];
+    const safeCats = ['dieren', 'voedsel', 'beroepen', 'sport', 'natuur', 'emoties', 'landen', 'vervoer', 'plaatsen', 'kunst', 'kleding', 'filosofie', 'religie', 'fictie', 'literatuur', 'muziek', 'acties', 'gereedschap', 'wetenschap', 'geneeskunde', 'ruimte', 'militair', 'misdaad', 'politiek', 'huishouden', 'spreekwoorden'];
     const catSet = selectedCategory instanceof Set ? selectedCategory : new Set();
     const allIds = CATEGORIES.map(c => c.id);
     const allSelected = catSet.size === 0 || allIds.every(id => catSet.has(id));
