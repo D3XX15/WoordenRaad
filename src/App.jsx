@@ -16,6 +16,7 @@ const CATEGORIES = [
   { id: "natuur",        label: "🌿 Natuur" },
   { id: "muziek",        label: "🎶 Muziek" },
   { id: "fictie",        label: "🧙 Fictie" },
+  { id: "literatuur",    label: "✍️ Literatuur" },
   { id: "ruimte",        label: "🚀 Ruimte" },
   { id: "militair",      label: "🪖 Militair" },
   { id: "wetenschap",    label: "🔬 Wetenschap" },
@@ -252,7 +253,7 @@ const WORDS_BY_CATEGORY = (() => {
     'schakelaar', 'batterij', 'rits', 'gesp', 'trechter', 'stekker',
     'muurschildering', 'beeldje', 'schaal', 'kom', 'kan', 'urn',
     'kruik', 'theeglas', 'shotglas', 'bierglas', 'champagneglas', 'trofee',
-    'olielamp', 'kalender', 'dagboek', 'fotoalbum', 'poster',
+    'olielamp', 'kalender', 'fotoalbum', 'poster',
     'woordenboek', 'encyclopedie', 'tijdschrift', 'krant',
     'asbak', 'deurklink', 'lampenkap', 'achteruitkijkspiegel',
     'brandblusser', 'fietspomp', 'EHBO-kit', 'nietmachine',
@@ -389,7 +390,7 @@ const WORDS_BY_CATEGORY = (() => {
     'exorcisme', 'bar mitswa', 'hekserij', 'paus', 'bisschop', 'priester',
     'imam', 'rabbijn', 'monnik', 'non', 'abt', 'dalai lama', 'pastoor', 'dominee',
     'ayatollah', 'apostel', 'profeet', 'heilige', 'martelaar', 'engel', 'aartsengel',
-    'messias', 'Jezus', 'Mekka', 'Jeruzalem', 'pelgrimsoord', 'heiligdom',
+    'messias', 'Jezus', 'Mekka', 'Jeruzalem', 'pelgrimsoord', 'heiligdom', 'ritueel',
     'bijbel', 'koran', 'torah', 'psalm', 'kruis', 'crucifix', 'duivel',
     'davidster', 'scepter', 'kloostertuin', 'rozenkrans', 'lot',
     'icoon', 'relikwie', 'talisman', 'amulet', 'altaar', 'God'
@@ -410,14 +411,22 @@ const WORDS_BY_CATEGORY = (() => {
     'zeemeermin', 'heks', 'sprookje', 'fabel', 'glazen bol', 'tovenaar',
     'tijdmachine', 'tijdreizen', 'draak', 'eenhoorn', 'vampier', 'weerwolf',
     'zombie', 'trol', 'fee', 'feniks', 'toverstaf', 'vloek', 'legende', 'mythe',
-    'sciencefiction', 'thriller', 'roman', 'cliffhanger', 'dystopie', 'utopie',
-    'bovennatuurlijk', 'spook', 'griffioen', 'centaur', 'spreuk', 'cycloop', 'yeti',
-    'toverdrank', 'fantasy', 'horror', 'gnoom', 'ork', 'cyborg', 'Dr. Frankenstein',
+    'sciencefiction', 'bovennatuurlijk', 'spook', 'griffioen', 'centaur', 'spreuk',
+    'cycloop', 'yeti', 'fictief', 'parallel universum', 'zwarte magie', 'visioen',
+    'toverdrank', 'fantasy', 'gnoom', 'ork', 'cyborg', 'Dr. Frankenstein',
+    'demon', 'telepathie', 'helderziend', 'waarzegger', 'gedachtelezen',
+    'gedaantewisseling', 'teleportatie', 'boself', 'klopgeest', 'superheld',
+    'gebroeders Grim', 'Hans Christian Andersen'
+  ];
+
+  const literatuur = [
+    'thriller', 'roman', 'cliffhanger', 'dystopie', 'utopie', 'horror', 'biografie',
     'held', 'antiheld', 'anticlimax', 'fictief', 'parallel universum', 'zwarte magie',
     'demon', 'telepathie', 'helderziend', 'waarzegger', 'gedachtelezen', 'visioen',
-    'gedaantewisseling', 'teleportatie', 'boself', 'klopgeest', 'ritueel',
-    'superheld', 'protagonist', 'antagonist', 'verhaal', 'plot', 'plottwist',
-    'gebroeders Grim', 'Hans Christian Andersen'
+    'gedaantewisseling', 'teleportatie', 'boself', 'klopgeest', 'autobiografie',
+    'dagboek', 'verhalenbundel', 'stripboek', 'personage', 'hoofdstuk', 'rijm',
+    'monoloog', 'dialoog', 'metafoor', 'ironie', 'satire', 'symbolisch',
+    'Shakespeare', 'Charles Dickens', 'haiku', 'gedicht'
   ];
 
   const misdaad = [
@@ -1012,7 +1021,7 @@ const WORDS_BY_CATEGORY = (() => {
     'iets uit de duim zuigen'
   ];
 
-  const map = { dieren, voedsel, beroepen, sport, objecten, huishouden, natuur, vervoer, plaatsen, filosofie, religie, fictie, acties, misdaad, emoties, landen, gereedschap, muziek, militair, ruimte, wetenschap, geneeskunde, politiek, spreekwoorden };
+  const map = { dieren, voedsel, beroepen, sport, objecten, huishouden, natuur, vervoer, plaatsen, filosofie, religie, fictie, literatuur, acties, misdaad, emoties, landen, gereedschap, muziek, militair, ruimte, wetenschap, geneeskunde, politiek, spreekwoorden };
   
   // FLAT alle woorden tot 1 array, filter dubbele (zoals 'vissen') eruit:
   const allWords = [...new Set(Object.values(map).flat())];
@@ -2382,7 +2391,7 @@ export default function App() {
     // Always show exactly 3 categories.
     // Priority: categories used in this game (excl. spreekwoorden) come first,
     // then fill up with random safe categories not yet in the list.
-    const safeCats = ['dieren', 'voedsel', 'beroepen', 'sport', 'objecten', 'natuur', 'emoties', 'landen', 'vervoer', 'plaatsen', 'filosofie', 'religie', 'fictie', 'muziek', 'acties', 'gereedschap', 'wetenschap', 'geneeskunde', 'ruimte', 'militair', 'misdaad', 'politiek', 'huishouden'];
+    const safeCats = ['dieren', 'voedsel', 'beroepen', 'sport', 'objecten', 'natuur', 'emoties', 'landen', 'vervoer', 'plaatsen', 'filosofie', 'religie', 'fictie', 'literatuur', 'muziek', 'acties', 'gereedschap', 'wetenschap', 'geneeskunde', 'ruimte', 'militair', 'misdaad', 'politiek', 'huishouden', 'spreekwoorden'];
     const catSet = selectedCategory instanceof Set ? selectedCategory : new Set();
     const allIds = CATEGORIES.map(c => c.id);
     const allSelected = catSet.size === 0 || allIds.every(id => catSet.has(id));
