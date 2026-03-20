@@ -4,18 +4,17 @@ import { useState, useEffect, useRef } from "react";
 const CATEGORIES = [
   { id: "dieren",        label: "🐶 Dieren" },
   { id: "voedsel",       label: "🍕 Eten & Drinken" },
-  { id: "muziek",        label: "🎶 Muziek" },
-  { id: "sport",         label: "⚽ Sport & Hobby" },
   { id: "vervoer",       label: "🚗 Vervoer" },
+  { id: "sport",         label: "⚽ Sport & Hobby" },
   { id: "kleding",       label: "👕 Kleding" },
   { id: "beroepen",      label: "👷 Beroepen" },
   { id: "kantoor",       label: "💼 Kantoor" },
-  { id: "acties",        label: "🏃 Werkwoorden" },
   { id: "emoties",       label: "🎭 Emoties & Gedrag" },
   { id: "misdaad",       label: "🚔 Misdaad & Justitie" },
   { id: "huishouden",    label: "🏠 Huishouden" },
   { id: "gereedschap",   label: "🔧 Gereedschap" },
   { id: "natuur",        label: "🌿 Natuur" },
+  { id: "muziek",        label: "🎶 Muziek" },
   { id: "kunst",         label: "🧑‍🎨 Kunst" },
   { id: "fictie",        label: "🧙 Fictie" },
   { id: "literatuur",    label: "✍️ Literatuur" },
@@ -27,6 +26,7 @@ const CATEGORIES = [
   { id: "ruimte",        label: "🚀 Ruimte" },
   { id: "plaatsen",      label: "🧭 Plaatsen" },
   { id: "landen",        label: "🌍 Landen" },
+  { id: "acties",        label: "🏃 Werkwoorden" },
   { id: "spreekwoorden", label: "💬 Spreekwoorden", bonus: true },
 ];
 
