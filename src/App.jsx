@@ -1519,14 +1519,16 @@ const MESSAGES_POOR = [
   () => `Hoofd omhoog, borst vooruit 💪`,
   () => `Slaap je wel genoeg? 😪`,
   () => `De anderen worden er alleen maar hebberiger van 😈`,
+  (_, pts) => `${pts} ${pt(pts)}, de weg omhoog begint hier ⛰️`,
   (_, pts) => `${pts} ${pt(pts)}, misschien even oefenen thuis 🏠`,
   (_, pts) => `${pts} ${pt(pts)}, maar je hebt het geprobeerd! 🫶`,
-  (_, pts) => `${pts} ${pt(pts)}, de weg omhoog begint hier ⛰️`,
-  (_, pts) => `${pts} ${pt(pts)}, maa wel lekker meegespeeld 🎮`,
+  (_, pts) => `${pts} ${pt(pts)}, maar wel lekker meegespeeld 🎮`,
   (_, pts) => `${pts} ${pt(pts)}, je kunt alleen maar omhoog ☝️`,
   () => `Even bijkomen en dan weer volle bak! 🔋`,
   () => `De woorden waren dit keer iets te lastig 🤷`,
 ];
+
+const lastMessageIndex = { great: -1, ok: -1, poor: -1 };
 
 function getRandomEndMessage(correctCount, roundTime, totalScore = correctCount) {
   const ratio = roundTime > 0 ? totalScore / (roundTime / 6) : 0;
@@ -1534,7 +1536,13 @@ function getRandomEndMessage(correctCount, roundTime, totalScore = correctCount)
     ratio >= 0.6   ? [MESSAGES_GREAT, "great"] :
     ratio >= 0.4   ? [MESSAGES_OK,    "ok"]    :
                      [MESSAGES_POOR,  "poor"];
-  const idx = Math.floor(Math.random() * pool.length);
+
+  let idx;
+  do {
+    idx = Math.floor(Math.random() * pool.length);
+  } while (idx === lastMessageIndex[tier] && pool.length > 1);
+  lastMessageIndex[tier] = idx;
+
   return { message: pool[idx](correctCount, totalScore), tier, count: correctCount, totalScore };
 }
 
