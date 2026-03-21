@@ -147,7 +147,7 @@ const WORDS_BY_CATEGORY = (() => {
 
   const sport = [
     'aerobics', 'alpineskiën', 'american football', 'atletiek', 'badminton', 'taekwondo',
-    'balletdansen', 'basketbal', 'beachvolleybal', 'bergsport', 'biatlon', 'bingo',
+    'balletdansen', 'basketbal', 'beachvolleybal', 'bergsport', 'biatlon', 'bingo', 'trofee',
     'biljarten', 'BMX', 'bobslee', 'boksen', 'bowling', 'breakdance', 'doping', 'boomerang',
     'cricket', 'curling', 'dammen', 'diepzeeduiken', 'discgolf', 'discuswerpen', 'ganzenbord',
     'dressuur', 'duiken', 'e-sporten', 'estafette', 'fietsen', 'freerunning', 'tennis',
@@ -226,7 +226,7 @@ const WORDS_BY_CATEGORY = (() => {
     'slee', 'sleepboot', 'sloep', 'sneltrein', 'speedboot', 'stadsbus', 'luchtballon', 
     'stadsfiets', 'step', 'stoomboot', 'stoomlocomotief', 'SUV', 'taxi', 'bulldozer',
     'touringcar', 'tractor', 'tram', 'trolleybus', 'tuk-tuk', 'veerboot', 'cabrio',
-    'wielerbaan', 'zeilschip', 'zijspan', 'zonneauto', 'zweefvliegtuig', 'minivan',
+    'zeilschip', 'zijspan', 'zonneauto', 'zweefvliegtuig', 'minivan',
     'fiets', 'elektrische fiets', 'scooter', 'trein', 'zeilboot', 'bijtanken', 'tandem',
     'tankwagen', 'brandstoftanker', 'jacht', 'rubberboot', 'ongeluk', 'waterbus', 'quad',
     'kano', 'vlot', 'waterscooter', 'reddingsvlot', 'onderzeeër', 'waterfiets', 'golfkarretje',
@@ -246,7 +246,7 @@ const WORDS_BY_CATEGORY = (() => {
   ];
 
   const plaatsen = [
-    'apotheek', 'aquaduct', 'aquarium', 'badhuis',
+    'apotheek', 'aquaduct', 'aquarium', 'badhuis', 'wielerbaan', 'skatepark',
     'balie', 'begraafplaats', 'bibliotheek', 'bioscoop', 'bloemenmarkt', 'boekenwinkel',
     'boerderij', 'bouwplaats', 'bowlingbaan', 'brandweerkazerne', 'brouwerij', 'brug',
     'café', 'camping', 'campingterrein', 'casino', 'centrum', 'circus', 'grensovergang',
@@ -682,7 +682,7 @@ const WORDS_BY_CATEGORY = (() => {
     'rookmelder', 'brievenbus', 'buitenlamp', 'wandspiegel', 'washandje', 'badkamerspiegel', 'antenne',
     'antiek', 'ballon', 'balustrade', 'lampion', 'kaars', 'computer', 'dakpan', 'bierglas', 'dekbed',
     'fakkel', 'föhn', 'haardroger', 'hangmat', 'ijsklontjesmaker', 'pakketje', 'oplader', 'cadeau',
-    'megafoon', 'neonlamp', 'paraplu', 'trofee', 'lichtschakelaar', 'spelcomputer', 'aansteker',
+    'megafoon', 'neonlamp', 'paraplu', 'lichtschakelaar', 'spelcomputer', 'aansteker',
     'spaarpot', 'wiel', 'rubberen eend', 'scheermes', 'tandenstoker', 'harde schijf', 'powerbank',
     'schommel', 'speelgoed', 'zonnewijzer', 'tandenborstel', 'tandpasta', 'tent', 'kalender', 'haard',
     'knuffelbeer', 'bellenblaas', 'trechter', 'theeglas', 'lampenkap', 'brandblusser', 'tafelkleed',
@@ -960,7 +960,7 @@ const EXTRA_WORD_PARTS = new Set([
 'verzekering', 'agent', 'voeding', 'wetenschapper', 'ziekenhuis', 'directeur', 'tram', 'bestuurder',
 'undercover', 'agent', 'belasting', 'adviseur', 'politie', 'commissaris', 'vrachtwagen', 'chauffeur',
 'beach', 'volleybal', 'diepzee', 'duiken', 'langebaan', 'schaatsen', 'parachute', 'springen', 'polsstok',
-'hoogspringen', 'schans', 'synchroon', 'trampoline', 'wedstrijd', 'vissen', 'kampioen', 'beker', 'tocht',
+'hoogspringen', 'schans', 'synchroon', 'trampoline', 'wedstrijd', 'vissen', 'kampioen', 'beker',
 'gezelschap', 'spel', 'kleiduiven', 'schieten', 'estafette', 'ring', 'afstand', 'bediening',
 'armband', 'horloge', 'beeld', 'houwwerk', 'kaarsen', 'houder', 'manchet', 'knoop', 'scheep',
 'schroef', 'veiligheid', 'speld', 'boodchappen', 'tas', 'gehoor', 'apparaat', 'muur', 'schildering',
@@ -982,7 +982,7 @@ const EXTRA_WORD_PARTS = new Set([
 'maan', 'relativiteit', 'theorie', 'koppeling', 'lanceer', 'installatie', 'weten', 'schapper',
 'laboratorium', 'aardappel', 'stamper', 'gezondheid', 'zorg', 'ondergang', 'telescoop', 'ruimte',
 'aanslag', 'aardig', 'actie', 'akkoord', 'amfibie', 'apparaat', 'arijs', 'atie', 'aanval', 'tijd',
-'baan', 'band', 'basis', 'bedrijf', 'beheer', 'beleid', 'bestuur', 'bom', 'bond', 'bouw',
+'baan', 'band', 'basis', 'bedrijf', 'beheer', 'beleid', 'bestuur', 'bom', 'bond', 'bouw', 'tocht',
 'cel', 'concentratie', 'crisis', 'damp', 'debat', 'deel', 'deeltje', 'democratie', 'deur', 'dienst',
 'energie', 'erij', 'explosie', 'factor', 'fiets', 'front', 'gas', 'gebouw', 'tuin', 'moordenaar',
 'geving', 'gever', 'golf', 'graaf', 'grond', 'haven', 'heid', 'herdenking', 'afdruk', 'therapie',
