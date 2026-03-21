@@ -2328,14 +2328,14 @@ export default function App() {
 
   const onStartTiebreaker = (tiedPlayerIndices) => {
     // Always show exactly 3 categories.
-    // Priority: categories used in this game (excl. spreekwoorden) come first,
+    // Priority: categories used in this game come first,
     // then fill up with random safe categories not yet in the list.
     const safeCats = ['dieren', 'voedsel', 'beroepen', 'kantoor','sport', 'natuur', 'emoties', 'landen', 'vervoer', 'plaatsen', 'kunst', 'kleding', 'religie', 'fictie', 'literatuur', 'muziek', 'acties', 'gereedschap', 'wetenschap', 'geneeskunde', 'ruimte', 'militair', 'misdaad', 'politiek', 'huishouden', 'spreekwoorden'];
     const catSet = selectedCategory instanceof Set ? selectedCategory : new Set();
     const allIds = CATEGORIES.map(c => c.id);
     const allSelected = catSet.size === 0 || allIds.every(id => catSet.has(id));
 
-    // Categories used in this game that are safe (no spreekwoorden, no all)
+    // Categories used in this game
     const usedSafe = allSelected
       ? []
       : safeCats.filter(c => catSet.has(c));
