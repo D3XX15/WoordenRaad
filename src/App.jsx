@@ -339,10 +339,10 @@ const WORDS_BY_CATEGORY = (() => {
   ];
 
   const misdaad = [
-    'vliegtuigkaping', 'politie', 'stelen', 'dreigen', 'criminoloog', 'verjaring',
+    'vliegtuigkaping', 'politie', 'cel', 'stelen', 'dreigen', 'criminoloog',
     'afpersen', 'kidnappen', 'smokkelen', 'brandstichten', 'cyberpesten', 'vonnis',
     'intimideren', 'op de vlucht zijn', 'executie', 'massamoord', 'ramkraak', 'boef',
-    'terrorisme', 'zelfmoordaanslag', 'bomaanslag', 'ontvoering', 'plaatsdelict', 'cel',
+    'terrorisme', 'zelfmoordaanslag', 'bomaanslag', 'ontvoering', 'plaatsdelict',
     'cyberaanval', 'corruptie', 'fraude', 'getuige', 'chantage', 'klokkenluider', 'inbreker',
     'slavernij', 'terreurcel', 'dagvaarding', 'radicalisering', 'zwarte markt', 'liquidatie',
     'forensisch onderzoek', 'vergiftiging', 'detective', 'sheriff', 'hoger beroep', 'inbraak',
@@ -505,7 +505,7 @@ const WORDS_BY_CATEGORY = (() => {
     'dilemma', 'discriminatie', 'erfenis', 'faillissement', 'fusie', 'stakingsrecht', 'provincie',
     'globalisering', 'herverdeling', 'immigratie', 'lockdown', 'recessie', 'referendum',
     'monopolie', 'nepnieuws', 'onteigening', 'polarisatie', 'populisme', 'propaganda', 'rente',
-    'schijnheilig', 'taboe', 'uitzetting', 'vervreemding', 'beschaving', 'mening',
+    'schijnheilig', 'taboe', 'uitzetting', 'verjaring', 'vervreemding', 'beschaving', 'mening',
     'coalitie', 'oppositie', 'verkiezingen', 'stemmen', 'verkiezingscampagne', 'vlag', 'EU',
     'minister', 'staatssecretaris', 'premier', 'president', 'koning', 'parlement', 'traditie',
     'senaat', 'grondwet', 'wet', 'amendement', 'motie', 'debat', 'nieuws', 'solidariteit',
@@ -2177,19 +2177,40 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
             <div className="scores-list">
               {teamResults.map((tr, i) => {
                 const tieBadges = ["🥇", "🥈", "🥉"];
+                const sortedPlayers = [...tr.playerResults].sort((a, b) => a.time - b.time);
+
                 return (
-                  <div key={tr.teamName}>
-                    <div className={`score-row rank-${i + 1} rank-final`}>
+                  <div key={tr.teamName} style={{marginBottom: i < teamResults.length - 1 ? '10px' : '0'}}>
+                    <div className={`score-row rank-${i + 1} rank-final`} style={{marginBottom: '6px'}}>
                       <span className="rank-badge">{tieBadges[i] ?? i + 1}</span>
                       <span className="score-name">{tr.teamName}</span>
                       <span className="score-pts tiebreaker-pts">⌀ {tr.avgTime.toFixed(1)}s</span>
                     </div>
-                    {tr.playerResults.map(pr => (
-                      <div key={pr.name} className="score-row" style={{paddingLeft: '32px', opacity: 0.7, animation: 'none'}}>
-                        <span className="score-name" style={{fontSize: '13px'}}>↳ {pr.name}</span>
-                        <span className="score-pts tiebreaker-pts" style={{fontSize: '13px'}}>{pr.time.toFixed(1)}s</span>
-                      </div>
-                    ))}
+                    <div style={{
+                      marginLeft: '14px',
+                      paddingLeft: '14px',
+                      borderLeft: '2px solid rgba(255,255,255,0.1)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '5px',
+                    }}>
+                      {sortedPlayers.map((pr, j) => (
+                        <div key={pr.name} style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '6px 10px',
+                          borderRadius: '10px',
+                          background: 'rgba(255,255,255,0.04)',
+                        }}>
+                          <span style={{display:'flex', alignItems:'center', gap:'7px', fontSize:'14px', fontWeight:700, color:'rgba(255,255,255,0.75)'}}>
+                            <span style={{fontSize:'13px'}}>{j + 1}.</span>
+                            {pr.name}
+                          </span>
+                          <span style={{fontSize:'14px', fontWeight:800, color:'rgba(255,255,255,0.6)'}}>{pr.time.toFixed(1)}s</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 );
               })}
@@ -2394,7 +2415,10 @@ export default function App() {
       teamPlayerIndices.push(team.players.map((_, i) => offset + i));
       offset += team.players.length;
     }
+    // Sorteer: team met meeste spelers begint altijd eerst (stabiel: bij gelijk aantal originele volgorde)
+    teamPlayerIndices.sort((a, b) => b.length - a.length);
     // Interleave: ronde 0 → speler 0 van elk team, ronde 1 → speler 1 van elk team, etc.
+    // Teams met minder spelers vallen eerder af; het grootste team speelt als laatste als enige.
     const maxSize = Math.max(...teamPlayerIndices.map(t => t.length));
     const order = [];
     for (let pos = 0; pos < maxSize; pos++) {
@@ -2497,6 +2521,7 @@ export default function App() {
 
     // In team-modus: sla teamgroeperingen op voor gemiddelde-berekening achteraf
     let tiedTeamGroups = null;
+    let orderedTiedPlayerIndices = tiedPlayerIndices;
     if (teams) {
       const teamMap = {};
       tiedPlayerIndices.forEach(pi => {
@@ -2506,11 +2531,20 @@ export default function App() {
           teamMap[tIdx].playerIndices.push(pi);
         }
       });
-      tiedTeamGroups = Object.values(teamMap);
+      // Sorteer: team met meeste spelers gaat als eerste in de tie-breaker
+      tiedTeamGroups = Object.values(teamMap).sort((a, b) => b.playerIndices.length - a.playerIndices.length);
+      // Herbouw tiedPlayerIndices met dezelfde interleave-logica als buildPlayOrder
+      const maxSize = Math.max(...tiedTeamGroups.map(g => g.playerIndices.length));
+      orderedTiedPlayerIndices = [];
+      for (let pos = 0; pos < maxSize; pos++) {
+        for (const group of tiedTeamGroups) {
+          if (pos < group.playerIndices.length) orderedTiedPlayerIndices.push(group.playerIndices[pos]);
+        }
+      }
     }
 
     setTiebreakerState({
-      tiedPlayerIndices,
+      tiedPlayerIndices: orderedTiedPlayerIndices,
       tiedTeamGroups,
       candidateCategories,
       chosenCategoryId: null,
