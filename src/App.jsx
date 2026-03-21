@@ -951,7 +951,7 @@ const WORDS_BY_CATEGORY = (() => {
     'iets aan de grote klok hangen',
     'de kool en de geit sparen',
     'het spits afbijten',
-    'tussen de wal en het schip vallen',
+    'tussen wal en schip vallen',
     'de handdoek in de ring gooien',
     'op eieren lopen',
     'een gat in de lucht springen',
