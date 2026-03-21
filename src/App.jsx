@@ -339,10 +339,10 @@ const WORDS_BY_CATEGORY = (() => {
   ];
 
   const misdaad = [
-    'vliegtuigkaping', 'politie', 'cel', 'stelen', 'dreigen', 'criminoloog',
+    'vliegtuigkaping', 'politie', 'stelen', 'dreigen', 'criminoloog', 'verjaring',
     'afpersen', 'kidnappen', 'smokkelen', 'brandstichten', 'cyberpesten', 'vonnis',
     'intimideren', 'op de vlucht zijn', 'executie', 'massamoord', 'ramkraak', 'boef',
-    'terrorisme', 'zelfmoordaanslag', 'bomaanslag', 'ontvoering', 'plaatsdelict',
+    'terrorisme', 'zelfmoordaanslag', 'bomaanslag', 'ontvoering', 'plaatsdelict', 'cel',
     'cyberaanval', 'corruptie', 'fraude', 'getuige', 'chantage', 'klokkenluider', 'inbreker',
     'slavernij', 'terreurcel', 'dagvaarding', 'radicalisering', 'zwarte markt', 'liquidatie',
     'forensisch onderzoek', 'vergiftiging', 'detective', 'sheriff', 'hoger beroep', 'inbraak',
@@ -505,7 +505,7 @@ const WORDS_BY_CATEGORY = (() => {
     'dilemma', 'discriminatie', 'erfenis', 'faillissement', 'fusie', 'stakingsrecht', 'provincie',
     'globalisering', 'herverdeling', 'immigratie', 'lockdown', 'recessie', 'referendum',
     'monopolie', 'nepnieuws', 'onteigening', 'polarisatie', 'populisme', 'propaganda', 'rente',
-    'schijnheilig', 'taboe', 'uitzetting', 'verjaring', 'vervreemding', 'beschaving', 'mening',
+    'schijnheilig', 'taboe', 'uitzetting', 'vervreemding', 'beschaving', 'mening',
     'coalitie', 'oppositie', 'verkiezingen', 'stemmen', 'verkiezingscampagne', 'vlag', 'EU',
     'minister', 'staatssecretaris', 'premier', 'president', 'koning', 'parlement', 'traditie',
     'senaat', 'grondwet', 'wet', 'amendement', 'motie', 'debat', 'nieuws', 'solidariteit',
@@ -1849,11 +1849,11 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
     const topAvg = Math.max(...sortedTeams.map(t => t.avgScore));
     const tiedTeams = sortedTeams.filter(t => t.avgScore === topAvg);
     if (tiedTeams.length > 1) {
-      // Gebruik originalIndex voor correcte referentie 
-      tiedPlayerIndices = tiedTeams.map(team => {
+      // Geef alle spelers van elk gebonden team mee (per team gegroepeerd)
+      tiedPlayerIndices = tiedTeams.flatMap(team => {
         let offset = 0;
         for (let t = 0; t < team.originalIndex; t++) offset += teams[t].players.length;
-        return offset; // eerste speler van elk gebonden team
+        return team.players.map((_, i) => offset + i);
       });
     }
   }
@@ -2093,7 +2093,7 @@ function TiebreakerCategoryPicker({ candidateCategories, onCategoryChosen }) {
 }
 
 function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGuessed, onRestart }) {
-  const { tiedPlayerIndices, candidateCategories, chosenCategoryId, words, categoryLabel, times, currentStep } = tiebreakerState;
+  const { tiedPlayerIndices, tiedTeamGroups, candidateCategories, chosenCategoryId, words, categoryLabel, times, currentStep } = tiebreakerState;
   const allDone = currentStep >= tiedPlayerIndices.length;
 
   // subPhase: 'handoff' | 'round' | 'results'
@@ -2142,6 +2142,67 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
 
   // Results view
   if (allDone) {
+    // Team-modus: groepeer per team, bereken gemiddelde tijd
+    if (tiedTeamGroups) {
+      const teamResults = tiedTeamGroups.map(group => {
+        const groupTimes = group.playerIndices.map(pi => {
+          const stepIdx = tiedPlayerIndices.indexOf(pi);
+          return times[stepIdx];
+        });
+        const avgTime = groupTimes.reduce((a, b) => a + b, 0) / groupTimes.length;
+        return {
+          teamName: group.teamName,
+          avgTime,
+          playerResults: group.playerIndices.map((pi, idx) => ({
+            name: players[pi],
+            time: groupTimes[idx],
+          })),
+        };
+      }).sort((a, b) => a.avgTime - b.avgTime);
+
+      const winnerTime = teamResults[0].avgTime;
+      const hasJointWinner = teamResults.filter(r => r.avgTime === winnerTime).length > 1;
+
+      return (
+        <div className="screen">
+          <div className="score-card">
+            <h2 className="score-title">⚡ Tie-breaker resultaten</h2>
+            <div className={`tiebreaker-result-banner ${hasJointWinner ? 'tiebreaker-result-tied' : 'tiebreaker-result-winner'}`}>
+              {hasJointWinner ? (
+                <span className="tiebreaker-result-text-tied">🤝 Nog steeds gelijkspel!</span>
+              ) : (
+                <span className="tiebreaker-result-text-winner">🏆 {teamResults[0].teamName} wint de tie-breaker!</span>
+              )}
+            </div>
+            <div className="scores-list">
+              {teamResults.map((tr, i) => {
+                const tieBadges = ["🥇", "🥈", "🥉"];
+                return (
+                  <div key={tr.teamName}>
+                    <div className={`score-row rank-${i + 1} rank-final`}>
+                      <span className="rank-badge">{tieBadges[i] ?? i + 1}</span>
+                      <span className="score-name">{tr.teamName}</span>
+                      <span className="score-pts tiebreaker-pts">⌀ {tr.avgTime.toFixed(1)}s</span>
+                    </div>
+                    {tr.playerResults.map(pr => (
+                      <div key={pr.name} className="score-row" style={{paddingLeft: '32px', opacity: 0.7, animation: 'none'}}>
+                        <span className="score-name" style={{fontSize: '13px'}}>↳ {pr.name}</span>
+                        <span className="score-pts tiebreaker-pts" style={{fontSize: '13px'}}>{pr.time.toFixed(1)}s</span>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="final-btns">
+              <button className="score-btn restart-btn" onClick={onRestart}>Nieuw spel</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Individuele modus (ongewijzigd)
     const results = tiedPlayerIndices.map((pi, i) => ({
       name: players[pi],
       time: times[i],
@@ -2188,12 +2249,13 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
 
   // Handoff view
   if (subPhase === 'handoff') {
+    const currentTeamGroup = tiedTeamGroups?.find(g => g.playerIndices.includes(currentPlayerIdx));
     return (
       <div className="screen handoff-screen">
         <div className="handoff-card">
           <div className="handoff-icon">⚡</div>
           <p className="handoff-sub tiebreaker-handoff-sub">
-            TIE-BREAKER · {currentStep + 1}/{tiedPlayerIndices.length}
+            TIE-BREAKER · {currentStep + 1}/{tiedPlayerIndices.length}{currentTeamGroup ? ` · ${currentTeamGroup.teamName}` : ''}
           </p>
           <h2 className="handoff-name">{players[currentPlayerIdx]}</h2>
           <p className="handoff-tip mb-2">Raad z.s.m. het random woord</p>
@@ -2433,8 +2495,23 @@ export default function App() {
 
     const candidateCategories = chosen.map(id => CATEGORIES.find(c => c.id === id)).filter(Boolean);
 
+    // In team-modus: sla teamgroeperingen op voor gemiddelde-berekening achteraf
+    let tiedTeamGroups = null;
+    if (teams) {
+      const teamMap = {};
+      tiedPlayerIndices.forEach(pi => {
+        const tIdx = getTeamIdxForPlayer(pi);
+        if (tIdx !== null) {
+          if (!teamMap[tIdx]) teamMap[tIdx] = { teamName: teams[tIdx].name, teamIdx: tIdx, playerIndices: [] };
+          teamMap[tIdx].playerIndices.push(pi);
+        }
+      });
+      tiedTeamGroups = Object.values(teamMap);
+    }
+
     setTiebreakerState({
       tiedPlayerIndices,
+      tiedTeamGroups,
       candidateCategories,
       chosenCategoryId: null,
       words: null,
