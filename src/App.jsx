@@ -256,7 +256,7 @@ const WORDS_BY_CATEGORY = (() => {
     'fiets', 'elektrische fiets', 'scooter', 'trein', 'zeilboot', 'bijtanken', 'tandem',
     'tankwagen', 'brandstoftanker', 'jacht', 'rubberboot', 'ongeluk', 'waterbus', 'quad',
     'kano', 'vlot', 'waterscooter', 'reddingsvlot', 'onderzeeër', 'waterfiets', 'golfkarretje',
-    'toeristentrein', 'zweeftrein', 'kampeerbus', 'politiemotor', 'ziekenwagen',
+    'stoomtram', 'toeristentrein', 'zweeftrein', 'kampeerbus', 'politiemotor', 'ziekenwagen',
     'brandweerboot', 'politiehelikopter', 'traumahelikopter', 'zeppelin', 'bakfiets', 'ligfiets',
     'sleepwagen', 'deelfiets', 'deelscooter', 'deelstep', 'snelweg', 'ringweg', 'kraanwagen',
     'afrit', 'invoegstrook', 'viaduct', 'tunnel', 'perron', 'spoorwegovergang', 'bagageband',
@@ -1576,6 +1576,11 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const penaltyRef = useRef(null);
   const skipPenaltyRef = useRef(0);
   const roundEndTimeoutRef = useRef(null);
+  const skipCountRef = useRef(0);
+  const [streak, setStreak] = useState(0);
+  const streakRef = useRef(0);
+  const [showOnFire, setShowOnFire] = useState(false);
+  const onFireTimeoutRef = useRef(null);
 
   const finishRound = (finalScores, finalWordIndex) => {
     const totalScore = finalScores.correct + wordResultsRef.current.reduce((sum, r) => sum + (r.bonusPts || 0), 0);
@@ -1600,6 +1605,15 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
     setScores(newScores);
     wordIndexRef.current += 1;
     setWordIndex(wordIndexRef.current);
+    // Streak bijhouden
+    const newStreak = streakRef.current + 1;
+    streakRef.current = newStreak;
+    setStreak(newStreak);
+    if (newStreak === 5) {
+      setShowOnFire(true);
+      clearTimeout(onFireTimeoutRef.current);
+      onFireTimeoutRef.current = setTimeout(() => setShowOnFire(false), 2000);
+    }
     if (timesUpRef.current) {
       finishRound(newScores, wordIndexRef.current);
     }
@@ -1615,14 +1629,20 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
     setScores(newScores);
     wordIndexRef.current += 1;
     setWordIndex(wordIndexRef.current);
+    // Streak resetten bij overslaan
+    streakRef.current = 0;
+    setStreak(0);
+    setShowOnFire(false);
     // Alleen penalty starten als tijd nog niet verstreken is
     if (timesUpRef.current) {
       finishRound(newScores, wordIndexRef.current);
       return;
     }
-    skipPenaltyRef.current = 3;
-    setSkipPenalty(3);
-    let count = 3;
+    skipCountRef.current += 1;
+    const penaltyDuration = skipCountRef.current === 1 ? 3 : skipCountRef.current === 2 ? 5 : 7;
+    skipPenaltyRef.current = penaltyDuration;
+    setSkipPenalty(penaltyDuration);
+    let count = penaltyDuration;
     penaltyRef.current = setInterval(() => {
       count -= 1;
       skipPenaltyRef.current = count;
@@ -1641,6 +1661,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   useEffect(() => () => {
     clearInterval(penaltyRef.current);
     clearTimeout(roundEndTimeoutRef.current);
+    clearTimeout(onFireTimeoutRef.current);
   }, []);
 
   const pct = timeRemaining / roundTime;
@@ -1677,8 +1698,15 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
         <div className="round-stats">
           <span className="stat correct-stat">✓ {scores.correct}</span>
           <span className="stat skip-stat">↷ {scores.skipped}</span>
+          {streak >= 3 && !done && (
+            <span className="stat streak-stat">🔥 {streak}</span>
+          )}
         </div>
       </div>
+
+      {showOnFire && (
+        <div className="on-fire-banner">🔥 On fire! 🔥</div>
+      )}
 
       <div className="word-stage">
         {done ? (
@@ -1696,9 +1724,11 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
           <div className="penalty-wrap">
             <div className="penalty-label">⏭️ Overgeslagen</div>
             <div className="penalty-bar-track">
-              <div className="penalty-bar-fill" />
+              <div className="penalty-bar-fill" style={{ animationDuration: `${skipCountRef.current === 1 ? 3 : skipCountRef.current === 2 ? 5 : 7}s` }} />
             </div>
-            <div className="penalty-sublabel">Wacht een paar seconden…</div>
+            <div className="penalty-sublabel">
+              {skipCountRef.current === 1 ? "3 seconden wachten…" : skipCountRef.current === 2 ? "5 seconden wachten…" : "7 seconden wachten…"}
+            </div>
           </div>
         ) : (
           <>
@@ -2650,7 +2680,16 @@ export default function App() {
         .stat { font-size: 14px; font-weight: 800; padding: 5px 10px; border-radius: 20px; white-space: nowrap; }
         .correct-stat { background: rgba(74,222,128,0.2); color: #4ade80; }
         .skip-stat { background: rgba(251,191,36,0.15); color: #fbbf24; }
+        .streak-stat { background: rgba(251,146,60,0.2); color: #fb923c; animation: streak-pulse 0.6s ease; }
         .round-stats-cat { font-size: 12px; color: rgba(255,255,255,0.4); }
+
+        .on-fire-banner {
+          font-family: 'Righteous', cursive; font-size: clamp(22px, 6vw, 32px);
+          color: #fb923c; text-align: center; letter-spacing: 0.04em;
+          animation: on-fire-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+          text-shadow: 0 0 20px rgba(251,146,60,0.6), 0 0 40px rgba(251,146,60,0.3);
+          margin-bottom: 4px;
+        }
 
         .word-stage {
           flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -2883,6 +2922,8 @@ export default function App() {
         @keyframes pulse-orange-banner { 0%, 100% { box-shadow: 0 0 6px rgba(251,146,60,0.4); } 50% { box-shadow: 0 0 14px rgba(251,146,60,0.8); } }
         @keyframes ring { 0% { transform: rotate(0deg); } 15% { transform: rotate(18deg); } 30% { transform: rotate(-16deg); } 45% { transform: rotate(14deg); } 60% { transform: rotate(-10deg); } 75% { transform: rotate(6deg); } 90% { transform: rotate(-3deg); } 100% { transform: rotate(0deg); } }
         @keyframes pulse-gold { 0%, 100% { box-shadow: 0 0 0 0 rgba(251,191,36,0.4); } 50% { box-shadow: 0 0 0 8px rgba(251,191,36,0); } }
+        @keyframes streak-pulse { 0% { transform: scale(0.7); opacity: 0; } 60% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes on-fire-in { 0% { transform: scale(0.5) translateY(-10px); opacity: 0; } 70% { transform: scale(1.1) translateY(0); } 100% { transform: scale(1); opacity: 1; } }
 
         /* ── Media Queries ── */
         @media (max-width: 380px) {
