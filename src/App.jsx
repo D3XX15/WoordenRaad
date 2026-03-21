@@ -510,7 +510,7 @@ const WORDS_BY_CATEGORY = (() => {
     'minister', 'staatssecretaris', 'premier', 'president', 'koning', 'parlement', 'traditie',
     'senaat', 'grondwet', 'wet', 'amendement', 'motie', 'debat', 'nieuws', 'solidariteit',
     'beleid', 'maatregel', 'subsidie', 'bezuiniging', 'begroting', 'nationalisatie', 'NAVO',
-    'ambassade', 'consul', 'staatshoofd', 'topontmoeting', 'vredesakkoord', 'hiërarchie',
+    'ambassade', 'ambassadeur', 'staatshoofd', 'topontmoeting', 'vredesakkoord', 'hiërarchie',
     'resolutie', 'handelsoorlog', 'mensenrechten', 'vrijheid van meningsuiting', 'persvrijheid',
     'integratie', 'asielzoeker', 'statushouder', 'tweede kamer', 'eerste kamer',  'zetel',
     'paspoort', 'douane', 'belastingdienst', 'sociale zekerheid', 'werkloosheid', 'armoede',
@@ -1038,7 +1038,7 @@ const EXTRA_WORD_PARTS = new Set([
 'ment', 'middel', 'minister', 'misdaad', 'monument', 'oord', 'natuurlijk', 'wisseling', 'darmontsteking',
 'moord', 'motor', 'nemer', 'neming', 'netwerk', 'nota', 'officier', 'onderhandeling', 'ontsteking',
 'oorlog', 'overleg', 'oxide', 'pad', 'partij', 'planeet', 'proef', 'punt', 'harmonica', 'ongeschiktheid',
-'raad', 'raam', 'raket', 'recht', 'reis', 'ruimte', 'schap', 'schip', 'schot', 'schutter', 
+'raad', 'raam', 'raket', 'recht', 'reis', 'ruimte', 'schap', 'schip', 'schot', 'schutter', 'staart',
 'scoop', 'sluiting', 'soldaat', 'speler', 'staf', 'stand', 'staat', 'station', 'nationaal',
 'stelsel', 'ster', 'stilstand', 'stof', 'stoel', 'straal', 'sturing', 'systeem', 'tafel', 
 'transport', 'trein', 'tuig', 'tuigage', 'vaart', 'veld', 'verdrag', 'verdediging', 'verkeer', 
@@ -2092,7 +2092,7 @@ function TiebreakerCategoryPicker({ candidateCategories, onCategoryChosen }) {
   );
 }
 
-function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGuessed, onRestart }) {
+function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGuessed, onRestart, onStartTiebreaker }) {
   const { tiedPlayerIndices, tiedTeamGroups, candidateCategories, chosenCategoryId, words, categoryLabel, times, currentStep } = tiebreakerState;
   const allDone = currentStep >= tiedPlayerIndices.length;
 
@@ -2160,29 +2160,46 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
         };
       }).sort((a, b) => a.avgTime - b.avgTime);
 
-      const winnerTime = teamResults[0].avgTime;
-      const hasJointWinner = teamResults.filter(r => r.avgTime === winnerTime).length > 1;
+      const winnerTime = Math.round(teamResults[0].avgTime * 10) / 10;
+      const hasJointWinner = teamResults.filter(r => Math.round(r.avgTime * 10) / 10 === winnerTime).length > 1;
 
       return (
         <div className="screen">
           <div className="score-card">
             <h2 className="score-title">⚡ Tie-breaker resultaten</h2>
-            <div className={`tiebreaker-result-banner ${hasJointWinner ? 'tiebreaker-result-tied' : 'tiebreaker-result-winner'}`}>
-              {hasJointWinner ? (
-                <span className="tiebreaker-result-text-tied">🤝 Nog steeds gelijkspel!</span>
-              ) : (
+            {hasJointWinner ? (
+              <button
+                className="tiebreaker-start-btn"
+                onClick={() => {
+                  const stillTiedIndices = teamResults
+                    .filter(tr => Math.round(tr.avgTime * 10) / 10 === winnerTime)
+                    .flatMap(tr => {
+                      const group = tiedTeamGroups.find(g => g.teamName === tr.teamName);
+                      return group ? group.playerIndices : [];
+                    });
+                  onStartTiebreaker(stillTiedIndices);
+                }}
+              >
+                🤝 Nog steeds gelijkspel! Start opnieuw.
+              </button>
+            ) : (
+              <div className="tiebreaker-result-banner tiebreaker-result-winner">
                 <span className="tiebreaker-result-text-winner">🏆 {teamResults[0].teamName} wint de tie-breaker!</span>
-              )}
-            </div>
+              </div>
+            )}
             <div className="scores-list">
               {teamResults.map((tr, i) => {
                 const tieBadges = ["🥇", "🥈", "🥉"];
                 const sortedPlayers = [...tr.playerResults].sort((a, b) => a.time - b.time);
+                const isTied = Math.round(tr.avgTime * 10) / 10 === winnerTime && hasJointWinner;
+                const rowClass = isTied
+                  ? 'score-row rank-1 rank-tied'
+                  : `score-row rank-${i + 1} rank-final`;
 
                 return (
                   <div key={tr.teamName} style={{marginBottom: i < teamResults.length - 1 ? '10px' : '0'}}>
-                    <div className={`score-row rank-${i + 1} rank-final`} style={{marginBottom: '6px'}}>
-                      <span className="rank-badge">{tieBadges[i] ?? i + 1}</span>
+                    <div className={rowClass} style={{marginBottom: '6px'}}>
+                      <span className="rank-badge">{isTied ? '👑' : (tieBadges[i] ?? i + 1)}</span>
                       <span className="score-name">{tr.teamName}</span>
                       <span className="score-pts tiebreaker-pts">⌀ {tr.avgTime.toFixed(1)}s</span>
                     </div>
@@ -2227,30 +2244,44 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
       name: players[pi],
       time: times[i],
     })).sort((a, b) => a.time - b.time);
-    const winnerTime = results[0].time;
-    const hasJointWinner = results.filter(r => r.time === winnerTime).length > 1;
+    const winnerTime = Math.round(results[0].time * 10) / 10;
+    const hasJointWinner = results.filter(r => Math.round(r.time * 10) / 10 === winnerTime).length > 1;
 
     return (
       <div className="screen">
         <div className="score-card">
           <h2 className="score-title">⚡ Tie-breaker resultaten</h2>
-          <div className={`tiebreaker-result-banner ${hasJointWinner ? 'tiebreaker-result-tied' : 'tiebreaker-result-winner'}`}>
-            {hasJointWinner ? (
-              <span className="tiebreaker-result-text-tied">
-                🤝 Nog steeds gelijkspel!
-              </span>
-            ) : (
+          {hasJointWinner ? (
+            <button
+              className="tiebreaker-start-btn"
+              onClick={() => {
+                const stillTiedIndices = results
+                  .filter(r => Math.round(r.time * 10) / 10 === winnerTime)
+                  .map(r => tiedPlayerIndices.find(pi => players[pi] === r.name))
+                  .filter(pi => pi !== undefined);
+                onStartTiebreaker(stillTiedIndices);
+              }}
+            >
+              🤝 Nog steeds gelijkspel! Start opnieuw.
+            </button>
+          ) : (
+            <div className="tiebreaker-result-banner tiebreaker-result-winner">
               <span className="tiebreaker-result-text-winner">
                 🏆 {results[0].name} wint de tie-breaker!
               </span>
-            )}
-          </div>
+            </div>
+          )}
           <div className="scores-list">
             {results.map((r, i) => {
               const tieBadges = ["🥇", "🥈", "🥉"];
+              const isTied = Math.round(r.time * 10) / 10 === winnerTime && hasJointWinner;
+              const effectiveRank = results.filter(r2 => Math.round(r2.time * 10) / 10 < Math.round(r.time * 10) / 10).length + 1;
+              const rowClass = isTied
+                ? 'score-row rank-1 rank-tied'
+                : `score-row rank-${effectiveRank} rank-final`;
               return (
-                <div key={r.name} className={`score-row rank-${i + 1} rank-final`}>
-                  <span className="rank-badge">{tieBadges[i] ?? i + 1}</span>
+                <div key={r.name} className={rowClass}>
+                  <span className="rank-badge">{isTied ? '👑' : (tieBadges[effectiveRank - 1] ?? effectiveRank)}</span>
                   <span className="score-name">{r.name}</span>
                   <span className="score-pts tiebreaker-pts">
                     {r.time.toFixed(1)}s
@@ -3141,6 +3172,7 @@ export default function App() {
           onCategoryChosen={onTiebreakerCategoryChosen}
           onWordGuessed={onTiebreakerWordGuessed}
           onRestart={onRestart}
+          onStartTiebreaker={onStartTiebreaker}
         />
       )}
 
