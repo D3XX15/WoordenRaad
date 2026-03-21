@@ -400,7 +400,7 @@ const WORDS_BY_CATEGORY = (() => {
     'geruststellen', 'hinderen', 'omkijken', 'troosten', 'vergeven', 'waarschuwen', 'sabbelen',
     'downloaden', 'kleien', 'updaten', 'blaffen', 'grazen', 'grommen', 'kauwen', 'spitten',
     'slikken', 'spugen', 'beslissen', 'fantaseren', 'inbeelden', 'slenteren', 'vlechten',
-    'peinzen', 'raden', 'vergelijken', 'voorspellen'
+    'reflecteren', 'peinzen', 'raden', 'vergelijken', 'voorspellen'
   ];
 
   const emoties = [
@@ -481,7 +481,7 @@ const WORDS_BY_CATEGORY = (() => {
     'injectie', 'keizersnede', 'medicijn', 'migraine', 'MRI', 'virus', 'kleurenblind',
     'obsessie', 'onderbewustzijn', 'operatie', 'overdosis', 'overlevingsdrang', 'pandemie',
     'paranoia', 'persoonlijkheid', 'pijnstiller', 'plasma', 'pols', 'psychiatrie', 'ziekte',
-    'PTSS', 'quarantaine', 'reflex', 'reflectie', 'rehabilitatie', 'ontsteking', 'ziekenhuis',
+    'PTSS', 'quarantaine', 'reflex', 'rehabilitatie', 'ontsteking', 'ziekenhuis',
     'röntgenfoto', 'scalpel', 'schizofrenie', 'stethoscoop', 'stigma', 'stoornis', 'doof',
     'surrogaatmoeder', 'symptoom', 'transplantatie', 'tunnelvisie', 'vaccinatie', 'vaccin',
     'fractuur', 'hechting', 'zwelling', 'reanimatie', 'verband', 'narcose', 'long', 'hart',
@@ -1554,23 +1554,23 @@ const MESSAGES_POOR = [
   () => `Meedoen is belangrijker dan winnen 🫠`,
   () => `Volgende keer eerst je bril opzetten 🤓`,
   () => `De volgende ronde gaat vast beter 😉`,
-  () => `De andere spelers ruiken bloed! 🩸`,
-  () => `De spanning zat er zeker in! 😅`,
+  () => `De andere spelers ruiken bloed 🩸`,
+  () => `De spanning zat er zeker in 😅`,
   () => `Dit was duidelijk een warming-up 🏃`,
   () => `Je was er met je hoofd even niet bij 💭`,
   () => `Zullen we doen alsof dit niet gebeurd is? 🙊`,
   () => `Het lag allemaal aan de woorden 😠`,
-  () => `Je hebt de anderen een kans gegund. Lief! 🎁`,
+  () => `Je gunt de anderen een kans. Lief! 🎁`,
   () => `Geeft niks, iedereen heeft soms een dipje 📉`,
-  () => `De klok was je vijand deze ronde ⏰`,
+  () => `De klok was deze ronde je vijand ⏰`,
   () => `Hoofd omhoog, borst vooruit 💪`,
   () => `Slaap je wel genoeg? 😪`,
   () => `De anderen worden er alleen maar hebberiger van 😈`,
   (_, pts) => `${pts} ${pt(pts)}, de weg omhoog begint hier ⛰️`,
   (_, pts) => `${pts} ${pt(pts)}, misschien even oefenen thuis 🏠`,
-  (_, pts) => `${pts} ${pt(pts)}, maar je hebt het geprobeerd! 🫶`,
-  (_, pts) => `${pts} ${pt(pts)}, maar wel lekker meegespeeld 🎮`,
-  (_, pts) => `${pts} ${pt(pts)}, je kunt alleen maar omhoog ☝️`,
+  (_, pts) => `${pts} ${pt(pts)}. Ach, je hebt het geprobeerd! 🫶`,
+  (_, pts) => `${pts} ${pt(pts)}, maar wel meegespeeld 🎮`,
+  (_, pts) => `${pts} ${pt(pts)}, vanaf hier kan je alleen omhoog ☝️`,
   () => `Even bijkomen en dan weer volle bak! 🔋`,
   () => `De woorden waren dit keer iets te lastig 🤷`,
 ];
