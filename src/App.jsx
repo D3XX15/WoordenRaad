@@ -243,37 +243,29 @@ const WORDS_BY_CATEGORY = (() => {
   ];
 
   const plaatsen = [
-    'apotheek', 'aquaduct', 'aquarium', 'badhuis', 'wielerbaan', 'skatepark',
-    'balie', 'begraafplaats', 'bibliotheek', 'bioscoop', 'bloemenmarkt', 'boekenwinkel',
-    'boerderij', 'bouwplaats', 'bowlingbaan', 'brandweerkazerne', 'brouwerij', 'brug',
-    'café', 'camping', 'campingterrein', 'casino', 'centrum', 'circus', 'grensovergang',
-    'consulaat', 'crematorium', 'dierentuin', 'discotheek', 'fabriek', 'fietsenwinkel',
-    'fontein', 'fruitmarkt', 'gemeentehuis', 'grachtenpand', 'manege', 'markt', 'loods',
-    'gymnasium', 'haven', 'herberg', 'honkbalstadion', 'hostel', 'hotel', 'tribune', 
-    'huis', 'iglo', 'ijsbaan', 'jachthaven', 'kapperszaak', 'kasteel', 'territorium',
-    'megabioscoop', 'monument', 'observatorium', 'dolfinarium', 'landgoed', 'molen',
-    'paleis', 'parkeergarage', 'pier', 'plein', 'poppenkast', 'roltrap', 'buitenwijk',
-    'postkantoor', 'pretpark', 'pyramide', 'racebaan', 'recreatiegebied',
-    'ruïne', 'sauna', 'schaatsbaan', 'school', 'silo', 'drielandenpunt',
-    'sluis', 'speeltuin', 'sporthal', 'stad', 'stadion', 'stadshuis',
-    'strandtent', 'supermarkt', 'tandartspraktijk', 'koffieshop', 'scheepswerf',
-    'toren', 'treinstation', 'universiteit', 'vakantiepark', 'kolenmijn', 'luchthaven',
-    'villa', 'vliegveld', 'voetgangersgebied', 'vuurtoren', 'watertoren',
-    'wegrestaurant', 'windmolen', 'winkelcentrum', 'zwembad', 'binnenstad', 'platteland',
-    'benzinepomp', 'bloemenwinkel', 'boekhandel', 'buurthuis', 'drogisterij', 'garage',
-    'ijssalon', 'kiosk', 'nachtwinkel', 'pannenkoekenhuis', 'parkeerplaats',
-    'slagerij', 'snackbar', 'sportschool', 'stomerij', 'viswinkel', 'warenhuis',
-    'Afrika', 'Azië', 'Europa', 'Noord-Amerika', 'Zuid-Amerika', 'Oceanië',
-    'Himalaya', 'Kaspische Zee', 'Mississippi', 'Nijl', 'Noordzee',
-    'Sahara', 'Thames', 'Corsica', 'Hawaï', 'Kaukasus', 'Siberië',
-    'Sicilië', 'steppe', 'boomhut', 'brandtrap', 'carwash', 'dierenasiel',
-    'fietsbrug', 'gemaal', 'graftombe', 'hertenkamp', 'ijsbaantje', 'kasteelgracht',
-    'kerkhof', 'kinderdagverblijf', 'klimrek', 'klimbos', 'markthal', 'ansichtkaart',
-    'meubelboulevard', 'ophaalbrug', 'plattegrond', 'riolering', 'rotonde',
-    'schaapskooi', 'sportpark', 'stadspark', 'stoep', 'uitkijktoren', 'kroeg',
-    'visvijver', 'voetbalveld', 'volkstuin', 'wijngaard', 'windpark', 'zonnepark',
-    'hutje', 'bungalow', 'studentenhuis', 'flat', 'appartement', 'studio',
-    'boerenschuur', 'stal', 'poolcirkel', 'slachthuis'
+    'apotheek', 'aquaduct', 'aquarium', 'badhuis', 'wielerbaan', 'skatepark', 'balie', 'begraafplaats',
+    'bibliotheek', 'bioscoop', 'bloemenmarkt', 'boekenwinkel', 'boerderij', 'bouwplaats', 'bowlingbaan', 
+    'brandweerkazerne', 'brouwerij', 'brug', 'café', 'camping', 'campingterrein', 'casino', 'centrum',
+    'circus', 'grensovergang', 'consulaat', 'crematorium', 'dierentuin', 'discotheek', 'fabriek',
+    'fietsenwinkel', 'fontein', 'fruitmarkt', 'gemeentehuis', 'grachtenpand', 'manege', 'markt', 'loods',
+    'gymnasium', 'haven', 'herberg', 'honkbalstadion', 'hostel', 'hotel', 'tribune', 'huis', 'iglo', 'ijsbaan',
+    'jachthaven', 'kapperszaak', 'kasteel', 'territorium', 'megabioscoop', 'monument', 'observatorium',
+    'dolfinarium', 'landgoed', 'molen', 'paleis', 'parkeergarage', 'pier', 'plein', 'poppenkast', 'roltrap',
+    'buitenwijk', 'postkantoor', 'pretpark', 'pyramide', 'racebaan', 'recreatiegebied', 'ruïne', 'sauna',
+    'schaatsbaan', 'school', 'silo', 'drielandenpunt', 'sluis', 'speeltuin', 'sporthal', 'stad', 'stadion',
+    'stadshuis', 'hertenkamp', 'gracht', 'strandtent', 'supermarkt', 'tandartspraktijk', 'koffieshop',
+    'scheepswerf', 'toren', 'treinstation', 'universiteit', 'vakantiepark', 'kolenmijn', 'luchthaven',
+    'villa', 'vliegveld', 'voetgangersgebied', 'vuurtoren', 'watertoren', 'wegrestaurant', 'windmolen',
+    'winkelcentrum', 'zwembad', 'binnenstad', 'platteland', 'benzinepomp', 'bloemenwinkel', 'boekhandel',
+    'buurthuis', 'drogisterij', 'garage', 'ijssalon', 'kiosk', 'nachtwinkel', 'pannenkoekenhuis', 'parkeerplaats',
+    'slagerij', 'snackbar', 'sportschool', 'stomerij', 'viswinkel', 'warenhuis', 'kinderdagverblijf',
+    'Afrika', 'Azië', 'Europa', 'Noord-Amerika', 'Zuid-Amerika', 'Oceanië', 'Himalaya', 'Kaspische Zee',
+    'Mississippi', 'Nijl', 'Noordzee', 'Sahara', 'Thames', 'Corsica', 'Hawaï', 'Kaukasus', 'Siberië',
+    'Sicilië', 'fietsbrug', 'gemaal', 'steppe', 'boomhut', 'brandtrap', 'carwash', 'dierenasiel', 
+    'graftombe', 'kerkhof', 'klimrek', 'klimbos', 'markthal', 'ansichtkaart', 'meubelboulevard', 'ophaalbrug',
+    'plattegrond', 'riolering', 'rotonde', 'schaapskooi', 'sportpark', 'stadspark', 'stoep', 'uitkijktoren',
+    'kroeg', 'visvijver', 'voetbalveld', 'volkstuin', 'wijngaard', 'windpark', 'zonnepark', 'hutje', 'bungalow',
+    'studentenhuis', 'flat', 'appartement', 'studio', 'boerenschuur', 'stal', 'poolcirkel', 'slachthuis'
   ];
 
   const religie = [
@@ -603,7 +595,7 @@ const WORDS_BY_CATEGORY = (() => {
     'bevrijding', 'overwinning', 'nederlaag', 'stadsbelegering', 'blokkade', 'kruisboog',  'konvooi', 
     'embargo', 'oorlogsverklaring', 'mobilisatie', 'dienstplicht', 'huurling', 'militie', 'landkaart',
     'reservist', 'veteraan', 'krijgsgevangene', 'onderscheiding', 'verdedigingslinie', 'terugtrekken',
-    'oorlogsgraf', 'herdenkingsmonument', 'militaire parade', 'militaire politie', 'beschietingen',
+    'herdenkingsmonument', 'militaire parade', 'militaire politie', 'beschietingen', 'Harley Davidson',
     'inlichtingendienst', 'geheime dienst', 'informatieoorlog', 'wapenuitrusting', 'lans', 'Jeep',
     'scherpschutter', 'bomopruimer', 'pantserdivisie', 'granaatwerper', 'mortier', 'leger',
     'wapenwedloop', 'atoombom', 'gevecht', 'oorlog', 'strijd', 'concentratiekamp'
@@ -821,7 +813,7 @@ const WORDS_BY_CATEGORY = (() => {
     'door de mand vallen',
     'met de gebakken peren zitten',
     'de koe bij de horens vatten',
-    'met alle winden meedraaien',
+    'met alle winden meewaaien',
     'geen haar op zijn hoofd',
     'uit zijn vel springen',
     'de hand in eigen boezem steken',
@@ -1039,7 +1031,7 @@ const EXTRA_WORD_PARTS = new Set([
 'moord', 'motor', 'nemer', 'neming', 'netwerk', 'nota', 'officier', 'onderhandeling', 'ontsteking',
 'oorlog', 'overleg', 'oxide', 'pad', 'partij', 'planeet', 'proef', 'punt', 'harmonica', 'ongeschiktheid',
 'raad', 'raam', 'raket', 'recht', 'reis', 'ruimte', 'schap', 'schip', 'schot', 'schutter', 'staart',
-'scoop', 'sluiting', 'soldaat', 'speler', 'staf', 'stand', 'staat', 'station', 'nationaal',
+'scoop', 'sluiting', 'soldaat', 'speler', 'staf', 'stand', 'staat', 'station', 'nationaal', 'gezind',
 'stelsel', 'ster', 'stilstand', 'stof', 'stoel', 'straal', 'sturing', 'systeem', 'tafel', 
 'transport', 'trein', 'tuig', 'tuigage', 'vaart', 'veld', 'verdrag', 'verdediging', 'verkeer', 
 'verkiezing', 'verklaring', 'verlening', 'vlak', 'vlucht', 'voertuig', 'voerder', 'vol', 
@@ -1916,8 +1908,8 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
                         <span className="score-members">{team.players.join(", ")}</span>
                       </div>
                       <div className="score-row-right">
-                        <span className="score-pts">{team.avgScore} pt</span>
-                        <div className="score-row-subtext">gem. per speler · totaal {team.totalScore}</div>
+                        <span className="score-pts">⌀ {team.avgScore} pt</span>
+                        <div className="score-row-subtext">totaal {team.totalScore}</div>
                       </div>
                     </div>
                   );
