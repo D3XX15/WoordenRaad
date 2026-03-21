@@ -632,7 +632,7 @@ const WORDS_BY_CATEGORY = (() => {
 
   const ruimte = [
     'astronaut', 'ruimtevaart', 'ruimtewetenschapper', 'raket', 'space shuttle', 'ruimtepak',
-    'maanlander', 'vliegende schotel', 'satelliet', 'telescoop', 'sterrenwacht', 'ruimtestation',
+    'maanlanding', 'vliegende schotel', 'satelliet', 'telescoop', 'sterrenwacht', 'ruimtestation',
     'planeet', 'komeet', 'ruimte', 'melkweg', 'zwart gat', 'supernova', 'lanceerplatform', 'maan',
     'sterrenstelsel', 'meteoor', 'meteoriet', 'Mars', 'Venus', 'Jupiter', 'Saturnus', 'zon', 'ster',
     'Mercurius', 'Neptunus', 'Uranus', 'noorderlicht', 'maansverduistering', 'ruimtesonde', 'sterrenbeeld',
