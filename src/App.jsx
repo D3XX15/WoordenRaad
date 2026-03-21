@@ -273,7 +273,7 @@ const WORDS_BY_CATEGORY = (() => {
     'boeddhisme', 'predikant', 'abdij', 'kathedraal', 'kerk', 'klooster',
     'moskee', 'synagoge', 'tempel', 'kapel', 'orthodox', 'heiden', 'begrafenis',
     'christendom', 'islam', 'jodendom', 'hindoeisme', 'sikhisme', 'calvinisme',
-    'taoisme', 'reformatie', 'protestantisme', 'katholicisme', 'Maarten Luther',
+    'taoïsme', 'reformatie', 'protestants', 'katholicisme', 'Maarten Luther',
     'gebed', 'zonde', 'genade', 'verlossing', 'hemel', 'hel', 'Maria', 'beeldenstorm',
     'vagevuur', 'paradijs', 'karma', 'nirvana', 'ziel', 'heilige geest', 'hagenpreek',
     'schepping', 'doop', 'biecht', 'mis', 'besnijdenis', 'offer', 'zegening', 'zondigen',
@@ -1024,7 +1024,7 @@ const EXTRA_WORD_PARTS = new Set([
 'cel', 'concentratie', 'crisis', 'damp', 'debat', 'deel', 'deeltje', 'democratie', 'deur', 'dienst',
 'energie', 'erij', 'explosie', 'factor', 'fiets', 'front', 'gas', 'gebouw', 'tuin', 'moordenaar',
 'geving', 'gever', 'golf', 'graaf', 'grond', 'haven', 'heid', 'herdenking', 'afdruk', 'therapie',
-'houder', 'hulp', 'informatie', 'ing', 'isme', 'iteit', 'kamer', 'kamp', 'kampioen', 'kant', 
+'houder', 'hulp', 'informatie', 'ing', 'isme', 'iteit', 'kamer', 'kamp', 'kampioen', 'kant',
 'kast', 'kern', 'kracht', 'krijgs', 'kunde', 'kwartier', 'leger', 'lijn', 'prijs', 'ontduiking',
 'linie', 'logie', 'loos', 'lucht', 'machine', 'macht', 'massa', 'maatregel', 'meester', 'darm',
 'ment', 'middel', 'minister', 'misdaad', 'monument', 'oord', 'natuurlijk', 'wisseling', 'darmontsteking',
@@ -1032,7 +1032,7 @@ const EXTRA_WORD_PARTS = new Set([
 'oorlog', 'overleg', 'oxide', 'pad', 'partij', 'planeet', 'proef', 'punt', 'harmonica', 'ongeschiktheid',
 'raad', 'raam', 'raket', 'recht', 'reis', 'ruimte', 'schap', 'schip', 'schot', 'schutter', 'staart',
 'scoop', 'sluiting', 'soldaat', 'speler', 'staf', 'stand', 'staat', 'station', 'nationaal', 'gezind',
-'stelsel', 'ster', 'stilstand', 'stof', 'stoel', 'straal', 'sturing', 'systeem', 'tafel', 
+'stelsel', 'ster', 'stilstand', 'stof', 'stoel', 'straal', 'sturing', 'systeem', 'tafel', 'platform',
 'transport', 'trein', 'tuig', 'tuigage', 'vaart', 'veld', 'verdrag', 'verdediging', 'verkeer', 
 'verkiezing', 'verklaring', 'verlening', 'vlak', 'vlucht', 'voertuig', 'voerder', 'vol', 
 'vorming', 'vuur', 'waardig', 'wagen', 'wapen', 'water', 'wedstrijd', 'weer', 'werker', 
@@ -1620,7 +1620,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
           finishRoundRef.current(scoresRef.current, wordIndexRef.current);
         } else {
           // Geen actieve penalty: geef speler 10 seconden extra om woord goed te rekenen
-          let graceTime = 9;
+          let graceTime = 10;
           setGraceCountdown(graceTime);
           graceTimerRef.current = setInterval(() => {
             graceTime -= 1;
@@ -1801,9 +1801,10 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
             <div className="word-anchor">
               <div className="word-counter">woord {wordIndex + 1}</div>
               <div key={wordIndex} className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ? hyphenateWord(currentWord) : "— geen woorden meer —"}</div>
-              <div className={`times-up-banner${timesUp ? '' : isCurrentBonus ? ' bonus-banner' : ' category-banner'}`}>
+              <div className={`times-up-banner${timesUp ? ' grace-active' : isCurrentBonus ? ' bonus-banner' : ' category-banner'}`}
+                >
                 {timesUp
-                  ? `⏰ Tijd is om — nog ${graceCountdown !== null ? graceCountdown : '…'}s om te raden!`
+                  ? <span>⏰ Tijd is om — nog <span style={{display:'inline-block', minWidth:'1.5ch', textAlign:'center'}}>{graceCountdown !== null ? graceCountdown : '…'}</span>s om te raden!</span>
                   : isCurrentBonus
                     ? '⭐ BONUSGEZEGDE — 3 punten!'
                     : currentWord ? (WORD_TO_CATEGORY[currentWord]?.label ?? '📦 Categorie') : ''}
@@ -1829,7 +1830,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   );
 }
 
-function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRestart, onContinue, onShowStats, teams, teamScores, onStartTiebreaker, playedIndices }) {
+function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRestart, onContinue, onShowStats, teams, teamScores, onStartTiebreaker }) {
   const isLast = currentRound >= totalRounds;
 
   // Team mode: sorteer teams op gemiddelde score per speler en bewaar originalIndex
@@ -1846,14 +1847,19 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
 
   // Individueel: sorteer spelers op score
   const sortedPlayers = !teams
-    ? [...players].map((p, i) => ({ name: p, score: scores[i] })).sort((a, b) => b.score - a.score)
+    ? [...players].map((p, i) => ({ name: p, score: scores[i] })).sort((a, b) => {
+      if (a.score === null && b.score === null) return 0;
+      if (a.score === null) return 1;
+      if (b.score === null) return -1;
+      return b.score - a.score;
+    })
     : null;
 
   // Gelijkspel detectie (alleen bij eindstand)
   let tiedPlayerIndices = null;
   if (isLast && !teams) {
-    const topScore = Math.max(...scores);
-    const tied = scores.map((s, i) => ({ s, i })).filter(x => x.s === topScore);
+    const topScore = Math.max(...scores.filter(s => s !== null));
+    const tied = scores.map((s, i) => ({ s, i })).filter(x => x.s !== null && x.s === topScore);
     if (tied.length > 1) tiedPlayerIndices = tied.map(x => x.i);
   }
   
@@ -1916,27 +1922,29 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
                 });
               })()
             : (() => {
-                const topScore = sortedPlayers[0]?.score;
+                const topScore = sortedPlayers.find(p => p.score !== null)?.score ?? null;
                 const medals = ["🥇","🥈","🥉"];
                 // Effectieve rang: aantal spelers met strikt hogere score + 1
-                const getEffectiveRank = (score) => sortedPlayers.filter(p2 => p2.score > score).length + 1;
+                const getEffectiveRank = (score) => score === null ? null : sortedPlayers.filter(p2 => p2.score !== null && p2.score > score).length + 1;
                 // Gelijkspel detectie per plek
-                const firstPlaceTied = isLast && sortedPlayers.filter(p => p.score === topScore).length > 1;
-                const interimFirstPlaceTied = !isLast && sortedPlayers.filter(p => p.score === topScore).length > 1;
+                const firstPlaceTied = isLast && topScore !== null && sortedPlayers.filter(p => p.score === topScore).length > 1;
+                const interimFirstPlaceTied = !isLast && topScore !== null && sortedPlayers.filter(p => p.score === topScore).length > 1;
                 return sortedPlayers.map((p, i) => {
                   const effectiveRank = getEffectiveRank(p.score);
                   const isTiedFinal = firstPlaceTied && p.score === topScore;
                   const isTiedInterim = interimFirstPlaceTied && p.score === topScore;
                   const originalIdx = players.indexOf(p.name);
-                  const hasPlayed = !isLast && (playedIndices?.has(originalIdx) ?? false);
-                  const isTopScore = p.score === topScore;
+                  const hasPlayed = p.score !== null;
+                  const isTopScore = topScore !== null && p.score === topScore;
                   const badge = isLast
                     ? (isTiedFinal ? "👑" : (medals[effectiveRank - 1] ?? effectiveRank))
-                    : (isTopScore ? "👑" : effectiveRank);
-                  const interimClass = isTiedInterim
-                    ? "rank-interim-tied"
-                    : (isTopScore ? "rank-interim" : (hasPlayed ? "rank-interim-played" : "rank-interim"));
-                  const rowClass = `score-row rank-${effectiveRank} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : interimClass}`;
+                    : (!hasPlayed ? "—" : isTopScore ? "👑" : effectiveRank);
+                  const interimClass = !hasPlayed
+                    ? "rank-interim-unplayed"
+                    : isTiedInterim
+                      ? "rank-interim-tied"
+                      : (isTopScore ? "rank-interim" : "rank-interim-played");
+                  const rowClass = `score-row rank-${effectiveRank ?? 99} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : interimClass}`;
                   return (
                     <div
                       key={p.name}
@@ -1945,7 +1953,7 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
                     >
                       <span className="rank-badge">{badge}</span>
                       <span className="score-name">{p.name}</span>
-                      <span className="score-pts">{p.score} pt</span>
+                      <span className="score-pts">{p.score !== null ? `${p.score} pt` : "—"}</span>
                     </div>
                   );
                 });
@@ -2019,7 +2027,7 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, onBack }) {
         </div>
 
         <div className="stats-player-name">{players[activePlayer]}</div>
-        <div className="stats-total-score">{scores[activePlayer]} {pt(scores[activePlayer])}</div>
+        <div className="stats-total-score">{scores[activePlayer] ?? 0} {pt(scores[activePlayer] ?? 0)}</div>
 
         {/* Overview grid */}
         <div className="stats-grid">
@@ -2424,7 +2432,7 @@ export default function App() {
   };
 
   const startGame = (names, time, teamsData, categories) => {
-    const empty = Array(names.length).fill(0);
+    const empty = Array(names.length).fill(null);
     setPlayers(names);
     setScores(empty);
     setCurrentPlayerIdx(0);
@@ -2489,7 +2497,7 @@ export default function App() {
     const totalPoints = correct + bonusPoints;
 
     const newScores = [...scores];
-    newScores[currentPlayerIdx] += totalPoints;
+    newScores[currentPlayerIdx] = (newScores[currentPlayerIdx] ?? 0) + totalPoints;
     setScores(newScores);
 
     if (teams) {
@@ -2917,6 +2925,15 @@ export default function App() {
           background: rgba(248,113,113,0.12); border: 3px solid rgba(248,113,113,0.35); border-radius: 12px;
           padding: 8px 16px; text-align: center; min-height: 40px; margin-top: 20px;
           animation: pulse-red-banner 1.2s ease-in-out infinite;
+          position: relative; overflow: hidden;
+        }
+        .times-up-banner.grace-active::before {
+          content: ''; position: absolute; top: 0; left: 0;
+          width: 100%; height: 100%;
+          background: rgba(248,113,113,0.22);
+          animation: grace-drain 10s linear forwards;
+          border-radius: 9px 0 0 9px;
+          pointer-events: none;
         }
         .times-up-banner.bonus-banner {
           color: #fb923c; background: rgba(251,146,60,0.12); border-color: rgba(251,146,60,0.35);
@@ -2994,6 +3011,7 @@ export default function App() {
         
         .score-row.rank-interim-played { background: rgba(167,139,250,0.08); border: 3px solid rgba(167,139,250,0.5); }
         .score-row.rank-interim-played .score-pts { color: #a78bfa; }
+        .score-row.rank-interim-unplayed { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
 
         /* Eindstand */
         .score-row.rank-1.rank-final { background: rgba(251,191,36,0.08); border: 3px solid #fbbf24; }
@@ -3121,6 +3139,7 @@ export default function App() {
         @keyframes flash-bonus-anim { 0% { background: rgba(251,146,60,0); } 30% { background: rgba(251,146,60,0.2); } 100% { background: rgba(251,146,60,0); } }
         @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
         @keyframes penalty-drain { from { width: 100%; } to { width: 0%; } }
+        @keyframes grace-drain { from { width: 100%; } to { width: 0%; } }
         @keyframes pulse-red-banner { 0%, 100% { box-shadow: 0 0 6px rgba(248,113,113,0.4); } 50% { box-shadow: 0 0 14px rgba(248,113,113,0.8); } }
         @keyframes pulse-orange-banner { 0%, 100% { box-shadow: 0 0 6px rgba(251,146,60,0.4); } 50% { box-shadow: 0 0 14px rgba(251,146,60,0.8); } }
         @keyframes ring { 0% { transform: rotate(0deg); } 15% { transform: rotate(18deg); } 30% { transform: rotate(-16deg); } 45% { transform: rotate(14deg); } 60% { transform: rotate(-10deg); } 75% { transform: rotate(6deg); } 90% { transform: rotate(-3deg); } 100% { transform: rotate(0deg); } }
@@ -3173,7 +3192,6 @@ export default function App() {
           teams={teams}
           teamScores={teamScores}
           onStartTiebreaker={onStartTiebreaker}
-          playedIndices={new Set(playOrder.slice(0, playOrderPos + 1))}
         />
       )}
 
