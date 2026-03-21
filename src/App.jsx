@@ -1604,6 +1604,8 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const timesUpRef = useRef(false);
   const [done, setDone] = useState(false);
   const timerRef = useRef(null);
+  const graceTimerRef = useRef(null);
+  const [graceCountdown, setGraceCountdown] = useState(null);
   const wordResultsRef = useRef([]); // [{word, guessed, isBonus}]
   const startTimeRef = useRef(null);
 
@@ -1624,6 +1626,19 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
           skipPenaltyRef.current = 0;
           setSkipPenalty(0);
           finishRoundRef.current(scoresRef.current, wordIndexRef.current);
+        } else {
+          // Geen actieve penalty: geef speler 10 seconden extra om woord goed te rekenen
+          let graceTime = 9;
+          setGraceCountdown(graceTime);
+          graceTimerRef.current = setInterval(() => {
+            graceTime -= 1;
+            setGraceCountdown(graceTime);
+            if (graceTime <= 0) {
+              clearInterval(graceTimerRef.current);
+              graceTimerRef.current = null;
+              finishRoundRef.current(scoresRef.current, wordIndexRef.current);
+            }
+          }, 1000);
         }
       }
     }, 50);
@@ -1645,6 +1660,10 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const streakRef = useRef(0);
 
   const finishRound = (finalScores, finalWordIndex) => {
+    if (graceTimerRef.current) {
+      clearInterval(graceTimerRef.current);
+      graceTimerRef.current = null;
+    }
     const totalScore = finalScores.correct + wordResultsRef.current.reduce((sum, r) => sum + (r.bonusPts || 0), 0);
     endMessageRef.current = getRandomEndMessage(finalScores.correct, roundTime, totalScore);
     setDone(true);
@@ -1716,6 +1735,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
 
   useEffect(() => () => {
     clearInterval(penaltyRef.current);
+    clearInterval(graceTimerRef.current);
     clearTimeout(roundEndTimeoutRef.current);
   }, []);
 
@@ -1791,7 +1811,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
               <div key={wordIndex} className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ? hyphenateWord(currentWord) : "— geen woorden meer —"}</div>
               <div className={`times-up-banner${timesUp ? '' : isCurrentBonus ? ' bonus-banner' : ' category-banner'}`}>
                 {timesUp
-                  ? '⏰ Tijd is om — maak dit woord nog af!'
+                  ? `⏰ Tijd is om — nog ${graceCountdown !== null ? graceCountdown : '…'}s om te raden!`
                   : isCurrentBonus
                     ? '⭐ BONUSGEZEGDE — 3 punten!'
                     : currentWord ? (WORD_TO_CATEGORY[currentWord]?.label ?? '📦 Categorie') : ''}
@@ -2160,8 +2180,8 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
         };
       }).sort((a, b) => a.avgTime - b.avgTime);
 
-      const winnerTime = Math.round(teamResults[0].avgTime * 10) / 10;
-      const hasJointWinner = teamResults.filter(r => Math.round(r.avgTime * 10) / 10 === winnerTime).length > 1;
+      const winnerTime = Math.round(teamResults[0].avgTime * 100) / 100;
+      const hasJointWinner = teamResults.filter(r => Math.round(r.avgTime * 100) / 100 === winnerTime).length > 1;
 
       return (
         <div className="screen">
@@ -2172,7 +2192,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
                 className="tiebreaker-start-btn"
                 onClick={() => {
                   const stillTiedIndices = teamResults
-                    .filter(tr => Math.round(tr.avgTime * 10) / 10 === winnerTime)
+                    .filter(tr => Math.round(tr.avgTime * 100) / 100 === winnerTime)
                     .flatMap(tr => {
                       const group = tiedTeamGroups.find(g => g.teamName === tr.teamName);
                       return group ? group.playerIndices : [];
@@ -2191,7 +2211,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
               {teamResults.map((tr, i) => {
                 const tieBadges = ["🥇", "🥈", "🥉"];
                 const sortedPlayers = [...tr.playerResults].sort((a, b) => a.time - b.time);
-                const isTied = Math.round(tr.avgTime * 10) / 10 === winnerTime && hasJointWinner;
+                const isTied = Math.round(tr.avgTime * 100) / 100 === winnerTime && hasJointWinner;
                 const rowClass = isTied
                   ? 'score-row rank-1 rank-tied'
                   : `score-row rank-${i + 1} rank-final`;
@@ -2201,7 +2221,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
                     <div className={rowClass} style={{marginBottom: '6px'}}>
                       <span className="rank-badge">{isTied ? '👑' : (tieBadges[i] ?? i + 1)}</span>
                       <span className="score-name">{tr.teamName}</span>
-                      <span className="score-pts tiebreaker-pts">⌀ {tr.avgTime.toFixed(1)}s</span>
+                      <span className="score-pts tiebreaker-pts">⌀ {tr.avgTime.toFixed(2)}s</span>
                     </div>
                     <div style={{
                       marginLeft: '14px',
@@ -2223,7 +2243,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
                           <span style={{fontSize:'14px', fontWeight:700, color:'rgba(255,255,255,0.75)'}}>
                             {pr.name}
                           </span>
-                          <span style={{fontSize:'14px', fontWeight:800, color:'rgba(255,255,255,0.6)'}}>{pr.time.toFixed(1)}s</span>
+                          <span style={{fontSize:'14px', fontWeight:800, color:'rgba(255,255,255,0.6)'}}>{pr.time.toFixed(2)}s</span>
                         </div>
                       ))}
                     </div>
@@ -2244,8 +2264,8 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
       name: players[pi],
       time: times[i],
     })).sort((a, b) => a.time - b.time);
-    const winnerTime = Math.round(results[0].time * 10) / 10;
-    const hasJointWinner = results.filter(r => Math.round(r.time * 10) / 10 === winnerTime).length > 1;
+    const winnerTime = Math.round(results[0].time * 100) / 100;
+    const hasJointWinner = results.filter(r => Math.round(r.time * 100) / 100 === winnerTime).length > 1;
 
     return (
       <div className="screen">
@@ -2256,7 +2276,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
               className="tiebreaker-start-btn"
               onClick={() => {
                 const stillTiedIndices = results
-                  .filter(r => Math.round(r.time * 10) / 10 === winnerTime)
+                  .filter(r => Math.round(r.time * 100) / 100 === winnerTime)
                   .map(r => tiedPlayerIndices.find(pi => players[pi] === r.name))
                   .filter(pi => pi !== undefined);
                 onStartTiebreaker(stillTiedIndices);
@@ -2274,8 +2294,8 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
           <div className="scores-list">
             {results.map((r, i) => {
               const tieBadges = ["🥇", "🥈", "🥉"];
-              const isTied = Math.round(r.time * 10) / 10 === winnerTime && hasJointWinner;
-              const effectiveRank = results.filter(r2 => Math.round(r2.time * 10) / 10 < Math.round(r.time * 10) / 10).length + 1;
+              const isTied = Math.round(r.time * 100) / 100 === winnerTime && hasJointWinner;
+              const effectiveRank = results.filter(r2 => Math.round(r2.time * 100) / 100 < Math.round(r.time * 100) / 100).length + 1;
               const rowClass = isTied
                 ? 'score-row rank-1 rank-tied'
                 : `score-row rank-${effectiveRank} rank-final`;
@@ -2284,7 +2304,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
                   <span className="rank-badge">{isTied ? '👑' : (tieBadges[effectiveRank - 1] ?? effectiveRank)}</span>
                   <span className="score-name">{r.name}</span>
                   <span className="score-pts tiebreaker-pts">
-                    {r.time.toFixed(1)}s
+                    {r.time.toFixed(2)}s
                   </span>
                 </div>
               );
