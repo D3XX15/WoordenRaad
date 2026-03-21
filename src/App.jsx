@@ -905,7 +905,7 @@ const WORDS_BY_CATEGORY = (() => {
     'schouders ergens onder zetten',
     'iemand een loer draaien',
     'met fluwelen handschoen aanpakken',
-    'niet alles is goud wat er blinkt',
+    'het is niet al goud wat er blinkt',
     'het achter de ellebogen hebben',
     'de knoop doorhakken',
     'ergens geen doekjes omwinden',
@@ -1806,7 +1806,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
                 {timesUp
                   ? <span>⏰ Tijd is om — nog <span style={{display:'inline-block', minWidth:'1.5ch', textAlign:'center'}}>{graceCountdown !== null ? graceCountdown : '…'}</span>s om te raden!</span>
                   : isCurrentBonus
-                    ? '⭐ BONUSGEZEGDE — 3 punten!'
+                    ? '⭐ Bonusgezegde — 3 punten!'
                     : currentWord ? (WORD_TO_CATEGORY[currentWord]?.label ?? '📦 Categorie') : ''}
               </div>
             </div>
