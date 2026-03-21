@@ -527,7 +527,7 @@ const WORDS_BY_CATEGORY = (() => {
     'raadslid', 'gedeputeerde', 'staatsschuld', 'BTW', 'inkomstenbelasting', 'subjectief', 'objectief',
     'vermogensbelasting', 'accijns', 'handelsakkoord', 'handelspartner', 'stelling', 'autonoom',
     'gezondheidszorg', 'pensioenstelsel', 'politieke partij', 'handelsverdrag', 'demissionair kabinet',
-    'volksgezondheid', 'pensioenfonds', 'arbeidsongeschiktheid', 'uitkeringsinstantie', 'vice-premier',
+    'volksgezondheid', 'pensioenfonds', 'arbeidsongeschiktheid', 'ministerie', 'vice-premier',
     'partijcongres', 'ledenraadpleging', 'coalitiekabinet', 'minderheidskabinet', 'hoorzitting',
     'kamerdebat', 'fractieleider', 'provinciebestuur', 'kabinetscrisis', 'motie van wantrouwen'
   ];
@@ -1037,7 +1037,7 @@ const EXTRA_WORD_PARTS = new Set([
 'linie', 'logie', 'loos', 'lucht', 'machine', 'macht', 'massa', 'maatregel', 'meester', 'darm',
 'ment', 'middel', 'minister', 'misdaad', 'monument', 'oord', 'natuurlijk', 'wisseling', 'darmontsteking',
 'moord', 'motor', 'nemer', 'neming', 'netwerk', 'nota', 'officier', 'onderhandeling', 'ontsteking',
-'oorlog', 'overleg', 'oxide', 'pad', 'partij', 'planeet', 'proef', 'punt', 'harmonica',
+'oorlog', 'overleg', 'oxide', 'pad', 'partij', 'planeet', 'proef', 'punt', 'harmonica', 'ongeschiktheid',
 'raad', 'raam', 'raket', 'recht', 'reis', 'ruimte', 'schap', 'schip', 'schot', 'schutter', 
 'scoop', 'sluiting', 'soldaat', 'speler', 'staf', 'stand', 'staat', 'station', 'nationaal',
 'stelsel', 'ster', 'stilstand', 'stof', 'stoel', 'straal', 'sturing', 'systeem', 'tafel', 
@@ -2203,8 +2203,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
                           borderRadius: '10px',
                           background: 'rgba(255,255,255,0.04)',
                         }}>
-                          <span style={{display:'flex', alignItems:'center', gap:'7px', fontSize:'14px', fontWeight:700, color:'rgba(255,255,255,0.75)'}}>
-                            <span style={{fontSize:'13px'}}>{j + 1}.</span>
+                          <span style={{fontSize:'14px', fontWeight:700, color:'rgba(255,255,255,0.75)'}}>
                             {pr.name}
                           </span>
                           <span style={{fontSize:'14px', fontWeight:800, color:'rgba(255,255,255,0.6)'}}>{pr.time.toFixed(1)}s</span>
