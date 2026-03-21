@@ -942,7 +942,7 @@ const WORDS_BY_CATEGORY = (() => {
     'de puntjes op de i zetten',
     'iets onder de loep nemen',
     'een oogje in het zeil houden',
-    'de teugels in handen hebben',
+    'de touwtjes in handen hebben',
     'iets op de lange baan schuiven',
     'het hoofd boven water houden',
     'geen blad voor de mond nemen',
@@ -1579,8 +1579,6 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const skipCountRef = useRef(0);
   const [streak, setStreak] = useState(0);
   const streakRef = useRef(0);
-  const [showOnFire, setShowOnFire] = useState(false);
-  const onFireTimeoutRef = useRef(null);
 
   const finishRound = (finalScores, finalWordIndex) => {
     const totalScore = finalScores.correct + wordResultsRef.current.reduce((sum, r) => sum + (r.bonusPts || 0), 0);
@@ -1609,11 +1607,6 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
     const newStreak = streakRef.current + 1;
     streakRef.current = newStreak;
     setStreak(newStreak);
-    if (newStreak === 5) {
-      setShowOnFire(true);
-      clearTimeout(onFireTimeoutRef.current);
-      onFireTimeoutRef.current = setTimeout(() => setShowOnFire(false), 2000);
-    }
     if (timesUpRef.current) {
       finishRound(newScores, wordIndexRef.current);
     }
@@ -1632,7 +1625,6 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
     // Streak resetten bij overslaan
     streakRef.current = 0;
     setStreak(0);
-    setShowOnFire(false);
     // Alleen penalty starten als tijd nog niet verstreken is
     if (timesUpRef.current) {
       finishRound(newScores, wordIndexRef.current);
@@ -1661,7 +1653,6 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   useEffect(() => () => {
     clearInterval(penaltyRef.current);
     clearTimeout(roundEndTimeoutRef.current);
-    clearTimeout(onFireTimeoutRef.current);
   }, []);
 
   const pct = timeRemaining / roundTime;
@@ -1696,17 +1687,16 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
           </svg>
         </div>
         <div className="round-stats">
-          <span className="stat correct-stat">✓ {scores.correct}</span>
-          <span className="stat skip-stat">↷ {scores.skipped}</span>
-          {streak >= 3 && !done && (
-            <span className="stat streak-stat">🔥 {streak}</span>
-          )}
+          <span className={`stat ${streak >= 3 ? "correct-stat-fire" : "correct-stat"}`}>
+            <span className="stat-icon">{streak >= 3 ? "🔥" : "✓"}</span>
+            <span>{scores.correct}</span>
+          </span>
+          <span className="stat skip-stat">
+            <span className="stat-icon">↷</span>
+            <span>{scores.skipped}</span>
+          </span>
         </div>
       </div>
-
-      {showOnFire && (
-        <div className="on-fire-banner">🔥 On fire! 🔥</div>
-      )}
 
       <div className="word-stage">
         {done ? (
@@ -2677,19 +2667,15 @@ export default function App() {
         .timer-ring { animation: ring 0.5s infinite; transform-origin: 50px 50px; }
 
         .round-stats { display: flex; gap: 8px; flex-shrink: 0; margin-left: auto; }
-        .stat { font-size: 14px; font-weight: 800; padding: 5px 10px; border-radius: 20px; white-space: nowrap; }
-        .correct-stat { background: rgba(74,222,128,0.2); color: #4ade80; }
-        .skip-stat { background: rgba(251,191,36,0.15); color: #fbbf24; }
-        .streak-stat { background: rgba(251,146,60,0.2); color: #fb923c; animation: streak-pulse 0.6s ease; }
-        .round-stats-cat { font-size: 12px; color: rgba(255,255,255,0.4); }
-
-        .on-fire-banner {
-          font-family: 'Righteous', cursive; font-size: clamp(22px, 6vw, 32px);
-          color: #fb923c; text-align: center; letter-spacing: 0.04em;
-          animation: on-fire-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-          text-shadow: 0 0 20px rgba(251,146,60,0.6), 0 0 40px rgba(251,146,60,0.3);
-          margin-bottom: 4px;
+        .stat {
+          font-size: 14px; font-weight: 800; padding: 5px 10px; border-radius: 20px; white-space: nowrap;
+          display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-width: 52px;
         }
+        .stat-icon { display: flex; align-items: center; justify-content: center; line-height: 1; }
+        .correct-stat { background: rgba(74,222,128,0.2); color: #4ade80; }
+        .correct-stat-fire { background: rgba(251,146,60,0.25); color: #fb923c; text-shadow: 0 0 8px rgba(251,146,60,0.7); transition: background 0.3s, color 0.3s; }
+        .skip-stat { background: rgba(251,191,36,0.15); color: #fbbf24; }
+        .round-stats-cat { font-size: 12px; color: rgba(255,255,255,0.4); }
 
         .word-stage {
           flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -2923,7 +2909,6 @@ export default function App() {
         @keyframes ring { 0% { transform: rotate(0deg); } 15% { transform: rotate(18deg); } 30% { transform: rotate(-16deg); } 45% { transform: rotate(14deg); } 60% { transform: rotate(-10deg); } 75% { transform: rotate(6deg); } 90% { transform: rotate(-3deg); } 100% { transform: rotate(0deg); } }
         @keyframes pulse-gold { 0%, 100% { box-shadow: 0 0 0 0 rgba(251,191,36,0.4); } 50% { box-shadow: 0 0 0 8px rgba(251,191,36,0); } }
         @keyframes streak-pulse { 0% { transform: scale(0.7); opacity: 0; } 60% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
-        @keyframes on-fire-in { 0% { transform: scale(0.5) translateY(-10px); opacity: 0; } 70% { transform: scale(1.1) translateY(0); } 100% { transform: scale(1); opacity: 1; } }
 
         /* ── Media Queries ── */
         @media (max-width: 380px) {
