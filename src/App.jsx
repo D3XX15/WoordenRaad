@@ -207,8 +207,8 @@ const WORDS_BY_CATEGORY = (() => {
     'es', 'iep', 'beuk', 'hulst', 'klimop', 'varens', 'stromend water', 'madeliefje', 'distel',
     'steen', 'zeegras', 'braam', 'eikel', 'dennenappel', 'framboos', 'boomgaard', 'boterbloem',
     'vruchtvlees', 'stuifmeel', 'dooi', 'rijp', 'ijzel', 'aardkorst', 'lelie', 'magma', 'munt',
-    'bladerdek', 'conifeer', 'den', 'gebergte', 'graniet', 'horizon', 'kalksteen',
-    'riviermonding', 'winter', 'wind', 'sloot', 'vloedgolf', 'wad', 'zwam'
+    'bladerdek', 'conifeer', 'den', 'gebergte', 'graniet', 'horizon', 'kalksteen', 'vloedgolf',
+    'fotosynthese', 'riviermonding', 'winter', 'wind', 'sloot', 'wad', 'zwam'
   ];
 
   const vervoer = [
@@ -464,7 +464,7 @@ const WORDS_BY_CATEGORY = (() => {
   const wetenschap = [
     'algoritme', 'ampère', 'atoom', 'atoomkern', 'barometer', 'biologie', 'scheikundige',
     'controlegroep', 'correlatie', 'deeltjesversneller', 'DNA', 'elektriciteit', 'celsius',
-    'elektron', 'element', 'evolutie', 'experiment', 'fotosynthese', 'fout', 'thermometer',
+    'elektron', 'element', 'evolutie', 'experiment', 'thermometer',
     'gen', 'genetica', 'geologie', 'golflengte', 'grafiek', 'histogram', 'nucleaire reactor',
     'foutmarge', 'frequentie', 'frictie', 'geigerteller', 'geleider', 'gemiddelde', 'celkern',
     'hologram', 'hypothese', 'implosie', 'infrarood', 'informatica', 'isolatie', 'centrifuge',
