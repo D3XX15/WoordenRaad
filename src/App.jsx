@@ -1037,7 +1037,7 @@ const EXTRA_WORD_PARTS = new Set([
 'verkiezing', 'verklaring', 'verlening', 'vlak', 'vlucht', 'voertuig', 'voerder', 'vol', 
 'vorming', 'vuur', 'waardig', 'wagen', 'wapen', 'water', 'wedstrijd', 'weer', 'werker', 
 'wet', 'omelet', 'wetenschap', 'wiel', 'weg', 'zelfmoord', 'zijde', 'zorg', 'zuur',
-'divisie', 'schuiver'
+'aftrek', 'getrokken', 'divisie', 'schuiver'
 ]);
 
 function hyphenateWord(word) {
