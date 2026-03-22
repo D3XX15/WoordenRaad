@@ -2929,7 +2929,7 @@ export default function App() {
           pointer-events: none;
         }
         .times-up-banner.bonus-banner {
-          color: #f59e0b; background: rgba(245,158,11, 0.05); border-color: rgba(245,158,11, 0.25);
+          color: #f59e0b; background: rgba(245,158,11, 0.08); border-color: rgba(245,158,11, 0.26);
           animation: none;
         }
         .times-up-banner.category-banner {
