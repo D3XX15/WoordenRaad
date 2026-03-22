@@ -2909,7 +2909,8 @@ export default function App() {
           max-width: 100%; padding: 0 8px; text-align: center;
         }
         .current-word.bonus-word {
-          background: linear-gradient(135deg, #fb923c, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+          background: linear-gradient(135deg, #f5c842, #e6b800); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
 
         .times-up-banner {
@@ -2928,8 +2929,8 @@ export default function App() {
           pointer-events: none;
         }
         .times-up-banner.bonus-banner {
-          color: #fb923c; background: rgba(251,146,60,0.12); border-color: rgba(251,146,60,0.35);
-
+          color: #f5c842; background: rgba(245, 200, 66, 0.12); border-color: rgba(245, 200, 66, 0.35);
+          animation: none;
         }
         .times-up-banner.category-banner {
           color: #a78bfa; background: rgba(167,139,250,0.10); border-color: rgba(167,139,250,0.30);
