@@ -1799,7 +1799,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
                 {timesUp
                   ? <span>⏰ Tijd is om — nog <span style={{display:'inline-block', minWidth:'1.5ch', textAlign:'center'}}>{graceCountdown !== null ? graceCountdown : '…'}</span>s om te raden!</span>
                   : isCurrentBonus
-                    ? '⭐ Bonusgezegde — 3 punten!'
+                    ? '⭐ BONUSGEZEGDE — 3 punten!'
                     : currentWord ? (WORD_TO_CATEGORY[currentWord]?.label ?? '📦 Categorie') : ''}
               </div>
             </div>
