@@ -1856,8 +1856,9 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
     if (tied.length > 1) tiedPlayerIndices = tied.map(x => x.i);
   }
   
+  const topAvg = sortedTeams ? Math.max(...sortedTeams.map(t => t.avgScore)) : null;
+
   if (isLast && teams) {
-    const topAvg = Math.max(...sortedTeams.map(t => t.avgScore));
     const tiedTeams = sortedTeams.filter(t => t.avgScore === topAvg);
     if (tiedTeams.length > 1) {
       // Geef alle spelers van elk gebonden team mee (per team gegroepeerd)
