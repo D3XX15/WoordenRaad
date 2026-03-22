@@ -1141,7 +1141,6 @@ function shuffle(arr) {
 // ── Screens ──────────────────────────────────────────────────────────────────
 
 function SetupScreen({ onStart }) {
-  const [count, setCount] = useState(3);
   const [names, setNames] = useState(["Dennis", "Marion", "Theo"]);
   const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
   const [teamMode, setTeamMode] = useState(false);
@@ -1155,12 +1154,10 @@ function SetupScreen({ onStart }) {
   const toggleTeamMode = () => {
     setTeamMode((prev) => {
       if (!prev) {
-        setCount(2);
         setTeamSizes([2, 2]);
         setTeamNames(["Team 1", "Team 2"]);
         setNames(Array(4).fill(""));
       } else {
-        setCount(3);
         setNames(["Dennis", "Marion", "Theo"]);
       }
       return !prev;
@@ -1174,12 +1171,10 @@ function SetupScreen({ onStart }) {
         setTeamSizes(newTeamSizes);
         setTeamNames(prev => [...prev, `Team ${prev.length + 1}`]);
         setNames(prev => [...prev, "", ""]);
-        setCount(newTeamSizes.length);
       }
     } else {
       if (names.length < 10) {
         setNames(prev => [...prev, ""]);
-        setCount(prev => prev + 1);
       }
     }
   };
@@ -1198,12 +1193,10 @@ function SetupScreen({ onStart }) {
           next.splice(offset, numToRemove);
           return next;
         });
-        setCount(newSizes.length);
       }
     } else {
       if (names.length > 2) {
         setNames(prev => prev.filter((_, i) => i !== index));
-        setCount(prev => prev - 1);
       }
     }
   };
@@ -1240,7 +1233,7 @@ function SetupScreen({ onStart }) {
     const trimmed = names.map((n) => n.trim());
     const result = [];
     let offset = 0;
-    for (let t = 0; t < count; t++) {
+    for (let t = 0; t < teamSizes.length; t++) {
       result.push({
         name: teamNames[t] || `Team ${t + 1}`,
         players: trimmed.slice(offset, offset + teamSizes[t]),
@@ -1891,16 +1884,14 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
         <div className="scores-list">
           {sortedTeams
             ? (() => {
-                const topAvg = sortedTeams[0]?.avgScore;
                 const medals = ["🥇","🥈","🥉"];
                 // Effectieve rang: aantal teams met strikt hogere gemiddelde score + 1
                 const getTeamEffectiveRank = (avgScore) => sortedTeams.filter(t2 => t2.avgScore > avgScore).length + 1;
-                // Gelijkspel detectie per plek
-                const firstPlaceTied = isLast && sortedTeams.filter(t => t.avgScore === topAvg).length > 1;
+                // topAvg is al berekend bovenaan ScoreScreen
                 const interimFirstPlaceTied = !isLast && sortedTeams.filter(t => t.avgScore === topAvg).length > 1;
                 return sortedTeams.map((team, i) => {
                   const effectiveRank = getTeamEffectiveRank(team.avgScore);
-                  const isTiedFinal = firstPlaceTied && team.avgScore === topAvg;
+                  const isTiedFinal = isLast && team.avgScore === topAvg && sortedTeams.filter(t => t.avgScore === topAvg).length > 1;
                   const isTiedInterim = interimFirstPlaceTied && team.avgScore === topAvg;
                   const badge = isLast
                     ? (isTiedFinal ? "👑" : (medals[effectiveRank - 1] ?? effectiveRank))
@@ -1927,11 +1918,10 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
                 // Effectieve rang: aantal spelers met strikt hogere score + 1
                 const getEffectiveRank = (score) => score === null ? null : sortedPlayers.filter(p2 => p2.score !== null && p2.score > score).length + 1;
                 // Gelijkspel detectie per plek
-                const firstPlaceTied = isLast && topScore !== null && sortedPlayers.filter(p => p.score === topScore).length > 1;
                 const interimFirstPlaceTied = !isLast && topScore !== null && sortedPlayers.filter(p => p.score === topScore).length > 1;
                 return sortedPlayers.map((p, i) => {
                   const effectiveRank = getEffectiveRank(p.score);
-                  const isTiedFinal = firstPlaceTied && p.score === topScore;
+                  const isTiedFinal = isLast && topScore !== null && p.score === topScore && sortedPlayers.filter(p2 => p2.score === topScore).length > 1;
                   const isTiedInterim = interimFirstPlaceTied && p.score === topScore;
                   const originalIdx = players.indexOf(p.name);
                   const hasPlayed = p.score !== null;
@@ -2377,7 +2367,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
         <div className="word-anchor">
           <div className="word-counter">leg z.s.m. uit</div>
           <div className="current-word">{hyphenateWord(currentWord)}</div>
-          <div className="times-up-banner is-hidden">placeholder</div>
+          <div className="times-up-banner is-hidden" aria-hidden="true" />
         </div>
       </div>
 
@@ -2633,6 +2623,10 @@ export default function App() {
     setPhase("setup");
     setPlayers([]);
     setScores([]);
+    setUsedWords(new Set());
+    setWordDeck([]);
+    setRoundTime(DEFAULT_ROUND_TIME);
+    setSelectedCategory(new Set());
     setTeams(null);
     setTeamScores([]);
     setPlayerStats([]);
