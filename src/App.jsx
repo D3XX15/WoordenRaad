@@ -967,7 +967,22 @@ const WORDS_BY_CATEGORY = (() => {
     'zo mak als een lammetje',
     'slapen als een roos',
     'zweten als een otter',
-    'hij liegt dat hij barst'
+    'hij liegt dat hij barst',
+    'zo blind als een mol',
+    'zo fris als een hoentje',
+    'zo gezond als een vis',
+    'zo ligt als een veertje',
+    'zo oud als de weg naar Rome',
+    'als een warm mes door de boter',
+    'zo vrij als een vogel',
+    'als een kip zonder kop',
+    'zo blij als een ei',
+    'zo stil dat je een speld kunt horen vallen'
+    'zo hard als steen',
+    'zo taai als leer',
+    'zo scherp als een mes',
+    'zo dood als een pier',
+    'een bek als een scheermes'
   ];
 
   const map = { dieren, voedsel, koken, beroepen, kantoor, sport, huishouden, natuur, vervoer, plaatsen, kunst, kleding, religie, fictie, literatuur, acties, misdaad, emoties, landen, gereedschap, muziek, militair, ruimte, wetenschap, geneeskunde, politiek, spreekwoorden };
