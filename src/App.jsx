@@ -856,6 +856,7 @@ const WORDS_BY_CATEGORY = (() => {
     'stille wateren hebben diepe gronden',
     'van hetzelfde laken een pak',
     'ergens je plasje over doen',
+    'je uit de naad werken',
     'tijd is geld',
     'schijn bedriegt',
     'uit het oog uit het hart',
