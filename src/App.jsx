@@ -1553,7 +1553,7 @@ const MESSAGES_POOR = [
   () => `Hebben de anderen je betaald om te verliezen? 💰`,
   (_, pts) => `${pts} ${pt(pts)}, de weg omhoog begint hier ⛰️`,
   (_, pts) => `${pts} ${pt(pts)}, misschien even oefenen thuis 🏠`,
-  (_, pts) => `${pts} ${pt(pts)}. Ach, je hebt het geprobeerd! 🫶`,
+  (_, pts) => `${pts} ${pt(pts)}, je hebt het geprobeerd! 🫶`,
   (_, pts) => `${pts} ${pt(pts)}, maar wel meegespeeld 🎮`,
   (_, pts) => `${pts} ${pt(pts)}, vanaf hier kan je alleen omhoog ☝️`,
   () => `Even bijkomen en dan weer volle bak! 🔋`,
@@ -2909,7 +2909,7 @@ export default function App() {
           max-width: 100%; padding: 0 8px; text-align: center;
         }
         .current-word.bonus-word {
-          background: linear-gradient(135deg, #f5c842, #e6b800); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background: linear-gradient(135deg, #fef9c3, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
           background-clip: text;
         }
 
@@ -2929,7 +2929,7 @@ export default function App() {
           pointer-events: none;
         }
         .times-up-banner.bonus-banner {
-          color: #f5c842; background: rgba(245, 200, 66, 0.12); border-color: rgba(245, 200, 66, 0.35);
+          color: #f59e0b; background: rgba(245,158,11, 0.05); border-color: rgba(245,158,11, 0.25);
           animation: none;
         }
         .times-up-banner.category-banner {
