@@ -1797,7 +1797,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
               <div className={`times-up-banner${timesUp ? ' grace-active' : isCurrentBonus ? ' bonus-banner' : ' category-banner'}`}
                 >
                 {timesUp
-                  ? <span>⏰ Tijd is om — nog <span style={{display:'inline-block', minWidth:'1.5ch', textAlign:'center'}}>{graceCountdown !== null ? graceCountdown : '…'}</span>s om te raden!</span>
+                  ? <span>⏰ Tijd is om — nog <span className="grace-countdown">{graceCountdown !== null ? graceCountdown : '…'}</span>s om te raden!</span>
                   : isCurrentBonus
                     ? '⭐ BONUSGEZEGDE — 3 punten!'
                     : currentWord ? (WORD_TO_CATEGORY[currentWord]?.label ?? '📦 Categorie') : ''}
@@ -1833,9 +1833,14 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
           ...t,
           originalIndex: i, // Belangrijk voor gelijke namen en tie-breakers
           totalScore: teamScores[i],
-          avgScore: Math.round((teamScores[i] / t.players.length) * 10) / 10,
+          avgScore: teamScores[i] === null ? null : Math.round((teamScores[i] / t.players.length) * 10) / 10,
         }))
-        .sort((a, b) => b.avgScore - a.avgScore)
+        .sort((a, b) => {
+          if (a.avgScore === null && b.avgScore === null) return 0;
+          if (a.avgScore === null) return 1;
+          if (b.avgScore === null) return -1;
+          return b.avgScore - a.avgScore;
+        })
     : null;
 
   // Individueel: sorteer spelers op score
@@ -1856,10 +1861,10 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
     if (tied.length > 1) tiedPlayerIndices = tied.map(x => x.i);
   }
   
-  const topAvg = sortedTeams ? Math.max(...sortedTeams.map(t => t.avgScore)) : null;
+  const topAvg = sortedTeams ? (sortedTeams.find(t => t.avgScore !== null)?.avgScore ?? null) : null;
 
   if (isLast && teams) {
-    const tiedTeams = sortedTeams.filter(t => t.avgScore === topAvg);
+    const tiedTeams = topAvg !== null ? sortedTeams.filter(t => t.avgScore === topAvg) : [];
     if (tiedTeams.length > 1) {
       // Geef alle spelers van elk gebonden team mee (per team gegroepeerd)
       tiedPlayerIndices = tiedTeams.flatMap(team => {
@@ -1887,17 +1892,23 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
             ? (() => {
                 const medals = ["🥇","🥈","🥉"];
                 // Effectieve rang: aantal teams met strikt hogere gemiddelde score + 1
-                const getTeamEffectiveRank = (avgScore) => sortedTeams.filter(t2 => t2.avgScore > avgScore).length + 1;
+                const getTeamEffectiveRank = (avgScore) => avgScore === null ? null : sortedTeams.filter(t2 => t2.avgScore !== null && t2.avgScore > avgScore).length + 1;
                 // topAvg is al berekend bovenaan ScoreScreen
-                const interimFirstPlaceTied = !isLast && sortedTeams.filter(t => t.avgScore === topAvg).length > 1;
+                const interimFirstPlaceTied = !isLast && topAvg !== null && sortedTeams.filter(t => t.avgScore === topAvg).length > 1;
                 return sortedTeams.map((team, i) => {
                   const effectiveRank = getTeamEffectiveRank(team.avgScore);
-                  const isTiedFinal = isLast && team.avgScore === topAvg && sortedTeams.filter(t => t.avgScore === topAvg).length > 1;
+                  const hasPlayed = team.avgScore !== null;
+                  const isTiedFinal = isLast && hasPlayed && team.avgScore === topAvg && sortedTeams.filter(t => t.avgScore === topAvg).length > 1;
                   const isTiedInterim = interimFirstPlaceTied && team.avgScore === topAvg;
                   const badge = isLast
-                    ? (isTiedFinal ? "👑" : (medals[effectiveRank - 1] ?? effectiveRank))
-                    : (team.avgScore === topAvg ? "👑" : effectiveRank);
-                  const rowClass = `score-row rank-${effectiveRank} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : (isTiedInterim ? "rank-interim-tied" : "rank-interim")}`;
+                    ? (!hasPlayed ? "—" : isTiedFinal ? "👑" : (medals[effectiveRank - 1] ?? effectiveRank))
+                    : (!hasPlayed ? "—" : team.avgScore === topAvg ? "👑" : effectiveRank);
+                  const interimClass = !hasPlayed
+                    ? "rank-interim-unplayed"
+                    : isTiedInterim
+                      ? "rank-interim-tied"
+                      : "rank-interim";
+                  const rowClass = `score-row rank-${effectiveRank ?? 99} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : interimClass}`;
                   return (
                     <div key={`${team.originalIndex}-${team.name}`} className={rowClass}>
                       <span className="rank-badge">{badge}</span>
@@ -1906,8 +1917,8 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
                         <span className="score-members">{team.players.join(", ")}</span>
                       </div>
                       <div className="score-row-right">
-                        <span className="score-pts">⌀ {team.avgScore} pt</span>
-                        <div className="score-row-subtext">totaal {team.totalScore}</div>
+                        <span className="score-pts">{hasPlayed ? `⌀ ${team.avgScore} pt` : "—"}</span>
+                        {hasPlayed && <div className="score-row-subtext">totaal {team.totalScore}</div>}
                       </div>
                     </div>
                   );
@@ -2208,33 +2219,19 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
                   : `score-row rank-${i + 1} rank-final`;
 
                 return (
-                  <div key={tr.teamName} style={{marginBottom: i < teamResults.length - 1 ? '10px' : '0'}}>
-                    <div className={rowClass} style={{marginBottom: '6px'}}>
+                  <div key={tr.teamName} className="tiebreaker-team-block">
+                    <div className={rowClass + " tiebreaker-team-row"}>
                       <span className="rank-badge">{isTied ? '👑' : (tieBadges[i] ?? i + 1)}</span>
                       <span className="score-name">{tr.teamName}</span>
                       <span className="score-pts tiebreaker-pts">⌀ {tr.avgTime.toFixed(2)}s</span>
                     </div>
-                    <div style={{
-                      marginLeft: '14px',
-                      paddingLeft: '14px',
-                      borderLeft: '2px solid rgba(255,255,255,0.1)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '5px',
-                    }}>
+                    <div className="tiebreaker-player-list">
                       {sortedPlayers.map((pr, j) => (
-                        <div key={pr.name} style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          padding: '6px 10px',
-                          borderRadius: '10px',
-                          background: 'rgba(255,255,255,0.04)',
-                        }}>
-                          <span style={{fontSize:'14px', fontWeight:700, color:'rgba(255,255,255,0.75)'}}>
+                        <div key={pr.name} className="tiebreaker-player-row">
+                          <span className="tiebreaker-player-name">
                             {pr.name}
                           </span>
-                          <span style={{fontSize:'14px', fontWeight:800, color:'rgba(255,255,255,0.6)'}}>{pr.time.toFixed(2)}s</span>
+                          <span className="tiebreaker-player-time">{pr.time.toFixed(2)}s</span>
                         </div>
                       ))}
                     </div>
@@ -2435,7 +2432,7 @@ export default function App() {
     const pool = getWordPool(catSet);
     setWordDeck(shuffle(pool));
     setTeams(teamsData);
-    setTeamScores(teamsData ? Array(teamsData.length).fill(0) : []);
+    setTeamScores(teamsData ? Array(teamsData.length).fill(null) : []);
     setPlayerStats(names.map(() => ({ rounds: [] })));
     const order = buildPlayOrder(teamsData, names.length);
     setPlayOrder(order);
@@ -2495,7 +2492,7 @@ export default function App() {
       const teamIdx = getTeamIdxForPlayer(currentPlayerIdx);
       if (teamIdx !== null) {
         const newTeamScores = [...teamScores];
-        newTeamScores[teamIdx] += totalPoints;
+        newTeamScores[teamIdx] = (newTeamScores[teamIdx] ?? 0) + totalPoints;
         setTeamScores(newTeamScores);
       }
     }
@@ -2932,7 +2929,7 @@ export default function App() {
         }
         .times-up-banner.bonus-banner {
           color: #fb923c; background: rgba(251,146,60,0.12); border-color: rgba(251,146,60,0.35);
-          animation: pulse-orange-banner 1.2s ease-in-out infinite;
+
         }
         .times-up-banner.category-banner {
           color: #a78bfa; background: rgba(167,139,250,0.10); border-color: rgba(167,139,250,0.30);
@@ -3118,6 +3115,21 @@ export default function App() {
         .mb-2 { margin-bottom: 2px; }
         .mt-0 { margin-top: 0px; }
         .tiebreaker-timer-circle { transition: stroke-dashoffset 0.05s linear; }
+        .tiebreaker-team-block:not(:last-child) { margin-bottom: 10px; }
+        .tiebreaker-team-row { margin-bottom: 6px; }
+        .tiebreaker-player-list {
+          margin-left: 14px; padding-left: 14px;
+          border-left: 2px solid rgba(255,255,255,0.1);
+          display: flex; flex-direction: column; gap: 5px;
+        }
+        .tiebreaker-player-row {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 6px 10px; border-radius: 10px;
+          background: rgba(255,255,255,0.04);
+        }
+        .tiebreaker-player-name { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.75); }
+        .tiebreaker-player-time { font-size: 14px; font-weight: 800; color: rgba(255,255,255,0.6); }
+        .grace-countdown { display: inline-block; min-width: 1.5ch; text-align: center; }
 
         /* ── Animations ── */
         @keyframes slideIn { from{transform:translateX(-20px);opacity:0} to{transform:translateX(0);opacity:1} }
