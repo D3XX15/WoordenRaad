@@ -956,7 +956,18 @@ const WORDS_BY_CATEGORY = (() => {
     'de handdoek in de ring gooien',
     'op eieren lopen',
     'een gat in de lucht springen',
-    'iets uit de duim zuigen'
+    'iets uit de duim zuigen',
+    'zo trots als een pauw',
+    'zo gek als een deur',
+    'zo blij als een kind',
+    'zo sterk als een beer',
+    'zo doof als een kwartel',
+    'zo snel als de wind',
+    'zo sluw als een vos',
+    'zo mak als een lammetje',
+    'slapen als een roos',
+    'zweten als een otter',
+    'hij liegt dat hij barst'
   ];
 
   const map = { dieren, voedsel, koken, beroepen, kantoor, sport, huishouden, natuur, vervoer, plaatsen, kunst, kleding, religie, fictie, literatuur, acties, misdaad, emoties, landen, gereedschap, muziek, militair, ruimte, wetenschap, geneeskunde, politiek, spreekwoorden };
