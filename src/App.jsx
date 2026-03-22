@@ -22,11 +22,11 @@ const CATEGORIES = [
   { id: "muziek",        label: "🎶 Muziek" },
   { id: "politiek",      label: "⚖️ Politiek & Maatschappij" },
   { id: "religie",       label: "🕍 Religie" },
+  { id: "wetenschap",    label: "🔬 Wetenschap" },
+  { id: "geneeskunde",   label: "🩺 Geneeskunde" },
   { id: "militair",      label: "🪖 Militair" },
   { id: "plaatsen",      label: "🧭 Plaatsen" },
   { id: "landen",        label: "🌍 Landen" },
-  { id: "wetenschap",    label: "🔬 Wetenschap" },
-  { id: "geneeskunde",   label: "🩺 Geneeskunde" },
   { id: "acties",        label: "🏃 Werkwoorden" },
   { id: "spreekwoorden", label: "💬 Spreekwoorden", bonus: true },
 ];
