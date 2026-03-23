@@ -60,7 +60,7 @@ const WORDS_BY_CATEGORY = (() => {
     'kreeft', 'mossel', 'oester', 'pijlinktvis', 'bij', 'wesp', 'hommel', 'vlooien', 'pissebed', 'glimworm',
     'mot', 'haan', 'eend', 'gans', 'kalkoen', 'geit', 'karper', 'baars', 'rog', 'zwaardvis', 'clownvis', 
     'zeester', 'varken', 'ezel', 'pony', 'lam', 'reuzenhaai', 'merel', 'spookdier', 'vis', 'capibara',
-    'gnoe', 'gordeldier', 'gier', 'papegaaiduiker', 'piranha', 'wandelende tak'
+    'sidderaal', 'gnoe', 'gordeldier', 'gier', 'papegaaiduiker', 'piranha', 'wandelende tak'
   ];
 
   const voedsel = [
@@ -893,7 +893,8 @@ const WORDS_BY_CATEGORY = (() => {
     'er met de pet naar gooien',
     'iemand het hoofd op hol brengen',
     'hard aan de weg timmeren',
-    'ergens geen gat in zien',
+    'er geen gat in zien',
+    'niet voor geen gat te vangen zijn',
     'met de neus op de feiten drukken',
     'op zijn dooie gemakje',
     'schouders ergens onder zetten',
@@ -982,6 +983,7 @@ const WORDS_BY_CATEGORY = (() => {
     'zo taai als leer',
     'zo scherp als een mes',
     'zo dood als een pier',
+    'zo glad als een aal',
     'een bek als een scheermes hebben'
   ];
 
