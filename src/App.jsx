@@ -984,7 +984,8 @@ const WORDS_BY_CATEGORY = (() => {
     'zo scherp als een mes',
     'zo dood als een pier',
     'zo glad als een aal',
-    'een bek als een scheermes hebben'
+    'zo mager als een lat',
+    'een bek als een scheermes'
   ];
 
   const map = { dieren, voedsel, koken, beroepen, kantoor, sport, huishouden, natuur, vervoer, plaatsen, kunst, kleding, religie, fictie, literatuur, acties, misdaad, emoties, landen, gereedschap, muziek, militair, ruimte, wetenschap, geneeskunde, politiek, spreekwoorden };
