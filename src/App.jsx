@@ -466,7 +466,7 @@ const WORDS_BY_CATEGORY = (() => {
     'injectie', 'keizersnede', 'medicijn', 'migraine', 'MRI', 'virus', 'kleurenblind',
     'obsessie', 'onderbewustzijn', 'operatie', 'overdosis', 'overlevingsdrang', 'pandemie',
     'paranoia', 'persoonlijkheid', 'pijnstiller', 'plasma', 'pols', 'psychiatrie', 'ziekte',
-    'PTSS', 'quarantaine', 'reflex', 'rehabilitatie', 'ontsteking', 'ziekenhuis',
+    'PTSS', 'quarantaine', 'reflex', 'rehabilitatie', 'ontsteking', 'ziekenhuis', 'medicatie',
     'röntgenfoto', 'scalpel', 'schizofrenie', 'stethoscoop', 'stigma', 'stoornis', 'doof',
     'surrogaatmoeder', 'symptoom', 'transplantatie', 'tunnelvisie', 'vaccinatie', 'vaccin',
     'fractuur', 'hechting', 'zwelling', 'reanimatie', 'verband', 'narcose', 'long', 'hart',
