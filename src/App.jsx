@@ -1019,7 +1019,7 @@ const EXTRA_WORD_PARTS = new Set([
 'kraam', 'verzorger', 'kunst', 'criticus', 'luchtverkeer', 'leider', 'museum', 'conservator',
 'revalidatie', 'arts', 'scenario', 'schrijver', 'stand-up', 'comedian', 'systeem', 'beheerder',
 'verzekering', 'agent', 'voeding', 'wetenschapper', 'ziekenhuis', 'directeur', 'tram', 'bestuurder',
-'undercover', 'belasting', 'adviseur', 'politie', 'commissaris', 'vrachtwagen', 'chauffeur',
+'belasting', 'adviseur', 'politie', 'commissaris', 'vrachtwagen', 'chauffeur',
 'beach', 'volleybal', 'diepzee', 'duiken', 'langebaan', 'schaatsen', 'parachute', 'springen', 'polsstok',
 'hoogspringen', 'schans', 'synchroon', 'trampoline', 'wedstrijd', 'vissen', 'kampioen', 'beker', 'oven',
 'gezelschap', 'spel', 'kleiduiven', 'schieten', 'estafette', 'ring', 'afstand', 'bediening', 'regelaar',
