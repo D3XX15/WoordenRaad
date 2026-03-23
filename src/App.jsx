@@ -980,67 +980,64 @@ const HYPHENATION_DICT = (() => {
 // Deze lijst vult het HYPHENATION_DICT aan voor woorden die niet 
 // als los speelwoord voorkomen, maar wel delen zijn van samenstellingen.
 const EXTRA_WORD_PARTS = new Set([
-'bijen', 'koningin', 'dwerg', 'pinguïn', 'galapagos', 'schildpad', 'lieveheers', 'beestje',
-'bid', 'sprinkhaan', 'stok', 'staartje', 'aardappel', 'puree', 'brandnetel', 'soep', 'caesar',
-'salade', 'granaat', 'appel', 'kaneel', 'broodje', 'vanille', 'pudding', 'water', 'meloen', 
-'biblio', 'thecaris', 'documentaire', 'maker', 'duik', 'instructeur', 'fysio', 'therapeut',
-'game', 'ontwikkelaar', 'hypno', 'ijsbeeld', 'beeld', 'houwer', 'kostuum', 'ontwerper',
-'kraam', 'verzorger', 'kunst', 'criticus', 'luchtverkeer', 'leider', 'museum', 'conservator',
-'revalidatie', 'arts', 'scenario', 'schrijver', 'stand-up', 'comedian', 'systeem', 'beheerder',
-'verzekering', 'agent', 'voeding', 'wetenschapper', 'ziekenhuis', 'directeur', 'tram', 'bestuurder',
-'belasting', 'adviseur', 'politie', 'commissaris', 'vrachtwagen', 'chauffeur',
-'beach', 'volleybal', 'diepzee', 'duiken', 'langebaan', 'schaatsen', 'parachute', 'springen', 'polsstok',
-'hoogspringen', 'schans', 'synchroon', 'trampoline', 'vissen', 'kampioen', 'beker', 'oven',
-'gezelschap', 'spel', 'kleiduiven', 'schieten', 'estafette', 'ring', 'afstand', 'bediening', 'regelaar',
-'armband', 'horloge', 'beeld', 'houwwerk', 'kaarsen', 'houder', 'manchet', 'knoop', 'scheep',
-'schroef', 'veiligheid', 'speld', 'boodchappen', 'tas', 'gehoor', 'apparaat', 'muur', 'schildering',
-'aard', 'verschuiving', 'lucht', 'vochtigheid', 'vulkaan', 'uitbarsting', 'zoetwater', 'meer',
-'zon', 'verduistering', 'deeldienst', 'stoom', 'locomotief', 'water', 'zweef', 'vliegtuig', 'kaping',
-'boot', 'trauma', 'spoorweg', 'overgang', 'paspoort', 'controle', 'kenteken', 'plaat', 'woon-werk',
-'verkeer', 'distributie', 'centrum', 'brandweer', 'kazerne', 'camping', 'terrein', 'recreatie', 
-'gebied', 'tandarts', 'praktijk', 'voetgangers', 'pannenkoeken', 'huis', 'kinder', 'dagverblijf',
-'meubel', 'boulevard', 'onder', 'handelen', 'touwtje', 'teweeg', 'stichten', 'live', 'streamen',
-'geheugen', 'verlies', 'bewustzijn', 'overling', 'drang', 'surrogaat', 'moeder', 'kwik', 'thermometer',
-'weten', 'schappelijk', 'onderzoek', 'instituut', 'deeltjes', 'versneller', 'parlement', 'aire',
-'staat', 'secretaris', 'rechtvaardig', 'heid', 'inkomen', 'verdeling', 'verkiezing', 'programma',
-'formatie', 'gesprekken', 'kabinet', 'formatie', 'hypotheekrente', 'rente', 'hypotheek', 'renteaftrek',
-'aftrek', 'werkgever', 'organisatie', 'volk', 'vertegenwoordiger', 'inkomsten', 'vermogen', 'belasting', 
-'consumenten', 'bescherming', 'campagne', 'arbeid', 'ongeschikt', 'heid', 'minderheid', 'kabinet',
-'openlucht', 'concert', 'patrouille', 'verkenning', 'stad', 'belegering', 'inlichtingen', 'gevende',
-'stroom', 'generator', 'gereedschap', 'kist', 'aardappel', 'schiller', 'accu', 'boormachine', 'uitje',
-'hetelucht', 'pistool', 'werk', 'handschoen', 'bescherming', 'isolatie', 'materiaal', 'istiek',
-'maan', 'relativiteit', 'theorie', 'koppeling', 'lanceer', 'installatie', 'weten', 'schapper', 'sleutel',
-'laboratorium', 'aardappel', 'stamper', 'gezondheid', 'zorg', 'ondergang', 'telescoop', 'ruimte',
-'aanslag', 'aardig', 'actie', 'akkoord', 'amfibie', 'apparaat', 'arijs', 'atie', 'aanval', 'tijd',
-'baan', 'band', 'basis', 'bedrijf', 'beheer', 'beleid', 'bestuur', 'bom', 'bond', 'bouw', 'tocht',
-'cel', 'concentratie', 'crisis', 'damp', 'debat', 'deel', 'deeltje', 'democratie', 'deur', 'dienst',
-'energie', 'erij', 'explosie', 'factor', 'fiets', 'front', 'gas', 'gebouw', 'tuin', 'moordenaar',
-'geving', 'gever', 'golf', 'graaf', 'grond', 'haven', 'heid', 'herdenking', 'afdruk', 'therapie',
-'houder', 'hulp', 'informatie', 'ing', 'isme', 'iteit', 'kamer', 'kamp', 'kampioen', 'kant', 'voorstel',
-'kast', 'kern', 'kracht', 'krijgs', 'kunde', 'kwartier', 'leger', 'lijn', 'prijs', 'ontduiking',
-'linie', 'logie', 'loos', 'lucht', 'machine', 'macht', 'massa', 'maatregel', 'meester', 'darm', 'draaier',
-'ment', 'middel', 'minister', 'misdaad', 'monument', 'oord', 'natuurlijk', 'wisseling', 'darmontsteking',
-'moord', 'motor', 'nemer', 'neming', 'netwerk', 'nota', 'officier', 'onderhandeling', 'ontsteking',
-'oorlog', 'overleg', 'oxide', 'pad', 'partij', 'planeet', 'proef', 'punt', 'harmonica', 'ongeschiktheid',
-'raad', 'raam', 'raket', 'recht', 'reis', 'schap', 'schip', 'schot', 'schutter', 'staart', 'draaien',
-'scoop', 'sluiting', 'soldaat', 'speler', 'staf', 'stand', 'staat', 'station', 'nationaal', 'gezind',
-'stelsel', 'ster', 'stilstand', 'stof', 'stoel', 'straal', 'sturing', 'systeem', 'tafel', 'platform',
-'transport', 'trein', 'tuig', 'tuigage', 'vaart', 'veld', 'verdrag', 'verdediging', 'verkeer', 
-'verkiezing', 'verklaring', 'verlening', 'vlak', 'vlucht', 'voertuig', 'voerder', 'vol', 
-'vorming', 'vuur', 'waardig', 'wagen', 'wapen', 'water', 'weer', 'werker', 'conferentie',
-'wet', 'omelet', 'wetenschap', 'wiel', 'weg', 'zelfmoord', 'zijde', 'zorg', 'zuur',
-'aftrek', 'getrokken', 'divisie', 'schuiver'
+'bijen', 'koningin', 'dwerg', 'pinguïn', 'galapagos', 'schildpad', 'lieveheers', 'beestje', 'sprinkhaan', 'stok', 'staartje', 
+'aardappel', 'puree', 'brandnetel', 'soep', 'caesar', 'salade', 'granaat', 'appel', 'kaneel', 'broodje', 'vanille', 'pudding',
+'water', 'meloen', 'biblio', 'thecaris', 'documentaire', 'maker', 'duik', 'instructeur', 'fysio', 'therapeut', 'beheerder',
+'game', 'ontwikkelaar', 'hypno', 'ijsbeeld', 'beeld', 'houwer', 'kostuum', 'ontwerper', 'kraam', 'verzorger', 'kunst', 'criticus',
+'luchtverkeer', 'leider', 'museum', 'conservator', 'revalidatie', 'arts', 'scenario', 'schrijver', 'comedian', 'systeem', 'divisie',
+'verzekering', 'agent', 'voeding', 'wetenschapper', 'ziekenhuis', 'directeur', 'tram', 'bestuurder', 'belasting', 'adviseur', 'politie', 
+'commissaris', 'vrachtwagen', 'chauffeur', 'beach', 'volleybal', 'diepzee', 'duiken', 'langebaan', 'schaatsen', 'parachute', 'springen',
+'polsstok', 'hoogspringen', 'schans', 'synchroon', 'trampoline', 'vissen', 'kampioen', 'beker', 'oven', 'gezelschap', 'spel', 'getrokken',
+'kleiduiven', 'schieten', 'estafette', 'ring', 'afstand', 'bediening', 'regelaar', 'armband', 'horloge', 'houwwerk', 'kaarsen', 'houder',
+'manchet', 'knoop', 'scheep', 'schroef', 'veiligheid', 'speld', 'boodschappen', 'tas', 'gehoor', 'apparaat', 'muur', 'schildering', 'zuur',
+'aard', 'verschuiving', 'lucht', 'vochtigheid', 'vulkaan', 'uitbarsting', 'zoetwater', 'meer', 'zon', 'verduistering', 'deeldienst', 'zorg',
+'stoom', 'locomotief', 'zweef', 'vliegtuig', 'kaping', 'boot', 'trauma', 'spoorweg', 'overgang', 'paspoort', 'controle', 'kenteken', 'zijde',
+'plaat', 'verkeer', 'distributie', 'centrum', 'brandweer', 'kazerne', 'camping', 'terrein', 'recreatie', 'gebied', 'tandarts', 'praktijk',
+'voetgangers', 'pannenkoeken', 'huis', 'kinder', 'dagverblijf', 'meubel', 'boulevard', 'onder', 'handelen', 'touwtje', 'teweeg', 'stichten',
+'live', 'streamen', 'geheugen', 'verlies', 'bewustzijn', 'drang', 'surrogaat', 'moeder', 'kwik', 'thermometer', 'weten', 'schappelijk',
+'onderzoek', 'instituut', 'deeltjes', 'versneller', 'parlement', 'aire', 'staat', 'secretaris', 'rechtvaardig', 'heid', 'inkomen', 'verdeling',
+'verkiezing', 'programma', 'formatie', 'gesprekken', 'kabinet', 'hypotheekrente', 'rente', 'hypotheek', 'renteaftrek', 'tijd', 'brander',
+'aftrek', 'werkgever', 'organisatie', 'volk', 'vertegenwoordiger', 'inkomsten', 'vermogen', 'consumenten', 'bescherming', 'campagne', 'arbeid',
+'ongeschikt', 'heid', 'minderheid', 'openlucht', 'concert', 'patrouille', 'verkenning', 'stad', 'belegering', 'inlichtingen', 'gevende',
+'stroom', 'generator', 'gereedschap', 'kist', 'schiller', 'accu', 'boormachine', 'uitje', 'hetelucht', 'pistool', 'werk', 'handschoen',
+'isolatie', 'materiaal', 'istiek', 'maan', 'relativiteit', 'theorie', 'koppeling', 'lanceer', 'installatie', 'schapper', 'sleutel', 'schuiver',
+'laboratorium', 'stamper', 'gezondheid', 'zorg', 'ondergang', 'telescoop', 'ruimte', 'aanslag', 'aardig', 'actie', 'akkoord', 'amfibie', 'atie',
+'aanval', 'baan', 'band', 'basis', 'bedrijf', 'beheer', 'beleid', 'bestuur', 'bond', 'bouw', 'tocht', 'cel', 'concentratie', 'crisis', 'damp',
+'debat', 'deel', 'deeltje', 'democratie', 'deur', 'dienst', 'energie', 'erij', 'explosie', 'factor', 'fiets', 'front', 'gebouw', 'tuin',
+'moordenaar', 'geving', 'gever', 'golf', 'graaf', 'grond', 'haven', 'herdenking', 'afdruk', 'therapie', 'harmonica', 'ongeschiktheid',
+'houder', 'hulp', 'informatie', 'ing', 'isme', 'iteit', 'kamer', 'kamp', 'kant', 'voorstel', 'kast', 'kern', 'kracht', 'krijgs', 'kunde',
+'leger', 'lijn', 'prijs', 'ontduiking', 'linie', 'logie', 'loos', 'machine', 'macht', 'massa', 'maatregel', 'meester', 'darm', 'draaier',
+'ment', 'middel', 'minister', 'misdaad', 'monument', 'oord', 'natuurlijk', 'wisseling', 'darmontsteking', 'moord', 'motor', 'nemer', 'neming', 
+'netwerk', 'nota', 'officier', 'onderhandeling', 'ontsteking', 'oorlog', 'overleg', 'oxide', 'partij', 'planeet', 'proef', 'punt', 'platform',
+'raad', 'raam', 'raket', 'recht', 'reis', 'schap', 'schip', 'schot', 'schutter', 'staart', 'draaien', 'kwartier', 'straal', 'sturing', 'tafel',
+'scoop', 'sluiting', 'soldaat', 'speler', 'staf', 'stand', 'station', 'nationaal', 'gezind', 'stelsel', 'ster', 'stilstand', 'stof', 'stoel',
+'transport', 'trein', 'tuig', 'vaart', 'veld', 'verdrag', 'verdediging', 'verklaring', 'verlening', 'vlak', 'vlucht', 'voertuig', 'voerder',
+'vorming', 'vuur', 'waardig', 'wagen', 'wapen', 'weer', 'werker', 'conferentie', 'wet', 'omelet', 'wetenschap', 'wiel', 'weg', 'zelfmoord'
 ]);
 
 function hyphenateWord(word) {
-  if (!word || word.includes(' ') || word.length <= 11) return word;
-  
+  // Lege string, null of undefined: niets te doen
+  if (!word) return word;
+
+  // Meerdere woorden: elk deel apart hypheneren en weer samenvoegen
+  if (word.includes(' ')) {
+    return word.split(' ').map(hyphenateWord).join(' ');
+  }
+
+  // Koppelteken: zachte afbreek ná elk streepje, ongeacht lengte
+  if (word.includes('-')) {
+    return word.replace(/-/g, '-\u00AD');
+  }
+
+  // Morfologische en fonetische logica alleen voor langere woorden
+  if (word.length <= 10) return word;
+
   const lower = word.toLowerCase();
   const isKnown = (str) => HYPHENATION_DICT.has(str) || EXTRA_WORD_PARTS.has(str);
 
   // --- STAP 1: Morfologische splitsing (Samenstellingen) ---
-  
-  // A. Check op tussen-s bij bekende woorden (bijv. herdenkings-monument)
+
+  // A. Check op tussen-s (bijv. herdenkings·monument)
   for (let i = 4; i <= lower.length - 5; i++) {
     if (lower[i] === 's') {
       const stam = lower.slice(0, i);
@@ -1051,21 +1048,19 @@ function hyphenateWord(word) {
     }
   }
 
-  // B. Algemene samenstelling check (van rechts naar links)
+  // B. Algemene samenstelling (van rechts naar links)
   for (let i = lower.length - 4; i >= 4; i--) {
     const links = lower.slice(0, i);
     const rechts = lower.slice(i);
-    
     if (isKnown(links) && isKnown(rechts)) {
       return word.slice(0, i) + '\u00AD' + word.slice(i);
     }
-    
     if (EXTRA_WORD_PARTS.has(rechts) && rechts.length >= 5) {
       return word.slice(0, i) + '\u00AD' + word.slice(i);
     }
   }
 
-  // --- STAP 2: Fonetisch Vangnet (Alleen als Stap 1 niets vond) ---
+  // --- STAP 2: Fonetisch Vangnet (alleen als Stap 1 niets vond) ---
   const vowels = 'aeiouyàáèéëïöü';
   const diphthongs = ['ee', 'oo', 'aa', 'uu', 'ei', 'au', 'ie', 'ij', 'oe', 'ou', 'ui', 'eu'];
   let result = "";
@@ -1073,25 +1068,33 @@ function hyphenateWord(word) {
 
   while (i < word.length) {
     result += word[i];
-    
-    // BEVEILIGING: Nooit afbreken in de laatste 5 letters
-    if (i < word.length - 5) { 
+
+    // Nooit afbreken in de laatste 5 letters
+    if (i < word.length - 5) {
       const char1 = word[i].toLowerCase();
       const char2 = word[i + 1].toLowerCase();
       const char3 = word[i + 2].toLowerCase();
-      
+
+      // Tweeklank als één eenheid behandelen: nooit doormidden afbreken
+      if (diphthongs.includes(char1 + char2)) {
+        i++;
+        result += word[i];
+        continue;
+      }
+
       const isVow1 = vowels.includes(char1);
       const isVow2 = vowels.includes(char2);
       const isVow3 = vowels.includes(char3);
 
-      // Alleen afbreken als we niet midden in een tweeklank zitten
+      // Klinker·medeklinker·klinker → afbreken na klinker (bijv. ma·ken)
       if (isVow1 && !isVow2 && isVow3 && i > 1) {
         result += '\u00AD';
-      } 
+      }
+      // Klinker·medeklinker·medeklinker·klinker → afbreken na eerste medeklinker (bijv. kam·per)
       else if (isVow1 && !isVow2 && !isVow3 && i < word.length - 6) {
         if (vowels.includes(word[i + 3].toLowerCase())) {
           result += char2 + '\u00AD';
-          i++; 
+          i++;
         }
       }
     }
