@@ -166,7 +166,7 @@ const WORDS_BY_CATEGORY = (() => {
     'skeleton', 'skiën', 'skislalom', 'snowboarden', 'softbal', 'speerwerpen', 'verspringen',
     'spijkerpoepen', 'squash', 'stoeien', 'suppen', 'surfen', 'synchroonzwemmen', 'trefbal',
     'pottenbakken', 'vliegeren', 'vliegvissen', 'voetbal', 'volleybal', 'wandelen', 'beachtennis',
-    'waterpolo', 'waterskiën', 'wakeboarden', 'wedstrijdvissen', 'wielrennen', 'worstelen', 'korfbal',
+    'waterpolo', 'waterskiën', 'wakeboarden', 'wedstrijd', 'wielrennen', 'worstelen', 'korfbal',
     'yoga', 'zeilen', 'zwemmen', 'schermen', 'kwartetten', 'sumoworstelen', 'windsurfen', 'jagen',
     'abseilen', 'kampioensbeker', 'medaille', 'stopwatch', 'borduren', 'breien', 'touwtrekken',
     'dartpijl', 'flipperkast', 'gele kaart', 'rode kaart', 'schaakbord', 'kleiduivenschieten',
@@ -237,7 +237,7 @@ const WORDS_BY_CATEGORY = (() => {
     'bagage', 'handbagage', 'reistas', 'ov-chipkaart', 'treinkaartje', 'terreinwagen', 'zijspan',
     'vliegticket', 'overstap', 'rijbewijs', 'kentekenplaat', 'autopech', 'lekke band', 'lantaarnpaal',
     'rijstrook', 'fietspad', 'kruispunt', 'stoplicht', 'parkeerbon', 'elektrisch rijden', 'shovel',
-    'waterstofauto', 'carpoolen', 'pendelen', 'woon-werkverkeer', 'Nationale Spoorwegen', 'sprinter',
+    'waterstofauto', 'carpoolen', 'pendelen', 'woon-werkverkeer', 'Nationale Spoorwegen', 'Sprinter',
     'nachtbus', 'pendelbusje', 'rolstoelbus', 'baggerschip', 'cruiseschip', 'laad- en losplaats',
     'distributiecentrum', 'koelwagen', 'voetpad', 'wandelroute', 'aanlegsteiger', 'privéjet',
     'helipad', 'auto', 'motor', 'wagen', 'huifkar', 'lijkwagen', 'sneeuwschuiver', 'vorkheftruck',
@@ -375,9 +375,9 @@ const WORDS_BY_CATEGORY = (() => {
     'sluiten', 'vergrendelen', 'ontgrendelen', 'instellen', 'bestellen', 'pinnen', 'boren', 'mailen', 'opnemen',
     'bezorgen', 'inpakken', 'sjouwen', 'tillen', 'dragen', 'uitstellen', 'timmeren', 'zagen', 'posten', 'afspelen',
     'spelen', 'stampvoeten', 'opdrukken', 'rekken', 'afwassen', 'confronteren', 'prikken', 'metselen', 'pauzeren',
-    'vegen', 'beschuldigen', 'commanderen', 'condoleren', 'feliciteren', 'rijden', 'knagen',
-    'geruststellen', 'hinderen', 'omkijken', 'troosten', 'vergeven', 'waarschuwen', 'sabbelen', 'dweilen',
-    'downloaden', 'kleien', 'updaten', 'blaffen', 'grazen', 'grommen', 'kauwen', 'spitten', 'knippen',
+    'vegen', 'beschuldigen', 'commanderen', 'condoleren', 'feliciteren', 'rijden', 'knagen', 'scoren', 'debuteren',
+    'geruststellen', 'hinderen', 'omkijken', 'troosten', 'vergeven', 'waarschuwen', 'sabbelen', 'dweilen', 'uitgaan',
+    'uitnodigen', 'downloaden', 'kleien', 'updaten', 'blaffen', 'grazen', 'grommen', 'kauwen', 'spitten', 'knippen',
     'slikken', 'spugen', 'beslissen', 'fantaseren', 'inbeelden', 'slenteren', 'vlechten', 'logeren',
     'livestreamen', 'uploaden', 'reflecteren', 'peinzen', 'raden', 'vergelijken', 'voorspellen'
   ];
@@ -403,7 +403,7 @@ const WORDS_BY_CATEGORY = (() => {
     'rationeel', 'ambitieus', 'zorgeloos', 'roekeloos', 'gul', 'vrijgevig', 'gierig', 'nonchalant',
     'fanatiek', 'betrouwbaar', 'onverschillig', 'assertief', 'cynisch', 'verstrooid', 'opgetogen',
     'verbijsterd', 'smoorverliefd', 'heimwee', 'ontroerd', 'geschokt', 'bewust', 'materialistisch',
-    'subjectief', 'objectief', 'vreemd', 'schijnheilig', 'zelfbewust'
+    'potig', 'uitstraling', 'mimiek', 'subjectief', 'objectief', 'vreemd', 'schijnheilig', 'zelfbewust'
   ];
 
   const landen = [
@@ -484,7 +484,7 @@ const WORDS_BY_CATEGORY = (() => {
     'ambassade', 'ambassadeur', 'staatshoofd', 'topontmoeting', 'vredesakkoord', 'hiërarchie', 'sociale zekerheid',
     'resolutie', 'handelsoorlog', 'mensenrechten', 'vrijheid van meningsuiting', 'persvrijheid', 'werkloosheid',
     'welvaart', 'inkomensverdeling', 'stembureau', 'kiesdrempel', 'lijsttrekker', 'kandidaat', 'voorzitter',
-    'partijprogramma', 'coalitieakkoord', 'informateur', 'formateur', 'woningmarkt', 'VN', 'wetsvoorstel',
+    'partijprogramma', 'coalitieakkoord', 'informateur', 'formateur', 'woningmarkt', 'VN', 'wetsvoorstel', 'persconferentie',
     'belastingaangifte', 'toeslagen', 'uitkering', 'pensioen', 'zorgverzekering', 'privatisering', 'kabinetsformatie',
     'hypotheekrenteaftrek', 'minimumloon', 'CAO', 'vakbond', 'werkgeversorganisatie', 'stemhokje', 'regeerakkoord',
     'petitie', 'demonstratie', 'burgerrechten', 'grondrechten', 'privacywet', 'gelijkheid', 'kieslijst', 'prinsjesdag',
@@ -608,7 +608,7 @@ const WORDS_BY_CATEGORY = (() => {
     'deurbel', 'rolluik', 'vloerkleed', 'lamp', 'gloeilamp', 'wekker', 'gordijn', 'tuintafel', 'theemuts',
     'klok', 'boekenkast', 'spiegel', 'tafel', 'stoel', 'bank', 'behang', 'deurmat', 'douchegordijn',
     'wasmand', 'prullenbak', 'schoonmaakmiddel', 'smartphone', 'smartwatch', 'handdoek', 'badmat',
-    'zeep', 'shampoo', 'conditioner', 'scheerapparaat', 'haarborstel', 'toiletpapier', 'kachel',
+    'zeep', 'shampoo', 'conditioner', 'scheerapparaat', 'haarborstel', 'toiletpapier', 'kachel', 'kleingeld',
     'deken', 'laken', 'kussensloop', 'matras', 'nachtkastje', 'kledingkast', 'tuinslang', 'tuinstoel',
     'strijkijzer', 'strijkplank', 'dweil', 'stoffer', 'bloempot', 'vaas', 'fotolijst', 'douchekop', 'doos',
     'theepot', 'koffiepot', 'broodtrommel', 'koektrommel', 'stofdoek', 'mop', 'emmer', 'allesreiniger',
@@ -635,7 +635,7 @@ const WORDS_BY_CATEGORY = (() => {
   const kantoor = [
     'arbeidsongeschikt', 'nietmachine', 'rekenmachine', 'Post-it',  'agenda', 'aktetas', 'perforator', 'paperclip',
     'usb-stick', 'printer', 'projector', 'scanner', 'headset', 'webcam', 'bureau', 'bureaustoel', 'directie', 'laptop',
-    'whiteboard', 'vergadertafel', 'vergaderzaal', 'ordner', 'map', 'envelop', 'brief', 'briefopener', 'HR',
+    'whiteboard', 'vergadertafel', 'vergaderzaal', 'ordner', 'map', 'envelop', 'brief', 'briefopener', 'HR', 'expert',
     'waterkoeler', 'toetsenbord', 'muis', 'plakband', 'balpen', 'marker', 'prikbord', 'visitekaartje', 'schrift', 'memo',
     'postvak', 'factuur', 'offerte', 'contract', 'notulen', 'presentatie', 'koffiezetapparaat', 'organiseren', 'administratie',
     'vergadering', 'evaluatie', 'kantine', 'kopieermachine', 'archief', 'papier', 'pen', 'potlood', 'samenwerken', 'declareren',
@@ -990,7 +990,7 @@ const EXTRA_WORD_PARTS = new Set([
 'verzekering', 'agent', 'voeding', 'wetenschapper', 'ziekenhuis', 'directeur', 'tram', 'bestuurder',
 'belasting', 'adviseur', 'politie', 'commissaris', 'vrachtwagen', 'chauffeur',
 'beach', 'volleybal', 'diepzee', 'duiken', 'langebaan', 'schaatsen', 'parachute', 'springen', 'polsstok',
-'hoogspringen', 'schans', 'synchroon', 'trampoline', 'wedstrijd', 'vissen', 'kampioen', 'beker', 'oven',
+'hoogspringen', 'schans', 'synchroon', 'trampoline', 'vissen', 'kampioen', 'beker', 'oven',
 'gezelschap', 'spel', 'kleiduiven', 'schieten', 'estafette', 'ring', 'afstand', 'bediening', 'regelaar',
 'armband', 'horloge', 'beeld', 'houwwerk', 'kaarsen', 'houder', 'manchet', 'knoop', 'scheep',
 'schroef', 'veiligheid', 'speld', 'boodchappen', 'tas', 'gehoor', 'apparaat', 'muur', 'schildering',
@@ -1027,7 +1027,7 @@ const EXTRA_WORD_PARTS = new Set([
 'stelsel', 'ster', 'stilstand', 'stof', 'stoel', 'straal', 'sturing', 'systeem', 'tafel', 'platform',
 'transport', 'trein', 'tuig', 'tuigage', 'vaart', 'veld', 'verdrag', 'verdediging', 'verkeer', 
 'verkiezing', 'verklaring', 'verlening', 'vlak', 'vlucht', 'voertuig', 'voerder', 'vol', 
-'vorming', 'vuur', 'waardig', 'wagen', 'wapen', 'water', 'wedstrijd', 'weer', 'werker', 
+'vorming', 'vuur', 'waardig', 'wagen', 'wapen', 'water', 'weer', 'werker', 'conferentie',
 'wet', 'omelet', 'wetenschap', 'wiel', 'weg', 'zelfmoord', 'zijde', 'zorg', 'zuur',
 'aftrek', 'getrokken', 'divisie', 'schuiver'
 ]);
