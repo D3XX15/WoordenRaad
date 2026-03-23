@@ -977,12 +977,12 @@ const WORDS_BY_CATEGORY = (() => {
     'zo vrij als een vogel',
     'als een kip zonder kop',
     'zo blij als een ei',
-    'zo stil dat je een speld kunt horen vallen'
+    'zo stil dat je een speld kunt horen vallen',
     'zo hard als steen',
     'zo taai als leer',
     'zo scherp als een mes',
     'zo dood als een pier',
-    'een bek als een scheermes'
+    'een bek als een scheermes hebben'
   ];
 
   const map = { dieren, voedsel, koken, beroepen, kantoor, sport, huishouden, natuur, vervoer, plaatsen, kunst, kleding, religie, fictie, literatuur, acties, misdaad, emoties, landen, gereedschap, muziek, militair, ruimte, wetenschap, geneeskunde, politiek, spreekwoorden };
