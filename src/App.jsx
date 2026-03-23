@@ -134,7 +134,7 @@ const WORDS_BY_CATEGORY = (() => {
     'opticien', 'piloot', 'politicoloog', 'postbode', 'stoffeerder', 'loodgieter', 'sommelier', 'ober',
     'strateeg', 'stratenmaker', 'stuntman', 'systeembeheerder', 'visser', 'vliegtuigbouwer', 'vuilnisman',
     'tatoeëerder', 'taxichauffeur', 'taxidermist', 'timmerman', 'tolk', 'kweker', 'wijnboer', 'kustwacht',
-    'trainer', 'tuinman', 'verpleegkundige', 'verzekeringsagent', 'lobbyist', 'undercoveragent', 'pionier',
+    'trainer', 'tuinman', 'verpleegkundige', 'verzekeringsagent', 'lobbyist', 'pionier',
     'winkelier', 'wiskundige', 'woordvoerder', 'zeebioloog', 'zeiler', 'diëtist', 'schildwacht', 'bioloog',
     'aannemer', 'burgemeester', 'cabaretier', 'ijsverkoper', 'kaarsenmaker', 'profvoetballer', 'barista',
     'ambtenaar', 'animator', 'auteur', 'bankier', 'belastingadviseur', 'hoefsmid', 'bibliothecaris',
@@ -331,12 +331,12 @@ const WORDS_BY_CATEGORY = (() => {
   ];
 
   const misdaad = [
-    'vliegtuigkaping', 'politie', 'cel', 'stelen', 'dreigen', 'criminoloog', 'achtervolging',
+    'vliegtuigkaping', 'politie', 'cel', 'stelen', 'dreigen', 'fraude', 'criminoloog', 'achtervolging',
     'afpersen', 'kidnappen', 'smokkelen', 'brandstichten', 'cyberpesten', 'vonnis', 'onderwereld',
     'intimideren', 'op de vlucht zijn', 'executie', 'massamoord', 'ramkraak', 'boef', 'celgenoot',
     'terrorisme', 'zelfmoordaanslag', 'bomaanslag', 'ontvoering', 'plaatsdelict', 'arrestatieteam',
-    'cyberaanval', 'corruptie', 'fraude', 'getuige', 'chantage', 'klokkenluider', 'inbreker',
-    'slavernij', 'terreurcel', 'dagvaarding', 'radicalisering', 'zwarte markt', 'liquidatie',
+    'cyberaanval', 'corruptie', 'getuige', 'chantage', 'klokkenluider', 'inbreker', 'slavernij', 
+    'terreurcel', 'dagvaarding', 'radicalisering', 'zwarte markt', 'liquidatie', 'agent in burger',
     'forensisch onderzoek', 'vergiftiging', 'detective', 'sheriff', 'hoger beroep', 'inbraak', 'inval',
     'laster', 'leugendetector', 'handboeien', 'rechercheur', 'politieagent', 'undercover', 'gevangene',
     'piraterij', 'gevangenis', 'politiebureau', 'rechtbank', 'gerechtshof', 'straatrover', 'maffia',
@@ -1019,7 +1019,7 @@ const EXTRA_WORD_PARTS = new Set([
 'kraam', 'verzorger', 'kunst', 'criticus', 'luchtverkeer', 'leider', 'museum', 'conservator',
 'revalidatie', 'arts', 'scenario', 'schrijver', 'stand-up', 'comedian', 'systeem', 'beheerder',
 'verzekering', 'agent', 'voeding', 'wetenschapper', 'ziekenhuis', 'directeur', 'tram', 'bestuurder',
-'undercover', 'agent', 'belasting', 'adviseur', 'politie', 'commissaris', 'vrachtwagen', 'chauffeur',
+'undercover', 'belasting', 'adviseur', 'politie', 'commissaris', 'vrachtwagen', 'chauffeur',
 'beach', 'volleybal', 'diepzee', 'duiken', 'langebaan', 'schaatsen', 'parachute', 'springen', 'polsstok',
 'hoogspringen', 'schans', 'synchroon', 'trampoline', 'wedstrijd', 'vissen', 'kampioen', 'beker', 'oven',
 'gezelschap', 'spel', 'kleiduiven', 'schieten', 'estafette', 'ring', 'afstand', 'bediening', 'regelaar',
