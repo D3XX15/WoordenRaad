@@ -398,7 +398,7 @@ const WORDS_BY_CATEGORY = (() => {
     'overweldigd', 'kalm', 'slaperig', 'futloos', 'verward', 'besluiteloos', 'pessimistisch', 'duidelijk',
     'gefixeerd', 'creatief', 'dromerig', 'empathisch', 'zorgzaam', 'afstandelijk', 'onbeleefd', 'boos',
     'kritisch', 'behulpzaam', 'perfectionistisch', 'zenuwachtig', 'verrast', 'vrolijk', 'manipulatief',
-    'verlegen', 'geduldig', 'eigenwijs', 'moedig', 'vergevingsgezind', 'afwezig', 'gewoontedier',
+    'verlegen', 'geduldig', 'eigenwijs', 'moedig', 'vergevingsgezind', 'afwezig', 'gewoontedier', 'trendy',
     'euforisch', 'vreedzaam', 'gepassioneerd', 'radeloos', 'gastvrij', 'wraakzuchtig', 'hebberig',
     'rationeel', 'ambitieus', 'zorgeloos', 'roekeloos', 'gul', 'vrijgevig', 'gierig', 'nonchalant',
     'fanatiek', 'betrouwbaar', 'onverschillig', 'assertief', 'cynisch', 'verstrooid', 'opgetogen',
@@ -446,7 +446,7 @@ const WORDS_BY_CATEGORY = (() => {
     'spectrum', 'staafdiagram', 'standaard', 'statistiek', 'steekproef', 'stroom', 'precisie', 'laser',
     'supergeleider', 'supergeluid', 'taartdiagram', 'theorie', 'transistor', 'trilling', 'loep',
     'ultraviolet', 'variabele', 'verbinding', 'vergrootglas', 'weerspiegeling', 'magneet',
-    'weerstand', 'wiskunde', 'zuurgraad', 'laborant', 'toxicoloog', 'wetenschapper'
+    'weerstand', 'trendlijn', 'wiskunde', 'zuurgraad', 'laborant', 'toxicoloog', 'wetenschapper'
   ];
 
   const geneeskunde = [
