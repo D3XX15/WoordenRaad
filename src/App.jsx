@@ -1432,13 +1432,13 @@ function SetupScreen({ onStart }) {
               className={`time-btn time-btn-minus${roundTime <= 30 ? " time-btn-disabled" : ""}`}
               onClick={() => setRoundTime((t) => Math.max(30, t - 30))}
               disabled={roundTime <= 30}
-            >−30</button>
+            >−</button>
             <span className="time-display">{roundTime}s </span>
             <button
               className={`time-btn time-btn-plus${roundTime >= 300 ? " time-btn-disabled" : ""}`}
               onClick={() => setRoundTime((t) => Math.min(300, t + 30))}
               disabled={roundTime >= 300}
-            >+30</button>
+            >+</button>
           </div>
         </div>
 
@@ -2823,9 +2823,9 @@ export default function App() {
         /* ── Time Control ── */
         .time-control { display: flex; align-items: center; gap: 12px; }
         .time-btn {
-          width: 64px; height: 44px; border-radius: 12px; border: 3px solid #34d399;
-          background: rgba(52,211,153,0.08); color: #34d399; font-family: inherit; font-size: 15px;
-          font-weight: 700; cursor: pointer; transition: all 0.18s;
+          width: 64px; height: 44px; border-radius: 12px; border: 2px dashed #ccc;
+          background: rgba(52,211,153,0.08); color: rgba(255,255,255,0.45); font-family: 'Righteous'; font-size: 20px;
+          font-weight: 700; cursor: pointer; transition: all 0.2s;
         }
         .time-btn-plus:hover:not(:disabled) { background: rgba(52,211,153,0.2); }
         .time-btn-minus { border-color: #f87171; background: rgba(248,113,113,0.1); color: #f87171; }
@@ -2833,7 +2833,7 @@ export default function App() {
         .time-btn:disabled { opacity: 0.3; cursor: default; }
         .time-btn-disabled { opacity: 1 !important; cursor: not-allowed !important; pointer-events: none; background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.35) !important; }
         .time-display { flex: 1; text-align: center; font-family: 'Righteous', cursive; font-size: 24px; color: rgba(255,255,255,0.9); }
-
+        
         /* ── Categories ── */
         .category-grid { display: flex; flex-wrap: wrap; gap: 8px; }
         .category-btn {
