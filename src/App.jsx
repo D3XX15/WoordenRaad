@@ -1324,7 +1324,7 @@ function SetupScreen({ onStart }) {
                                 <span className="player-index-badge">{p + 1}</span>
                                 <input
                                   className="integrated-name-input"
-                                  placeholder={`Speler ${p + 1}`}
+                                  placeholder={`Player ${p + 1}`}
                                   value={names[idx] ?? ""}
                                   onChange={(e) => updateName(idx, e.target.value)}
                                   maxLength={16}
@@ -1343,7 +1343,7 @@ function SetupScreen({ onStart }) {
                         <button 
                           className="add-player-integrated" 
                           onClick={() => addPlayerToTeam(t)}>
-                          Speler toevoegen
+                          Add player
                         </button>
                       )}
                     </div>
@@ -1356,14 +1356,14 @@ function SetupScreen({ onStart }) {
                   className="add-player-integrated dashed team-add-btn" 
                   onClick={addPlayer}
                 >
-                  Team toevoegen
+                  Add team
                 </button>
               )}
             </div>
           ) : (
             <div className="teams-setup-wrapper">
               <div className="setup-wrapper-badge">
-                SPELERS
+                PLAYERS
               </div>
 
               <div className="names-grid">
@@ -1394,7 +1394,7 @@ function SetupScreen({ onStart }) {
                 {names.length < 10 && (
                   <button className="add-player-integrated"
                     onClick={addPlayer}>
-                    Speler toevoegen
+                    Add player
                   </button>
                 )}
               </div>
@@ -1407,8 +1407,8 @@ function SetupScreen({ onStart }) {
             className={`toggle-all-btn ${allSelected ? "toggle-all-btn-active" : ""}`}
             onClick={() => toggleCategory("all")}
           >
-            {allSelected ? "🎲 All categories" : "⚙️ Custom select"}
-            <span className="toggle-all-word-count">{totalWordsCount} woorden</span>
+            {allSelected ? "🎲 All categories" : "⚙️ Custom selection"}
+            <span className="toggle-all-word-count">{totalWordsCount} words</span>
           </button>
 
           {!allSelected && (
