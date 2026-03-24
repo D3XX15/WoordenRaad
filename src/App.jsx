@@ -1489,15 +1489,14 @@ const MESSAGES_GREAT = [
   () => `Dit was gewoon unfair 😭`,
   () => `Hoe? Gewoon hoe? 🤯`,
   () => `Heb je soms een spiekbriefje? 🕵️`,
-  () => `De anderen zitten stiekem te bidden 🙏`,
+  () => `De anderen doen een schietgebedje 🙏`,
   () => `Weet je zeker dat je niet vals speelt? 🧐`,
   () => `Is de Dikke Van Dale persoonlijk aanwezig? 📚`,
   () => `Toevallig een woordenboek opgegeten? 📖`,
   () => `Dit grenst aan superheldenkrachten 🦸`,
-  () => `Wij nomineren je voor het WK woorden 🌍`,
-  () => `Even checken of je een robot bent 🤖`,
+  () => `Je bent genomineerd voor het WK woordjes raden 🌍`,
+  () => `Even checken of je geen robot bent 🤖`,
   () => `De anderen overwegen naar huis te gaan 🚪`,
-  () => `Dit was te makkelijk voor jou, of niet? 😏`,
   () => `Iemand heeft goed geslapen vannacht 😴`,
   () => `Je hebt de groep getraumatiseerd 😵`,
   () => `Zelfs de tijdklok is onder de indruk ⏱️`,
@@ -1507,7 +1506,7 @@ const MESSAGES_OK = [
   (_, pts) => `${pts} ${pt(pts)}, lekker bezig! 🙌`,
   (_, pts) => `${pts} ${pt(pts)}, prima gedaan 👌`,
   (_, pts) => `${pts} ${pt(pts)}, niet slecht 👍`,
-  (_, pts) => `${pts} ${pt(pts)}, wat geweldig 🥳`,
+  (_, pts) => `${pts} ${pt(pts)}, gefeliciteerd 🥳`,
   (_, pts) => `${pts} ${pt(pts)} bijgeschreven ✍️`,
   (_, pts) => `${pts} ${pt(pts)} in één ronde 🤩`,
   (_, pts) => `${pts} ${pt(pts)}, ga zo door! 💪`,
@@ -1516,7 +1515,7 @@ const MESSAGES_OK = [
   (_, pts) => `${pts} ${pt(pts)}, netjes hoor 🤝`,
   (_, pts) => `${pts} ${pt(pts)} de goede kant op 📈`,
   (_, pts) => `${pts} ${pt(pts)}, solide ronde! 🧱`,
-  (_, pts) => `${pts} ${pt(pts)}, daar kun je mee thuiskomen 🏠`,
+  (_, pts) => `${pts} ${pt(pts)}, lekker gespeeld 🎮`,
   (_, pts) => `${pts} ${pt(pts)}, lekker stabiel! ⚖️`,
   (_, pts) => `${pts} ${pt(pts)}, je zit in een flow 🌊`,
   (_, pts) => `${pts} ${pt(pts)}, niks mis mee 🤷`,
@@ -1536,7 +1535,7 @@ const MESSAGES_POOR = [
   () => `Je was er met je hoofd even niet bij 💭`,
   () => `Zullen we doen alsof dit niet gebeurd is? 🙊`,
   () => `Het lag allemaal aan de woorden 😠`,
-  () => `Je gunt de anderen een kans. Lief! 🎁`,
+  () => `Je gunt de rest een kans. Lief! 🎁`,
   () => `Geeft niks, iedereen heeft soms een dipje 📉`,
   () => `De klok was deze ronde je vijand ⏰`,
   () => `Hoofd omhoog, borst vooruit 💪`,
@@ -1545,8 +1544,6 @@ const MESSAGES_POOR = [
   (_, pts) => `${pts} ${pt(pts)}, de weg omhoog begint hier ⛰️`,
   (_, pts) => `${pts} ${pt(pts)}, misschien even oefenen thuis 🏠`,
   (_, pts) => `${pts} ${pt(pts)}, je hebt het geprobeerd! 🫶`,
-  (_, pts) => `${pts} ${pt(pts)}, maar wel meegespeeld 🎮`,
-  (_, pts) => `${pts} ${pt(pts)}, vanaf hier kan je alleen omhoog ☝️`,
   () => `Even bijkomen en dan weer volle bak! 🔋`,
   () => `De woorden waren dit keer iets te lastig 🤷`,
 ];
@@ -1643,7 +1640,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
     const totalScore = finalScores.correct + wordResultsRef.current.reduce((sum, r) => sum + (r.bonusPts || 0), 0);
     endMessageRef.current = getRandomEndMessage(finalScores.correct, roundTime, totalScore);
     setDone(true);
-    roundEndTimeoutRef.current = setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex, wordResults: wordResultsRef.current }), 2800);
+    roundEndTimeoutRef.current = setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex, wordResults: wordResultsRef.current }), 3000);
   };
 
   // Ref naar finishRound zodat de timer-interval er altijd de actuele versie van kan aanroepen
