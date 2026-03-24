@@ -722,6 +722,7 @@ const WORDS_BY_CATEGORY = (() => {
     'eerlijkheid duurt het langst',
     'eerst zien dan geloven',
     'er de brui aan geven',
+    'er een eind aan breien',
     'het kind met het badwater weggooien',
     'het roer omgooien',
     'hoge bomen vangen veel wind',
