@@ -2824,12 +2824,12 @@ export default function App() {
         .time-control { display: flex; align-items: center; gap: 12px; }
         .time-btn {
           width: 64px; height: 44px; border-radius: 12px; border: 2px dashed #4a90e2;
-          background: rgba(74, 144, 226, 0.1); color: #4a90e2; font-family: 'Righteous'; font-size: 20px;
+          background: rgba(52,211,153,0.2); color: #4a90e2; font-family: 'Righteous'; font-size: 20px;
           font-weight: 700; cursor: pointer; transition: all 0.2s;
         }
-        .time-btn-plus:hover:not(:disabled) { background: rgba(74, 144, 226, 0.1); }
-        .time-btn-minus { border-color: #4a90e2; background: rgba(74, 144, 226, 0.1); color: #4a90e2; }
-        .time-btn-minus:hover:not(:disabled) { background: rgba(248,113,113,0.2); }
+        .time-btn-plus:hover:not(:disabled) { background: rgba(52,211,153,0.2); }
+        .time-btn-minus { border-color: #4a90e2; background: rgba(248,113,113,0.1); color: #4a90e2; }
+        .time-btn-minus:hover:not(:disabled) { background: rgba(248,113,113,0.1); }
         .time-btn:disabled { opacity: 0.3; cursor: default; }
         .time-btn-disabled { opacity: 1 !important; cursor: not-allowed !important; pointer-events: none; background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.35) !important; }
         .time-display { flex: 1; text-align: center; font-family: 'Righteous', cursive; font-size: 24px; color: rgba(255,255,255,0.9); }
