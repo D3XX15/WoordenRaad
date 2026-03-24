@@ -2823,11 +2823,11 @@ export default function App() {
         /* ── Time Control ── */
         .time-control { display: flex; align-items: center; gap: 12px; }
         .time-btn {
-          width: 64px; height: 44px; border-radius: 12px; border: 2px dashed #ccc;
-          background: rgba(52,211,153,0.08); color: rgba(255,255,255,0.45); font-family: 'Righteous'; font-size: 20px;
+          width: 64px; height: 44px; border-radius: 12px; border: 2px dashed #4a90e2;
+          background: rgba(74, 144, 226, 0.1); color: #4a90e2; font-family: 'Righteous'; font-size: 20px;
           font-weight: 700; cursor: pointer; transition: all 0.2s;
         }
-        .time-btn-plus:hover:not(:disabled) { background: rgba(52,211,153,0.2); }
+        .time-btn-plus:hover:not(:disabled) { background: rgba(74, 144, 226, 0.1); }
         .time-btn-minus { border-color: #4a90e2; background: rgba(74, 144, 226, 0.1); color: #4a90e2; }
         .time-btn-minus:hover:not(:disabled) { background: rgba(248,113,113,0.2); }
         .time-btn:disabled { opacity: 0.3; cursor: default; }
