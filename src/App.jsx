@@ -1424,7 +1424,7 @@ function SetupScreen({ onStart }) {
             onClick={() => toggleCategory("all")}
           >
             {allSelected ? "🎲 Alle categorieën" : "⚙️ Custom selectie"}
-            <span className="toggle-all-word-count">{totalWordsCount}/{absoluteTotalWords}</span>
+            <span className="toggle-all-word-count">{totalWordsCount} woorden</span>
           </button>
 
           {!allSelected && (
