@@ -1017,20 +1017,20 @@ const EXTRA_WORD_PARTS = new Set([
 ]);
 
 function hyphenateWord(word) {
-  // Lege string, null of undefined: niets te doen
+  // 1. Basis checks: Lege string of korte woorden overslaan
   if (!word) return word;
 
-  // Meerdere woorden: elk deel apart hypheneren en weer samenvoegen
+  // Meerdere woorden: elk deel apart behandelen
   if (word.includes(' ')) {
     return word.split(' ').map(hyphenateWord).join(' ');
   }
 
-  // Koppelteken: zachte afbreek ná elk streepje, ongeacht lengte
+  // Bestaand koppelteken: zachte afbreek (\u00AD) toevoegen na het streepje
   if (word.includes('-')) {
     return word.replace(/-/g, '-\u00AD');
   }
 
-  // Morfologische en fonetische logica alleen voor langere woorden
+  // Alleen lange woorden verwerken (prestatie en logica)
   if (word.length <= 10) return word;
 
   const lower = word.toLowerCase();
@@ -1073,34 +1073,38 @@ function hyphenateWord(word) {
     // Nooit afbreken in de laatste 5 letters
     if (i < word.length - 5) {
       const char1 = word[i].toLowerCase();
-      const char2 = word[i + 1].toLowerCase();
-      const char3 = word[i + 2].toLowerCase();
+      const char2 = word[i + 1]?.toLowerCase();
+      const char3 = word[i + 2]?.toLowerCase();
 
-      // Tweeklank als één eenheid behandelen: nooit doormidden afbreken
-      if (diphthongs.includes(char1 + char2)) {
-        i++;
-        result += word[i];
-        continue;
+      // Check op tweeklanken (bijv. 'aa', 'oe')
+      // Als gevonden, voeg tweede letter toe en spring over beide heen
+      if (char2 && diphthongs.includes(char1 + char2)) {
+        result += word[i + 1]; 
+        i += 2; 
+        continue; 
       }
 
       const isVow1 = vowels.includes(char1);
-      const isVow2 = vowels.includes(char2);
-      const isVow3 = vowels.includes(char3);
+      const isVow2 = char2 && vowels.includes(char2);
+      const isVow3 = char3 && vowels.includes(char3);
 
-      // Klinker·medeklinker·klinker → afbreken na klinker (bijv. ma·ken)
+      // Regel: Klinker-Medeklinker-Klinker (bijv. ma-ken)
       if (isVow1 && !isVow2 && isVow3 && i > 1) {
         result += '\u00AD';
       }
-      // Klinker·medeklinker·medeklinker·klinker → afbreken na eerste medeklinker (bijv. kam·per)
+      // Regel: Klinker-Medeklinker-Medeklinker-Klinker (bijv. kam-per)
       else if (isVow1 && !isVow2 && !isVow3 && i < word.length - 6) {
-        if (vowels.includes(word[i + 3].toLowerCase())) {
-          result += char2 + '\u00AD';
-          i++;
+        const char4 = word[i + 3]?.toLowerCase();
+        if (char4 && vowels.includes(char4)) {
+          result += word[i + 1] + '\u00AD';
+          i++; // Spring over de eerste medeklinker die we zojuist hebben toegevoegd
         }
       }
     }
+    
     i++;
   }
+
   return result;
 }
 
