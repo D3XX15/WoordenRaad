@@ -2828,7 +2828,7 @@ export default function App() {
           font-weight: 700; cursor: pointer; transition: all 0.2s;
         }
         .time-btn-plus:hover:not(:disabled) { background: rgba(52,211,153,0.2); }
-        .time-btn-minus { border-color: #f87171; background: rgba(248,113,113,0.1); color: #f87171; }
+        .time-btn-minus { border-color: #4a90e2; background: rgba(74, 144, 226, 0.1); color: #4a90e2; }
         .time-btn-minus:hover:not(:disabled) { background: rgba(248,113,113,0.2); }
         .time-btn:disabled { opacity: 0.3; cursor: default; }
         .time-btn-disabled { opacity: 1 !important; cursor: not-allowed !important; pointer-events: none; background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.35) !important; }
