@@ -1424,6 +1424,7 @@ function SetupScreen({ onStart }) {
             onClick={() => toggleCategory("all")}
           >
             {allSelected ? "🎲 Alle categorieën" : "⚙️ Custom selectie"}
+            <span className="toggle-all-word-count">{totalWordsCount}/{absoluteTotalWords}</span>
           </button>
 
           {!allSelected && (
@@ -1439,12 +1440,6 @@ function SetupScreen({ onStart }) {
               ))}
             </div>
           )}
-        </div>
-
-        <div className="names-label-row center-labels">
-          <label className="setup-label center-label">
-            {totalWordsCount}/{absoluteTotalWords} woorden in het spel
-          </label>
         </div>
 
         <button
@@ -1537,7 +1532,7 @@ const MESSAGES_POOR = [
   () => `De volgende ronde gaat vast beter 😉`,
   () => `De andere spelers ruiken bloed 🩸`,
   () => `De spanning zat er zeker in 😅`,
-  () => `Dit was een warming-up 🏃`,
+  () => `Dit was duidelijk een warming-up 🏃`,
   () => `Je was er met je hoofd even niet bij 💭`,
   () => `Zullen we doen alsof dit niet gebeurd is? 🙊`,
   () => `Het lag allemaal aan de woorden 😠`,
@@ -2753,6 +2748,10 @@ export default function App() {
         .toggle-all-btn:hover { background: rgba(255,255,255,0.1); }
         .toggle-all-btn-active { background: rgba(74, 144, 226, 0.1); border-color: #4a90e2; color: #4a90e2; margin-bottom: 0; }
         .toggle-all-btn-active:hover { background: rgba(74, 144, 226, 0.2); }
+        .toggle-all-word-count {
+          margin-left: auto; font-family: inherit; font-size: 12px; font-weight: 800;
+          letter-spacing: 0.06em; opacity: 0.55;
+        }
 
         /* ── Player Inputs (Individual & Teams) ── */
         .player-input-group { display: flex; margin-bottom: 4px; height: 48px; width: 100%; }
