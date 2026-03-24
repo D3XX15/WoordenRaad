@@ -832,7 +832,7 @@ const WORDS_BY_CATEGORY = (() => {
     'vele handen maken licht werk',
     'vertrouwen komt te voet en gaat te paard',
     'waar rook is is vuur',
-    'wat men niet weet wat men niet deert',
+    'wat niet weet wat niet deert',
     'wie de schoen past trekt hem aan',
     'wie het kleine niet eert is het grote niet weerd',
     'wie kaatst moet de bal verwachten',
