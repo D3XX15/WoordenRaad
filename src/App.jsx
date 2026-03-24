@@ -2824,7 +2824,7 @@ export default function App() {
         .time-control { display: flex; align-items: center; gap: 12px; }
         .time-btn {
           width: 64px; height: 44px; border-radius: 12px; border: 2px dashed #4a90e2;
-          background: rgba(52,211,153,0.1); color: #4a90e2; font-family: 'Righteous'; font-size: 20px;
+          background: rgba(52,211,153,0.1); color: #4a90e2; font-family: 'Righteous'; font-size: 30px;
           font-weight: 700; cursor: pointer; transition: all 0.2s;
         }
         .time-btn-plus:hover:not(:disabled) { background: rgba(52,211,153,0.1); }
