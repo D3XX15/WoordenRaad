@@ -1403,22 +1403,6 @@ function SetupScreen({ onStart }) {
         </div>
 
         <div className="setup-section">
-          <div className="time-control">
-            <button
-              className={`time-btn time-btn-minus${roundTime <= 30 ? " time-btn-disabled" : ""}`}
-              onClick={() => setRoundTime((t) => Math.max(30, t - 30))}
-              disabled={roundTime <= 30}
-            >−30</button>
-            <span className="time-display">{roundTime}s </span>
-            <button
-              className={`time-btn time-btn-plus${roundTime >= 300 ? " time-btn-disabled" : ""}`}
-              onClick={() => setRoundTime((t) => Math.min(300, t + 30))}
-              disabled={roundTime >= 300}
-            >+30</button>
-          </div>
-        </div>
-
-        <div className="setup-section">
           <button
             className={`toggle-all-btn ${allSelected ? "toggle-all-btn-active" : ""}`}
             onClick={() => toggleCategory("all")}
@@ -1440,6 +1424,22 @@ function SetupScreen({ onStart }) {
               ))}
             </div>
           )}
+        </div>
+
+        <div className="setup-section">
+          <div className="time-control">
+            <button
+              className={`time-btn time-btn-minus${roundTime <= 30 ? " time-btn-disabled" : ""}`}
+              onClick={() => setRoundTime((t) => Math.max(30, t - 30))}
+              disabled={roundTime <= 30}
+            >−30</button>
+            <span className="time-display">{roundTime}s </span>
+            <button
+              className={`time-btn time-btn-plus${roundTime >= 300 ? " time-btn-disabled" : ""}`}
+              onClick={() => setRoundTime((t) => Math.min(300, t + 30))}
+              disabled={roundTime >= 300}
+            >+30</button>
+          </div>
         </div>
 
         <button
