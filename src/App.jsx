@@ -1324,7 +1324,7 @@ function SetupScreen({ onStart }) {
                                 <span className="player-index-badge">{p + 1}</span>
                                 <input
                                   className="integrated-name-input"
-                                  placeholder={`Player ${p + 1}`}
+                                  placeholder={`Speler ${p + 1}`}
                                   value={names[idx] ?? ""}
                                   onChange={(e) => updateName(idx, e.target.value)}
                                   maxLength={16}
@@ -1343,7 +1343,7 @@ function SetupScreen({ onStart }) {
                         <button 
                           className="add-player-integrated" 
                           onClick={() => addPlayerToTeam(t)}>
-                          Add player
+                          Speler toevoegen
                         </button>
                       )}
                     </div>
@@ -1356,14 +1356,14 @@ function SetupScreen({ onStart }) {
                   className="add-player-integrated dashed team-add-btn" 
                   onClick={addPlayer}
                 >
-                  Add team
+                  Team toevoegen
                 </button>
               )}
             </div>
           ) : (
             <div className="teams-setup-wrapper">
               <div className="setup-wrapper-badge">
-                PLAYERS
+                SPELERS
               </div>
 
               <div className="names-grid">
@@ -1394,7 +1394,7 @@ function SetupScreen({ onStart }) {
                 {names.length < 10 && (
                   <button className="add-player-integrated"
                     onClick={addPlayer}>
-                    Add player
+                    Speler toevoegen
                   </button>
                 )}
               </div>
@@ -1407,8 +1407,8 @@ function SetupScreen({ onStart }) {
             className={`toggle-all-btn ${allSelected ? "toggle-all-btn-active" : ""}`}
             onClick={() => toggleCategory("all")}
           >
-            {allSelected ? "🎲 All categories" : "⚙️ Custom selection"}
-            <span className="toggle-all-word-count">{totalWordsCount} words</span>
+            {allSelected ? "🎲 Alles" : "⚙️ Custom"}
+            <span className="toggle-all-word-count">{totalWordsCount} woorden</span>
           </button>
 
           {!allSelected && (
@@ -1432,13 +1432,13 @@ function SetupScreen({ onStart }) {
               className={`time-btn time-btn-minus${roundTime <= 30 ? " time-btn-disabled" : ""}`}
               onClick={() => setRoundTime((t) => Math.max(30, t - 30))}
               disabled={roundTime <= 30}
-            >−</button>
+            >−30</button>
             <span className="time-display">{roundTime}s </span>
             <button
               className={`time-btn time-btn-plus${roundTime >= 300 ? " time-btn-disabled" : ""}`}
               onClick={() => setRoundTime((t) => Math.min(300, t + 30))}
               disabled={roundTime >= 300}
-            >+</button>
+            >+30</button>
           </div>
         </div>
 
@@ -2833,7 +2833,7 @@ export default function App() {
         .time-btn:disabled { opacity: 0.3; cursor: default; }
         .time-btn-disabled { opacity: 1 !important; cursor: not-allowed !important; pointer-events: none; background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.35) !important; }
         .time-display { flex: 1; text-align: center; font-family: 'Righteous', cursive; font-size: 24px; color: rgba(255,255,255,0.9); }
-        
+
         /* ── Categories ── */
         .category-grid { display: flex; flex-wrap: wrap; gap: 8px; }
         .category-btn {
