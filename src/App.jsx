@@ -1407,7 +1407,7 @@ function SetupScreen({ onStart }) {
             className={`toggle-all-btn ${allSelected ? "toggle-all-btn-active" : ""}`}
             onClick={() => toggleCategory("all")}
           >
-            {allSelected ? "🎲 All" : "⚙️ Custom"}
+            {allSelected ? "🎲 All categories" : "⚙️ Custom selection"}
             <span className="toggle-all-word-count">{totalWordsCount} woorden</span>
           </button>
 
