@@ -1279,18 +1279,18 @@ function SetupScreen({ onStart }) {
           <p className="logo-sub">Het raad- en uitbeeldspel</p>
         </div>
 
-        <div className="setup-mode-toggle-group">
+        <div className="setup-mode-segmented">
           <button
-            className={`start-btn mode-toggle-btn mode-toggle-btn-half ${!teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
-            onClick={() => !teamMode ? null : toggleTeamMode()}
+            className={`mode-seg-btn ${!teamMode ? "mode-seg-active" : "mode-seg-inactive"}`}
+            onClick={() => teamMode && toggleTeamMode()}
           >
-            👤
+            👤 Solo
           </button>
           <button
-            className={`start-btn mode-toggle-btn mode-toggle-btn-half ${teamMode ? " mode-toggle-teams" : " mode-toggle-singles"}`}
-            onClick={() => teamMode ? null : toggleTeamMode()}
+            className={`mode-seg-btn ${teamMode ? "mode-seg-active" : "mode-seg-inactive"}`}
+            onClick={() => !teamMode && toggleTeamMode()}
           >
-            👥
+            👥 Teams
           </button>
         </div>
 
@@ -1345,7 +1345,7 @@ function SetupScreen({ onStart }) {
                       </div>
                       {size < 10 && (
                         <button 
-                          className="add-player-integrated" 
+                          className="add-player-integrated add-player-in-team" 
                           onClick={() => addPlayerToTeam(t)}>
                           Speler toevoegen
                         </button>
@@ -1407,15 +1407,24 @@ function SetupScreen({ onStart }) {
         </div>
 
         <div className="setup-section">
-          <button
-            className={`toggle-all-btn ${allSelected ? "toggle-all-btn-active" : ""}`}
-            onClick={() => toggleCategory("all")}
-          >
-            {allSelected ? "🎲 Alles" : "⚙️ Custom"}
-            <span className="toggle-all-word-count">{totalWordsCount} woorden</span>
-          </button>
+          <div className="cat-section-header">
+            <span className="cat-section-title">Categorieën</span>
+            <button
+              className={`cat-toggle-pill ${allSelected ? "cat-toggle-pill-active" : "cat-toggle-pill-custom"}`}
+              onClick={() => toggleCategory("all")}
+            >
+              {totalWordsCount} woorden
+            </button>
+          </div>
 
-          {!allSelected && (
+          {allSelected ? (
+            <div className="cat-preview-chips">
+              {CATEGORIES.slice(0, 5).map((cat) => (
+                <span key={cat.id} className="cat-preview-chip">{cat.label}</span>
+              ))}
+              <span className="cat-preview-more">+{CATEGORIES.length - 5} meer</span>
+            </div>
+          ) : (
             <div className="category-grid">
               {CATEGORIES.map((cat) => (
                 <button
@@ -1431,13 +1440,14 @@ function SetupScreen({ onStart }) {
         </div>
 
         <div className="setup-section">
+          <span className="time-section-label">⏱ Rondetijd</span>
           <div className="time-control">
             <button
               className={`time-btn time-btn-minus${roundTime <= 30 ? " time-btn-disabled" : ""}`}
               onClick={() => setRoundTime((t) => Math.max(30, t - 30))}
               disabled={roundTime <= 30}
             >−</button>
-            <span className="time-display">{roundTime}s </span>
+            <span className="time-display">{roundTime}s</span>
             <button
               className={`time-btn time-btn-plus${roundTime >= 300 ? " time-btn-disabled" : ""}`}
               onClick={() => setRoundTime((t) => Math.min(300, t + 30))}
@@ -1447,11 +1457,11 @@ function SetupScreen({ onStart }) {
         </div>
 
         <button
-          className={`start-btn ${canStart ? "ready" : ""}`}
+          className={`start-btn ${canStart ? "ready-solid" : ""}`}
           onClick={handleStart}
           disabled={!canStart}
         >
-          Spel starten
+          {canStart ? "Spel starten →" : "Vul alle namen in"}
         </button>
       </div>
     </div>
@@ -2708,13 +2718,29 @@ export default function App() {
         .setup-section { margin-bottom: 28px; }
         .setup-label { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
         
-        .names-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .names-grid { display: grid; grid-template-columns: 1fr; gap: 4px; }
         .names-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
         .center-labels { justify-content: center; width: 100%; }
         .center-label { text-align: center; width: 100%; }
 
         /* ── Toggles & Buttons ── */
-        .setup-mode-toggle-group { display: flex; gap: 12px; margin-bottom: 30px; }
+        .setup-mode-segmented {
+          display: flex; margin-bottom: 28px;
+          border: 2px solid rgba(255,255,255,0.15); border-radius: 14px; overflow: hidden;
+        }
+        .mode-seg-btn {
+          flex: 1; padding: 13px 10px; font-family: 'Righteous', cursive; font-size: 17px;
+          letter-spacing: 0.04em; cursor: pointer; border: none; transition: all 0.2s;
+          display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .mode-seg-active {
+          background: rgba(74,144,226,0.18); color: #4a90e2;
+          border-right: none;
+        }
+        .mode-seg-inactive {
+          background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.45);
+        }
+        .mode-seg-inactive:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.7); }
 
         .start-btn {
           width: 100%;
@@ -2730,9 +2756,13 @@ export default function App() {
           transition: all 0.25s;
           margin-top: 4px;
         }
-        .start-btn.ready { border-color: #a78bfa; background: rgba(167,139,250,0.1); color: #a78bfa; }
-        .start-btn.ready:hover { background: rgba(167,139,250,0.2); }
+        .start-btn.ready-solid {
+          border-color: #a78bfa; background: #a78bfa; color: white;
+          box-shadow: 0 4px 20px rgba(167,139,250,0.35);
+        }
+        .start-btn.ready-solid:hover { background: #b89ffc; border-color: #b89ffc; }
 
+        /* kept for any other uses of .mode-toggle-* in the codebase */
         .mode-toggle-btn { border: 3px solid rgba(255,255,255,0.2); }
         .mode-toggle-btn-half { margin: 0; flex: 1; }
         .mode-toggle-singles { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); }
@@ -2740,6 +2770,43 @@ export default function App() {
         .mode-toggle-teams { background: rgba(74, 144, 226, 0.1); color: #4a90e2; border-color: #4a90e2; }
         .mode-toggle-teams:hover { background: rgba(74, 144, 226, 0.2); }
         
+        /* ── Category Section ── */
+        .cat-section-header {
+          display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+        }
+        .cat-section-title {
+          font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+          color: rgba(255,255,255,0.45);
+        }
+        .cat-header-right { display: flex; align-items: center; gap: 10px; }
+        .cat-word-count {
+          font-size: 12px; font-weight: 800; letter-spacing: 0.06em;
+          color: rgba(255,255,255,0.35);
+        }
+        .cat-toggle-pill {
+          font-size: 12px; font-weight: 700; padding: 5px 13px; border-radius: 20px; cursor: pointer;
+          transition: all 0.2s; letter-spacing: 0.03em; font-family: inherit;
+        }
+        .cat-toggle-pill-active {
+          background: rgba(52,211,153,0.12); border: 2px solid #34d399; color: #34d399;
+        }
+        .cat-toggle-pill-active:hover { background: rgba(52,211,153,0.22); }
+        .cat-toggle-pill-custom {
+          background: rgba(74,144,226,0.1); border: 2px solid #4a90e2; color: #4a90e2;
+        }
+        .cat-toggle-pill-custom:hover { background: rgba(74,144,226,0.2); }
+        .cat-preview-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; }
+        .cat-preview-chip {
+          font-size: 12px; padding: 5px 11px; border-radius: 20px;
+          background: rgba(52,211,153,0.08); border: 2px solid rgba(52,211,153,0.3);
+          color: rgba(52,211,153,0.75);
+        }
+        .cat-preview-more {
+          font-size: 12px; padding: 5px 11px; border-radius: 20px;
+          background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.2);
+          color: rgba(255,255,255,0.35);
+        }
+        /* legacy toggle-all-btn kept for safety */
         .toggle-all-btn {
           width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
           padding: 12px; border-radius: 12px; border: 2px dashed #ccc; background: transparent;
@@ -2780,12 +2847,13 @@ export default function App() {
         .btn-subtle { background: rgba(255, 255, 255, 0.1) !important; color: white !important; }
 
         .add-player-integrated {
-          width: 100%; height: 44px; margin-top: 4px;
+          width: 100%; height: 44px; margin-top: 8px;
           background: rgba(52, 211, 153, 0.1); border: 2px dashed #34d399; border-radius: 12px;
           color: #34d399; display: flex; align-items: center; justify-content: center; gap: 12px;
           cursor: pointer; font-size: 1rem; font-weight: 600;
         }
         .add-player-integrated:hover { background: rgba(52, 211, 153, 0.2); }
+        .add-player-in-team { margin-top: 12px; }
 
         /* ── Team Layout ── */
         .teams-setup-wrapper {
@@ -2798,7 +2866,7 @@ export default function App() {
         }
         .teams-grid { display: flex; flex-direction: column; gap: 14px; }
         .team-section-container {
-          margin-bottom: 14px; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          margin-bottom: 14px; padding: 10px 0;
           width: 100%; background-color: transparent; border-radius: 16px;
         }
         .team-header-row { position: relative; display: flex; align-items: center; margin-bottom: 8px; }
@@ -2822,6 +2890,10 @@ export default function App() {
         .small-group .integrated-delete-btn { border-radius: 0 10px 10px 0; width: 38px !important; }
 
         /* ── Time Control ── */
+        .time-section-label {
+          display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.12em;
+          text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 10px;
+        }
         .time-control { display: flex; align-items: center; gap: 12px; }
         .time-btn {
           width: 64px; height: 44px; border-radius: 12px; border: 2px dashed #4a90e2;
@@ -2836,15 +2908,15 @@ export default function App() {
         .time-display { flex: 1; text-align: center; font-family: 'Righteous', cursive; font-size: 24px; color: rgba(255,255,255,0.9); }
 
         /* ── Categories ── */
-        .category-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+        .category-grid { display: flex; flex-wrap: wrap; gap: 7px; }
         .category-btn {
-          padding: 8px 14px; border-radius: 20px; border: 3px solid rgba(255,255,255,0.2);
-          background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 700;
-          font-family: inherit; cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s; user-select: none;
+          padding: 5px 11px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2);
+          background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 700;
+          cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s; user-select: none;
         }
         .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
-        .category-btn-active { background: rgba(52,211,153,0.08); border-color: #34d399; color: #34d399; }
-        .category-btn-active:hover { background: rgba(52,211,153,0.18); border-color: #34d399; }
+        .category-btn-active { background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.3); color: rgba(52,211,153,0.75); }
+        .category-btn-active:hover { background: rgba(52,211,153,0.18); border-color: #34d399; color: #34d399; }
 
         /* ── Handoff Screen ── */
         .handoff-screen { background: none; }
