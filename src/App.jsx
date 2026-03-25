@@ -2974,7 +2974,7 @@ export default function App() {
           width: 100%; backdrop-filter: blur(20px);
         }
         .handoff-icon { font-size: 52px; margin-bottom: 16px; animation: bounce 1.5s infinite; }
-        .handoff-sub { font-size: 12px; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; margin-bottom: 10px; }
+        .handoff-sub { font-size: 12px; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; margin-bottom: 12px; }
         .handoff-name {
   font-family: 'Righteous', cursive; 
   font-size: clamp(28px, 8vw, 42px);
