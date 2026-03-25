@@ -2793,7 +2793,7 @@ export default function App() {
           align-items: center;
           justify-content: center;
           font-size: 12px; 
-          padding: 5px 11px;
+          padding: 5px 14px;
           border-radius: 20px; 
           cursor: pointer;
           transition: all 0.2s;
