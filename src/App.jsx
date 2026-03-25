@@ -2748,8 +2748,8 @@ export default function App() {
           border-radius: 16px;
           border: 3px solid rgba(255,255,255,0.2);
           font-family: 'Righteous', cursive;
-          font-size: 24px;
-          font-weight: 800;
+          font-size: 22px;
+          font-weight: 700;
           letter-spacing: 0.04em;
           cursor: pointer;
           background: rgba(255,255,255,0.08);
@@ -2798,7 +2798,7 @@ export default function App() {
         .cat-toggle-pill-custom:hover { background: rgba(74,144,226,0.2); }
         .cat-preview-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700}
         .cat-preview-chip {
-          font-family: 'Righteous', font-size: 12px; padding: 5px 11px; border-radius: 20px;
+          font-size: 12px; padding: 5px 11px; border-radius: 20px;
           background: rgba(52,211,153,0.08); border: 2px solid rgba(52,211,153,0.3);
           color: rgba(52,211,153,0.75);
         }
@@ -2911,7 +2911,7 @@ export default function App() {
         /* ── Categories ── */
         .category-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700}
         .category-btn {
-          font-family: 'Righteous', font-size: 12px; padding: 5px 11px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2);
+          font-size: 12px; padding: 5px 11px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2);
           background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); cursor: pointer;
           transition: background 0.15s, border-color 0.15s, color 0.15s; user-select: none;
         }
