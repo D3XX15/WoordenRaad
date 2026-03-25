@@ -1413,7 +1413,7 @@ function SetupScreen({ onStart }) {
               className={`cat-toggle-pill ${allSelected ? "cat-toggle-pill-active" : "cat-toggle-pill-custom"}`}
               onClick={() => toggleCategory("all")}
             >
-              {totalWordsCount} woorden
+              {totalWordsCount}/{absoluteTotalWords} woorden
             </button>
           </div>
 
