@@ -2742,7 +2742,10 @@ export default function App() {
         }
         .mode-seg-inactive:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.7); }
 
-        .start-btn {
+        .start-btn,
+        .handoff-btn,
+        .restart-btn,
+        .next-btn {
           position: relative;
           display: block;
           width: 100%;
@@ -2756,7 +2759,10 @@ export default function App() {
           transition: transform 0.2s ease;
           z-index: 1;
         }
-        .start-btn::before {
+        .start-btn::before,
+        .handoff-btn::before,
+        .restart-btn::before,
+        .next-btn::before {
           content: "";
           position: absolute;
           top: 0;
@@ -2773,7 +2779,10 @@ export default function App() {
                   mask-composite: exclude;
           pointer-events: none;
         }
-        .start-btn {
+        .start-btn,
+        .handoff-btn,
+        .restart-btn,
+        .next-btn {
           background-image: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -2781,11 +2790,17 @@ export default function App() {
           color: transparent;
         }
 
-        .start-btn:active {
+        .start-btn:active,
+        .handoff-btn:active,
+        .restart-btn:active,
+        .next-btn:active {
           transform: scale(0.98);
         }
 
-        .start-btn:disabled {
+        .start-btn:disabled,
+        .handoff-btn:disabled,
+        .restart-btn:disabled,
+        .next-btn:disabled {
           opacity: 0.5;
           cursor: not-allowed;
           filter: grayscale(1);
@@ -2958,11 +2973,6 @@ export default function App() {
         .handoff-name { font-family: 'Righteous', cursive; font-size: clamp(28px, 8vw, 42px); color: #a78bfa; margin-bottom: 24px; word-break: break-word; }
         .handoff-team { font-size: 13px; color: #34d399; font-weight: 800; letter-spacing: 0.06em; margin-top: -10px; margin-bottom: 16px; }
         .handoff-tip { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
-        .handoff-btn {
-          padding: 16px 32px; border-radius: 16px; border: 3px solid #a78bfa; background: rgba(167,139,250,0.08);
-          color: #a78bfa; font-family: 'Righteous', cursive; font-size: 18px; cursor: pointer; transition: all 0.2s;
-        }
-        .handoff-btn:hover { background: rgba(167,139,250,0.15); }
 
         /* ── Round Screen ── */
         .round-screen { flex-direction: column; background: none; transition: background 0.2s; padding-top: max(28px, env(safe-area-inset-top)); }
@@ -3128,14 +3138,8 @@ export default function App() {
           width: 100%; padding: 18px; border-radius: 16px; border: none; font-family: 'Righteous', cursive;
           font-size: 20px; cursor: pointer; transition: filter 0.18s;
         }
-        .next-btn { background: rgba(167,139,250,0.08); color: #a78bfa; border: 3px solid #a78bfa; }
-        .next-btn:hover { background: rgba(167,139,250,0.15); }
         .continue-btn { background: rgba(52,211,153,0.1); color: #34d399; border: 3px solid rgba(52,211,153,0.35); margin-bottom: 10px; }
         .continue-btn:hover { background: rgba(52,211,153,0.18); }
-        .restart-btn { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); border: 3px solid rgba(255,255,255,0.2); }
-        .restart-btn:hover { background: rgba(255,255,255,0.14); }
-        .stats-btn { background: rgba(251,191,36,0.1); color: #fbbf24; border: 3px solid rgba(251,191,36,0.35); margin-bottom: 10px; }
-        .stats-btn:hover { background: rgba(251,191,36,0.18); }
         .final-btns { display: flex; flex-direction: column; }
 
         /* ── Stats Screen ── */
