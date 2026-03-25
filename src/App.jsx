@@ -2744,7 +2744,7 @@ export default function App() {
 
         .start-btn,
         .handoff-btn,
-        .restart-btn,
+        .continue-btn,
         .next-btn {
           position: relative;
           display: block;
@@ -2761,7 +2761,7 @@ export default function App() {
         }
         .start-btn::before,
         .handoff-btn::before,
-        .restart-btn::before,
+        .continue-btn::before,
         .next-btn::before {
           content: "";
           position: absolute;
@@ -3135,8 +3135,8 @@ export default function App() {
           width: 100%; padding: 18px; border-radius: 16px; border: none; font-family: 'Righteous', cursive;
           font-size: 20px; cursor: pointer; transition: filter 0.18s;
         }
-        .continue-btn { background: rgba(52,211,153,0.1); color: #34d399; border: 3px solid rgba(52,211,153,0.35); margin-bottom: 10px; }
-        .continue-btn:hover { background: rgba(52,211,153,0.18); }
+        .restart-btn { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); border: 3px solid rgba(255,255,255,0.2); }
+        .restart-btn:hover { background: rgba(255,255,255,0.14); }
         .final-btns { display: flex; flex-direction: column; }
 
         /* ── Stats Screen ── */
