@@ -2743,21 +2743,23 @@ export default function App() {
         .mode-seg-inactive:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.7); }
 
 .start-btn {
-  background-color: #060d1a; 
+  background: 
+    linear-gradient(#060d1a, #060d1a) padding-box, 
+    linear-gradient(135deg, #a78bfa, #60a5fa, #34d399) border-box;
+  border: 3px solid transparent;
+  border-radius: 12px;
+  display: block;
+  width: 100%;
+  padding: 16px 32px;
+  cursor: pointer;
+  font-family: 'Righteous', cursive;
+  font-size: 20px;
+  transition: transform 0.2s ease;
   background-image: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  border: 3px solid;
-  border-image-source: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
-  border-image-slice: 1;
-  font-family: 'Righteous', cursive;
-  font-size: 20px;
-  padding: 16px 32px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  width: 100%;
-  display: block;
+  color: transparent; 
 }
 
 .start-btn:active {
