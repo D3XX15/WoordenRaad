@@ -124,7 +124,7 @@ const WORDS_BY_CATEGORY = (() => {
   const beroepen = [
     'acrobaat', 'archeoloog', 'stand-upcomedian', 'monteur', 'notaris', 'socioloog', 'architect',
     'blogger', 'botanicus', 'brandweerman', 'buschauffeur', 'circusdirecteur', 'clown', 'automonteur',
-    'voetbalcoach', 'cowboy', 'croupier', 'danser', 'dansleraar', 'data-analist', 'handelaar', 'hovenier',
+    'voetbalcoach', 'cowboy', 'croupier', 'dansleraar', 'data-analist', 'handelaar', 'hovenier',
     'dierenarts', 'dierentrainer', 'diplomaat', 'documentairemaker', 'schoenmaker', 'verkeersregelaar',
     'dronepiloot', 'duikinstructeur', 'econoom', 'ethisch hacker', 'examinator', 'beveiliger', 'cameraman',
     'gids', 'glazenwasser', 'illusionist', 'grafisch ontwerper', 'kassière', 'tegelzetter', 'pedicure',
