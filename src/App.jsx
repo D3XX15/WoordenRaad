@@ -1461,7 +1461,7 @@ function SetupScreen({ onStart }) {
           onClick={handleStart}
           disabled={!canStart}
         >
-          {canStart ? "Spel starten ➜" : "Vul alles in…"}
+          {canStart ? "Start spel ➜" : "Vul alles in…"}
         </button>
       </div>
     </div>
@@ -1477,7 +1477,7 @@ function HandoffScreen({ player, teamName, onReady }) {
         <h2 className="handoff-name">{player}</h2>
         {teamName && <p className="handoff-team">{teamName}</p>}
         <button className="handoff-btn" onClick={onReady}>
-          Ik ben er klaar voor!
+          Start ronde ➜
         </button>
       </div>
     </div>
