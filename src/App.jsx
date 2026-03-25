@@ -2744,7 +2744,7 @@ export default function App() {
 
         .start-btn {
           width: 100%;
-          padding: 12px;
+          padding: 18px;
           border-radius: 16px;
           border: none;
           font-family: 'Righteous', cursive;
@@ -2757,15 +2757,49 @@ export default function App() {
           transition: all 0.25s;
           margin-top: 4px;
         }
-        .start-btn.ready-solid {
-          background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
-          color: #060d1a;
-          border: 3px solid transparent;
-          box-shadow: 0 8px 25px rgba(167, 139, 250, 0.4);
-        }
-        .start-btn.ready-solid:hover {
-          filter: brightness(1.1);
-        }
+        
+/* De 'actieve' staat van de startknop - Inverted Look */
+.start-btn.ready-solid {
+  /* 1. De tekst krijgt de gradient */
+  background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  
+  /* 2. Layout & Positie */
+  position: relative;
+  border: 3px solid transparent; /* We houden de border-breedte aan voor de spacing */
+  background-color: transparent; /* De echte vulling komt in de ::before laag */
+  z-index: 1;
+  transition: all 0.25s;
+}
+
+/* De laag voor de gradient-border en de donkere achtergrond */
+.start-btn.ready-solid::before {
+  content: "";
+  position: absolute;
+  inset: -3px; /* Valt precies over de border-ruimte heen */
+  z-index: -1; /* Zorgt dat dit achter de tekst staat */
+  border-radius: 16px; /* Zelfde als de knop */
+  
+  /* 3. De 'Magic' voor gradient border met donkere opvulling */
+  /* padding-box = de binnenkant, border-box = de rand */
+  background: 
+    linear-gradient(#060d1a, #060d1a) padding-box, 
+    linear-gradient(135deg, #a78bfa, #60a5fa, #34d399) border-box;
+  border: 3px solid transparent;
+  transition: all 0.25s;
+}
+
+/* Hover effecten */
+.start-btn.ready-solid:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.2); /* Maakt zowel tekst als border iets feller */
+}
+
+.start-btn.ready-solid:hover::before {
+  box-shadow: 0 8px 20px rgba(167, 139, 250, 0.2);
+}
         
         /* ── Category Section ── */
         .cat-section-header {
