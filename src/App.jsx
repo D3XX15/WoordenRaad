@@ -2759,6 +2759,11 @@ export default function App() {
           transition: transform 0.2s ease;
           z-index: 1;
         }
+        .handoff-btn {
+          width: max-content;
+          margin: 0 auto;
+          min-width: 150px;
+        }
         .start-btn::before,
         .handoff-btn::before,
         .continue-btn::before,
