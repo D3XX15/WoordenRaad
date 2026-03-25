@@ -2758,18 +2758,14 @@ export default function App() {
           margin-top: 4px;
         }
         .start-btn.ready-solid {
-          border-color: #a78bfa; background: #a78bfa; color: white;
-          box-shadow: 0 4px 20px rgba(167,139,250,0.35);
+          background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+          color: #060d1a;
+          border: 3px solid transparent;
+          box-shadow: 0 8px 25px rgba(167, 139, 250, 0.4);
         }
-        .start-btn.ready-solid:hover { background: #b89ffc; border-color: #b89ffc; }
-
-        /* kept for any other uses of .mode-toggle-* in the codebase */
-        .mode-toggle-btn { border: 3px solid rgba(255,255,255,0.2); }
-        .mode-toggle-btn-half { margin: 0; flex: 1; }
-        .mode-toggle-singles { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); }
-        .mode-toggle-singles:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.35); }
-        .mode-toggle-teams { background: rgba(74, 144, 226, 0.1); color: #4a90e2; border-color: #4a90e2; }
-        .mode-toggle-teams:hover { background: rgba(74, 144, 226, 0.2); }
+        .start-btn.ready-solid:hover {
+          filter: brightness(1.1);
+        }
         
         /* ── Category Section ── */
         .cat-section-header {
