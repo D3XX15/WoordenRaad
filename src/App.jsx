@@ -2797,10 +2797,7 @@ export default function App() {
           transform: scale(0.98);
         }
 
-        .start-btn:disabled,
-        .handoff-btn:disabled,
-        .restart-btn:disabled,
-        .next-btn:disabled {
+        .start-btn:disabled {
           opacity: 0.5;
           cursor: not-allowed;
           filter: grayscale(1);
