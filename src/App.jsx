@@ -2758,47 +2758,52 @@ export default function App() {
           margin-top: 4px;
         }
         
-/* De 'actieve' staat van de startknop - Inverted Look */
 .start-btn.ready-solid {
-  /* 1. De tekst krijgt de gradient */
-  background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+  /* 1. De Tekst Gradient */
+  background-image: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
-  
-  /* 2. Layout & Positie */
+  -webkit-text-fill-color: transparent;
+  color: transparent; /* Fallback */
+
+  /* 2. Layout & Font */
+  font-family: 'Righteous', cursive;
   position: relative;
-  border: 3px solid transparent; /* We houden de border-breedte aan voor de spacing */
-  background-color: transparent; /* De echte vulling komt in de ::before laag */
   z-index: 1;
-  transition: all 0.25s;
+  border: 3px solid transparent;
+  border-radius: 16px;
+  background-color: transparent; /* Belangrijk: de knop zelf moet transparant zijn */
+  
+  /* Forceer clipping gedrag */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* De laag voor de gradient-border en de donkere achtergrond */
+/* 3. De Gradient Border (onderste laag) */
 .start-btn.ready-solid::before {
   content: "";
   position: absolute;
-  inset: -3px; /* Valt precies over de border-ruimte heen */
-  z-index: -1; /* Zorgt dat dit achter de tekst staat */
-  border-radius: 16px; /* Zelfde als de knop */
-  
-  /* 3. De 'Magic' voor gradient border met donkere opvulling */
-  /* padding-box = de binnenkant, border-box = de rand */
-  background: 
-    linear-gradient(#060d1a, #060d1a) padding-box, 
-    linear-gradient(135deg, #a78bfa, #60a5fa, #34d399) border-box;
-  border: 3px solid transparent;
-  transition: all 0.25s;
+  inset: -3px; /* Valt precies over de border-ruimte */
+  border-radius: 16px;
+  background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+  z-index: -2;
 }
 
-/* Hover effecten */
+/* 4. De Zwarte Vulling (middelste laag) */
+.start-btn.ready-solid::after {
+  content: "";
+  position: absolute;
+  inset: 0; /* Blijft binnen de border-rand */
+  border-radius: 13px; /* Iets kleiner dan 16px ivm de rand */
+  background: #060d1a;
+  z-index: -1;
+}
+
+/* Hover effect */
 .start-btn.ready-solid:hover {
+  filter: brightness(1.2);
   transform: translateY(-2px);
-  filter: brightness(1.2); /* Maakt zowel tekst als border iets feller */
-}
-
-.start-btn.ready-solid:hover::before {
-  box-shadow: 0 8px 20px rgba(167, 139, 250, 0.2);
 }
         
         /* ── Category Section ── */
