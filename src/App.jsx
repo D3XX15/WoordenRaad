@@ -2975,7 +2975,10 @@ export default function App() {
         }
         .handoff-icon { font-size: 52px; margin-bottom: 16px; animation: bounce 1.5s infinite; }
         .handoff-sub { font-size: 12px; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; margin-bottom: 10px; }
-        .handoff-name { font-family: 'Righteous', cursive; font-size: clamp(28px, 8vw, 42px); color: #a78bfa; margin-bottom: 24px; word-break: break-word; }
+        handoff-name { font-family: 'Righteous', cursive; font-size: clamp(28px, 8vw, 42px); background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text; margin-bottom: 24px; word-break: break-word; }
         .handoff-team { font-size: 13px; color: #34d399; font-weight: 800; letter-spacing: 0.06em; margin-top: -10px; margin-bottom: 16px; }
         .handoff-tip { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
 
