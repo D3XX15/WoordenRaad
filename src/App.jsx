@@ -2,16 +2,16 @@ import { useState, useEffect, useRef } from "react";
 
 // ── Categorieën ──────────────────────────────────────────────────────────────
 const CATEGORIES = [
-  { id: "beroepen",      label: "👷 Beroepen" },
-  { id: "kantoor",       label: "💼 Kantoor" },
-  { id: "vervoer",       label: "🚗 Vervoer" },
   { id: "voedsel",       label: "🍕 Eten & Drinken" },
   { id: "koken",         label: "🧑‍🍳 Koken & Bakken" },
-  { id: "sport",         label: "⚽ Sport & Hobby" },
   { id: "huishouden",    label: "🏠 Huishouden" },
   { id: "kleding",       label: "👕 Kleding" },
   { id: "dieren",        label: "🐶 Dieren" },
   { id: "natuur",        label: "🌿 Natuur" },
+  { id: "vervoer",       label: "🚗 Vervoer" },
+  { id: "beroepen",      label: "👷 Beroepen" },
+  { id: "kantoor",       label: "💼 Kantoor" },
+  { id: "sport",         label: "⚽ Sport & Hobby" },
   { id: "emoties",       label: "🎭 Emoties & Gedrag" },
   { id: "misdaad",       label: "🚔 Misdaad & Justitie" },
   { id: "gereedschap",   label: "🔧 Gereedschap" },
@@ -22,9 +22,9 @@ const CATEGORIES = [
   { id: "muziek",        label: "🎶 Muziek" },
   { id: "politiek",      label: "⚖️ Politiek & Maatschappij" },
   { id: "religie",       label: "🕍 Religie" },
+  { id: "militair",      label: "🪖 Militair" },
   { id: "wetenschap",    label: "🔬 Wetenschap" },
   { id: "geneeskunde",   label: "🩺 Geneeskunde" },
-  { id: "militair",      label: "🪖 Militair" },
   { id: "plaatsen",      label: "🧭 Plaatsen" },
   { id: "landen",        label: "🌍 Landen" },
   { id: "acties",        label: "🏃 Werkwoorden" },
@@ -1440,7 +1440,7 @@ function SetupScreen({ onStart }) {
         </div>
 
         <div className="setup-section">
-          <span className="time-section-label">⏱ Rondetijd</span>
+          <span className="time-section-label">Rondetijd</span>
           <div className="time-control">
             <button
               className={`time-btn time-btn-minus${roundTime <= 30 ? " time-btn-disabled" : ""}`}
@@ -2795,7 +2795,7 @@ export default function App() {
           background: rgba(74,144,226,0.1); border: 2px solid #4a90e2; color: #4a90e2;
         }
         .cat-toggle-pill-custom:hover { background: rgba(74,144,226,0.2); }
-        .cat-preview-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; }
+        .cat-preview-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700}
         .cat-preview-chip {
           font-size: 12px; padding: 5px 11px; border-radius: 20px;
           background: rgba(52,211,153,0.08); border: 2px solid rgba(52,211,153,0.3);
