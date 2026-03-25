@@ -17,8 +17,8 @@ const CATEGORIES = [
   { id: "misdaad",       label: "🚔 Misdaad & Justitie" },
   { id: "fictie",        label: "🧙 Fictie" },
   { id: "literatuur",    label: "✍️ Literatuur" },
-  { id: "kunst",         label: "🧑‍🎨 Kunst" },
   { id: "muziek",        label: "🎶 Muziek" },
+  { id: "kunst",         label: "🧑‍🎨 Kunst" },
   { id: "politiek",      label: "⚖️ Politiek & Maatschappij" },
   { id: "religie",       label: "🕍 Religie" },
   { id: "militair",      label: "🪖 Militair" },
@@ -1461,7 +1461,7 @@ function SetupScreen({ onStart }) {
           onClick={handleStart}
           disabled={!canStart}
         >
-          {canStart ? "Spel starten →" : "Vul alle namen in"}
+          {canStart ? "Spel starten ➜" : "Vul alles in…"}
         </button>
       </div>
     </div>
