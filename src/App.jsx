@@ -2746,18 +2746,31 @@ export default function App() {
   position: relative;
   display: block;
   width: 100%;
-  padding: 16px 32px;
+  padding: 20px 32px; /* Iets meer padding voor de grotere tekst */
   cursor: pointer;
-  background-color: #060d1a; /* De achtergrond van de app */
+  background-color: #060d1a;
   border-radius: 12px;
-  border: none; /* We gebruiken geen standaard border */
+  border: none;
+  
+  /* MATCH MET TITEL "WoordenRaad" */
   font-family: 'Righteous', cursive;
-  font-size: 20px;
+  font-size: 42px;         /* Gelijk aan h1 */
+  font-weight: 900;        /* Extra dik */
+  letter-spacing: -1px;    /* Compacte look van de titel */
+  text-transform: none;    /* Behoudt normale letters */
+  
   transition: transform 0.2s ease;
   z-index: 1;
+  
+  /* Gradient Tekst Effect */
+  background-image: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }
 
-/* De Gradient Border via een pseudo-element */
+/* De Gradient Border (blijft 12px radius behouden) */
 .start-btn::before {
   content: "";
   position: absolute;
@@ -2766,7 +2779,7 @@ export default function App() {
   right: 0;
   bottom: 0;
   border-radius: 12px; 
-  padding: 3px; /* Dit bepaalt de dikte van de border */
+  padding: 4px; /* Iets dikkere border om bij de dikke tekst te passen */
   background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
   -webkit-mask: 
      linear-gradient(#fff 0 0) content-box, 
@@ -2776,17 +2789,8 @@ export default function App() {
   pointer-events: none;
 }
 
-/* De Gradient Tekst */
-.start-btn {
-  background-image: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-}
-
 .start-btn:active {
-  transform: scale(0.98);
+  transform: scale(0.95); /* Iets meer feedback bij klik omdat de knop groter is */
 }
 
 .start-btn:disabled {
