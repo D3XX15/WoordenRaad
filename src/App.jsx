@@ -2911,9 +2911,21 @@ export default function App() {
         /* ── Categories ── */
         .category-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700}
         .category-btn {
-          font-size: 12px; padding: 5px 11px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2);
-          background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); cursor: pointer;
-          transition: background 0.15s, border-color 0.15s, color 0.15s; user-select: none;
+          font-family: inherit;
+          font-weight: inherit;
+          line-height: inherit;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px; 
+          padding: 5px 11px; 
+          border-radius: 20px; 
+          border: 2px solid rgba(255,255,255,0.2);
+          background: rgba(255,255,255,0.05); 
+          color: rgba(255,255,255,0.7); 
+          cursor: pointer;
+          transition: background 0.15s, border-color 0.15s, color 0.15s; 
+          user-select: none;
         }
         .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
         .category-btn-active { background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.3); color: rgba(52,211,153,0.75); }
