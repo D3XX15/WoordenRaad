@@ -355,7 +355,7 @@ const WORDS_BY_CATEGORY = (() => {
     'eten', 'fluiten', 'gapen', 'geven', 'giechelen', 'gillen', 'gluren', 'groeten', 'tikken', 'winnen',
     'inloggen', 'uitloggen', 'inschenken', 'inslapen', 'juichen', 'kijken', 'klagen', 'kloppen', 'wroeten',
     'knipogen', 'kopen', 'leren', 'lezen', 'liegen', 'luisteren', 'trappen', 'opruimen', 'schrijven',
-    'meten', 'nabootsen', 'nadenken', 'omvallen', 'onderhandelen', 'ophangen', 'opstaan', 'schminken',
+    'meten', 'nabootsen', 'nadenken', 'omvallen', 'onderhandelen', 'ophangen', 'opstaan', 'schminken', 'organiseren',
     'plukken', 'praten', 'proberen', 'roepen', 'ruiken', 'ruilen', 'plannen', 'tekenen', 'schelden', 'oplappen',
     'smeken', 'snijden', 'sparen', 'speuren', 'stoppen', 'verdedigen', 'schudden', 'delegeren', 'openen',
     'strelen', 'studeren', 'telefoneren', 'twijfelen', 'uitleggen', 'uitpakken', 'roken', 'kwetsen', 'corrigeren',
@@ -569,7 +569,7 @@ const WORDS_BY_CATEGORY = (() => {
     'hamer', 'schaar', 'sleutel', 'moersleutel', 'schroefsleutel', 'zaag', 'beitel',
     'hooivork', 'hark', 'gieter', 'borstel', 'ladder', 'moker', 'kettingzaag', 'naaimachine',
     'stroomgenerator', 'windturbine', 'dynamo', 'liniaal', 'waterpas', 'boormachine', 'lasbril',
-    'spijker', 'smeedijzer', 'telraam', 'betonmixer', 'touwladder', 'zeis', 'puntenslijper',
+    'spijker', 'smeedijzer', 'telraam', 'betonmixer', 'touwladder', 'zeis',
     'klem', 'verlengsnoer', 'pomp', 'kabel', 'snoer', 'zekering', 'pikhouweel', 'schroevendraaier',
     'waterpomptang', 'steeksleutel', 'inbussleutel', 'schaaf', 'vijl', 'klinknagel', 'snijder',
     'handzaag', 'figuurzaag', 'cirkelzaag', 'schuurmachine', 'decoupeerzaag', 'prikpen', 'punttang',
@@ -637,7 +637,7 @@ const WORDS_BY_CATEGORY = (() => {
     'usb-stick', 'printer', 'projector', 'scanner', 'headset', 'webcam', 'bureau', 'bureaustoel', 'directie', 'laptop',
     'whiteboard', 'vergadertafel', 'vergaderzaal', 'ordner', 'map', 'envelop', 'brief', 'briefopener', 'HR', 'expert',
     'waterkoeler', 'toetsenbord', 'muis', 'plakband', 'balpen', 'marker', 'prikbord', 'visitekaartje', 'schrift', 'memo',
-    'postvak', 'factuur', 'offerte', 'contract', 'notulen', 'presentatie', 'koffiezetapparaat', 'organiseren', 'administratie',
+    'postvak', 'factuur', 'offerte', 'contract', 'notulen', 'presentatie', 'koffiezetapparaat', 'puntenslijper', 'administratie',
     'vergadering', 'evaluatie', 'kantine', 'kopieermachine', 'archief', 'papier', 'pen', 'potlood', 'samenwerken', 'declareren',
     'punaise', 'elastiekje', 'notitieblok', 'shredder', 'postzegel', 'inktcartridge', 'kluisje', 'spreadsheet', 'kwartaal',
     'flexwerk', 'collega', 'baas', 'kantoorpand', 'thuiswerken', 'loonstrook', 'verlof', 'arbeid', 'netwerken', 'jaarverslag',
@@ -2746,10 +2746,10 @@ export default function App() {
           width: 100%;
           padding: 18px;
           border-radius: 16px;
-          border: none;
+          border: 3px solid rgba(255,255,255,0.2);
           font-family: 'Righteous', cursive;
-          font-size: 22px;
-          font-weight: 700;
+          font-size: 24px;
+          font-weight: 800;
           letter-spacing: 0.04em;
           cursor: pointer;
           background: rgba(255,255,255,0.08);
@@ -2757,72 +2757,19 @@ export default function App() {
           transition: all 0.25s;
           margin-top: 4px;
         }
-        
-.start-btn.ready-solid {
-  /* 1. De Tekst Gradient */
-  background-image: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+        .start-btn.ready-solid {
+          border-color: #a78bfa; background: #a78bfa; color: white;
+          box-shadow: 0 4px 20px rgba(167,139,250,0.35);
+        }
+        .start-btn.ready-solid:hover { background: #b89ffc; border-color: #b89ffc; }
 
-  /* 2. De Gradient Border & Layout */
-  position: relative;
-  z-index: 1;
-  padding: 18px;
-  border-radius: 16px;
-  /* We gebruiken een gradient als border via deze methode: */
-  border: 3px solid transparent;
-  background-origin: border-box;
-  background-clip: text, border-box; /* Clip voor tekst EN border */
-  
-  /* 3. De zwarte vulling (moet ACHTER de tekst) */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* De 'holte' van de knop (de zwarte achtergrond) */
-.start-btn.ready-solid::before {
-  content: "";
-  position: absolute;
-  /* Inset 0 zorgt dat hij de hele knop vult, 
-     maar we plaatsen hem ACHTER de tekst met z-index -1 */
-  inset: 0; 
-  background: #060d1a;
-  border-radius: 13px; /* Iets kleiner dan 16px om binnen de border te blijven */
-  z-index: -1;
-  transition: all 0.25s;
-}
-
-/* Extra laag voor de gradient border (omdat background-clip: text soms de border weghaalt) */
-.start-btn.ready-solid::after {
-  content: "";
-  position: absolute;
-  inset: -3px; 
-  border-radius: 16px;
-  padding: 3px; 
-  background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
-  /* Deze mask-trick zorgt dat alleen de rand van de gradient overblijft */
-  -webkit-mask: 
-     linear-gradient(#fff 0 0) content-box, 
-     linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* Hover effecten */
-.start-btn.ready-solid:hover {
-  filter: brightness(1.2);
-  transform: translateY(-2px);
-}
-
-.start-btn.ready-solid:hover::before {
-  /* Bij hover maken we de binnenkant iets lichter/blauwer voor interactie */
-  background: rgba(167, 139, 250, 0.1);
-}
+        /* kept for any other uses of .mode-toggle-* in the codebase */
+        .mode-toggle-btn { border: 3px solid rgba(255,255,255,0.2); }
+        .mode-toggle-btn-half { margin: 0; flex: 1; }
+        .mode-toggle-singles { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); }
+        .mode-toggle-singles:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.35); }
+        .mode-toggle-teams { background: rgba(74, 144, 226, 0.1); color: #4a90e2; border-color: #4a90e2; }
+        .mode-toggle-teams:hover { background: rgba(74, 144, 226, 0.2); }
         
         /* ── Category Section ── */
         .cat-section-header {
@@ -2846,7 +2793,7 @@ export default function App() {
           align-items: center;
           justify-content: center;
           font-size: 12px; 
-          padding: 7px 14px;
+          padding: 5px 11px; /* Was 13px, nu 11px */
           border-radius: 20px; 
           cursor: pointer;
           transition: all 0.2s;
@@ -2870,7 +2817,7 @@ export default function App() {
           background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.2);
           color: rgba(255,255,255,0.35);
         }
-        
+
         .category-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700}
         .category-btn {
           font-family: inherit;
