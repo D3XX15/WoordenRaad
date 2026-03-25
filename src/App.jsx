@@ -1545,7 +1545,6 @@ const MESSAGES_POOR = [
   () => `De volgende ronde gaat vast beter 😉`,
   () => `De andere spelers ruiken bloed 🩸`,
   () => `De spanning zat er zeker in 😅`,
-  () => `Dit was duidelijk een warming-up 🏃`,
   () => `Je was er met je hoofd even niet bij 💭`,
   () => `Laten we doen alsof dit niet gebeurd is 🙊`,
   () => `Het lag allemaal aan de woorden 😠`,
