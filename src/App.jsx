@@ -983,7 +983,7 @@ const HYPHENATION_DICT = (() => {
 const EXTRA_WORD_PARTS = new Set([
 'bijen', 'koningin', 'dwerg', 'pinguïn', 'galapagos', 'schildpad', 'lieveheers', 'beestje', 'sprinkhaan', 'stok', 'staartje', 
 'aardappel', 'puree', 'brandnetel', 'soep', 'caesar', 'salade', 'granaat', 'appel', 'kaneel', 'broodje', 'vanille', 'pudding',
-'water', 'meloen', 'biblio', 'thecaris', 'documentaire', 'maker', 'duik', 'instructeur', 'fysio', 'therapeut', 'beheerder',
+'water', 'meloen', 'biblio', 'thecaris', 'documentaire', 'maker', 'duik', 'instructeur', 'fysio', 'therapeut', 'beheerder', 'controleur',
 'game', 'ontwikkelaar', 'hypno', 'ijsbeeld', 'beeld', 'houwer', 'kostuum', 'ontwerper', 'kraam', 'verzorger', 'kunst', 'criticus',
 'luchtverkeer', 'leider', 'museum', 'conservator', 'revalidatie', 'arts', 'scenario', 'schrijver', 'comedian', 'systeem', 'divisie',
 'verzekering', 'agent', 'voeding', 'wetenschapper', 'ziekenhuis', 'directeur', 'tram', 'bestuurder', 'belasting', 'adviseur', 'politie', 
@@ -2786,7 +2786,7 @@ export default function App() {
         }
         .start-btn,
         .handoff-btn,
-        .restart-btn,
+        .continue-btn,
         .next-btn {
           background-image: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
           -webkit-background-clip: text;
@@ -2797,7 +2797,7 @@ export default function App() {
 
         .start-btn:active,
         .handoff-btn:active,
-        .restart-btn:active,
+        .continue:active,
         .next-btn:active {
           transform: scale(0.98);
         }
