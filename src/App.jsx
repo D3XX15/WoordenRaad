@@ -2748,7 +2748,8 @@ export default function App() {
           border-radius: 16px;
           border: 3px solid rgba(255,255,255,0.2);
           font-family: 'Righteous', cursive;
-          font-size: 20px;
+          font-size: 24px;
+          font-weight: 800;
           letter-spacing: 0.04em;
           cursor: pointer;
           background: rgba(255,255,255,0.08);
