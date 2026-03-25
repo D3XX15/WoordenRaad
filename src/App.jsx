@@ -2764,46 +2764,64 @@ export default function App() {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: transparent; /* Fallback */
+  color: transparent;
 
-  /* 2. Layout & Font */
-  font-family: 'Righteous', cursive;
+  /* 2. De Gradient Border & Layout */
   position: relative;
   z-index: 1;
-  border: 3px solid transparent;
+  padding: 18px;
   border-radius: 16px;
-  background-color: transparent; /* Belangrijk: de knop zelf moet transparant zijn */
+  /* We gebruiken een gradient als border via deze methode: */
+  border: 3px solid transparent;
+  background-origin: border-box;
+  background-clip: text, border-box; /* Clip voor tekst EN border */
   
-  /* Forceer clipping gedrag */
+  /* 3. De zwarte vulling (moet ACHTER de tekst) */
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* 3. De Gradient Border (onderste laag) */
+/* De 'holte' van de knop (de zwarte achtergrond) */
 .start-btn.ready-solid::before {
   content: "";
   position: absolute;
-  inset: -3px; /* Valt precies over de border-ruimte */
-  border-radius: 16px;
-  background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
-  z-index: -2;
+  /* Inset 0 zorgt dat hij de hele knop vult, 
+     maar we plaatsen hem ACHTER de tekst met z-index -1 */
+  inset: 0; 
+  background: #060d1a;
+  border-radius: 13px; /* Iets kleiner dan 16px om binnen de border te blijven */
+  z-index: -1;
+  transition: all 0.25s;
 }
 
-/* 4. De Zwarte Vulling (middelste laag) */
+/* Extra laag voor de gradient border (omdat background-clip: text soms de border weghaalt) */
 .start-btn.ready-solid::after {
   content: "";
   position: absolute;
-  inset: 0; /* Blijft binnen de border-rand */
-  border-radius: 13px; /* Iets kleiner dan 16px ivm de rand */
-  background: #060d1a;
-  z-index: -1;
+  inset: -3px; 
+  border-radius: 16px;
+  padding: 3px; 
+  background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+  /* Deze mask-trick zorgt dat alleen de rand van de gradient overblijft */
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) content-box, 
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  z-index: 0;
+  pointer-events: none;
 }
 
-/* Hover effect */
+/* Hover effecten */
 .start-btn.ready-solid:hover {
   filter: brightness(1.2);
   transform: translateY(-2px);
+}
+
+.start-btn.ready-solid:hover::before {
+  /* Bij hover maken we de binnenkant iets lichter/blauwer voor interactie */
+  background: rgba(167, 139, 250, 0.1);
 }
         
         /* ── Category Section ── */
