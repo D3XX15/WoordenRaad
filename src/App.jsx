@@ -2764,6 +2764,9 @@ export default function App() {
           margin: 0 auto;
           min-width: 150px;
         }
+        .continue-btn {
+          margin-bottom: 10px;
+        }
         .start-btn::before,
         .handoff-btn::before,
         .continue-btn::before,
