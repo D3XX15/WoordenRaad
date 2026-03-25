@@ -2744,9 +2744,9 @@ export default function App() {
 
         .start-btn {
           width: 100%;
-          padding: 18px;
+          padding: 12px;
           border-radius: 16px;
-          border: 3px solid rgba(255,255,255,0.2);
+          border: none;
           font-family: 'Righteous', cursive;
           font-size: 22px;
           font-weight: 700;
