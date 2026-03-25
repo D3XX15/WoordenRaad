@@ -2742,35 +2742,34 @@ export default function App() {
         }
         .mode-seg-inactive:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.7); }
 
-        .start-btn {
-          width: 100%;
-          padding: 18px;
-          border-radius: 16px;
-          border: 3px solid rgba(255,255,255,0.2);
-          font-family: 'Righteous', cursive;
-          font-size: 24px;
-          font-weight: 800;
-          letter-spacing: 0.04em;
-          cursor: pointer;
-          background: rgba(255,255,255,0.08);
-          color: rgba(255,255,255,0.3);
-          transition: all 0.25s;
-          margin-top: 4px;
-        }
-        .start-btn.ready-solid {
-          border-color: #a78bfa; background: #a78bfa; color: white;
-          box-shadow: 0 4px 20px rgba(167,139,250,0.35);
-        }
-        .start-btn.ready-solid:hover { background: #b89ffc; border-color: #b89ffc; }
+.start-btn {
+  background-color: #060d1a; 
+  background-image: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  border: 3px solid;
+  border-image-source: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+  border-image-slice: 1;
+  font-family: 'Righteous', cursive;
+  font-size: 20px;
+  padding: 16px 32px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  width: 100%;
+  display: block;
+}
 
-        /* kept for any other uses of .mode-toggle-* in the codebase */
-        .mode-toggle-btn { border: 3px solid rgba(255,255,255,0.2); }
-        .mode-toggle-btn-half { margin: 0; flex: 1; }
-        .mode-toggle-singles { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); }
-        .mode-toggle-singles:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.35); }
-        .mode-toggle-teams { background: rgba(74, 144, 226, 0.1); color: #4a90e2; border-color: #4a90e2; }
-        .mode-toggle-teams:hover { background: rgba(74, 144, 226, 0.2); }
-        
+.start-btn:active {
+  transform: scale(0.98);
+}
+
+.start-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
         /* ── Category Section ── */
         .cat-section-header {
           display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
@@ -2793,7 +2792,7 @@ export default function App() {
           align-items: center;
           justify-content: center;
           font-size: 12px; 
-          padding: 5px 11px; /* Was 13px, nu 11px */
+          padding: 7px 14px;
           border-radius: 20px; 
           cursor: pointer;
           transition: all 0.2s;
