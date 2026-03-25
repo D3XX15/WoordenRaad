@@ -2807,20 +2807,28 @@ export default function App() {
           background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.2);
           color: rgba(255,255,255,0.35);
         }
-        /* legacy toggle-all-btn kept for safety */
-        .toggle-all-btn {
-          width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
-          padding: 12px; border-radius: 12px; border: 2px dashed #ccc; background: transparent;
-          margin-bottom: 15px; font-family: 'Righteous', cursive; font-size: 20px; letter-spacing: 0.04em;
-          cursor: pointer; color: rgba(255,255,255,0.45); transition: all 0.25s;
+        
+        .category-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700}
+        .category-btn {
+          font-family: inherit;
+          font-weight: inherit;
+          line-height: inherit;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px; 
+          padding: 5px 11px; 
+          border-radius: 20px; 
+          border: 2px solid rgba(255,255,255,0.2);
+          background: rgba(255,255,255,0.05); 
+          color: rgba(255,255,255,0.7); 
+          cursor: pointer;
+          transition: background 0.15s, border-color 0.15s, color 0.15s; 
+          user-select: none;
         }
-        .toggle-all-btn:hover { background: rgba(255,255,255,0.1); }
-        .toggle-all-btn-active { background: rgba(74, 144, 226, 0.1); border-color: #4a90e2; color: #4a90e2; margin-bottom: 0; }
-        .toggle-all-btn-active:hover { background: rgba(74, 144, 226, 0.2); }
-        .toggle-all-word-count {
-          margin-left: auto; font-family: inherit; font-size: 12px; font-weight: 800;
-          letter-spacing: 0.06em; opacity: 0.55;
-        }
+        .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
+        .category-btn-active { background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.3); color: rgba(52,211,153,0.75); }
+        .category-btn-active:hover { background: rgba(52,211,153,0.18); border-color: #34d399; color: #34d399; }
 
         /* ── Player Inputs (Individual & Teams) ── */
         .player-input-group { display: flex; margin-bottom: 4px; height: 48px; width: 100%; }
@@ -2907,29 +2915,6 @@ export default function App() {
         .time-btn:disabled { opacity: 0.3; cursor: default; }
         .time-btn-disabled { opacity: 1 !important; cursor: not-allowed !important; pointer-events: none; background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.35) !important; }
         .time-display { flex: 1; text-align: center; font-family: 'Righteous', cursive; font-size: 24px; color: rgba(255,255,255,0.9); }
-
-        /* ── Categories ── */
-        .category-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700}
-        .category-btn {
-          font-family: inherit;
-          font-weight: inherit;
-          line-height: inherit;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 12px; 
-          padding: 5px 11px; 
-          border-radius: 20px; 
-          border: 2px solid rgba(255,255,255,0.2);
-          background: rgba(255,255,255,0.05); 
-          color: rgba(255,255,255,0.7); 
-          cursor: pointer;
-          transition: background 0.15s, border-color 0.15s, color 0.15s; 
-          user-select: none;
-        }
-        .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
-        .category-btn-active { background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.3); color: rgba(52,211,153,0.75); }
-        .category-btn-active:hover { background: rgba(52,211,153,0.18); border-color: #34d399; color: #34d399; }
 
         /* ── Handoff Screen ── */
         .handoff-screen { background: none; }
