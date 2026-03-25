@@ -2785,8 +2785,18 @@ export default function App() {
           color: rgba(255,255,255,0.35);
         }
         .cat-toggle-pill {
-          font-size: 12px; font-weight: 700; padding: 5px 13px; border-radius: 20px; cursor: pointer;
-          transition: all 0.2s; letter-spacing: 0.03em; font-family: inherit;
+          font-family: inherit;
+          font-weight: 700;
+          line-height: inherit;
+          letter-spacing: normal;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px; 
+          padding: 5px 11px; /* Was 13px, nu 11px */
+          border-radius: 20px; 
+          cursor: pointer;
+          transition: all 0.2s;
         }
         .cat-toggle-pill-active {
           background: rgba(52,211,153,0.12); border: 2px solid #34d399; color: #34d399;
