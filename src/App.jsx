@@ -2742,54 +2742,54 @@ export default function App() {
         }
         .mode-seg-inactive:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.7); }
 
-.start-btn {
-  position: relative;
-  display: block;
-  width: 100%;
-  padding: 16px 32px;
-  cursor: pointer;
-  background-color: #060d1a; /* De achtergrond van de app */
-  border-radius: 12px;
-  border: none; /* We gebruiken geen standaard border */
-  font-family: 'Righteous', cursive;
-  font-size: 20px;
-  transition: transform 0.2s ease;
-  z-index: 1;
-}
-.start-btn::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 12px; 
-  padding: 3px;
-  background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
-  -webkit-mask: 
-     linear-gradient(#fff 0 0) content-box, 
-     linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;
-  pointer-events: none;
-}
-.start-btn {
-  background-image: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-}
+        .start-btn {
+          position: relative;
+          display: block;
+          width: 100%;
+          padding: 16px 32px;
+          cursor: pointer;
+          background-color: #060d1a;
+          border-radius: 12px;
+          border: none;
+          font-family: 'Righteous', cursive;
+          font-size: 20px;
+          transition: transform 0.2s ease;
+          z-index: 1;
+        }
+        .start-btn::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border-radius: 12px; 
+          padding: 3px;
+          background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+          -webkit-mask: 
+             linear-gradient(#fff 0 0) content-box, 
+             linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+                  mask-composite: exclude;
+          pointer-events: none;
+        }
+        .start-btn {
+          background-image: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          color: transparent;
+        }
 
-.start-btn:active {
-  transform: scale(0.98);
-}
+        .start-btn:active {
+          transform: scale(0.98);
+        }
 
-.start-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  filter: grayscale(1);
-}
+        .start-btn:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          filter: grayscale(1);
+        }
 
         /* ── Category Section ── */
         .cat-section-header {
