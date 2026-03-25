@@ -1422,7 +1422,7 @@ function SetupScreen({ onStart }) {
               {CATEGORIES.slice(0, 5).map((cat) => (
                 <span key={cat.id} className="cat-preview-chip">{cat.label}</span>
               ))}
-              <span className="cat-preview-more">+{CATEGORIES.length - 5} meer</span>
+              <span className="cat-preview-more">+{CATEGORIES.length - 7} meer</span>
             </div>
           ) : (
             <div className="category-grid">
