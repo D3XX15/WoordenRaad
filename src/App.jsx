@@ -100,7 +100,8 @@ const WORDS_BY_CATEGORY = (() => {
     'rijstwafel', 'maïs', 'mandarijn', 'matse', 'merengue', 'nasischijf', 'nootmuskaat', 'oliebol', 'paaseitje', 'paksoi', 
     'druivensap', 'sardientje', 'saté', 'saucijzenbroodje', 'shoarma', 'snert', 'sparerib', 'spruitje', 'stokbrood', 'tapas',
     'cacao', 'tofu', 'venkel', 'wasabi', 'borrelplank', 'wortel', 'vijgen', 'visstick', 'worstenbroodje', 'kauwgom',
-    'laurierblad', 'tijm', 'kaneel', 'chilipeper', 'witte peper', 'zelfrijzend bakmeel', 'gist', 'basterdsuiker'
+    'laurierblad', 'tijm', 'kaneel', 'chilipeper', 'witte peper', 'zelfrijzend bakmeel', 'gist', 'basterdsuiker',
+    'zuurstok', 'drop', 'pretzel'
   ];
 
   const koken = [
@@ -219,7 +220,7 @@ const WORDS_BY_CATEGORY = (() => {
     'erosie', 'grasland', 'grot', 'jungle', 'kustlijn', 'natuur', 'boswachter', 'bosrand',
     'volle maan', 'onweersbui', 'oerbos', 'permafrost', 'polder', 'fermentatie', 'stroompje',
     'rivieroever', 'rotsklif', 'schors', 'steentijd', 'steppegras', 'waterlelie', 'riet',
-    'stroomgebied', 'stuifzand', 'terp', 'waterput', 'wildernis', 'stofwolk', 'heide',
+    'stroomgebied', 'stuifzand', 'terp', 'waterput', 'wildernis', 'stofwolk', 'heide', 'tuinieren',
     'windstil', 'zandbank', 'zandvlakte', 'zeebodem', 'zeestroming', 'zeewier', 'koolzaad',
     'zilt', 'zoetwatermeer', 'zonnestraling', 'zonsverduistering', 'zoutvlakte', 'zonnebloem',
     'es', 'iep', 'beuk', 'hulst', 'klimop', 'varens', 'stromend water', 'madeliefje', 'distel',
@@ -386,7 +387,7 @@ const WORDS_BY_CATEGORY = (() => {
     'debatteren', 'demonstreren', 'flirten', 'herkennen', 'hijgen', 'improviseren', 'doorsturen', 'zwaaien',
     'jongleren', 'knijpen', 'krabben', 'kwispelen', 'mompelen', 'ontsnappen', 'plassen', 'zwijgen', 'niezen',
     'sluimeren', 'snuffelen', 'stampen', 'staren', 'steigeren', 'trillen', 'migreren', 'touwtjesspringen',
-    'wentelen', 'woelen', 'zuchten', 'reizen', 'bewijzen', 'dromen', 'schipbreuk lijden', 'triomferen',
+    'wentelen', 'woelen', 'zuchten', 'reizen', 'bewijzen', 'dromen', 'schipbreuk lijden', 'triomferen', 'sissen',
     'herinneren', 'liefhebben', 'oplossen', 'pech hebben', 'teweegbrengen', 'aarzelen', 'takelen', 'oversteken',
     'roddelen', 'rusten', 'vertrouwen', 'markeren', 'imiteren', 'afwachten', 'zingen', 'sms-en', 'veroveren',
     'googelen', 'typen', 'kopiëren', 'plakken', 'opslaan', 'printen', 'uitbuiten', 'zaaien', 'appen', 'filmen',
@@ -420,7 +421,7 @@ const WORDS_BY_CATEGORY = (() => {
     'euforisch', 'vreedzaam', 'gepassioneerd', 'radeloos', 'gastvrij', 'wraakzuchtig', 'hebberig', 'vriendelijk',
     'rationeel', 'ambitieus', 'zorgeloos', 'roekeloos', 'gul', 'vrijgevig', 'gierig', 'nonchalant', 'vriendschappelijk',
     'fanatiek', 'betrouwbaar', 'onverschillig', 'assertief', 'cynisch', 'verstrooid', 'opgetogen', 'iconisch',
-    'verbijsterd', 'smoorverliefd', 'heimwee', 'ontroerd', 'geschokt', 'bewust', 'materialistisch',
+    'verbijsterd', 'smoorverliefd', 'heimwee', 'ontroerd', 'geschokt', 'bewust', 'materialistisch', 'tegendraads',
     'potig', 'uitstraling', 'mimiek', 'subjectief', 'objectief', 'vreemd', 'schijnheilig', 'zelfbewust'
   ];
 
@@ -475,11 +476,11 @@ const WORDS_BY_CATEGORY = (() => {
     'geheugenverlies', 'hallucinatie', 'hartstilstand', 'hersenletsel', 'hersenspoeling', 'besmetting', 'bewusteloos', 'ADHD',
     'hoogtevrees', 'hormoon', 'hypnose', 'hysterie', 'immuunsysteem', 'infectie', 'blind', 'injectie', 'keizersnede', 'dyscalculie',
     'obsessie', 'onderbewustzijn', 'operatie', 'overdosis', 'overlevingsdrang', 'pandemie', 'enzym', 'epidemie', 'autisme',
-    'paranoia', 'persoonlijkheid', 'pijnstiller', 'plasma', 'pols', 'psychiatrie', 'ziekte', 'PTSS', 'quarantaine',
-    'röntgenfoto', 'scalpel', 'schizofrenie', 'stethoscoop', 'stigma', 'stoornis', 'doof', 'medicijn', 'migraine',
-    'surrogaatmoeder', 'symptoom', 'transplantatie', 'tunnelvisie', 'vaccinatie', 'vaccin', 'homeopathie', 'bacterie',
-    'fractuur', 'hechting', 'zwelling', 'reanimatie', 'verband', 'narcose', 'long', 'hart', 'reflex', 'rehabilitatie',
-    'nier', 'lever', 'alvleesklier', 'galblaas', 'schildklier', 'dikke darm', 'spieren', 'MRI', 'virus', 'kleurenblind',
+    'paranoia', 'persoonlijkheid', 'pijnstiller', 'plasma', 'pols', 'psychiatrie', 'ziekte', 'PTSS', 'quarantaine', 'CT-scan',
+    'röntgenfoto', 'scalpel', 'schizofrenie', 'stethoscoop', 'stigma', 'stoornis', 'doof', 'medicijn', 'migraine', 'slaapapneu',
+    'surrogaatmoeder', 'symptoom', 'transplantatie', 'tunnelvisie', 'vaccinatie', 'vaccin', 'homeopathie', 'bacterie', 'eczeem',
+    'fractuur', 'hechting', 'zwelling', 'reanimatie', 'verband', 'narcose', 'long', 'hart', 'reflex', 'rehabilitatie', 'puistje'
+    'nier', 'lever', 'alvleesklier', 'galblaas', 'schildklier', 'dikke darm', 'spieren', 'MRI', 'virus', 'kleurenblind', 'wrat',
     'chemotherapie', 'prothese', 'pacemaker', 'bloedsuiker', 'cholesterol', 'botten', 'ontsteking', 'ziekenhuis', 'ruggengraat',
     'litteken', 'tumor', 'kanker', 'leukemie', 'diabetes', 'astma', 'reuma', 'alzheimer', 'medicatie', 'ziekenhuisdirecteur',
     'parkinson', 'burnout', 'bipolaire', 'anorexia', 'obesitas', 'hartritme', 'bloedvat', 'zenuwstelsel', 'orgaandonatie',
@@ -536,8 +537,8 @@ const WORDS_BY_CATEGORY = (() => {
     'strijkorkest', 'fanfare', 'jazzband', 'rockband', 'liveband', 'remix', 'mashup', 'sample', 'popgroep', 'duo', 'trio',
     'openluchtconcert', 'jamsessie', 'nachtclub', 'poppodium', 'trekharmonika', 'samba', 'rumba', 'tourmanager', 'koorzanger',
     'operahuis', 'concertgebouw', 'festivalterrein', 'backstage', 'strijkkwartet', 'tango', 'viool', 'muziekzaal', 'gitaarsolo',
-    'volkslied', 'kinderlied', 'slaapliedje', 'kerstlied', 'hymne', 'serenade', 'wals', 'polka', 'kwartet', 'solist',
-    'turntable', 'autotune', 'muziekfestival', 'cha-cha-cha', 'foxtrot', 'quickstep', 'slowfox'
+    'volkslied', 'kinderlied', 'slaapliedje', 'kerstlied', 'hymne', 'serenade', 'wals', 'polka', 'kwartet', 'solist', 'plectrum',
+    'turntable', 'autotune', 'muziekfestival', 'cha-cha-cha', 'foxtrot', 'quickstep', 'slowfox', 'neuriën', 'deuntje', 'stemvork'
   ];
 
   const kleding = [
@@ -551,7 +552,7 @@ const WORDS_BY_CATEGORY = (() => {
     'beenwarmers', 'slippers', 'zonneklep', 'portemonnee', 'piercing', 'boxershort', 'bretels', 'polsband', 'pantoffels',
     'coltrui', 'overhemd', 'hoodie', 'sweater', 'joggingbroek', 'hemd', 'corset', 'motorpak', 'jumpsuit', 'kousen',
     'panty', 'klompen', 'veters', 'bomberjack', 'garderobe', 'laptoptas', 'wetsuit', 'trainingspak', 'broekspijp',
-    'hardloopschoenen', 'instappers', 'snowboots', 'capuchon'
+    'hardloopschoenen', 'instappers', 'snowboots', 'capuchon', 'toga'
   ];
 
   const militair = [
