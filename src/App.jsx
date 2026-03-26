@@ -920,6 +920,8 @@ const WORDS_BY_CATEGORY = (() => {
     'de hond in de pot vinden',
     'als een paal boven water staan',
     'iets aan de grote klok hangen',
+    'april doet wat hij wil',
+    'in mei leggen alle vogels een ei',
     'de kool en de geit sparen',
     'het spits afbijten',
     'tussen wal en schip vallen',
