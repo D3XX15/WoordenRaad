@@ -310,7 +310,7 @@ const WORDS_BY_CATEGORY = (() => {
     'toverdrank', 'gnoom', 'ork', 'cyborg', 'Dr. Frankenstein', 'elfjes', 'mythe', 'folklore', 'fantasie',
     'demon', 'telepathie', 'helderziend', 'waarzegger', 'gedachtelezen', 'visioen', 'monster', 'verzinsel',
     'gedaantewisseling', 'klopgeest', 'superheld', 'Hans Christian Andersen', 'bezwering', 'verbeelding',
-    'schaduwwereld', 'gebroeders Grim', 'bosnimf', 'reus', 'ondoden', 'onsterfelijkheid', 'illusie', 'wonder',
+    'schaduwwereld', 'gebroeders Grimm', 'bosnimf', 'reus', 'ondoden', 'onsterfelijkheid', 'illusie', 'wonder',
     'portaal', 'heksenketel', 'sphinx', 'minotaurus', 'hobbit', 'titaan', 'betoveren', 'zeemonster', 'sirene'
   ];
 
@@ -412,7 +412,7 @@ const WORDS_BY_CATEGORY = (() => {
     'confronterend', 'meegaand', 'dominant', 'agressief', 'onderdanig', 'hyperactief', 'sceptisch', 'wilskracht',
     'loom', 'passief', 'gefocust', 'afgeleid', 'doelgericht', 'lui', 'arrogant', 'eerlijk', 'intens', 'oprecht',
     'volhardend', 'dankbaar', 'voldaan', 'content', 'geïnspireerd', 'verbonden', 'machteloos', 'suf', 'teder',
-    'geliefd', 'optimistisch', 'zelfverzekerd', 'woedend', 'geïrriteerd', 'wanhopig', 'schaamte', 'bang', '',
+    'geliefd', 'optimistisch', 'zelfverzekerd', 'woedend', 'geïrriteerd', 'wanhopig', 'schaamte', 'bang',
     'overweldigd', 'kalm', 'slaperig', 'futloos', 'verward', 'besluiteloos', 'pessimistisch', 'duidelijk',
     'gefixeerd', 'creatief', 'dromerig', 'empathisch', 'zorgzaam', 'afstandelijk', 'onbeleefd', 'boos', 'pestkop',
     'kritisch', 'behulpzaam', 'perfectionistisch', 'zenuwachtig', 'verrast', 'vrolijk', 'manipulatief', 'buitenbeentje',
