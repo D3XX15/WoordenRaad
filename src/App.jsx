@@ -402,7 +402,7 @@ const WORDS_BY_CATEGORY = (() => {
   ];
 
   const emoties = [
-    'blij', 'tevreden', 'angstig', 'enthousiast', 'opgewonden', 'ontspannen', 'territoriaal', 'saai', 'haat',
+    'blij', 'tevreden', 'angstig', 'enthousiast', 'opgewonden', 'ontspannen', 'territoriaal', 'saai', 'haat', 'gek',
     'kalm', 'alert', 'gestrest', 'paniekerig', 'energiek', 'traag', 'actief', 'bescheiden', 'karakteristiek', 'wijs',
     'leergierig', 'nieuwsgierig', 'onzeker', 'jaloers', 'gefrustreerd', 'verdrietig', 'narcistisch', 'geheimzinnig',
     'somber', 'teleurgesteld', 'eenzaam', 'verveeld', 'opgelucht', 'trots', 'egoïstisch', 'humaan', 'nostalgisch',
@@ -417,16 +417,16 @@ const WORDS_BY_CATEGORY = (() => {
     'overweldigd', 'slaperig', 'futloos', 'verward', 'besluiteloos', 'pessimistisch', 'duidelijk', 'kneuterig',
     'gefixeerd', 'creatief', 'dromerig', 'empathisch', 'zorgzaam', 'afstandelijk', 'onbeleefd', 'boos', 'klungelig',
     'kritisch', 'behulpzaam', 'perfectionistisch', 'zenuwachtig', 'verrast', 'vrolijk', 'manipulatief', 'gluiperig',
-    'verlegen', 'geduldig', 'eigenwijs', 'moedig', 'vergevingsgezind', 'afwezig', 'gewoontedier', 'trendy', 'menselijk',
+    'verlegen', 'geduldig', 'eigenwijs', 'moedig', 'vergevingsgezind', 'afwezig', 'gewoontedier', 'trendy',
     'euforisch', 'vreedzaam', 'gepassioneerd', 'radeloos', 'gastvrij', 'wraakzuchtig', 'hebberig', 'vriendelijk',
     'rationeel', 'ambitieus', 'zorgeloos', 'roekeloos', 'vrijgevig', 'gierig', 'nonchalant', 'vriendschappelijk',
     'fanatiek', 'betrouwbaar', 'onverschillig', 'assertief', 'cynisch', 'verstrooid', 'opgetogen', 'iconisch',
     'verbijsterd', 'smoorverliefd', 'heimwee', 'ontroerd', 'geschokt', 'bewust', 'materialistisch', 'tegendraads',
-    'potig', 'uitstraling', 'mimiek', 'subjectief', 'objectief', 'vreemd', 'schijnheilig', 'zelfbewust', 'smeerkees',
-    'luiwammes', 'lapzwans', 'viezerik', 'pestkop', 'buitenbeentje', 'nietsnut', 'vreemde vogel', 'kreng',
-    'einzelgänger', 'treiteraar', 'smeerlap', 'huichelaar', 'blaaskaak', 'slijmjurk', 'dwaas', 'sukkel',
-    'smeerpoets', 'lolbroek', 'lulhannes', 'betweter', 'wijsneus', 'mierenneuker', 'koekenbakker',
-    'kneus', 'druiloor', 'hansworst', 'heikneuter', 'zeurkous', 'halve zool', 'flapdrol', 'mafkees'
+    'potig', 'uitstraling', 'mimiek', 'subjectief', 'objectief', 'vreemd', 'schijnheilig', 'zelfbewust', 'mal',
+    'luiwammes', 'lapzwans', 'viezerik', 'pestkop', 'buitenbeentje', 'nietsnut', 'vreemde vogel', 'kreng', 'menselijk',
+    'einzelgänger', 'treiteraar', 'smeerlap', 'huichelaar', 'blaaskaak', 'slijmjurk', 'dwaas', 'sukkel', 'vrouwelijk',
+    'smeerpoets', 'lolbroek', 'lulhannes', 'betweter', 'wijsneus', 'mierenneuker', 'koekenbakker', 'apart', 'mannelijk',
+    'krankzinnig', 'kneus', 'druiloor', 'hansworst', 'heikneuter', 'zeurkous', 'halve zool', 'flapdrol', 'mafkees'
   ];
 
   const landen = [
