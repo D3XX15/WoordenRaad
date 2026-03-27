@@ -426,7 +426,8 @@ const WORDS_BY_CATEGORY = (() => {
     'luiwammes', 'lapzwans', 'viezerik', 'pestkop', 'buitenbeentje', 'nietsnut', 'vreemde vogel', 'kreng', 'menselijk',
     'einzelgänger', 'treiteraar', 'smeerlap', 'huichelaar', 'blaaskaak', 'slijmjurk', 'dwaas', 'sukkel', 'vrouwelijk',
     'smeerpoets', 'lolbroek', 'lulhannes', 'betweter', 'wijsneus', 'mierenneuker', 'koekenbakker', 'apart', 'mannelijk',
-    'krankzinnig', 'kneus', 'druiloor', 'hansworst', 'heikneuter', 'zeurkous', 'halve zool', 'flapdrol', 'mafkees'
+    'krankzinnig', 'kneus', 'druiloor', 'hansworst', 'heikneuter', 'zeurkous', 'halve zool', 'flapdrol', 'mafkees',
+    'vastberaden'
   ];
 
   const landen = [
@@ -647,7 +648,7 @@ const WORDS_BY_CATEGORY = (() => {
     'tuinhek', 'tuinpad', 'vliegenwering', 'vogelbadje', 'vogelhuisje', 'schutting', 'breinaald', 'serre',
     'vogelvoer', 'tuinaarde', 'bad', 'douche', 'toilet', 'radiator', 'thermostaatknop', 'fles', 'tablet',
     'rookmelder', 'brievenbus', 'buitenlamp', 'wandspiegel', 'washandje', 'badkamerspiegel', 'antenne',
-    'antiek', 'ballon', 'balustrade', 'lampion', 'kaars', 'computer', 'dakpan', 'bierglas', 'dekbed',
+    'antiek', 'ballon', 'balustrade', 'lampion', 'kaars', 'computer', 'dakpan', 'bierglas', 'dekbed', 'vliegenmepper',
     'fakkel', 'föhn', 'haardroger', 'hangmat', 'ijsklontjesmaker', 'pakketje', 'oplader', 'cadeau', 'zolder',
     'megafoon', 'neonlamp', 'paraplu', 'lichtschakelaar', 'spelcomputer', 'aansteker', 'ventilator', 'kelder',
     'spaarpot', 'wiel', 'rubberen eend', 'scheermes', 'tandenstoker', 'harde schijf', 'powerbank', 'schuifdeur',
@@ -1025,9 +1026,9 @@ const EXTRA_WORD_PARTS = new Set([
 'manchet', 'knoop', 'scheep', 'schroef', 'veiligheid', 'speld', 'boodschappen', 'tas', 'gehoor', 'apparaat', 'muur', 'schildering', 'zuur', 'speelzaal',
 'aard', 'verschuiving', 'lucht', 'vochtigheid', 'vulkaan', 'uitbarsting', 'zoetwater', 'meer', 'zon', 'verduistering', 'deeldienst', 'zorg', 'peuter',
 'stoom', 'locomotief', 'zweef', 'vliegtuig', 'kaping', 'boot', 'trauma', 'spoorweg', 'overgang', 'paspoort', 'controle', 'kenteken', 'zijde',
-'plaat', 'verkeer', 'distributie', 'centrum', 'brandweer', 'kazerne', 'camping', 'terrein', 'recreatie', 'gebied', 'tandarts', 'praktijk',
+'plaat', 'verkeer', 'distributie', 'centrum', 'brandweer', 'kazerne', 'camping', 'terrein', 'recreatie', 'gebied', 'tandarts', 'praktijk', 'mepper',
 'voetgangers', 'pannenkoeken', 'huis', 'kinder', 'dagverblijf', 'meubel', 'boulevard', 'onder', 'handelen', 'touwtje', 'teweeg', 'stichten',
-'live', 'streamen', 'geheugen', 'verlies', 'bewustzijn', 'drang', 'surrogaat', 'moeder', 'kwik', 'thermometer', 'weten', 'schappelijk',
+'live', 'streamen', 'geheugen', 'verlies', 'bewustzijn', 'drang', 'surrogaat', 'moeder', 'kwik', 'thermometer', 'weten', 'schappelijk', 'vliegen',
 'onderzoek', 'instituut', 'deeltjes', 'versneller', 'parlement', 'aire', 'staat', 'secretaris', 'rechtvaardig', 'heid', 'inkomen', 'verdeling',
 'verkiezing', 'programma', 'formatie', 'gesprekken', 'kabinet', 'hypotheekrente', 'rente', 'hypotheek', 'renteaftrek', 'tijd', 'brander',
 'aftrek', 'werkgever', 'organisatie', 'volk', 'vertegenwoordiger', 'inkomsten', 'vermogen', 'bescherming', 'campagne', 'arbeid', 'currency',
