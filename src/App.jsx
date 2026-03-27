@@ -427,7 +427,7 @@ const WORDS_BY_CATEGORY = (() => {
     'einzelgänger', 'treiteraar', 'smeerlap', 'huichelaar', 'blaaskaak', 'slijmjurk', 'dwaas', 'sukkel', 'vrouwelijk',
     'smeerpoets', 'lolbroek', 'lulhannes', 'betweter', 'wijsneus', 'mierenneuker', 'koekenbakker', 'apart', 'mannelijk',
     'krankzinnig', 'kneus', 'druiloor', 'hansworst', 'heikneuter', 'zeurkous', 'halve zool', 'flapdrol', 'mafkees',
-    'vastberaden'
+    'vastberaden', 'angsthaas'
   ];
 
   const landen = [
