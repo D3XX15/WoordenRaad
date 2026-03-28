@@ -23,6 +23,7 @@ const CATEGORIES = [
   { id: "onderwijs",     label: "🎓 Onderwijs" },
   { id: "religie",       label: "🕍 Religie" },
   { id: "militair",      label: "🪖 Militair" },
+  { id: "wapens",        label: "🔫 Wapens" },
   { id: "wetenschap",    label: "🔬 Wetenschap" },
   { id: "geneeskunde",   label: "🩺 Geneeskunde" },
   { id: "ruimte",        label: "🚀 Ruimte" },
@@ -36,9 +37,9 @@ const CATEGORIES = [
 const WORDS_BY_CATEGORY = (() => {
   const dieren = [
     'aardvarken', 'adelaar', 'arend', 'albatros', 'alpaca', 'anaconda', 'baviaan', 'kameleon', 'kangoeroe',
-    'beer', 'bever', 'bijenkoningin', 'bizon', 'boomkikker', 'boomslang', 'kat', 'kever', 'kikker',
-    'buffel', 'buizerd', 'buldog', 'cheetah', 'chihuahua', 'cobra', 'kiwi', 'egel', 'ekster', 'eland',
-    'condor', 'das', 'dingo', 'dinosaurus', 'dolfijn', 'dromedaris', 'duif', 'dwergpinguïn', 'eekhoorn',
+    'beer', 'bever', 'bijenkoningin', 'bizon', 'boomkikker', 'boomslang', 'kat', 'kever', 'kikker', 'bladluis',
+    'buffel', 'buizerd', 'buldog', 'cheetah', 'chihuahua', 'cobra', 'kiwi', 'egel', 'ekster', 'eland', 'marter',
+    'condor', 'dingo', 'dinosaurus', 'dolfijn', 'dromedaris', 'duif', 'dwergpinguïn', 'eekhoorn', 'bloedzuiger',
     'gibbon', 'giraffe', 'gorilla', 'goudjakhals', 'goudvis', 'grizzlybeer', 'hyena', 'ibis', 'ijsbeer',
     'guppie', 'haai', 'haas', 'hagedis', 'hamster', 'havik', 'prooidier', 'hermelijn', 'hond', 'honingdas',
     'impala', 'inktvis', 'jaguar', 'jakhals', 'kaketoe', 'kameel', 'emoe', 'fazant', 'flamingo', 'fret',
@@ -94,7 +95,7 @@ const WORDS_BY_CATEGORY = (() => {
     'jenever', 'karnemelk', 'kokos', 'krentenbollen', 'pinda', 'kruidenboter', 'melk', 'muesli', 'ontbijtkoek', 'pap',
     'peperkoek', 'pepernoot', 'rijst', 'rookworst', 'speculaas', 'stroopwafel', 'schijf van vijf', 'roomboter', 'eidooier',
     'wentelteefje', 'wittebrood', 'suikerspin', 'aardpeer', 'ansjovis', 'rode kool', 'bamischijf', 'biet', 'bloedworst',
-    'brie', 'bami pangang', 'pistolet', 'sambal', 'courgette', 'döner', 'eendenborst', 'eierkoek', 'filet american',
+    'brie', 'bami pangang', 'pistolet', 'sambal', 'courgette', 'döner', 'eendenborst', 'eierkoek', 'filet american', 'biscuit',
     'panna cotta', 'gember', 'guacamole', 'grillworst', 'havermout', 'inktvisringen', 'ierse koffie', 'kalfsvlees', 'deeg',
     'kapucijners','kaviaar','kibbeling', 'knoflook', 'koolraap', 'kruidnoten', 'lekkerbek','leverworst', 'limoen', 'kroepoek',
     'rijstwafel', 'maïs', 'mandarijn', 'matse', 'merengue', 'nasischijf', 'nootmuskaat', 'oliebol', 'paaseitje', 'paksoi', 
@@ -130,12 +131,13 @@ const WORDS_BY_CATEGORY = (() => {
     'tentamen', 'academisch', 'rector', 'mentor', 'bijles', 'conciërge', 'basisschool', 'middelbare school',
     'montessori', 'thuisonderwijs', 'bijscholing', 'schoolreisje', 'excursie', 'werkstuk', 'stage', 'lezing',
     'open dag', 'ouderavond', 'zomervakantie', 'overhoring', 'atlas', 'geodriehoek', 'passer', 'liniaal',
-    'schoolbord', 'kluisje', 'etui', 'onvoldoende', 'blijven zitten', 'CITO-toets', 'schooladvies', 'bruggers',
+    'schoolbord', 'kluisje', 'etui', 'onvoldoende', 'blijven zitten', 'CITO-toets', 'schooladvies', 'brugpieper',
     'lesrooster', 'samenvatting', 'aantekeningen', 'meerkeuzevraag', 'studiefinanciering', 'cum laude',
     'afstuderen', 'schoolkrant', 'groepsdruk', 'afkijken', 'spiekbriefje', 'nablijven', 'schorsing', 'lesuur',
-    'corvee', 'uitval', 'invaller', 'absentie', 'faalangst', 'studiebeurs', 'luizenouder', 'peuterspeelzaal',
+    'corvee', 'uitval', 'invaller', 'absentie', 'faalangst', 'studiebeurs', 'luizenmoeder', 'peuterspeelzaal',
     'gymnasium', 'lyceum', 'internaat', 'schoolplein', 'puntenslijper', 'schrift', 'practicum', 'aula',
-    'mediatheek', 'college', 'reünie', 'semester', 'tussenuur', 'je vinger opsteken', 'de beurt krijgen'
+    'mediatheek', 'college', 'reünie', 'semester', 'tussenuur', 'je vinger opsteken', 'de beurt krijgen',
+    'brugklas'
   ];
 
   const beroepen = [
@@ -162,13 +164,13 @@ const WORDS_BY_CATEGORY = (() => {
     'machinist', 'molenaar', 'parkeercontroleur', 'recruiter', 'receptionist', 'vrijwilliger', 'acteur',
     'trambestuurder', 'kapper', 'reisleider', 'restaurateur', 'stukadoor', 'wegwerker', 'webdesigner',
     'producent', 'zwemleraar', 'gameontwikkelaar', 'reddingswerker', 'schoonmaker', 'glasblazer',
-    'babysitter', 'badmeester', 'bemiddelaar', 'beul'
+    'babysitter', 'badmeester', 'bemiddelaar', 'beul', 'bloemist', 'bouwvakker', 'butler'
   ];
 
   const sport = [
     'aerobics', 'alpineskiën', 'american football', 'atletiek', 'badminton', 'taekwondo', 'discipline',
     'balletdansen', 'basketbal', 'beachvolleybal', 'bergsport', 'biatlon', 'bingo', 'trofee', 'blessure',
-    'biljarten', 'BMX', 'bobslee', 'boksen', 'bowling', 'breakdance', 'doping', 'boomerang', 'scheenbeschermer',
+    'biljarten', 'BMX', 'bobslee', 'boksen', 'bowling', 'breakdance', 'doping', 'scheenbeschermer',
     'cricket', 'curling', 'dammen', 'diepzeeduiken', 'discgolf', 'discuswerpen', 'ganzenbord', 'rivaliteit',
     'dressuur', 'duiken', 'e-sporten', 'estafette', 'fietsen', 'freerunning', 'tennis', 'honkbal', 'arbiter',
     'frisbee', 'gewichtheffen', 'gokken', 'golfen', 'gymnastiek', 'handbal', 'tafeltennis', 'scheidsrechter',
@@ -199,7 +201,7 @@ const WORDS_BY_CATEGORY = (() => {
 
   const natuur = [
     'aardbeving', 'aardverschuiving', 'algen', 'bamboe', 'bergtop', 'rots', 'seizoen', 'aardkorst',
-    'blad', 'bliksem', 'bloem', 'boom', 'bos', 'branding', 'zwerfkei', 'eb', 'rotsbodem', 'metaal',
+    'blad', 'bliksem', 'bloem', 'bos', 'branding', 'zwerfkei', 'eb', 'rotsbodem', 'metaal', 'heksenkring',
     'brandnetels', 'bronwater', 'bui', 'cactus', 'compost', 'dauw', 'delta', 'savanne', 'microplastic',
     'ecosysteem', 'fjord', 'fossiel', 'getijden', 'geiser', 'goud', 'strand', 'dijk', 'hortensia',
     'greppel', 'hagel', 'herfst', 'herfstblad', 'heuvel', 'hittegolf', 'storm', 'duin', 'anjer',
@@ -207,17 +209,17 @@ const WORDS_BY_CATEGORY = (() => {
     'kiezel', 'klif', 'koraal', 'koraalrif', 'lavastroom', 'lente', 'droogte', 'moesson', 'krokus',
     'luchtvochtigheid', 'mangrovebos', 'maretak', 'meander', 'mist', 'modder', 'moeras', 'hyacint',
     'oase', 'oceaan', 'orkaan', 'paddenstoel', 'paddenvijver', 'dennennaald', 'morgenrood', 'asbest',
-    'plas', 'poollicht', 'regen', 'regenboog', 'regenbui', 'regenwoud', 'hars', 'naaldboom',
-    'schemering', 'schimmel', 'sneeuw', 'sneeuwvlok', 'sneeuwstorm', 'steengroeve', 'nevel',
+    'plas', 'poollicht', 'regen', 'regenboog', 'regenbui', 'regenwoud', 'hars', 'naaldboom', 'bloeitijd',
+    'schemering', 'schimmel', 'sneeuw', 'sneeuwvlok', 'sneeuwstorm', 'steengroeve', 'nevel', 'bloesem',
     'toendra', 'tornado', 'tropische regen', 'tsunami', 'tulp', 'uiterwaarden', 'roos', 'houtskool',
     'vallei', 'veen', 'veld', 'vijver', 'vlakte', 'vloed', 'wild', 'stikstof', 'archipel', 'steenkool',
     'vulkaan', 'vulkaanuitbarsting', 'waterval', 'weide', 'windvlaag', 'woestijn', 'stekel', 'aardgas',
-    'wolk', 'woud', 'zandstorm', 'zeewind', 'zomer', 'marmer', 'stroomversnelling', 'rivier',
-    'zonsondergang', 'zonsopgang', 'schelp', 'schaduw', 'berk', 'eik', 'ravijn', 'vlierbes',
+    'wolk', 'woud', 'zandstorm', 'zeewind', 'zomer', 'marmer', 'stroomversnelling', 'rivier', 'biesbos',
+    'zonsondergang', 'zonsopgang', 'schelp', 'schaduw', 'berk', 'eik', 'ravijn', 'vlierbes', 'blubber',
     'graan', 'kastanjeboom', 'klaver', 'korenbloem', 'lavendel', 'meidoorn', 'braamstruik',
     'narcis', 'populier', 'wilg', 'viooltje', 'afgrond', 'gletsjer', 'zee', 'lagedrukgebied',
     'lawine', 'draaikolk', 'turbulentie', 'akker', 'beek', 'bergpas', 'kurk', 'struikgewas', 'bestuiving',
-    'bloemenveld', 'bosbrand', 'bospad', 'bron', 'dode boom', 'eiland', 'jager',  'bosje', 'berenklauw',
+    'bloemenveld', 'bosbrand', 'bospad', 'bron', 'boomstam', 'eiland', 'jager',  'bosje', 'berenklauw',
     'erosie', 'grasland', 'grot', 'jungle', 'kustlijn', 'natuur', 'boswachter', 'bosrand', 'berm',
     'volle maan', 'onweersbui', 'oerbos', 'permafrost', 'polder', 'fermentatie', 'stroompje',
     'rivieroever', 'rotsklif', 'schors', 'steentijd', 'steppegras', 'waterlelie', 'riet', 'aardbol',
@@ -228,7 +230,7 @@ const WORDS_BY_CATEGORY = (() => {
     'steen', 'zeegras', 'braam', 'eikel', 'dennenappel', 'framboos', 'boomgaard', 'boterbloem',
     'vruchtvlees', 'stuifmeel', 'dooi', 'rijp', 'ijzel', 'aardkorst', 'lelie', 'magma', 'munt',
     'bladerdek', 'conifeer', 'den', 'gebergte', 'graniet', 'horizon', 'kalksteen', 'vloedgolf',
-    'heksenkring', 'fotosynthese', 'riviermonding', 'winter', 'wind', 'sloot', 'wad', 'zwam',
+    'fotosynthese', 'riviermonding', 'winter', 'wind', 'sloot', 'wad', 'zwam',
     'bestrijdingsmiddel'
   ];
 
@@ -258,7 +260,7 @@ const WORDS_BY_CATEGORY = (() => {
     'rijstrook', 'fietspad', 'kruispunt', 'stoplicht', 'parkeerbon', 'elektrisch rijden', 'shovel',
     'waterstofauto', 'carpoolen', 'pendelen', 'woon-werkverkeer', 'Nationale Spoorwegen', 'Sprinter',
     'nachtbus', 'pendelbusje', 'rolstoelbus', 'baggerschip', 'cruiseschip', 'laad- en losplaats',
-    'distributiecentrum', 'koelwagen', 'voetpad', 'wandelroute', 'aanlegsteiger', 'privéjet',
+    'distributiecentrum', 'koelwagen', 'voetpad', 'wandelroute', 'aanlegsteiger', 'privéjet', 'brokkenpiloot',
     'helipad', 'automobilist', 'motor', 'wagen', 'huifkar', 'lijkwagen', 'sneeuwschuiver', 'vorkheftruck',
     'schoolbus', 'rolstoel', 'skateboard', 'vouwfiets', 'laadpaal', 'paardentram', 'zebrapad'
   ];
@@ -268,7 +270,7 @@ const WORDS_BY_CATEGORY = (() => {
     'bioscoop', 'bloemenmarkt', 'boekenwinkel', 'boerderij', 'bouwplaats', 'bowlingbaan', 'brandweerkazerne', 'brouwerij',
     'circus', 'grensovergang', 'consulaat', 'crematorium', 'dierentuin', 'discotheek', 'fabriek', 'café', 'camping', 'brug',
     'fietsenwinkel', 'fontein', 'fruitmarkt', 'gemeentehuis', 'grachtenpand', 'manege', 'markt', 'loods', 'casino', 'centrum',
-    'jachthaven', 'kapperszaak', 'kasteel', 'territorium', 'megabioscoop', 'monument', 'observatorium', 'wegrestaurant', 'arena',
+    'jachthaven', 'kapperszaak', 'kasteel', 'territorium', 'monument', 'observatorium', 'wegrestaurant', 'arena', 'bistro',
     'dolfinarium', 'landgoed', 'molen', 'paleis', 'parkeergarage', 'pier', 'plein', 'poppenkast', 'roltrap', 'windmolen',
     'buitenwijk', 'postkantoor', 'pretpark', 'piramide', 'racebaan', 'recreatiegebied', 'ruïne', 'sauna', 'watertoren',
     'schaatsbaan', 'school', 'silo', 'drielandenpunt', 'sluis', 'speeltuin', 'sporthal', 'stad', 'stadion', 'vuurtoren',
@@ -280,8 +282,8 @@ const WORDS_BY_CATEGORY = (() => {
     'Mississippi', 'Nijl', 'Noordzee', 'Sahara', 'Thames', 'Corsica', 'Hawaï', 'Kaukasus', 'Siberië', 'binnenstad', 'platteland',
     'Sicilië', 'fietsbrug', 'gemaal', 'steppe', 'boomhut', 'brandtrap', 'carwash', 'dierenasiel', 'winkelcentrum', 'zwembad',
     'graftombe', 'kerkhof', 'klimrek', 'klimbos', 'markthal', 'ansichtkaart', 'meubelboulevard', 'ophaalbrug', 'herberg', 'hotel',
-    'plattegrond', 'riolering', 'rotonde', 'schaapskooi', 'sportpark', 'stadspark', 'uitkijktoren', 'honkbalstadion',
-    'kroeg', 'visvijver', 'voetbalveld', 'volkstuin', 'wijngaard', 'windpark', 'zonnepark', 'hutje', 'bungalow', 'tribune',
+    'plattegrond', 'riolering', 'rotonde', 'schaapskooi', 'sportpark', 'stadspark', 'uitkijktoren', 'honkbalstadion', 'kermis',
+    'kroeg', 'voetbalveld', 'volkstuin', 'wijngaard', 'windpark', 'zonnepark', 'hutje', 'bungalow', 'tribune',
     'hostel', 'studentenhuis', 'flat', 'appartement', 'studio', 'boerenschuur', 'stal', 'poolcirkel', 'slachthuis', 'bestemming',
     'rijtjeshuis', 'ijsbaan', 'provincie', 'hoofdstad', 'gemeente', 'afsluitdijk', 'waddeneiland', 'bejaardentehuis'
   ];
@@ -315,7 +317,8 @@ const WORDS_BY_CATEGORY = (() => {
     'demon', 'telepathie', 'helderziend', 'waarzegger', 'gedachtelezen', 'visioen', 'monster', 'verzinsel',
     'gedaantewisseling', 'klopgeest', 'superheld', 'Hans Christian Andersen', 'bezwering', 'verbeelding',
     'schaduwwereld', 'gebroeders Grimm', 'bosnimf', 'reus', 'ondoden', 'onsterfelijkheid', 'illusie', 'wonder',
-    'portaal', 'heksenketel', 'sphinx', 'minotaurus', 'hobbit', 'titaan', 'betoveren', 'zeemonster', 'sirene'
+    'portaal', 'heksenketel', 'sphinx', 'minotaurus', 'hobbit', 'titaan', 'betoveren', 'zeemonster', 'sirene',
+    'boeman'
   ];
 
   const literatuur = [
@@ -329,7 +332,8 @@ const WORDS_BY_CATEGORY = (() => {
     'bladwijzer', 'inleiding', 'nawoord', 'register', 'ghostwriter', 'setting', 'beeldspraak', 'uitgeverij',
     'citaat', 'verhaal', 'woordenboek', 'encyclopedie', 'tijdschrift', 'krant', 'bestseller', 'paragraaf',
     'toon', 'literatuur', 'beschrijving', 'prentenboek', 'redacteur', 'auteursrecht', 'luisterboek', 'e-book',
-    'context', 'genre', 'limerick', 'manga', 'kinderboek', 'woordenschat', 'woordspeling', 'boekenweek'
+    'context', 'genre', 'limerick', 'manga', 'kinderboek', 'woordenschat', 'woordspeling', 'boekenweek',
+    'bijlage', 'bladzijde', 'blokletter', 'boekenbal', 'boekenwurm', 'braille'
   ];
 
   const kunst = [
@@ -364,7 +368,8 @@ const WORDS_BY_CATEGORY = (() => {
     'heling', 'signalement', 'misdrijf', 'delict', 'tbs', 'vrijspraak', 'bloedspoor', 'phishing', 'aanrijding',
     'conflict', 'moordwapen', 'seriemoordenaar', 'losgeld', 'enkelband', 'bewijsstuk', 'smaad', 'aanranding',
     'getuige', 'rapporteren', 'identiteitsfraude', 'bankoverval', 'belastingontduiking', 'mensenhandel',
-    'bekeuring', 'relschopper', 'berechten', 'beroving', 'bestraffen', 'bewaker', 'bewijslast'
+    'bekeuring', 'relschopper', 'berechten', 'beroving', 'bestraffen', 'bewaker', 'bewijslast', 'bloedbad',
+    'marteling', 'bommelding'
   ];
 
   const acties = [
@@ -384,11 +389,11 @@ const WORDS_BY_CATEGORY = (() => {
     'strelen', 'studeren', 'telefoneren', 'twijfelen', 'uitleggen', 'uitpakken', 'roken', 'kwetsen', 'corrigeren',
     'verbergen', 'verdwalen', 'vergeten', 'verkopen', 'verliezen', 'verrassen', 'roeren',  'doneren', 'renoveren',
     'verzorgen', 'vluchten', 'volgen', 'wachten', 'wassen', 'weggooien', 'inhalen', 'hakken', 'werken', 'bijwerken',
-    'sluipen', 'brandblussen', 'eerste hulp verlenen', 'blindoeken', 'een geheim bewaren', 'liken', 'repareren',
+    'sluipen', 'brandblussen', 'eerste hulp verlenen', 'een geheim bewaren', 'liken', 'repareren',
     'misleiden', 'in de rij staan', 'afrijden', 'piekeren', 'overwinnen', 'piepen', 'hinkelen', 'herstellen',
     'haasten', 'vervelen', 'achtervolgen', 'bazelen', 'broeden', 'sleutels verliezen', 'verslikken', 'ploegen',
     'bedanken', 'begroeten', 'beschermen', 'bewonderen', 'boeren', 'controleren', 'scheuren', 'zoeken',
-    'debatteren', 'flirten', 'herkennen', 'hijgen', 'improviseren', 'doorsturen', 'zwaaien',
+    'debatteren', 'flirten', 'herkennen', 'hijgen', 'improviseren', 'doorsturen', 'zwaaien', 'zweten',
     'jongleren', 'knijpen', 'krabben', 'kwispelen', 'mompelen', 'ontsnappen', 'plassen', 'zwijgen', 'niezen',
     'sluimeren', 'snuffelen', 'stampen', 'staren', 'steigeren', 'trillen', 'migreren', 'touwtjesspringen',
     'wentelen', 'woelen', 'zuchten', 'reizen', 'bewijzen', 'dromen', 'schipbreuk lijden', 'triomferen', 'sissen',
@@ -414,15 +419,15 @@ const WORDS_BY_CATEGORY = (() => {
     'overprikkeld', 'nerveus', 'onrustig', 'overbelast', 'prikkelbaar', 'uitgeput', 'tam', 'ethisch', 'succesvol',
     'speels', 'sociaal', 'teruggetrokken', 'vermijdend', 'aanhankelijk', 'onafhankelijk', 'absurd', 'eervol', 'raar',
     'gehoorzaam', 'koppig', 'impulsief', 'voorzichtig', 'minderwaardig', 'opgefokt', 'stoïcijns', 'emotie', 'amicaal',
-    'confronterend', 'meegaand', 'dominant', 'agressief', 'onderdanig', 'hyperactief', 'sceptisch', 'wilskracht',
-    'loom', 'passief', 'gefocust', 'afgeleid', 'doelgericht', 'lui', 'arrogant', 'eerlijk', 'intens', 'oprecht',
+    'confronterend', 'meegaand', 'dominant', 'agressief', 'onderdanig', 'hyperactief', 'sceptisch', 'wilskracht', 'boerenlul',
+    'loom', 'passief', 'gefocust', 'afgeleid', 'doelgericht', 'lui', 'arrogant', 'eerlijk', 'intens', 'oprecht', 'bijgelovig',
     'volhardend', 'dankbaar', 'voldaan', 'content', 'geïnspireerd', 'verbonden', 'machteloos', 'suf', 'teder', 'attent',
     'geliefd', 'optimistisch', 'zelfverzekerd', 'woedend', 'geïrriteerd', 'wanhopig', 'schaamte', 'bang', 'gul', 'autistisch',
     'overweldigd', 'slaperig', 'futloos', 'verward', 'besluiteloos', 'pessimistisch', 'duidelijk', 'kneuterig', 'atypisch',
-    'gefixeerd', 'creatief', 'dromerig', 'empathisch', 'zorgzaam', 'afstandelijk', 'onbeleefd', 'boos', 'klungelig',
-    'kritisch', 'behulpzaam', 'perfectionistisch', 'zenuwachtig', 'verrast', 'vrolijk', 'manipulatief', 'gluiperig',
+    'gefixeerd', 'creatief', 'dromerig', 'empathisch', 'zorgzaam', 'afstandelijk', 'onbeleefd', 'boos', 'klungelig', 'ijverig',
+    'kritisch', 'behulpzaam', 'perfectionistisch', 'zenuwachtig', 'verrast', 'vrolijk', 'manipulatief', 'gluiperig', 'braaf',
     'verlegen', 'geduldig', 'eigenwijs', 'moedig', 'vergevingsgezind', 'afwezig', 'gewoontedier', 'trendy', 'joviaal',
-    'euforisch', 'vreedzaam', 'gepassioneerd', 'radeloos', 'gastvrij', 'wraakzuchtig', 'hebberig', 'vriendelijk',
+    'euforisch', 'vreedzaam', 'gepassioneerd', 'radeloos', 'gastvrij', 'wraakzuchtig', 'hebberig', 'vriendelijk', 'brutaal',
     'rationeel', 'ambitieus', 'zorgeloos', 'roekeloos', 'vrijgevig', 'gierig', 'nonchalant', 'vriendschappelijk', 'laf',
     'fanatiek', 'betrouwbaar', 'onverschillig', 'assertief', 'cynisch', 'verstrooid', 'opgetogen', 'iconisch', 'lafaard',
     'verbijsterd', 'smoorverliefd', 'heimwee', 'ontroerd', 'geschokt', 'bewust', 'materialistisch', 'tegendraads', 'maf',
@@ -434,7 +439,8 @@ const WORDS_BY_CATEGORY = (() => {
     'vastberaden', 'angsthaas', 'aandachtig', 'aanstellerij', 'aantrekkelijk', 'leugenaar', 'aasgier', 'abnormaal',
     'achterlijk', 'ad rem', 'gevat', 'trouw', 'afzetter', 'gemeen', 'allemansvriend', 'amateuristisch', 'flapuit',
     'barmhartig', 'bazig', 'hebzuchtig', 'gulzig', 'baldadig', 'bangeschijter', 'barbaars', 'bedrijvig', 'beheerst',
-    'beïnvloedbaar', 'bekakt', 'deugniet', 'bemoeial', 'berucht', 'beteuterd', 'beunhaas', 'muggenziften', 'bevlogen'
+    'beïnvloedbaar', 'bekakt', 'deugniet', 'bemoeial', 'berucht', 'beteuterd', 'beunhaas', 'muggenziften', 'bevlogen',
+    'bijdehand', 'bofkont'
   ];
 
   const landen = [
@@ -485,23 +491,23 @@ const WORDS_BY_CATEGORY = (() => {
     'placebo', 'acupunctuur', 'ader', 'adrenaline', 'allergie', 'amputatie', 'anesthesie', 'antibiotica', 'autopsie', 'oogkas',
     'bloedarmoede', 'bloeddruk', 'bloedgroep', 'bloedonderzoek', 'claustrofobie', 'coma', 'behandeling', 'beroerte', 'neusholte',
     'defibrillator', 'dementie', 'depressie', 'desinfecteren', 'diagnose', 'dialyse', 'doofstom', 'dwangbuis', 'echo', 'dyslexie',
-    'geheugenverlies', 'hallucinatie', 'hartstilstand', 'hersenletsel', 'hersenspoeling', 'besmetting', 'bewusteloos', 'ADHD',
+    'geheugenverlies', 'hallucinatie', 'hartstilstand', 'hersenletsel', 'hersenspoeling', 'besmetting', 'bewusteloos', 'bloedcel',
     'hoogtevrees', 'hormoon', 'hypnose', 'hysterie', 'immuunsysteem', 'infectie', 'blind', 'injectie', 'keizersnede', 'dyscalculie',
-    'obsessie', 'onderbewustzijn', 'operatie', 'overdosis', 'overlevingsdrang', 'pandemie', 'enzym', 'epidemie', 'beademing',
-    'paranoia', 'persoonlijkheid', 'pijnstiller', 'plasma', 'pols', 'psychiatrie', 'ziekte', 'PTSS', 'quarantaine', 'CT-scan',
+    'obsessie', 'onderbewustzijn', 'operatie', 'overdosis', 'overlevingsdrang', 'pandemie', 'enzym', 'epidemie', 'beademing', 'ADHD',
+    'paranoia', 'persoonlijkheid', 'pijnstiller', 'plasma', 'pols', 'psychiatrie', 'ziekte', 'PTSS', 'quarantaine', 'CT-scan', 'donor',
     'röntgenfoto', 'scalpel', 'schizofrenie', 'stethoscoop', 'stigma', 'stoornis', 'doof', 'medicijn', 'migraine', 'slaapapneu',
     'surrogaatmoeder', 'symptoom', 'transplantatie', 'tunnelvisie', 'vaccinatie', 'vaccin', 'homeopathie', 'bacterie', 'eczeem',
     'fractuur', 'hechting', 'zwelling', 'reanimatie', 'verband', 'narcose', 'long', 'hart', 'reflex', 'rehabilitatie', 'puistje',
     'nier', 'lever', 'alvleesklier', 'galblaas', 'schildklier', 'dikke darm', 'spieren', 'MRI', 'virus', 'kleurenblind', 'wrat',
     'chemotherapie', 'prothese', 'pacemaker', 'bloedsuiker', 'cholesterol', 'botten', 'ontsteking', 'ziekenhuis', 'ruggengraat',
     'litteken', 'tumor', 'leukemie', 'diabetes', 'astma', 'reuma', 'alzheimer', 'medicatie', 'ziekenhuisdirecteur', 'aspirientje',
-    'parkinson', 'burnout', 'bipolaire', 'anorexia', 'obesitas', 'hartritme', 'bloedvat', 'zenuwstelsel', 'orgaandonatie',
-    'chirurg', 'verzorger', 'dermatoloog', 'hersenchirurg', 'gynaecoloog', 'immunoloog', 'EHBO-kit', 'apotheker', 'cardioloog',
-    'kinderarts', 'neuroloog', 'radioloog', 'psycholoog', 'orthopeed', 'revalidatiearts', 'farmaceut', 'fysiotherapeut',
-    'hypnotherapeut', 'dokter', 'therapeut', 'verloskundige', 'zorgverlener', 'oogarts', 'huisarts', 'psychiater', 'ruggenmerg',
-    'chiropractor', 'blindedarmontsteking', 'nierstenen', 'spatader', 'oorsuizen', 'longontsteking', 'lichaam', 'navelstreng',
-    'bloedlichaampje', 'skelet', 'bloedsomloop', 'schaamhaar', 'nagelriem', 'vingerkootje', 'telefoonbotje', 'bestraling',
-    'hamstringblessure', 'scheurbuik', 'aambei', 'alcoholisme', 'anaal', 'oraal', 'anticonceptie', 'beugel'
+    'parkinson', 'burnout', 'bipolaire', 'anorexia', 'obesitas', 'hartritme', 'bloedvat', 'zenuwstelsel', 'orgaandonatie', 'verziend',
+    'chirurg', 'verzorger', 'dermatoloog', 'hersenchirurg', 'gynaecoloog', 'immunoloog', 'EHBO-kit', 'apotheker', 'cardioloog', 'griep',
+    'kinderarts', 'neuroloog', 'radioloog', 'psycholoog', 'orthopeed', 'revalidatiearts', 'farmaceut', 'fysiotherapeut', 'bijziend',
+    'hypnotherapeut', 'dokter', 'therapeut', 'verloskundige', 'zorgverlener', 'oogarts', 'huisarts', 'psychiater', 'ruggenmerg', 'brandwond',
+    'chiropractor', 'blindedarmontsteking', 'nierstenen', 'spatader', 'oorsuizen', 'longontsteking', 'lichaam', 'navelstreng', 'botbreuk',
+    'bloedlichaampje', 'skelet', 'bloedsomloop', 'schaamhaar', 'nagelriem', 'vingerkootje', 'telefoonbotje', 'bestraling', 'blauwe plek',
+    'hamstringblessure', 'scheurbuik', 'aambei', 'alcoholisme', 'anaal', 'oraal', 'anticonceptie', 'beugel', 'bijsluiter', 'brancard'
   ];
 
   const politiek = [
@@ -512,7 +518,7 @@ const WORDS_BY_CATEGORY = (() => {
     'globalisering', 'herverdeling', 'immigratie', 'lockdown', 'recessie', 'referendum', 'integratie', 'asielzoeker',
     'monopolie', 'nepnieuws', 'onteigening', 'polarisatie', 'populisme', 'propaganda', 'rente', 'statushouder', 'mening',
     'coalitie', 'oppositie', 'verkiezingen', 'stemmen', 'verkiezingscampagne', 'vlag', 'EU', 'zetel', 'uitzetting', 'adel',
-    'minister', 'staatssecretaris', 'premier', 'president', 'koning', 'parlement', 'traditie', 'paspoort', 'douane',
+    'minister', 'staatssecretaris', 'premier', 'president', 'koning', 'parlement', 'traditie', 'paspoort', 'douane', 'boycot',
     'senaat', 'grondwet', 'wet', 'amendement', 'motie', 'debat', 'nieuws', 'solidariteit', 'Tweede Kamer', 'Eerste Kamer', 
     'beleid', 'maatregel', 'subsidie', 'bezuiniging', 'begroting', 'nationalisatie', 'NAVO', 'belastingdienst', 'armoede',
     'ambassade', 'ambassadeur', 'staatshoofd', 'topontmoeting', 'vredesakkoord', 'hiërarchie', 'sociale zekerheid', 'activist',
@@ -533,19 +539,19 @@ const WORDS_BY_CATEGORY = (() => {
   ];
 
   const muziek = [
-    'gitaar', 'basgitaar', 'elektrische gitaar', 'ukelele', 'luit', 'sitar', 'trompet', 'trombone',
+    'gitaar', 'basgitaar', 'elektrische gitaar', 'ukelele', 'luit', 'sitar', 'trompet', 'trombone', 'bovenstem',
     'saxofoon', 'klarinet', 'fluit', 'dwarsfluit', 'blokfluit', 'harp', 'tuba', 'hoorn', 'contrabas', 'banjo', 'keyboard',
     'fagot', 'hobo', 'didgeridoo', 'piano', 'vleugel', 'elpee', 'royalties', 'orgelpijp', 'accordeon', 'synthesizer',
     'microfoon', 'luidspreker', 'versterker', 'mengpaneel', 'grammofoon', 'grunge', 'cassette', 'soul', 'playlist', 'album',
     'platenspeler', 'koptelefoon', 'muziekdoos', 'notenbalk', 'hardrock', 'koor', 'trommel', 'xylofoon', 'Spotify', 'indie',
-    'achtergrondmuziek', 'orkest', 'symfonie', 'opera', 'jazz', 'albumhoes', 'heavy metal', 'conservatorium', 'blues', 'rock', 'pop',
+    'achtergrondmuziek', 'orkest', 'symfonie', 'opera', 'jazz', 'albumhoes', 'heavy metal', 'conservatorium', 'blues', 'rock',
     'reggae', 'volkszanger', 'punk', 'metal', 'elektronische muziek', 'muziekvideo', 'soundtrack', 'rap', 'hiphop', 'klassiek',
     'akkoord', 'melodie', 'ritme', 'beat', 'refrein', 'solo', 'altviool', 'platenlabel', 'akoestisch', 'componeren', 'r&b',
     'concert', 'festival', 'repetitie', 'songtekst', 'opname', 'live optreden', 'muziekschool', 'koorlid', 'mondharmonica',
     'operazanger', 'componist', 'gitarist', 'drummer', 'pianist', 'violist', 'single', 'geluidsinstallatie', 'tamboerijn',
     'kapelmeester', 'bandlid', 'producer', 'pianospelen', 'djembé', 'dirigent', 'dj', 'cello', 'optreden', 'country', 'gospel',
     'disco', 'techno', 'house', 'trance', 'drum and bass', 'ambient', 'tenor', 'sopraan', 'cd', 'latin', 'afrobeat', 'musicus',
-    'toonladder', 'muzieknoot', 'maat', 'tempo', 'dynamiek', 'harmonie', 'podium', 'soundcheck', 'zanger', 'bongo', 'alt',
+    'toonladder', 'muzieknoot', 'maat', 'tempo', 'dynamiek', 'harmonie', 'podium', 'soundcheck', 'zanger', 'bongo', 'alt', 'pop',
     'octaaf', 'interval', 'crescendo', 'panfluit', 'doedelzak', 'groupie', 'cover', 'kazoo', 'songwriter', 'geluidstechnicus',
     'strijkorkest', 'fanfare', 'jazzband', 'rockband', 'liveband', 'remix', 'mashup', 'sample', 'popgroep', 'duo', 'trio',
     'openluchtconcert', 'jamsessie', 'nachtclub', 'poppodium', 'trekharmonika', 'samba', 'rumba', 'tourmanager', 'koorzanger',
@@ -562,41 +568,43 @@ const WORDS_BY_CATEGORY = (() => {
     'rits', 'gesp', 'camouflagepak', 'helm', 'uniform', 'bodywarmer', 'blouse', 'rok', 'colbert', 'pak', 'smoking', 'kamerjas',
     'sokken', 'ondergoed', 'beha', 'bikini', 'laarzen', 'legging', 'tanktop', 'longsleeve', 'oorbel', 'trouwring', 'vlinderdas',
     'nekwarmer', 'wanten', 'baret', 'tulband', 'haarband', 'haarspeld', 'sleutelhanger', 'badpak', 'zwembroek', 'minirok',
-    'beenwarmers', 'slippers', 'zonneklep', 'portemonnee', 'piercing', 'boxershort', 'bretels', 'polsband', 'pantoffels',
-    'coltrui', 'overhemd', 'hoodie', 'sweater', 'joggingbroek', 'hemd', 'corset', 'motorpak', 'jumpsuit', 'kousen',
-    'panty', 'klompen', 'veters', 'bomberjack', 'garderobe', 'laptoptas', 'wetsuit', 'trainingspak', 'broekspijp',
-    'hardloopschoenen', 'instappers', 'snowboots', 'capuchon', 'toga', 'accesoire', 'bandana'
+    'beenwarmers', 'slippers', 'zonneklep', 'portemonnee', 'piercing', 'bretels', 'polsband', 'pantoffels', 'broekzak',
+    'coltrui', 'overhemd', 'hoodie', 'sweater', 'joggingbroek', 'hemd', 'corset', 'motorpak', 'jumpsuit', 'kousen', 'blinddoek',
+    'panty', 'klompen', 'veters', 'bomberjack', 'garderobe', 'laptoptas', 'wetsuit', 'trainingspak', 'broekspijp', 'boxershort',
+    'hardloopschoenen', 'instappers', 'snowboots', 'capuchon', 'toga', 'accesoire', 'bandana', 'mijter', 'bivakmuts'
   ];
 
   const militair = [
-    'soldaat', 'generaal', 'luitenant', 'sergeant', 'korporaal', 'officier', 'genocide', 'afweergeschut',
-    'commandant', 'ridder', 'sluipschutter', 'marinier', 'luchtmachtpiloot', 'onderofficier', 'bondgenoot',
-    'geweer', 'pistool', 'machinegeweer', 'zwaard', 'bunker', 'fort', 'drietand', 'speer', 'arsenaal', 'bewapenen',
-    'kanon', 'kanonskogel', 'katapult', 'handgranaat', 'explosief', 'bajonet', 'harnas', 'barak', 'bevel', 'konvooi', 
-    'munitie', 'torpedo', 'landmijn', 'bom', 'nucleaire bom', 'boog', 'schild', 'gasmasker', 'bestorming', 'kruisboog',
-    'bazooka', 'morse', 'vuurpijl', 'harpoen', 'antitankwapen', 'amfibievoertuig', 'kompas', 'bevrijding', 'blokkade',
-    'guillotine', 'tank', 'pantservoertuig', 'onderzeeboot', 'vliegdekschip', 'oorlogsschip', 'overwinning', 'nederlaag',
-    'commandopost', 'militaire basis', 'loopgraaf', 'mijnenveld', 'patrouilleboot', 'schieten', 'wapenwedloop',
-    'invasie', 'guerrilla oorlog', 'coup', 'oorlogsmisdaad', 'wapenhandel', 'burgerwacht',
-    'agressor', 'militaire oefening', 'belegering', 'geheime operatie', 'spionage', 'sabotage',
-    'capitulatie', 'wapenstilstand', 'tribunaal', 'krijgsraad', 'evacuatie', 'kogelvrij vest',
-    'parachute', 'radarscherm', 'infanterie', 'cavalerie', 'artillerie', 'marine', 'verrekijker',
-    'luchtmacht', 'landmacht', 'commando', 'parachutist', 'verkenner', 'kazerne', 'nachtkijker',
-    'majoor', 'kolonel', 'admiraal', 'veldslag', 'hinderlaag', 'frontlinie', 'gevechtshelikopter',
-    'achterhoede', 'vliegbasis', 'militaire begraafplaats', 'marinebasis', 'grenspost', 'checkpoint',
-    'mijnenveger', 'verkenningsvliegtuig', 'bommenwerper', 'jachtvliegtuig', 'transportvliegtuig',
-    'raketschild', 'luchtafweer', 'radar', 'sonar', 'gevaarlijk', 'gevechtsvliegtuig', 'luchtaanval',
-    'wapenopslag', 'munitiedepot', 'schietbaan', 'hindernisbaan', 'geheime boodschap', 'grenscontrole',
-    'saluut', 'wachtpost', 'identiteit', 'noodrantsoen', 'veldfles', 'kaartlezen', 'bombardement',
-    'veiligheidszone', 'bufferzones', 'neutrale zone', 'demilitarisatie', 'vredesmissie', 'VN-missie',
-    'alliantie', 'bezetting', 'vaandel', 'rang', 'staatsgreep', 'wapen', 'veldtent', 'veldhospitaal',
-    'embargo', 'oorlogsverklaring', 'mobilisatie', 'dienstplicht', 'huurling', 'militie', 'landkaart',
-    'reservist', 'veteraan', 'krijgsgevangene', 'onderscheiding', 'verdedigingslinie', 'terugtrekken',
-    'herdenkingsmonument', 'militaire parade', 'militaire politie', 'beschietingen', 'Harley Davidson',
-    'inlichtingendienst', 'geheime dienst', 'informatieoorlog', 'wapenuitrusting', 'lans', 'Jeep',
-    'scherpschutter', 'bomopruimer', 'pantserdivisie', 'granaatwerper', 'mortier', 'leger',
-    'atoombom', 'gevecht', 'oorlog', 'strijd', 'concentratiekamp'
+    'soldaat', 'generaal', 'luitenant', 'sergeant', 'korporaal', 'officier', 'genocide', 'overwinning', 'nederlaag',
+    'commandant', 'ridder', 'sluipschutter', 'marinier', 'luchtmachtpiloot', 'onderofficier', 'bondgenoot', 'blitzkrieg',
+    'bunker', 'fort', 'arsenaal', 'bewapenen', 'harnas', 'barak', 'bevel', 'konvooi', 'schild', 'gasmasker', 'bestorming',
+    'morse', 'kompas', 'bevrijding', 'blokkade', 'guillotine', 'pantservoertuig', 'onderzeeboot', 'vliegdekschip', 'oorlogsschip',
+    'commandopost', 'militaire basis', 'loopgraaf', 'mijnenveld', 'patrouilleboot', 'schieten', 'wapenwedloop', 'leger', 'gevecht',
+    'invasie', 'guerrilla oorlog', 'coup', 'oorlogsmisdaad', 'wapenhandel', 'burgerwacht', 'agressor', 'militaire oefening', 'oorlog',
+    'belegering', 'geheime operatie', 'spionage', 'sabotage', 'capitulatie', 'wapenstilstand', 'tribunaal', 'krijgsraad', 'evacuatie',
+    'kogelvrij vest', 'parachute', 'radarscherm', 'infanterie', 'cavalerie', 'artillerie', 'marine', 'verrekijker', 'pantserdivisie',
+    'luchtmacht', 'landmacht', 'commando', 'parachutist', 'verkenner', 'kazerne', 'nachtkijker', 'majoor', 'kolonel', 'admiraal',
+    'veldslag', 'hinderlaag', 'frontlinie', 'gevechtshelikopter', 'achterhoede', 'vliegbasis', 'militaire begraafplaats', 'marinebasis',
+    'grenspost', 'checkpoint', 'mijnenveger', 'verkenningsvliegtuig', 'bommenwerper', 'jachtvliegtuig', 'transportvliegtuig', 'strijd',
+    'raketschild', 'luchtafweer', 'radar', 'sonar', 'gevaarlijk', 'gevechtsvliegtuig', 'luchtaanval', 'wapenopslag', 'munitiedepot',
+    'schietbaan', 'hindernisbaan', 'grenscontrole', 'saluut', 'wachtpost', 'identiteit', 'noodrantsoen', 'veldfles', 'brigade',
+    'kaartlezen', 'bombardement', 'veiligheidszone', 'bufferzones', 'neutrale zone', 'demilitarisatie', 'vredesmissie', 'VN-missie',
+    'alliantie', 'bezetting', 'vaandel', 'rang', 'staatsgreep', 'veldtent', 'veldhospitaal', 'embargo', 'oorlogsverklaring', 'mobilisatie',
+    'dienstplicht', 'huurling', 'militie', 'landkaart', 'reservist', 'veteraan', 'krijgsgevangene', 'onderscheiding', 'verdedigingslinie',
+    'terugtrekken', 'herdenkingsmonument', 'militaire parade', 'militaire politie', 'beschietingen', 'Harley Davidson', 'concentratiekamp',
+    'inlichtingendienst', 'geheime dienst', 'informatieoorlog', 'wapenuitrusting', 'Jeep', 'scherpschutter', 'bomopruimer'
   ];
+
+  const wapens = [
+    'boksbeugel', 'geweer', 'pistool', 'machinegeweer', 'bazooka', 'granaatwerper', 'mortier', 'bom', 'kanon',
+    'atoombom', 'handgranaat', 'landmijn', 'torpedo', 'explosief', 'kanonskogel', 'zwaard', 'speer', 'drietand',
+    'lans', 'bajonet', 'harpoen', 'pijl-en-boog', 'kruisboog', 'katapult', 'wapen', 'afweergeschut', 'munitie',
+    'antitankwapen', 'tank', 'revolver', 'jachtgeweer', 'mitrailleur', 'uzi', 'kalasjnikov', 'taser', 'dynamiet',
+    'molotovcocktail', 'tijdbom', 'dolk', 'stiletto', 'machete', 'katana', 'knuppel', 'nunchucks', 'werpster',
+    'boomerang', 'traangas', 'mosterdgas', 'pepperspray', 'vlammenwerper', 'stormram', 'zakmes', 'luchtbuks',
+    'shotgun', 'sniper', 'vlindermes', 'waterkanon', 'blaaspijp', 'knots', 'kruisraket', 'wapenstok', 'bombrief'
+  ];
+
 
   const gereedschap = [
     'hamer', 'schaar', 'sleutel', 'moersleutel', 'schroefsleutel', 'zaag', 'beitel',
@@ -648,7 +656,7 @@ const WORDS_BY_CATEGORY = (() => {
     'schuurspons', 'vaatwasser', 'wasmiddel', 'wasverzachter', 'bijzettafel', 'batterij', 'parasol', 'kassabon',
     'salontafel', 'tv-meubel', 'wandkast', 'ladekast', 'dressoir', 'kapstok', 'fotoalbum', 'plantenbak', 'spaargeld',
     'schoenenrek', 'sprinkler', 'plantenspuit', 'toilettas', 'zeeppomp', 'krat', 'fruitschaal', 'blik', 'hypotheek',
-    'vuilniszak', 'vuilnisbak', 'afvalcontainer', 'papierbak', 'glasbak', 'gft-bak', 'deurklink', 'camera', 'buren',
+    'vuilniszak', 'vuilnisbak', 'afvalcontainer', 'papierbak', 'glasbak', 'gft-bak', 'deurklink', 'camera', 'burenruzie',
     'plafondlamp', 'spotje', 'antislipmat', 'vloerbedekking', 'asbak', 'afstandsbediening', 'koelkast', 'verjaardag',
     'parket', 'laminaat', 'tegels', 'nagelvijl', 'pincet', 'bloemperk', 'tuinverlichting', 'vriezer', 'zorgverzekering',
     'tuinhek', 'tuinpad', 'vliegenwering', 'vogelbadje', 'vogelhuisje', 'schutting', 'breinaald', 'serre', 'achterdeur',
@@ -656,15 +664,15 @@ const WORDS_BY_CATEGORY = (() => {
     'rookmelder', 'brievenbus', 'buitenlamp', 'wandspiegel', 'washandje', 'badkamerspiegel', 'antenne', 'aanbouw',
     'antiek', 'ballon', 'balustrade', 'lampion', 'kaars', 'computer', 'dakpan', 'bierglas', 'dekbed', 'vliegenmepper',
     'fakkel', 'föhn', 'haardroger', 'hangmat', 'ijsklontjesmaker', 'pakketje', 'oplader', 'cadeau', 'zolder', 'adres',
-    'megafoon', 'neonlamp', 'paraplu', 'lichtschakelaar', 'spelcomputer', 'aansteker', 'ventilator', 'kelder',
+    'megafoon', 'neonlamp', 'paraplu', 'lichtschakelaar', 'spelcomputer', 'aansteker', 'ventilator', 'kelder', 'bidet',
     'spaarpot', 'wiel', 'rubberen eend', 'scheermes', 'tandenstoker', 'harde schijf', 'powerbank', 'schuifdeur',
     'schommel', 'speelgoed', 'zonnewijzer', 'tandenborstel', 'tandpasta', 'tent', 'kalender', 'haard', 'dakgoot',
     'knuffelbeer', 'bellenblaas', 'trechter', 'theeglas', 'lampenkap', 'brandblusser', 'tafelkleed', 'schoorsteen',
     'dvd', 'blu-ray', 'lenzen', 'gehoorapparaat', 'kruk', 'tuinkabouter', 'fietspomp', 'wasknijper', 'plafond',
     'kaasschaaf', 'zonnescherm', 'vouwstoel', 'campingstoel', 'stekker', 'kruik', 'spons', 'zaklamp', 'trappenhuis',
     'airco', 'cv-ketel', 'warmtepomp', 'luxaflex', 'bezemkast', 'dakraam', 'balkon', 'terras', 'gevel', 'beeldscherm',
-    'bluetooth', 'wifi', 'glasvezel', 'tweeling', 'schoonmoeder', 'stiefvader', 'weduwe', 'bruidegom',
-    'verloofde', 'echtgenoot', 'peetoom', 'kleindochter', 'betovergrootmoeder'
+    'bluetooth', 'wifi', 'glasvezel', 'tweeling', 'schoonmoeder', 'stiefvader', 'weduwe', 'bruidegom', 'inboedel',
+    'verloofde', 'echtgenoot', 'peetoom', 'kleindochter', 'betovergrootmoeder', 'boodschappen'
   ];
 
   const kantoor = [
@@ -672,7 +680,7 @@ const WORDS_BY_CATEGORY = (() => {
     'usb-stick', 'printer', 'projector', 'scanner', 'headset', 'webcam', 'bureau', 'bureaustoel', 'directie', 'laptop', 'folder',
     'whiteboard', 'vergadertafel', 'vergaderzaal', 'ordner', 'map', 'envelop', 'brief', 'briefopener', 'HR', 'expert', 'lening',
     'waterkoeler', 'toetsenbord', 'muis', 'plakband', 'balpen', 'marker', 'prikbord', 'visitekaartje', 'memo', 'evenement',
-    'postvak', 'factuur', 'offerte', 'contract', 'notulen', 'presentatie', 'koffiezetapparaat', 'administratie', 'advertentie',
+    'postvak', 'factuur', 'offerte', 'contract', 'notulen', 'presentatie', 'koffiezetapparaat', 'administratie',
     'vergadering', 'evaluatie', 'kantine', 'kopieermachine', 'archief', 'papier', 'pen', 'potlood', 'samenwerken', 'declareren',
     'punaise', 'elastiekje', 'notitieblok', 'shredder', 'postzegel', 'inktcartridge', 'spreadsheet', 'kwartaal', 'feedback',
     'flexwerk', 'collega', 'baas', 'kantoorpand', 'thuiswerken', 'loonstrook', 'verlof', 'arbeid', 'netwerken', 'jaarverslag',
@@ -680,7 +688,7 @@ const WORDS_BY_CATEGORY = (() => {
     'werknemer', 'brainstorm', 'sollicitatie', 'teambuilding', 'bedrijfsuitje', 'cursus', 'training', 'tabblad', 'software', 'bedrijf',
     'directeur', 'manager', 'secretaresse', 'stagiair', 'teamleider', 'teamlid', 'leidinggevende', 'boekhouder', 'aandelen',
     'accountant', 'muismat', 'laserpointer', 'bureaulamp', 'Excel', 'Powerpoint', 'intranet', 'cloud', 'afdeling', 'audit',
-    'overuren', 'ziekteverzuim', 'arbo', 'budget', 'omzet', 'winst', 'klanten', 'leverancier', 'e-mail', 'bijlage', 'belegging',
+    'overuren', 'ziekteverzuim', 'arbo', 'budget', 'omzet', 'winst', 'klanten', 'leverancier', 'e-mail', 'belegging', 'branche',
     'vacature', 'deadline', 'receptie', 'koffiepauze', 'lunchpauze', 'handtekening', 'bedrijfswagen', 'leasebak', 'consument',
     'dividend', 'faillissement', 'incasso', 'concept', 'internet', 'website', 'wachtwoord', 'gebruikersnaam', 'account', 'jubileum',
     'portfolio', 'profiel', 'database', 'zoekmachine', 'pixel', 'bestand', 'notificatie', 'abonnement', 'vrijmibo', 'dienstverlening'
@@ -689,6 +697,8 @@ const WORDS_BY_CATEGORY = (() => {
   const spreekwoorden = [
     'alle hens aan dek',
     'als de kat van huis is dansen de muizen',
+    'een boekje opendoen over iets',
+    'zijn boekje te buiten gaan',
     'iemand op heterdaad betrappen',
     'als puntje bij paaltje komt',
     'als sneeuw voor de zon verdwijnen',
@@ -728,6 +738,7 @@ const WORDS_BY_CATEGORY = (() => {
     'in het diepe springen',
     'in iemands vaarwater zitten',
     'in de kaart kijken',
+    'zand erover',
     'je kaarten op tafel leggen',
     'je licht ergens over laten schijnen',
     'de moed zakt in de schoenen',
@@ -782,6 +793,7 @@ const WORDS_BY_CATEGORY = (() => {
     'en ze leefden nog lang en gelukkig',
     '1 april kikker in je bil',
     'je huid duur verkopen',
+    'een brok in je keel hebben',
     'zoals het klokje thuis tikt tikt het nergens',
     'roeien met de riemen die je hebt',
     'langs de neus weg',
@@ -806,6 +818,7 @@ const WORDS_BY_CATEGORY = (() => {
     'van het kastje naar de muur sturen',
     'een ver van mijn bed show',
     'vuur met vuur bestrijden',
+    'de strijdbijl begraven',
     'water naar de zee dragen',
     'wie niet waagt wie niet wint',
     'wie niet sterk is moet slim zijn',
@@ -834,6 +847,7 @@ const WORDS_BY_CATEGORY = (() => {
     'ieder voor zich',
     'iets is beter dan niets',
     'in de aap gelogeerd zijn',
+    'iemands bloed wel kunnen drinken',
     'al is de leugen nog zo snel de waarheid achterhaalt haar wel',
     'beter een vogel in de hand dan tien in de lucht',
     'een ezel stoot zich geen twee keer aan dezelfde steen',
@@ -930,6 +944,7 @@ const WORDS_BY_CATEGORY = (() => {
     'rust roest',
     'boe noch ba zeggen',
     'de boot missen',
+    'een rots in de branding',
     'het vuur aan de schenen leggen',
     'eieren voor zijn geld kiezen',
     'iemand in het zadel helpen',
@@ -1010,7 +1025,7 @@ const WORDS_BY_CATEGORY = (() => {
     'een bek als een scheermes'
   ];
 
-  const map = { dieren, voedsel, koken, onderwijs, beroepen, kantoor, sport, huishouden, natuur, vervoer, plaatsen, kunst, kleding, religie, fictie, literatuur, acties, misdaad, emoties, landen, gereedschap, muziek, militair, ruimte, wetenschap, geneeskunde, politiek, spreekwoorden };
+  const map = { dieren, voedsel, koken, onderwijs, beroepen, kantoor, sport, huishouden, natuur, vervoer, plaatsen, kunst, kleding, religie, fictie, literatuur, acties, misdaad, emoties, landen, gereedschap, muziek, militair, wapens, ruimte, wetenschap, geneeskunde, politiek, spreekwoorden };
   
   // FLAT alle woorden tot 1 array, filter dubbele (zoals 'vissen') eruit:
   const allWords = [...new Set(Object.values(map).flat())];
@@ -1042,7 +1057,7 @@ const EXTRA_WORD_PARTS = new Set([
 'commissaris', 'vrachtwagen', 'chauffeur', 'beach', 'volleybal', 'diepzee', 'duiken', 'langebaan', 'schaatsen', 'parachute', 'springen', 'driehoek',
 'polsstok', 'hoogspringen', 'schans', 'synchroon', 'trampoline', 'vissen', 'kampioen', 'beker', 'oven', 'gezelschap', 'spel', 'getrokken', 'studie',
 'kleiduiven', 'schieten', 'estafette', 'ring', 'afstand', 'bediening', 'regelaar', 'armband', 'horloge', 'houwwerk', 'kaarsen', 'houder', 'financiering',
-'manchet', 'knoop', 'scheep', 'schroef', 'veiligheid', 'speld', 'boodschappen', 'tas', 'gehoor', 'apparaat', 'muur', 'schildering', 'zuur', 'speelzaal',
+'manchet', 'knoop', 'scheep', 'schroef', 'veiligheid', 'speld', 'tas', 'gehoor', 'apparaat', 'muur', 'schildering', 'zuur', 'speelzaal',
 'aard', 'verschuiving', 'lucht', 'vochtigheid', 'vulkaan', 'uitbarsting', 'zoetwater', 'meer', 'zon', 'verduistering', 'zorg', 'peuter', 'alarm',
 'stoom', 'locomotief', 'zweef', 'vliegtuig', 'kaping', 'boot', 'trauma', 'spoorweg', 'overgang', 'paspoort', 'controle', 'kenteken', 'zijde', 'centrale',
 'plaat', 'verkeer', 'distributie', 'centrum', 'brandweer', 'kazerne', 'camping', 'terrein', 'recreatie', 'gebied', 'tandarts', 'praktijk', 'mepper',
@@ -1062,14 +1077,14 @@ const EXTRA_WORD_PARTS = new Set([
 'leger', 'lijn', 'prijs', 'ontduiking', 'linie', 'logie', 'loos', 'machine', 'macht', 'massa', 'maatregel', 'meester', 'darm', 'draaier',
 'ment', 'middel', 'minister', 'misdaad', 'monument', 'oord', 'natuurlijk', 'wisseling', 'darmontsteking', 'moord', 'motor', 'nemer', 'neming', 
 'netwerk', 'nota', 'officier', 'onderhandeling', 'ontsteking', 'oorlog', 'overleg', 'oxide', 'partij', 'planeet', 'proef', 'punt', 'platform',
-'raad', 'raam', 'raket', 'recht', 'reis', 'schap', 'schip', 'schot', 'schutter', 'staart', 'draaien', 'kwartier', 'straal', 'sturing', 'tafel',
+'raad', 'raam', 'recht', 'reis', 'schap', 'schip', 'schot', 'schutter', 'staart', 'draaien', 'kwartier', 'straal', 'sturing', 'tafel',
 'scoop', 'sluiting', 'soldaat', 'speler', 'staf', 'stand', 'station', 'nationaal', 'gezind', 'stelsel', 'ster', 'stilstand', 'stof', 'stoel',
 'transport', 'trein', 'tuig', 'vaart', 'veld', 'verdrag', 'verdediging', 'verklaring', 'verlening', 'vlak', 'vlucht', 'voertuig', 'voerder',
 'vorming', 'vuur', 'waardig', 'wagen', 'wapen', 'weer', 'werker', 'conferentie', 'wet', 'omelet', 'wetenschap', 'wiel', 'weg', 'zelfmoord',
 'hoge', 'hogesnelheid', 'snelheid', 'kootje', 'botje', 'streng', 'merg', 'omloop', 'achtergrond', 'muziek', 'achter', 'volging', 'afstand',
 'bediening', 'afval', 'container', 'afweer', 'geschut', 'alleman', 'vriend', 'brandstof', 'tanker', 'scheids', 'auto', 'bange', 'schijter',
 'banket', 'staaf', 'bejaarden', 'tehuis', 'bende', 'bestrijding', 'middel', 'bet', 'betover', 'overgrootmoeder', 'grootmoeder', 'moeder',
-'kaartje'
+'kaartje', 'molotov', 'cocktail', 'vlammen', 'werper'
 ]);
 
 function hyphenateWord(word) {
