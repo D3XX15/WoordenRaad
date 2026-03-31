@@ -5,7 +5,7 @@ const CATEGORIES = [
   { id: "voedsel",        label: "🍕 Eten & Drinken" },
   { id: "koken",          label: "🧑‍🍳 Koken & Bakken" },
   { id: "huishouden",     label: "🏠 Huishouden" },
-  { id: "verkeer",        label: "🚗 Voertuigen & Verkeer" },
+  { id: "verkeer",        label: "🚗 Verkeer & Vervoer" },
   { id: "kleding",        label: "👕 Kleding" },
   { id: "beroepen",       label: "👷 Beroepen" },
   { id: "kantoor",        label: "💼 Werk & Kantoor" },
