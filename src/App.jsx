@@ -2,35 +2,35 @@ import { useState, useEffect, useRef } from "react";
 
 // ── Categorieën ──────────────────────────────────────────────────────────────
 const CATEGORIES = [
-  { id: "voedsel",       label: "🍕 Eten & Drinken" },
-  { id: "koken",         label: "🧑‍🍳 Koken & Bakken" },
-  { id: "huishouden",    label: "🏠 Huishouden" },
-  { id: "vervoer",       label: "🚗 Vervoer" },
-  { id: "kleding",       label: "👕 Kleding" },
-  { id: "beroepen",      label: "👷 Beroepen" },
-  { id: "kantoor",       label: "💼 Werk & Kantoor" },
-  { id: "gereedschap",   label: "🔧 Gereedschap" },
-  { id: "dieren",        label: "🐶 Dieren" },
-  { id: "natuur",        label: "🌿 Natuur" },
-  { id: "sport",         label: "⚽ Sport & Hobby" },
-  { id: "emoties",       label: "🎭 Emoties & Gedrag" },
-  { id: "misdaad",       label: "🚔 Misdaad & Justitie" },
-  { id: "fictie",        label: "🧙 Fictie & Mythe" },
-  { id: "literatuur",    label: "✍️ Literatuur" },
-  { id: "muziek",        label: "🎶 Muziek" },
-  { id: "kunst",         label: "🧑‍🎨 Kunst" },
-  { id: "politiek",      label: "⚖️ Politiek & Maatschappij" },
-  { id: "onderwijs",     label: "🎓 Onderwijs" },
-  { id: "religie",       label: "🕍 Religie" },
-  { id: "militair",      label: "🪖 Militair" },
-  { id: "wapens",        label: "🔫 Wapens" },
-  { id: "wetenschap",    label: "🔬 Wetenschap" },
-  { id: "geneeskunde",   label: "🩺 Geneeskunde" },
-  { id: "ruimte",        label: "🚀 Ruimte" },
-  { id: "plaatsen",      label: "🧭 Plaatsen" },
-  { id: "landen",        label: "🌍 Landen" },
-  { id: "acties",        label: "🏃 Werkwoorden" },
-  { id: "spreekwoorden", label: "💬 Spreekwoorden & Gezegden", bonus: true },
+  { id: "voedsel",        label: "🍕 Eten & Drinken" },
+  { id: "koken",          label: "🧑‍🍳 Koken & Bakken" },
+  { id: "huishouden",     label: "🏠 Huishouden" },
+  { id: "verkeer",        label: "🚗 Voertuigen & Verkeer" },
+  { id: "kleding",        label: "👕 Kleding" },
+  { id: "beroepen",       label: "👷 Beroepen" },
+  { id: "kantoor",        label: "💼 Werk & Kantoor" },
+  { id: "gereedschap",    label: "🔧 Gereedschap" },
+  { id: "dieren",         label: "🐶 Dieren" },
+  { id: "natuur",         label: "🌿 Natuur" },
+  { id: "sport",          label: "⚽ Sport & Hobby" },
+  { id: "emoties",        label: "🎭 Emoties & Gedrag" },
+  { id: "misdaad",        label: "🚔 Misdaad & Justitie" },
+  { id: "fictie",         label: "🧙 Fictie & Mythe" },
+  { id: "literatuur",     label: "✍️ Literatuur" },
+  { id: "muziek",         label: "🎶 Muziek" },
+  { id: "kunst",          label: "🧑‍🎨 Kunst" },
+  { id: "politiek",       label: "⚖️ Politiek & Maatschappij" },
+  { id: "onderwijs",      label: "🎓 Onderwijs" },
+  { id: "religie",        label: "🕍 Religie" },
+  { id: "militair",       label: "🪖 Militair" },
+  { id: "wapens",         label: "🔫 Wapens" },
+  { id: "wetenschap",     label: "🔬 Wetenschap" },
+  { id: "geneeskunde",    label: "🩺 Geneeskunde" },
+  { id: "ruimte",         label: "🚀 Ruimte" },
+  { id: "plaatsen",       label: "🧭 Plaatsen" },
+  { id: "landen",         label: "🌍 Landen" },
+  { id: "acties",         label: "🏃 Werkwoorden" },
+  { id: "spreekwoorden",  label: "💬 Spreekwoorden & Gezegden", bonus: true },
 ];
 
 // WORDS_BY_CATEGORY maps category id → word array
@@ -226,46 +226,39 @@ const WORDS_BY_CATEGORY = (() => {
     'stroomgebied', 'stuifzand', 'terp', 'waterput', 'wildernis', 'stofwolk', 'heide', 'tuinieren',
     'windstil', 'zandbank', 'zandvlakte', 'zeebodem', 'zeestroming', 'zeewier', 'koolzaad', 'grondstof',
     'zilt', 'zoetwatermeer', 'zonnestraling', 'zonsverduistering', 'zoutvlakte', 'zonnebloem', 'helium',
-    'es', 'iep', 'beuk', 'hulst', 'klimop', 'varens', 'stromend water', 'madeliefje', 'distel',
-    'steen', 'zeegras', 'braam', 'eikel', 'dennenappel', 'framboos', 'boomgaard', 'boterbloem',
-    'vruchtvlees', 'stuifmeel', 'dooi', 'rijp', 'ijzel', 'lelie', 'magma', 'munt',
+    'es', 'iep', 'beuk', 'hulst', 'klimop', 'varens', 'stromend water', 'madeliefje', 'distel', 'bloeddiamant', 
+    'steen', 'zeegras', 'braam', 'eikel', 'dennenappel', 'framboos', 'boomgaard', 'boterbloem', 'windhoos',
+    'vruchtvlees', 'stuifmeel', 'dooi', 'rijp', 'ijzel', 'lelie', 'magma', 'munt', 'bestrijdingsmiddel',
     'bladerdek', 'conifeer', 'den', 'gebergte', 'graniet', 'horizon', 'kalksteen', 'vloedgolf',
-    'fotosynthese', 'riviermonding', 'winter', 'wind', 'sloot', 'wad', 'zwam',
-    'bestrijdingsmiddel', 'bloeddiamant', 'windhoos'
+    'fotosynthese', 'riviermonding', 'winter', 'wind', 'sloot', 'wad', 'zwam'
   ];
 
-  const vervoer = [
-    'aanhanger', 'achtbaan', 'ambulance', 'benzine', 'tankstation', 'Boeing', 'zeilschip', 'stoep', 'hybride',
-    'boot', 'brandweerwagen', 'bromfiets', 'bus', 'camper', 'GPS', 'achteruitkijkspiegel', 'coupé',
-    'caravan', 'catamaran', 'containerschip', 'diesel', 'driewieler', 'vrachtwagen', 'fietstaxi', 'doodlopen',
-    'drone', 'dubbeldekker', 'duikboot', 'elektrische auto', 'fietsendrager', 'asfalt', 'Nationale Spoorwegen',
-    'hangbrug', 'helikopter', 'hogesnelheidstrein', 'hoverboard', 'fatbike', 'forens', 'file', 'handrem',
-    'hovercraft', 'intercity', 'internationale trein', 'jetpack', 'jetski', 'kabelbaan', 'haaientanden',
-    'kajak', 'kar', 'lijnbus', 'metro', 'Mini', 'watervliegtuig', 'buggy', 'cabrio', 'cockpit', 'vrachtvliegtuig',
-    'monorail', 'motorfiets', 'nachttrein', 'oplegger', 'pick-uptruck', 'politieauto', 'veerboot', 'flitspaal',
-    'postkoets', 'racefiets', 'racewagen', 'reddingsboot', 'rijtuig', 'bushalte', 'zonneauto', 'gaspedaal',
-    'riksja', 'robotaxi', 'roeiboot', 'schip', 'segway', 'tolweg', 'zweefvliegtuig', 'verkeersdrempel', 'veerpont',
-    'slee', 'sleepboot', 'sloep', 'sneltrein', 'speedboot', 'stadsbus', 'luchtballon', 'minivan', 'skelter',
-    'stadsfiets', 'step', 'stoomboot', 'stoomlocomotief', 'SUV', 'taxi', 'bulldozer', 'touringcar', 'daluren',
-    'scooter', 'trein', 'zeilboot', 'bijtanken', 'tandem', 'tractor', 'verkeer', 'bestelbus', 'waterstofauto',
-    'tankwagen', 'brandstoftanker', 'jacht', 'rubberboot', 'ongeluk', 'waterbus', 'quad', 'trolleybus',
-    'kano', 'vlot', 'waterscooter', 'reddingsvlot', 'onderzeeër', 'waterfiets', 'golfkarretje', 'tram',
-    'stoomtram', 'toeristentrein', 'zweeftrein', 'kampeerbus', 'politiemotor', 'ziekenwagen', 'tuk-tuk',
-    'brandweerboot', 'politiehelikopter', 'traumahelikopter', 'zeppelin', 'bakfiets', 'ligfiets',
-    'sleepwagen', 'deelfiets', 'deelscooter', 'deelstep', 'snelweg', 'ringweg', 'kraanwagen', 'gondel',
-    'afrit', 'invoegstrook', 'viaduct', 'tunnel', 'perron', 'spoorwegovergang', 'bagageband', 'gondelbaan',
-    'paspoortcontrole', 'vertrekhal', 'aankomsthal', 'landingsbaan', 'vliegtuigtrap', 'jetway', 'heenweg',
-    'bagage', 'handbagage', 'reistas', 'ov-chipkaart', 'treinkaartje', 'terreinwagen', 'zijspan', 'terugweg',
-    'vliegticket', 'overstap', 'rijbewijs', 'kentekenplaat', 'autopech', 'lekke band', 'lantaarnpaal',
-    'rijstrook', 'fietspad', 'kruispunt', 'stoplicht', 'parkeerbon', 'elektrisch rijden', 'shovel',
-    'nachtbus', 'pendelbusje', 'rolstoelbus', 'baggerschip', 'cruiseschip', 'laad- en losplaats', 'dollemansrit',
-    'distributiecentrum', 'koelwagen', 'voetpad', 'wandelroute', 'aanlegsteiger', 'privéjet', 'brokkenpiloot',
-    'helipad', 'automobilist', 'motor', 'wagen', 'huifkar', 'lijkwagen', 'sneeuwschuiver', 'vorkheftruck',
-    'schoolbus', 'rolstoel', 'skateboard', 'vouwfiets', 'laadpaal', 'paardentram', 'zebrapad', 'eenrichtingsverkeer'
+  const verkeer = [
+    'aanhanger', 'achtbaan', 'ambulance', 'Boeing', 'zeilschip', 'hybride', 'boot', 'brandweerwagen', 'bromfiets', 'rolstoel', 'skateboard',
+    'bus', 'camper', 'go-kart', 'caravan', 'catamaran', 'containerschip', 'driewieler', 'vrachtwagen', 'fietstaxi', 'drone', 'vouwfiets',
+    'dubbeldekker', 'duikboot', 'elektrische auto', 'helikopter', 'hogesnelheidstrein', 'hoverboard', 'fatbike', 'jetpack', 'paardentram',
+    'hovercraft', 'intercity', 'internationale trein', 'jetski', 'kabelbaan', 'kajak', 'kar', 'lijnbus', 'metro', 'Mini', 'watervliegtuig',
+    'buggy', 'cabrio', 'cockpit', 'vrachtvliegtuig', 'monorail', 'motorfiets', 'nachttrein', 'oplegger', 'pick-uptruck', 'politieauto',
+    'veerboot', 'postkoets', 'racefiets', 'racewagen', 'reddingsboot', 'rijtuig', 'riksja', 'robotaxi', 'roeiboot', 'schip', 'segway',
+    'zweefvliegtuig', 'veerpont', 'slee', 'sleepboot', 'sloep', 'speedboot', 'stadsbus', 'luchtballon', 'minivan', 'skelter', 'step',
+    'stadsfiets', 'stoomboot', 'stoomlocomotief', 'SUV', 'taxi', 'bulldozer', 'touringcar', 'scooter', 'trein', 'zeilboot', 'tandem',
+    'tractor', 'bestelbus', 'waterstofauto', 'tankwagen', 'olietanker', 'jacht', 'rubberboot', 'waterbus', 'quad', 'trolleybus', 'kano',
+    'vlot', 'waterscooter', 'onderzeeër', 'waterfiets', 'golfkarretje', 'tram', 'boemeltrein', 'kampeerbus', 'politiemotor', 'ligfiets',
+    'ziekenwagen', 'tuk-tuk', 'brandweerboot', 'politiehelikopter', 'traumahelikopter', 'zeppelin', 'bakfiets', 'sleepwagen', 'deelfiets',
+    'deelscooter', 'kraanwagen', 'gondel', 'terreinwagen', 'zijspan', 'shovel', 'nachtbus', 'pendelbusje', 'sneeuwschuiver', 'lijkwagen',
+    'rolstoelbus', 'baggerschip', 'cruiseschip', 'koelwagen', 'privéjet', 'automobilist', 'motor', 'huifkar', 'vorkheftruck', 'schoolbus',
+    'brandstof', 'benzine', 'diesel', 'laadpaal', 'GPS', 'asfalt', 'haaientanden', 'flitspaal', 'verkeersdrempel', 'daluren', 'verkeer',
+    'vliegtuigtrap', 'ov-chipkaart', 'treinkaartje', 'vliegticket', 'rijbewijs', 'kentekenplaat', 'autopech', 'lekke band', 'lantaarnpaal',
+    'Nationale Spoorwegen', 'doodlopende weg', 'eenrichtingsweg', 'tolweg', 'snelweg', 'ringweg', 'perron', 'riolering', 'rotonde',
+    'spoorwegovergang', 'laad- en losplaats', 'tunnel', 'bagageband', 'viaduct', 'aquaduct', 'ecoduct', 'vertrekhal', 'aankomsthal',
+    'landingsbaan', 'afrit', 'invoegstrook', 'zebrapad', 'rijstrook', 'fietspad', 'kruispunt', 'stoplicht', 'voetpad', 'wandelroute',
+    'aanlegsteiger', 'hangbrug', 'spoorlijn', 'bushalte', 'haarspeldbocht', 'ophaalbrug', 'tankstation', 'file', 'forens', 'plattegrond',
+    'fietsendrager', 'zijspiegel', 'gaspedaal', 'handrem', 'haven', 'benzinepomp', 'helipad', 'stoep', 'treinstation', 'treincoupé',
+    'fietsenrek', 'voetganger'
   ];
 
   const plaatsen = [
-    'apotheek', 'aquaduct', 'aquarium', 'badhuis', 'wielerbaan', 'skatepark', 'balie', 'begraafplaats', 'campingterrein',
+    'apotheek', 'aquarium', 'badhuis', 'wielerbaan', 'skatepark', 'balie', 'begraafplaats', 'campingterrein', 'frietkraam',
     'bioscoop', 'bloemenmarkt', 'boekenwinkel', 'boerderij', 'bouwplaats', 'bowlingbaan', 'brandweerkazerne', 'brouwerij',
     'circus', 'grensovergang', 'consulaat', 'crematorium', 'dierentuin', 'discotheek', 'fabriek', 'café', 'camping', 'brug',
     'fietsenwinkel', 'fontein', 'fruitmarkt', 'gemeentehuis', 'grachtenpand', 'manege', 'markt', 'loods', 'casino', 'centrum',
@@ -273,21 +266,18 @@ const WORDS_BY_CATEGORY = (() => {
     'dolfinarium', 'landgoed', 'molen', 'paleis', 'parkeergarage', 'pier', 'plein', 'poppenkast', 'roltrap', 'windmolen',
     'buitenwijk', 'postkantoor', 'pretpark', 'piramide', 'racebaan', 'recreatiegebied', 'ruïne', 'sauna', 'watertoren',
     'schaatsbaan', 'school', 'silo', 'drielandenpunt', 'sluis', 'speeltuin', 'sporthal', 'stad', 'stadion', 'vuurtoren',
-    'stadshuis', 'hertenkamp', 'gracht', 'strandtent', 'supermarkt', 'tandartspraktijk', 'coffeeshop', 'voetgangersgebied',
-    'scheepswerf', 'toren', 'treinstation', 'vakantiepark', 'kolenmijn', 'luchthaven', 'villa', 'vliegveld', 'alarmcentrale',
+    'stadshuis', 'hertenkamp', 'gracht', 'strandtent', 'supermarkt', 'tandartspraktijk', 'coffeeshop', 'distributiecentrum',
+    'scheepswerf', 'toren', 'vakantiepark', 'kolenmijn', 'luchthaven', 'villa', 'vliegveld', 'alarmcentrale', 'winkelcentrum',
     'buurthuis', 'drogisterij', 'garage', 'ijssalon', 'kiosk', 'nachtwinkel', 'pannenkoekenhuis', 'parkeerplaats', 'vuilnisbelt',
-    'slagerij', 'snackbar', 'sportschool', 'stomerij', 'viswinkel', 'warenhuis', 'kinderdagverblijf', 'bloemenwinkel', 'haven',
-    'Afrika', 'Azië', 'Europa', 'Noord-Amerika', 'Zuid-Amerika', 'Oceanië', 'Himalaya', 'Kaspische Zee', 'benzinepomp', 'iglo',
-    'Mississippi', 'Nijl', 'Noordzee', 'Sahara', 'Thames', 'Corsica', 'Hawaï', 'Kaukasus', 'Siberië', 'binnenstad', 'platteland',
-    'Sicilië', 'fietsenrek', 'gemaal', 'steppe', 'boomhut', 'brandtrap', 'carwash', 'dierenasiel', 'winkelcentrum', 'zwembad',
-    'graftombe', 'kerkhof', 'klimrek', 'klimbos', 'markthal', 'ansichtkaart', 'meubelboulevard', 'ophaalbrug', 'herberg', 'hotel',
-    'plattegrond', 'riolering', 'rotonde', 'schaapskooi', 'sportpark', 'stadspark', 'uitkijktoren', 'honkbalstadion', 'kermis',
-    'kroeg', 'voetbalveld', 'volkstuin', 'wijngaard', 'windpark', 'zonnepark', 'hutje', 'bungalow', 'tribune', 'catacombe',
-    'hostel', 'studentenhuis', 'flat', 'appartement', 'studio', 'boerenschuur', 'stal', 'poolcirkel', 'slachthuis', 'bestemming',
+    'slagerij', 'snackbar', 'sportschool', 'stomerij', 'viswinkel', 'warenhuis', 'kinderdagverblijf', 'bloemenwinkel', 'zwembad',
+    'iglo', 'binnenstad', 'platteland', 'gemaal', 'steppe', 'boomhut', 'brandtrap', 'carwash', 'dierenasiel', 'habitat', 'Hanzestad',
+    'graftombe', 'kerkhof', 'klimrek', 'klimbos', 'markthal', 'meubelboulevard', 'herberg', 'hotel', 'hangar', 'bordeel', 'kennel',
+    'schaapskooi', 'sportpark', 'stadspark', 'uitkijktoren', 'honkbalstadion', 'kermis', 'voetgangersgebied', 'houtzagerij', 'hunebed',
+    'kroeg', 'voetbalveld', 'volkstuin', 'wijngaard', 'windpark', 'zonnepark', 'hutje', 'bungalow', 'tribune', 'catacombe', 'dug-out',
+    'hostel', 'studentenhuis', 'flat', 'appartement', 'studio', 'boerenschuur', 'stal', 'slachthuis', 'bestemming', 'filmhuis',
     'rijtjeshuis', 'ijsbaan', 'provincie', 'hoofdstad', 'gemeente', 'afsluitdijk', 'waddeneiland', 'bejaardentehuis', 'circuit',
     'clubhuis', 'continent', 'dansvloer', 'dierenkliniek', 'dierenwinkel', 'dojo', 'drukkerij', 'duiventil', 'etalage', 'expo',
-    'filmhuis', 'dug-out', 'frietkraam', 'gala', 'gangpad', 'gehucht', 'gekkenhuis', 'getto', 'golfbaan', 'golfstaat', 'green',
-    'haarspeldbocht', 'habitat', 'hangar', 'Hanzestad', 'bordeel', 'kennel', 'houtzagerij', 'hunebed'
+    'gala', 'gangpad', 'gehucht', 'gekkenhuis', 'getto', 'golfbaan', 'golfstaat', 'green'
   ];
 
   const religie = [
@@ -323,7 +313,7 @@ const WORDS_BY_CATEGORY = (() => {
     'portaal', 'heksenketel', 'sphinx', 'minotaurus', 'hobbit', 'titaan', 'betoveren', 'zeemonster',
     'sirene', 'boeman', 'dubbelganger', 'zesde zintuig', 'halfgod', 'orakel', 'handlezer', 'Hercules',
     'Zeus', 'Atlantis', 'Poseidon', 'Hades', 'Thor', 'Olympus', 'talisman', 'amulet', 'wensput',
-    'hersenspinsel', 'hocus-pocus'
+    'hersenspinsel', 'hocus-pocus', 'gladiator'
   ];
 
   const literatuur = [
@@ -419,7 +409,8 @@ const WORDS_BY_CATEGORY = (() => {
     'uitnodigen', 'downloaden', 'kleien', 'updaten', 'blaffen', 'grazen', 'grommen', 'kauwen', 'spitten', 'knippen',
     'slikken', 'spugen', 'beslissen', 'fantaseren', 'inbeelden', 'slenteren', 'vlechten', 'logeren', 'protesteren',
     'livestreamen', 'uploaden', 'reflecteren', 'peinzen', 'raden', 'vergelijken', 'voorspellen', 'voordringen',
-    'dwarsbomen', 'dwarsliggen', 'ploeteren', 'sjoemelen', 'graaien', 'headbangen', 'heersen', 'herladen'
+    'dwarsbomen', 'dwarsliggen', 'ploeteren', 'sjoemelen', 'graaien', 'headbangen', 'heersen', 'herladen', 'tanken',
+    'overstappen'
   ];
 
   const emoties = [
@@ -457,7 +448,7 @@ const WORDS_BY_CATEGORY = (() => {
     'waaghals', 'gewetenloos', 'eigenaardig', 'elegant', 'etterbak', 'introvert', 'fatsoenlijk', 'fel', 'flamboyant',
     'geestig', 'geinig', 'grappig', 'genadeloos', 'genant', 'geniepig', 'gewelddadig', 'goedzak', 'grapjas', 'halvegare',
     'hamsteren', 'hardleers', 'heethoofd', 'heldhaftig', 'herrieschopper', 'hielenlikker', 'hork', 'hufter', 'huilebalk',
-    'humeur', 'humeurig', 'hypocriet', 'hysterisch'
+    'humeur', 'humeurig', 'hypocriet', 'hysterisch', 'ongelukkig', 'brokkenpiloot'
   ];
 
   const landen = [
@@ -481,7 +472,10 @@ const WORDS_BY_CATEGORY = (() => {
     'Papua Nieuw-Guinea', 'San Marino', 'Sierra Leone', 'Taiwan', 'Tadzjikistan', 'Tsjaad', 'Turkmenistan',
     'Vaticaanstad', 'Wit-Rusland', 'Centraal-Afrikaanse Republiek', 'Trinidad en Tobago', 'Kaapverdië',
     'Dominica', 'Palestina', 'Schotland', 'Wales', 'Catalonië', 'Koerdistan', 'Tibet', 'Puerto Rico',
-    'Groenland', 'Aruba', 'Curaçao', 'Bermuda', 'Gibraltar', 'Frans-Guyana', 'Tahiti', 'Sint Maarten'
+    'Groenland', 'Aruba', 'Curaçao', 'Bermuda', 'Gibraltar', 'Frans-Guyana', 'Tahiti', 'Sint Maarten',
+    'Afrika', 'Azië', 'Europa', 'Noord-Amerika', 'Zuid-Amerika', 'Oceanië', 'Himalaya', 'Kaspische Zee',
+    'Mississippi', 'Nijl', 'Sahara', 'Thames', 'Corsica', 'Hawaï', 'Kaukasus', 'Sicilië', 'Siberië',
+    'poolcirkel'
   ];
 
   const wetenschap = [
@@ -599,7 +593,7 @@ const WORDS_BY_CATEGORY = (() => {
     'panty', 'klompen', 'veters', 'bomberjack', 'garderobe', 'laptoptas', 'wetsuit', 'trainingspak', 'broekspijp', 'boxershort',
     'hardloopschoenen', 'instappers', 'snowboots', 'capuchon', 'toga', 'accesoire', 'bandana', 'mijter', 'bivakmuts', 'decolleté',
     'fluweel', 'zijde', 'katoen', 'nylon', 'wol', 'leer', 'lingerie', 'pruik', 'hijab', 'niqab', 'boerka', 'hoofddeksel', 
-    'indianentooi', 'houwtje-touwtjejas'
+    'indianentooi', 'houwtje-touwtjejas', 'bagage', 'handbagage'
   ];
 
   const militair = [
@@ -1105,6 +1099,7 @@ const WORDS_BY_CATEGORY = (() => {
     'met hangende pootjes terugkomen',
     'iemand iets niet aan de neus hangen',
     'zijn oren laten hangen naar iets',
+    'een ongeluk zit in een klein hoekje',
     'aan de wilgen hangen',
     'de bui zien hangen',
     'het hangt erom',
@@ -1165,7 +1160,7 @@ const WORDS_BY_CATEGORY = (() => {
     'een bek als een scheermes'
   ];
 
-  const map = { dieren, voedsel, koken, onderwijs, beroepen, kantoor, sport, huishouden, natuur, vervoer, plaatsen, kunst, kleding, religie, fictie, literatuur, acties, misdaad, emoties, landen, gereedschap, muziek, militair, wapens, ruimte, wetenschap, geneeskunde, politiek, spreekwoorden };
+  const map = { dieren, voedsel, koken, onderwijs, beroepen, kantoor, sport, huishouden, natuur, verkeer, plaatsen, kunst, kleding, religie, fictie, literatuur, acties, misdaad, emoties, landen, gereedschap, muziek, militair, wapens, ruimte, wetenschap, geneeskunde, politiek, spreekwoorden };
   
   // FLAT alle woorden tot 1 array, filter dubbele (zoals 'vissen') eruit:
   const allWords = [...new Set(Object.values(map).flat())];
@@ -1201,10 +1196,10 @@ const EXTRA_WORD_PARTS = new Set([
 'aard', 'verschuiving', 'lucht', 'vochtigheid', 'vulkaan', 'uitbarsting', 'zoetwater', 'meer', 'zon', 'verduistering', 'zorg', 'peuter', 'alarm', 'kliniek',
 'stoom', 'locomotief', 'zweef', 'vliegtuig', 'kaping', 'boot', 'trauma', 'spoorweg', 'overgang', 'paspoort', 'controle', 'kenteken', 'centrale', 'carnaval',
 'plaat', 'verkeer', 'distributie', 'centrum', 'brandweer', 'kazerne', 'camping', 'terrein', 'recreatie', 'gebied', 'tandarts', 'praktijk', 'mepper', 'kloof',
-'voetgangers', 'pannenkoeken', 'huis', 'kinder', 'dagverblijf', 'meubel', 'boulevard', 'onder', 'handelen', 'touwtje', 'teweeg', 'stichten', 'winkel',
+'pannenkoeken', 'huis', 'kinder', 'dagverblijf', 'meubel', 'boulevard', 'onder', 'handelen', 'touwtje', 'teweeg', 'stichten', 'winkel',
 'live', 'streamen', 'geheugen', 'verlies', 'bewustzijn', 'drang', 'surrogaat', 'moeder', 'kwik', 'thermometer', 'weten', 'schappelijk', 'vliegen', 'geluid',
 'onderzoek', 'instituut', 'deeltjes', 'versneller', 'parlement', 'aire', 'staat', 'secretaris', 'rechtvaardig', 'heid', 'inkomen', 'verdeling', 'overtuiging',
-'verkiezing', 'programma', 'formatie', 'gesprekken', 'kabinet', 'tijd', 'brander', 'worst', 'gerei',
+'verkiezing', 'programma', 'formatie', 'gesprekken', 'kabinet', 'tijd', 'brander', 'worst', 'gerei', 'dood', 'lopende',
 'aftrek', 'volk', 'vertegenwoordiger', 'inkomsten', 'vermogen', 'bescherming', 'campagne', 'arbeid', 'currency', 'worsten', 'export', 'product', 'sluip',
 'ongeschikt', 'heid', 'minderheid', 'openlucht', 'concert', 'patrouille', 'verkenning', 'stad', 'inlichtingen', 'gevende', 'naam', 'lachen', 'schater',
 'stroom', 'generator', 'gereedschap', 'kist', 'schiller', 'accu', 'boormachine', 'uitje', 'hetelucht', 'pistool', 'werk', 'handschoen', 'crypto', 'scherp',
@@ -1222,9 +1217,9 @@ const EXTRA_WORD_PARTS = new Set([
 'transport', 'trein', 'tuig', 'vaart', 'veld', 'verdrag', 'verdediging', 'verklaring', 'verlening', 'vlak', 'vlucht', 'voertuig', 'voerder', 'herrie',
 'vorming', 'vuur', 'waardig', 'wagen', 'wapen', 'weer', 'werker', 'conferentie', 'wet', 'omelet', 'wetenschap', 'wiel', 'weg', 'zelfmoord', 'schopper',
 'hoge', 'hogesnelheid', 'snelheid', 'kootje', 'botje', 'streng', 'merg', 'omloop', 'achtergrond', 'muziek', 'achter', 'volging', 'hartritme', 'likker',
-'afval', 'container', 'afweer', 'geschut', 'alleman', 'vriend', 'brandstof', 'tanker', 'scheids', 'auto', 'bange', 'schijter', 'beurs', 'handelaar',
+'afval', 'container', 'afweer', 'geschut', 'alleman', 'vriend', 'olie', 'tanker', 'scheids', 'auto', 'bange', 'schijter', 'beurs', 'handelaar',
 'banket', 'staaf', 'bejaarden', 'tehuis', 'bende', 'bestrijding', 'bet', 'betover', 'overgrootmoeder', 'grootmoeder', 'moeder', 'barrière', 'guerrilla',
-'kaartje', 'molotov', 'vlammen', 'werper', 'studenten', 'corps', 'dansen', 'dochter', 'onderneming', 'dubbel', 'dekker', 'eendag', 'eenrichting',
+'kaartje', 'molotov', 'vlammen', 'werper', 'studenten', 'corps', 'dansen', 'dochter', 'onderneming', 'dubbel', 'dekker', 'eendag', 'eenrichting', 'weg',
 'dolheid', 'houwtje', 'touwtje', 'huisvrede', 'breuk'
 ]);
 
