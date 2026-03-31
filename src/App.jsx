@@ -771,11 +771,11 @@ const WORDS_BY_CATEGORY = (() => {
     'in goede aarde vallen',
     'in het diepe springen',
     'in iemands vaarwater zitten',
-    'in de kaart kijken',
+    'zich in de kaart laten kijken',
     'zand erover',
     'je kaarten op tafel leggen',
     'je licht ergens over laten schijnen',
-    'de moed zakt in de schoenen',
+    'de moed zakt je in de schoenen',
     'naast je schoenen lopen',
     'in de ander zijn schoenen staan',
     'de onderste steen boven halen',
@@ -1781,20 +1781,20 @@ function getRandomEndMessage(correctCount, roundTime, totalScore = correctCount)
   return { message: pool[idx](correctCount, totalScore), tier, count: correctCount, totalScore };
 }
 
-function RoundScreen({ player, words, onRoundEnd, roundTime }) {
+function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, initialSkips = 0 }) {
   const [wordIndex, setWordIndex] = useState(0);
-  const [scores, setScores] = useState({ correct: 0, skipped: 0 });
-  const scoresRef = useRef({ correct: 0, skipped: 0 });
+  const [scores, setScores] = useState({ correct: 0, skipped: 0, points: 0 }); // points toegevoegd
+  const scoresRef = useRef({ correct: 0, skipped: 0, points: 0 }); // points toegevoegd
   const endMessageRef = useRef(null);
   const [timeRemaining, setTimeRemaining] = useState(roundTime);
-  const [flash, setFlash] = useState(null); // "correct" | "skip" | "bonus"
+  const [flash, setFlash] = useState(null); 
   const [timesUp, setTimesUp] = useState(false);
   const timesUpRef = useRef(false);
   const [done, setDone] = useState(false);
   const timerRef = useRef(null);
   const graceTimerRef = useRef(null);
   const [graceCountdown, setGraceCountdown] = useState(null);
-  const wordResultsRef = useRef([]); // [{word, guessed, isBonus}]
+  const wordResultsRef = useRef([]); 
   const startTimeRef = useRef(null);
 
   useEffect(() => {
@@ -1869,16 +1869,22 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
   const finishRoundRef = useRef(null);
   finishRoundRef.current = finishRound;
 
-  const correct = () => {
+const correct = () => {
     if (done || skipPenaltyRef.current > 0) return;
     const word = words[wordIndexRef.current];
     const bonusPts = getBonusPoints(word);
     const isBonus = bonusPts > 0;
     triggerFlash(isBonus ? "bonus" : "correct");
     wordResultsRef.current.push({ word, guessed: true, isBonus, bonusPts });
-    const newScores = { ...scoresRef.current, correct: scoresRef.current.correct + 1 };
+    
+    const newScores = { 
+      correct: scoresRef.current.correct + 1, 
+      skipped: scoresRef.current.skipped,
+      points: scoresRef.current.points + 1 + bonusPts // Bereken punten (basis + bonus)
+    };
     scoresRef.current = newScores;
     setScores(newScores);
+    
     wordIndexRef.current += 1;
     setWordIndex(wordIndexRef.current);
     // Streak bijhouden
@@ -1968,11 +1974,11 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
         <div className="round-stats">
           <span className={`stat ${streak >= 3 ? "correct-stat-fire" : "correct-stat"}`}>
             <span className="stat-icon">{streak >= 3 ? "🔥" : "✓"}</span>
-            <span>{scores.correct}</span>
+            <span>{initialPoints + scores.points}</span>
           </span>
           <span className="stat skip-stat">
             <span className="stat-icon">↷</span>
-            <span>{scores.skipped}</span>
+            <span>{initialSkips + scores.skipped}</span>
           </span>
         </div>
       </div>
@@ -2267,7 +2273,7 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, onBack }) {
 
         {bestRound && (
           <div className="stats-best">
-            🏅 Ronde {bestRound.idx + 1} was het sterkst met {bestRound.correct + (bestRound.bonusPoints || 0)} {pt(bestRound.correct + (bestRound.bonusPoints || 0))}
+            🏅 Met {bestRound.correct + (bestRound.bonusPoints || 0)} {pt(bestRound.correct + (bestRound.bonusPoints || 0))} was ronde {bestRound.idx + 1} het best
           </div>
         )}
 
@@ -3503,15 +3509,23 @@ export default function App() {
         />
       )}
 
-      {phase === "round" && (
-        <RoundScreen
-          key={`${currentPlayerIdx}-${roundNum}`}
-          player={players[currentPlayerIdx]}
-          words={wordDeck}
-          onRoundEnd={onRoundEnd}
-          roundTime={roundTime}
-        />
-      )}
+      {phase === "round" && (() => {
+        // Bereken totaal aantal punten en skips van eerdere rondes voor deze speler
+        const currentPlayerTotalPoints = scores[currentPlayerIdx] ?? 0;
+        const currentPlayerTotalSkips = playerStats[currentPlayerIdx]?.rounds.reduce((sum, r) => sum + r.skipped, 0) ?? 0;
+
+        return (
+          <RoundScreen
+            key={`${currentPlayerIdx}-${roundNum}`}
+            player={players[currentPlayerIdx]}
+            words={wordDeck}
+            onRoundEnd={onRoundEnd}
+            roundTime={roundTime}
+            initialPoints={currentPlayerTotalPoints}
+            initialSkips={currentPlayerTotalSkips}
+          />
+        );
+      })()}
 
       {phase === "score" && (
         <ScoreScreen
