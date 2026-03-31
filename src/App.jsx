@@ -1626,10 +1626,10 @@ function SetupScreen({ onStart }) {
 
           {allSelected ? (
             <div className="cat-preview-chips">
-              {CATEGORIES.slice(0, 4).map((cat) => (
+              {CATEGORIES.slice(0, 5).map((cat) => (
                 <span key={cat.id} className="cat-preview-chip">{cat.label}</span>
               ))}
-              <span className="cat-preview-more">+{CATEGORIES.length - 4} meer</span>
+              <span className="cat-preview-more">+{CATEGORIES.length - 5} meer</span>
             </div>
           ) : (
             <div className="category-grid">
