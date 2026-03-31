@@ -2210,7 +2210,7 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, onBack }) {
   const totalSkipped = allRounds.reduce((s, r) => s + r.skipped, 0);
   const totalBonus = allRounds.reduce((s, r) => s + (r.bonusPoints || 0), 0);
   const totalSeen = totalCorrect + totalSkipped;
-  const skipRatio = totalSeen > 0 ? Math.round((totalSkipped / totalSeen) * 100) : 0;
+  const wpm = roundTime > 0 ? ((stats.correct / roundTime) * 60).toFixed(1) : 0;
 
   const bestRound = allRounds.reduce((best, r, i) => {
     const pts = r.correct + (r.bonusPoints || 0);
@@ -2262,8 +2262,8 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, onBack }) {
             <div className="stats-cell-lbl">↷ Geskipt</div>
           </div>
           <div className="stats-cell">
-            <div className="stats-cell-val">{skipRatio}%</div>
-            <div className="stats-cell-lbl">Skip-ratio</div>
+            <div className="stats-cell-val text-yellow-400">{wpm}</div>
+            <div className="stats-cell-lbl">Snelheid</div>
           </div>
           <div className="stats-cell stats-cell-gold">
             <div className="stats-cell-val">+{totalBonus}</div>
@@ -2273,7 +2273,7 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, onBack }) {
 
         {bestRound && (
           <div className="stats-best">
-            🏅 Met {bestRound.correct + (bestRound.bonusPoints || 0)} {pt(bestRound.correct + (bestRound.bonusPoints || 0))} was ronde {bestRound.idx + 1} het best
+            🏅 Ronde {bestRound.idx + 1} was geweldig! {bestRound.correct + (bestRound.bonusPoints || 0)} {pt(bestRound.correct + (bestRound.bonusPoints || 0))} gescoord
           </div>
         )}
 
