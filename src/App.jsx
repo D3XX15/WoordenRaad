@@ -357,7 +357,7 @@ const WORDS_BY_CATEGORY = (() => {
     'terreurcel', 'dagvaarding', 'radicalisering', 'zwarte markt', 'liquidatie', 'agent in burger', 'bandiet',
     'forensisch onderzoek', 'vergiftiging', 'detective', 'sheriff', 'hoger beroep', 'inbraak', 'inval', 'boete',
     'laster', 'leugendetector', 'handboeien', 'rechercheur', 'politieagent', 'undercover', 'gevangene', 'bekentenis',
-    'piraterij', 'gevangenis', 'politiebureau', 'rechtbank', 'gerechtshof', 'straatrover', 'maffia', 'bendeleider',
+    'piraterij', 'gevangenis', 'politiebureau', 'rechtbank', 'gerechtshof', 'struikrover', 'maffia', 'bendeleider',
     'zakkenroller', 'oplichter', 'valsmunterij', 'witwassen', 'moord', 'bodycam', 'motief', 'geweld', 'bedreiging',
     'diefstal', 'alibi', 'verdachte', 'aanklacht', 'advocaat', 'celstraf', 'hitman', 'drugsdealer', 'schuilnaam',
     'taakstraf', 'borgsom', 'huiszoeking', 'arrestatie', 'verhoor', 'verduistering', 'huisarrest', 'afluisteren',
@@ -551,10 +551,9 @@ const WORDS_BY_CATEGORY = (() => {
     'scheiding der machten', 'checks en balances', 'stemrecht', 'formatiegesprek', 'rechtsstaat', 'staatsschuld', 'BTW', 'compromis',
     'vermogensbelasting', 'accijns', 'handelsakkoord', 'handelspartner', 'stelling', 'autonoom', 'inkomstenbelasting', 'complot',
     'gezondheidszorg', 'pensioenstelsel', 'politieke partij', 'handelsverdrag', 'demissionair kabinet', 'volksgezondheid',
-    'partijcongres', 'ledenraadpleging', 'kabinet', 'minderheidskabinet', 'pensioenfonds', 'concurrentie',
+    'partijcongres', 'kabinet', 'minderheidskabinet', 'pensioenfonds', 'concurrentie', 'generatie', 'generatiekloof',
     'ministerie', 'kamerdebat', 'fractieleider', 'provinciebestuur', 'kabinetscrisis', 'motie van wantrouwen', 'conservatief',
-    'progressief', 'cultuur', 'inflatie', 'deflatie', 'draagvlak', 'dunbevolkt', 'economie', 'emancipatie', 'etiquette',
-    'generatie', 'generatiekloof'
+    'progressief', 'cultuur', 'inflatie', 'deflatie', 'draagvlak', 'dunbevolkt', 'economie', 'emancipatie', 'etiquette'
   ];
 
   const muziek = [
@@ -1829,6 +1828,13 @@ function RoundScreen({ player, words, onRoundEnd, roundTime }) {
             if (graceTime <= 0) {
               clearInterval(graceTimerRef.current);
               graceTimerRef.current = null;
+              // Het huidige woord is niet geraden binnen de grace-periode: voeg het toe als geskipt
+              const currentWord = words[wordIndexRef.current];
+              if (currentWord) {
+                wordResultsRef.current.push({ word: currentWord, guessed: false, isBonus: getBonusPoints(currentWord) > 0, bonusPts: 0 });
+                scoresRef.current = { ...scoresRef.current, skipped: scoresRef.current.skipped + 1 };
+                setScores(s => ({ ...s, skipped: s.skipped + 1 }));
+              }
               finishRoundRef.current(scoresRef.current, wordIndexRef.current);
             }
           }, 1000);
@@ -2158,8 +2164,8 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
                   return (
                     <div
                       key={p.name}
-                      className={rowClass + (isLast ? " cursor-pointer" : "")}
-                      onClick={isLast ? () => onShowStats(originalIdx) : undefined}
+                      className={rowClass + ((isLast || hasPlayed) ? " cursor-pointer" : "")}
+                      onClick={(isLast || hasPlayed) ? () => onShowStats(originalIdx) : undefined}
                     >
                       <span className="rank-badge">{badge}</span>
                       <span className="score-name">{p.name}</span>
@@ -2204,7 +2210,11 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, onBack }) {
   const totalSeen = totalCorrect + totalSkipped;
   const skipRatio = totalSeen > 0 ? Math.round((totalSkipped / totalSeen) * 100) : 0;
 
-  const bestRound = allRounds.reduce((best, r, i) => (r.correct > (best?.correct ?? -1) ? { ...r, idx: i } : best), null);
+  const bestRound = allRounds.reduce((best, r, i) => {
+    const pts = r.correct + (r.bonusPoints || 0);
+    const bestPts = (best?.correct || 0) + (best?.bonusPoints || 0);
+    return pts > bestPts ? { ...r, idx: i } : best;
+  }, null);
 
   const allWordResults = allRounds.flatMap(r => r.wordResults || []);
   const guessedWords = allWordResults.filter(w => w.guessed);
@@ -2261,7 +2271,7 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, onBack }) {
 
         {bestRound && (
           <div className="stats-best">
-            🏅 Beste ronde: {bestRound.idx + 1} — {bestRound.correct} {w(bestRound.correct)} geraden
+            🏅 Ronde {bestRound.idx + 1} was het sterkst met {bestRound.correct + (bestRound.bonusPoints || 0)} {pt(bestRound.correct + (bestRound.bonusPoints || 0))}
           </div>
         )}
 
