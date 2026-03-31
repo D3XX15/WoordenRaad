@@ -2210,7 +2210,8 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, o
   const totalSkipped = allRounds.reduce((s, r) => s + r.skipped, 0);
   const totalBonus = allRounds.reduce((s, r) => s + (r.bonusPoints || 0), 0);
   const totalSeen = totalCorrect + totalSkipped;
-  const wpm = roundTime > 0 ? ((totalCorrect / roundTime) * 60).toFixed(1) : 0;
+  const totalTime = allRounds.length * roundTime; // totale speeltijd in seconden
+  const wpm = totalTime > 0 ? ((totalCorrect / totalTime) * 60).toFixed(1) : 0;
 
   const bestRound = allRounds.reduce((best, r, i) => {
     const pts = r.correct + (r.bonusPoints || 0);
@@ -2262,8 +2263,8 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, o
             <div className="stats-cell-lbl">↷ Geskipt</div>
           </div>
           <div className="stats-cell">
-            <div className="stats-cell-val text-yellow-400">{wpm}</div>
-            <div className="stats-cell-lbl">Snelheid</div>
+            <div className="stats-cell-val">{wpm}</div>
+            <div className="stats-cell-lbl">⏱️ Woorden p/m</div>
           </div>
           <div className="stats-cell stats-cell-gold">
             <div className="stats-cell-val">+{totalBonus}</div>
@@ -2273,7 +2274,7 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, o
 
         {bestRound && (
           <div className="stats-best">
-            🏅 Ronde {bestRound.idx + 1} was geweldig! {bestRound.correct + (bestRound.bonusPoints || 0)} {pt(bestRound.correct + (bestRound.bonusPoints || 0))} gescoord
+            ✨ Ronde {bestRound.idx + 1} was jouw beste ronde met {bestRound.correct + (bestRound.bonusPoints || 0)} {pt(bestRound.correct + (bestRound.bonusPoints || 0))}
           </div>
         )}
 
