@@ -2199,7 +2199,7 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
 
 // ── Stats Screen ─────────────────────────────────────────────────────────────
 
-function StatsScreen({ players, playerStats, scores, initialPlayer, onBack }) {
+function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, onBack }) {
   const [activePlayer, setActivePlayer] = useState(initialPlayer ?? 0);
 
   const ps = playerStats[activePlayer];
@@ -2210,7 +2210,7 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, onBack }) {
   const totalSkipped = allRounds.reduce((s, r) => s + r.skipped, 0);
   const totalBonus = allRounds.reduce((s, r) => s + (r.bonusPoints || 0), 0);
   const totalSeen = totalCorrect + totalSkipped;
-  const wpm = roundTime > 0 ? ((stats.correct / roundTime) * 60).toFixed(1) : 0;
+  const wpm = roundTime > 0 ? ((totalCorrect / roundTime) * 60).toFixed(1) : 0;
 
   const bestRound = allRounds.reduce((best, r, i) => {
     const pts = r.correct + (r.bonusPoints || 0);
@@ -3560,6 +3560,7 @@ export default function App() {
           playerStats={playerStats}
           scores={scores}
           initialPlayer={statsInitialPlayer}
+          roundTime={roundTime}
           onBack={() => setPhase("score")}
         />
       )}
