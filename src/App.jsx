@@ -496,9 +496,9 @@ const WORDS_BY_CATEGORY = (() => {
     'ultraviolet', 'variabele', 'verbinding', 'vergrootglas', 'weerspiegeling', 'magneet', 'kernenergie', 'chemicaliën',
     'weerstand', 'trendlijn', 'wiskunde', 'zuurgraad', 'laborant', 'toxicoloog', 'wetenschapper', 'metrieke stelsel',
     'tijdperk', 'tijdstip', 'moment', 'periode', 'fase', 'vloeistof', 'kunstmatige intelligentie', 'dichtheid',
-    'Charles Darwin', 'Isaac Newton', 'Albert Einstein', 'Marie Curie', 'Thomas Edison', 'Alexander Graham Bell',
-    'Galileo Galilei', 'Nikola Tesla', 'Stephen Hawking', 'effect', 'epicentrum', 'eureka', 'expertise', 'geleerde',
-    'geluidsbarrière', 'geluidsgolf', 'hertz', 'homogeen', 'hightech', 'technologie'
+    'effect', 'epicentrum', 'eureka', 'expertise', 'geleerde', 'geluidsbarrière', 'geluidsgolf', 'hertz', 'homogeen',
+    'hightech', 'technologie', 'Charles Darwin', 'Isaac Newton', 'Albert Einstein', 'Marie Curie', 'Thomas Edison',
+    'Alexander Graham Bell', 'Galileo Galilei', 'Nikola Tesla', 'Stephen Hawking','Plato', 'Socrates'
   ];
 
   const geneeskunde = [
