@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 const CATEGORIES = [
   { id: "voedsel",        label: "🍕 Eten & Drinken" },
   { id: "koken",          label: "🧑‍🍳 Koken & Bakken" },
+  { id: "sport",          label: "⚽ Sport & Hobby" },
   { id: "huishouden",     label: "🏠 Huishouden" },
   { id: "verkeer",        label: "🚗 Verkeer & Vervoer" },
   { id: "kleding",        label: "👕 Kleding" },
@@ -12,7 +13,6 @@ const CATEGORIES = [
   { id: "gereedschap",    label: "🔧 Gereedschap" },
   { id: "dieren",         label: "🐶 Dieren" },
   { id: "natuur",         label: "🌿 Natuur" },
-  { id: "sport",          label: "⚽ Sport & Hobby" },
   { id: "emoties",        label: "🎭 Emoties & Gedrag" },
   { id: "misdaad",        label: "🚔 Misdaad & Justitie" },
   { id: "fictie",         label: "🧙 Fictie & Mythe" },
