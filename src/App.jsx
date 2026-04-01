@@ -1957,7 +1957,7 @@ const correct = () => {
   const isCurrentBonus = currentWord ? getBonusPoints(currentWord) > 0 : false;
 
   return (
-    <div className={`screen round-screen ${flash ? `flash-${flash}` : ""} ${done ? "round-done" : ""}`}>
+    <div className={`screen round-screen ${done ? "round-done" : ""}`}>
       <div className="round-top">
         <span className="round-player">{player}</span>
         <div className="timer-wrap">
@@ -2034,11 +2034,11 @@ const correct = () => {
 
       {!done && (
         <div className="action-row">
-          <button className={`action-btn skip-btn ${skipPenalty > 0 ? "btn-disabled" : ""}`} onClick={skip}>
+          <button className={`action-btn skip-btn ${skipPenalty > 0 ? "btn-disabled" : ""} ${flash === "skip" ? "btn-flashed-skip" : ""}`} onClick={skip}>
             <span className="btn-icon">↷</span>
             <span className="btn-label">Sla over</span>
           </button>
-          <button className={`action-btn correct-btn ${skipPenalty > 0 ? "btn-disabled" : ""}`} onClick={correct}>
+          <button className={`action-btn correct-btn ${skipPenalty > 0 ? "btn-disabled" : ""} ${flash === "correct" || flash === "bonus" ? "btn-flashed-correct" : ""}`} onClick={correct}>
             <span className="btn-icon">✓</span>
             <span className="btn-label">Goed geraden!</span>
           </button>
@@ -2768,7 +2768,7 @@ export default function App() {
     // Always show exactly 3 categories.
     // Priority: categories used in this game come first,
     // then fill up with random safe categories not yet in the list.
-    const safeCats = ['dieren', 'voedsel', 'koken', 'beroepen', 'kantoor','sport', 'natuur', 'emoties', 'landen', 'vervoer', 'plaatsen', 'kunst', 'kleding', 'religie', 'fictie', 'literatuur', 'muziek', 'acties', 'gereedschap', 'wetenschap', 'geneeskunde', 'ruimte', 'militair', 'misdaad', 'politiek', 'huishouden', 'spreekwoorden'];
+    const safeCats = ['dieren', 'voedsel', 'koken', 'beroepen', 'kantoor','sport', 'natuur', 'emoties', 'landen', 'verkeer', 'plaatsen', 'kunst', 'kleding', 'religie', 'fictie', 'literatuur', 'muziek', 'acties', 'gereedschap', 'wetenschap', 'geneeskunde', 'ruimte', 'militair', 'misdaad', 'politiek', 'huishouden', 'spreekwoorden'];
     const catSet = selectedCategory instanceof Set ? selectedCategory : new Set();
     const allIds = CATEGORIES.map(c => c.id);
     const allSelected = catSet.size === 0 || allIds.every(id => catSet.has(id));
@@ -3218,8 +3218,8 @@ export default function App() {
 
         /* ── Round Screen ── */
         .round-screen { flex-direction: column; background: none; transition: background 0.2s; padding-top: max(28px, env(safe-area-inset-top)); }
-        .round-screen.flash-correct { animation: flashGreen 0.4s ease; }
-        .round-screen.flash-skip { animation: flashOrange 0.4s ease; }
+        .btn-flashed-correct { animation: btnGlowCorrect 0.55s cubic-bezier(0.4,0,0.2,1); }
+        .btn-flashed-skip    { animation: btnGlowSkip 0.55s cubic-bezier(0.4,0,0.2,1); }
         .round-screen.round-done { opacity: 0.6; }
 
         .round-top {
@@ -3492,9 +3492,8 @@ export default function App() {
         .score-row:nth-child(6) { animation-delay: 0.3s }
         
         @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-        @keyframes flashGreen { 0%{background:rgba(74,222,128,0.3)} 100%{background:transparent} }
-        @keyframes flashOrange { 0%{background:rgba(251,191,36,0.2)} 100%{background:transparent} }
-        @keyframes flash-bonus-anim { 0% { background: rgba(251,146,60,0); } 30% { background: rgba(251,146,60,0.2); } 100% { background: rgba(251,146,60,0); } }
+        @keyframes btnGlowCorrect { 0%{background:rgba(74,222,128,0.2)} 25%{background:rgba(74,222,128,0.45);border-color:rgba(74,222,128,0.7)} 100%{background:rgba(74,222,128,0.2);border-color:rgba(74,222,128,0.35)} }
+        @keyframes btnGlowSkip    { 0%{background:rgba(251,191,36,0.15)} 25%{background:rgba(251,191,36,0.38);border-color:rgba(251,191,36,0.65)} 100%{background:rgba(251,191,36,0.15);border-color:rgba(251,191,36,0.3)} }
         @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
         @keyframes penalty-drain { from { width: 100%; } to { width: 0%; } }
         @keyframes grace-drain { from { width: 100%; } to { width: 0%; } }
