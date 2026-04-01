@@ -2264,13 +2264,13 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, o
             <div className="stats-cell-val">{totalSkipped}</div>
             <div className="stats-cell-lbl">↷ Geskipt</div>
           </div>
+          <div className="stats-cell stats-cell-bonus">
+            <div className="stats-cell-val">{totalBonus}</div>
+            <div className="stats-cell-lbl">⭐ Bonuspunten</div>
+          </div>
           <div className="stats-cell stats-cell-streak">
             <div className="stats-cell-val">{longestStreak > 0 ? `${longestStreak}` : longestStreak}</div>
             <div className="stats-cell-lbl">🔥 Langste streak</div>
-          </div>
-          <div className="stats-cell stats-cell-bonus">
-            <div className="stats-cell-val">+{totalBonus}</div>
-            <div className="stats-cell-lbl">⭐ Bonuspunten</div>
           </div>
         </div>
 
