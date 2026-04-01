@@ -619,7 +619,7 @@ const WORDS_BY_CATEGORY = (() => {
     'alliantie', 'bezetting', 'vaandel', 'rang', 'staatsgreep', 'veldtent', 'veldhospitaal', 'embargo', 'oorlogsverklaring', 'mobilisatie',
     'dienstplicht', 'huurling', 'militie', 'landkaart', 'reservist', 'veteraan', 'krijgsgevangene', 'onderscheiding', 'verdedigingslinie',
     'terugtrekken', 'herdenkingsmonument', 'militaire parade', 'militaire politie', 'beschietingen', 'Harley Davidson', 'concentratiekamp',
-    'inlichtingendienst', 'geheime dienst', 'wapenuitrusting', 'Jeep', 'scherpschutter', 'bomopruimer', 'overgave', 'interventie'
+    'inlichtingendienst', 'geheime dienst', 'wapenuitrusting', 'Jeep', 'scherpschutter', 'bomopruimer', 'overgave', 'interventie',
     'dubbelspion', 'grondtroepen', 'infiltrant', 'informant'
   ];
 
