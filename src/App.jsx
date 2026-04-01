@@ -3487,8 +3487,7 @@ export default function App() {
         
         @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
         @keyframes flashGreen { 
-          0%   { background: rgba(74,222,128,0); }
-          1%  { background: rgba(74,222,128,0.15); }
+          0%  { background: rgba(74,222,128,0.15); }
           100% { background: rgba(74,222,128,0); } 
         }
         @keyframes flashOrange { 
