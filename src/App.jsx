@@ -1849,7 +1849,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
 
   const triggerFlash = (type) => {
     setFlash(type);
-    setTimeout(() => setFlash(null), 400);
+    setTimeout(() => setFlash(null), 1000);
   };
 
   const wordIndexRef = useRef(0);
@@ -3212,7 +3212,7 @@ export default function App() {
         /* ── Round Screen ── */
         .round-screen { flex-direction: column; background: none; transition: background 0.2s; padding-top: max(28px, env(safe-area-inset-top)); }
         .round-screen.flash-correct { animation: flashGreen 0.6s ease; }
-        .round-screen.flash-skip { animation: flashOrange 2.0s ease; }
+        .round-screen.flash-skip { animation: flashOrange 0.6s ease; }
         .round-screen.flash-bonus { animation: flash-bonus-anim 0.6s ease; }
         .round-screen.round-done { opacity: 1.0; }
 
