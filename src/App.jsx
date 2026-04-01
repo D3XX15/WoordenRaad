@@ -1849,7 +1849,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
 
   const triggerFlash = (type) => {
     setFlash(type);
-    setTimeout(() => setFlash(null), 1400);
+    setTimeout(() => setFlash(null), 1300);
   };
 
   const wordIndexRef = useRef(0);
