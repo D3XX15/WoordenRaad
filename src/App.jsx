@@ -2276,7 +2276,7 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, o
 
         {bestRound && (
           <div className="stats-best">
-            ✨ Ronde {bestRound.idx + 1} was jouw beste ronde met {bestRound.correct + (bestRound.bonusPoints || 0)} {pt(bestRound.correct + (bestRound.bonusPoints || 0))}
+            ✨ Ronde {bestRound.idx + 1} was je beste ronde met {bestRound.correct + (bestRound.bonusPoints || 0)} {pt(bestRound.correct + (bestRound.bonusPoints || 0))}
           </div>
         )}
 
