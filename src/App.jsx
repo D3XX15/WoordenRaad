@@ -1853,6 +1853,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
   const skipCountRef = useRef(0);
   const [streak, setStreak] = useState(0);
   const streakRef = useRef(0);
+  const maxStreakRef = useRef(0);
 
   const finishRound = (finalScores, finalWordIndex) => {
     if (graceTimerRef.current) {
@@ -1862,7 +1863,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
     const totalScore = finalScores.correct + wordResultsRef.current.reduce((sum, r) => sum + (r.bonusPts || 0), 0);
     endMessageRef.current = getRandomEndMessage(finalScores.correct, roundTime, totalScore);
     setDone(true);
-    roundEndTimeoutRef.current = setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex, wordResults: wordResultsRef.current }), 3000);
+    roundEndTimeoutRef.current = setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex, wordResults: wordResultsRef.current, maxStreak: maxStreakRef.current }), 3000);
   };
 
   // Ref naar finishRound zodat de timer-interval er altijd de actuele versie van kan aanroepen
@@ -1890,6 +1891,7 @@ const correct = () => {
     // Streak bijhouden
     const newStreak = streakRef.current + 1;
     streakRef.current = newStreak;
+    if (newStreak > maxStreakRef.current) maxStreakRef.current = newStreak;
     setStreak(newStreak);
     if (timesUpRef.current) {
       finishRound(newScores, wordIndexRef.current);
@@ -2211,7 +2213,7 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, o
   const totalBonus = allRounds.reduce((s, r) => s + (r.bonusPoints || 0), 0);
   const totalSeen = totalCorrect + totalSkipped;
   const totalTime = allRounds.length * roundTime; // totale speeltijd in seconden
-  const wpm = totalTime > 0 ? ((totalCorrect / totalTime) * 60).toFixed(1) : 0;
+  const longestStreak = allRounds.reduce((max, r) => Math.max(max, r.maxStreak || 0), 0);
 
   const bestRound = allRounds.reduce((best, r, i) => {
     const pts = r.correct + (r.bonusPoints || 0);
@@ -2255,20 +2257,20 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, o
         {/* Overview grid */}
         <div className="stats-grid">
           <div className="stats-cell">
-            <div className="stats-cell-val">{totalCorrect}</div>
-            <div className="stats-cell-lbl">✓ Geraden</div>
+            <div className="stats-cell-val">✓{totalCorrect}</div>
+            <div className="stats-cell-lbl">Geraden</div>
           </div>
           <div className="stats-cell">
-            <div className="stats-cell-val">{totalSkipped}</div>
-            <div className="stats-cell-lbl">↷ Geskipt</div>
+            <div className="stats-cell-val">↷{totalSkipped}</div>
+            <div className="stats-cell-lbl">Geskipt</div>
           </div>
           <div className="stats-cell">
-            <div className="stats-cell-val">{wpm}</div>
-            <div className="stats-cell-lbl">⏱️ Woorden p/m</div>
+            <div className="stats-cell-val">{longestStreak > 0 ? `🔥${longestStreak}` : longestStreak}</div>
+            <div className="stats-cell-lbl">Langste streak</div>
           </div>
           <div className="stats-cell stats-cell-gold">
-            <div className="stats-cell-val">+{totalBonus}</div>
-            <div className="stats-cell-lbl">⭐ Bonuspunten</div>
+            <div className="stats-cell-val">⭐{totalBonus}</div>
+            <div className="stats-cell-lbl">Bonuspunten</div>
           </div>
         </div>
 
@@ -2699,7 +2701,7 @@ export default function App() {
     return null;
   };
 
-  const onRoundEnd = ({ correct, skipped, wordsUsed, wordResults }) => {
+  const onRoundEnd = ({ correct, skipped, wordsUsed, wordResults, maxStreak }) => {
     // wordResults: [{word, guessed, isBonus, bonusPts}]
     // spreekwoorden geven +2 extra (totaal 3)
     const bonusPoints = wordResults ? wordResults.filter(r => r.guessed).reduce((sum, r) => sum + (r.bonusPts || 0), 0) : 0;
@@ -2723,7 +2725,7 @@ export default function App() {
       if (i !== currentPlayerIdx) return ps;
       return {
         ...ps,
-        rounds: [...ps.rounds, { correct, skipped, bonusPoints, wordResults: wordResults || [] }]
+        rounds: [...ps.rounds, { correct, skipped, bonusPoints, wordResults: wordResults || [], maxStreak: maxStreak || 0 }]
       };
     });
     setPlayerStats(newPlayerStats);
