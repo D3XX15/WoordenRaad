@@ -3214,7 +3214,11 @@ export default function App() {
         .round-screen.flash-correct { animation: flashGreen 0.8s ease; }
         .round-screen.flash-skip { animation: flashOrange 0.8s ease; }
         .round-screen.flash-bonus { animation: flash-bonus-anim 0.8s ease; }
-        .round-screen.round-done { opacity: 0.6; }
+.round-screen.round-done {
+  filter: brightness(0.4) grayscale(0.5);
+  transition: filter 0.5s ease;
+  pointer-events: none;
+}
 
         .round-top {
           display: flex; align-items: center; justify-content: space-between; width: 100%;
