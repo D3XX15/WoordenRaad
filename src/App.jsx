@@ -2256,21 +2256,21 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, o
 
         {/* Overview grid */}
         <div className="stats-grid">
-          <div className="stats-cell">
-            <div className="stats-cell-val">✓{totalCorrect}</div>
-            <div className="stats-cell-lbl">Geraden</div>
+          <div className="stats-cell stats-cell-correct">
+            <div className="stats-cell-val">{totalCorrect}</div>
+            <div className="stats-cell-lbl">✓ Geraden</div>
           </div>
-          <div className="stats-cell">
-            <div className="stats-cell-val">↷{totalSkipped}</div>
-            <div className="stats-cell-lbl">Geskipt</div>
+          <div className="stats-cell stats-cell-skip">
+            <div className="stats-cell-val">{totalSkipped}</div>
+            <div className="stats-cell-lbl">↷ Geskipt</div>
           </div>
-          <div className="stats-cell">
-            <div className="stats-cell-val">{longestStreak > 0 ? `🔥${longestStreak}` : longestStreak}</div>
-            <div className="stats-cell-lbl">Langste streak</div>
+          <div className="stats-cell stats-cell-streak">
+            <div className="stats-cell-val">{longestStreak > 0 ? `${longestStreak}` : longestStreak}</div>
+            <div className="stats-cell-lbl">🔥 Langste streak</div>
           </div>
-          <div className="stats-cell stats-cell-gold">
-            <div className="stats-cell-val">⭐{totalBonus}</div>
-            <div className="stats-cell-lbl">Bonuspunten</div>
+          <div className="stats-cell stats-cell-bonus">
+            <div className="stats-cell-val">+{totalBonus}</div>
+            <div className="stats-cell-lbl">⭐ Bonuspunten</div>
           </div>
         </div>
 
@@ -3401,9 +3401,17 @@ export default function App() {
         
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
         .stats-cell { background: rgba(255,255,255,0.06); border: 2.5px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 12px; text-align: center; }
+        .stats-cell-correct { background: rgba(74,222,128,0.2); border-color: rgba(74,222,128,0.35); color: #4ade80; }
+        .stats-cell-skip { background: rgba(251,191,36,0.15); border-color: rgba(251,191,36,0.3); color: #fbbf24; }
+        .stats-cell-streak { background: rgba(251,146,60,0.25); border-color: rgba(251,146,60,0.4); color: #fb923c; }
+        .stats-cell-bonus { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.26); color: #f59e0b; }
         .stats-cell-gold { border-color: rgba(251,146,60,0.35); background: rgba(251,146,60,0.08); }
         .stats-cell-val { font-family: 'Righteous', cursive; font-size: 26px; }
         .stats-cell-lbl { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); margin-top: 2px; }
+        .stats-cell-correct .stats-cell-lbl,
+        .stats-cell-skip .stats-cell-lbl,
+        .stats-cell-streak .stats-cell-lbl,
+        .stats-cell-bonus .stats-cell-lbl { color: inherit; opacity: 0.7; }
         .stats-best {
           font-size: 13px; font-weight: 700; color: #fbbf24; background: rgba(251,191,36,0.1);
           border: 2.5px solid rgba(251,191,36,0.25); border-radius: 12px; padding: 10px 14px; margin-bottom: 14px;
