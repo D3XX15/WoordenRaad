@@ -3211,9 +3211,9 @@ export default function App() {
 
         /* ── Round Screen ── */
         .round-screen { flex-direction: column; background: none; transition: background 0.2s; padding-top: max(28px, env(safe-area-inset-top)); }
-        .round-screen.flash-correct { animation: flashGreen 0.5s ease; }
-        .round-screen.flash-skip { animation: flashOrange 1.0s ease; }
-        .round-screen.flash-bonus { animation: flash-bonus-anim 0.5s ease; }
+        .round-screen.flash-correct { animation: flashGreen 0.6s ease; }
+        .round-screen.flash-skip { animation: flashOrange 2.0s ease; }
+        .round-screen.flash-bonus { animation: flash-bonus-anim 0.6s ease; }
         .round-screen.round-done { opacity: 1.0; }
 
         .round-top {
@@ -3488,17 +3488,17 @@ export default function App() {
         @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
         @keyframes flashGreen { 
           0%   { background: rgba(74,222,128,0); }
-          10%  { background: rgba(74,222,128,0.15); }
+          10%  { background: rgba(74,222,128,0.2); }
           100% { background: rgba(74,222,128,0); } 
         }
         @keyframes flashOrange { 
           0%   { background: rgba(220, 38, 38, 0); }
-          10%  { background: rgba(220, 38, 38, 0.15); }
+          10%  { background: rgba(220, 38, 38, 0.25); }
           100% { background: rgba(220, 38, 38, 0); } 
         }
         @keyframes flash-bonus-anim { 
           0%   { background: rgba(255,215,0,0); }
-          10%  { background: rgba(255,215,0,0.15); }
+          10%  { background: rgba(255,215,0,0.2); }
           100% { background: rgba(255,215,0,0); } 
         }
         @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
