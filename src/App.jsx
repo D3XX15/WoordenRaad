@@ -1709,13 +1709,13 @@ const MESSAGES_GREAT = [
   () => `Weet je zeker dat je niet vals speelt? 🧐`,
   () => `Is de Dikke Van Dale persoonlijk aanwezig? 📚`,
   () => `Toevallig een woordenboek opgegeten? 📖`,
-  () => `Dit grenst aan superheldenkrachten 🦸`,
-  () => `Je bent genomineerd voor het WK woordjes raden 🌍`,
+  () => `Heb je de anderen omgekocht? 💰`,
+  () => `Je mag mee voor het WK woordjes raden 🌍`,
   () => `Even checken of je geen robot bent 🤖`,
   () => `De anderen overwegen naar huis te gaan 🚪`,
   () => `Iemand heeft goed geslapen vannacht 😴`,
   () => `Je hebt de groep getraumatiseerd 😵`,
-  () => `Zelfs de tijdklok is onder de indruk ⏱️`,
+  () => `Zelfs de klok is onder de indruk ⏱️`,
 ];
 
 const MESSAGES_OK = [
