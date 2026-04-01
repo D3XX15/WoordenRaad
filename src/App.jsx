@@ -2895,13 +2895,6 @@ export default function App() {
           width: 100%;
         }
 
-        /* ── Background ── */
-        .screen::before {
-          content: '';
-          position: fixed; inset: 0;
-          background: #060d1a;
-          z-index: 0;
-        }
         .screen::after {
           content: '';
           position: fixed; inset: 0;
@@ -3220,6 +3213,7 @@ export default function App() {
         .round-screen { flex-direction: column; background: none; transition: background 0.2s; padding-top: max(28px, env(safe-area-inset-top)); }
         .round-screen.flash-correct { animation: flashGreen 0.4s ease; }
         .round-screen.flash-skip { animation: flashOrange 0.4s ease; }
+        .round-screen.flash-bonus { animation: flash-bonus-anim 0.4s ease; }
         .round-screen.round-done { opacity: 0.6; }
 
         .round-top {
