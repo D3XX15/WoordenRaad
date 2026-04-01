@@ -3491,13 +3491,11 @@ export default function App() {
           100% { background: rgba(74,222,128,0); } 
         }
         @keyframes flashOrange { 
-          0%   { background: rgba(220, 38, 38, 0); }
-          1%  { background: rgba(220, 38, 38, 0.25); }
+          0%  { background: rgba(220, 38, 38, 0.25); }
           100% { background: rgba(220, 38, 38, 0); } 
         }
         @keyframes flash-bonus-anim { 
-          0%   { background: rgba(255,215,0,0); }
-          1%  { background: rgba(255,215,0,0.15); }
+          0%  { background: rgba(255,215,0,0.15); }
           100% { background: rgba(255,215,0,0); } 
         }
         @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
