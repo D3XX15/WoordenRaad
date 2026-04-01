@@ -228,7 +228,7 @@ const WORDS_BY_CATEGORY = (() => {
     'zilt', 'zoetwatermeer', 'zonnestraling', 'zonsverduistering', 'zoutvlakte', 'zonnebloem', 'helium',
     'es', 'iep', 'beuk', 'hulst', 'klimop', 'varens', 'stromend water', 'madeliefje', 'distel', 'bloeddiamant', 
     'steen', 'zeegras', 'braam', 'eikel', 'dennenappel', 'framboos', 'boomgaard', 'boterbloem', 'windhoos',
-    'vruchtvlees', 'stuifmeel', 'dooi', 'rijp', 'ijzel', 'lelie', 'magma', 'munt', 'bestrijdingsmiddel',
+    'vruchtvlees', 'stuifmeel', 'dooi', 'rijp', 'ijzel', 'lelie', 'magma', 'munt',
     'bladerdek', 'conifeer', 'den', 'gebergte', 'graniet', 'horizon', 'kalksteen', 'vloedgolf',
     'fotosynthese', 'riviermonding', 'winter', 'wind', 'sloot', 'wad', 'zwam', 'inheems', 'ivoor'
   ];
