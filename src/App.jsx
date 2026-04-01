@@ -3486,9 +3486,21 @@ export default function App() {
         .score-row:nth-child(6) { animation-delay: 0.3s }
         
         @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-        @keyframes flashGreen { 0%{background:rgba(74,222,128,0.3)} 100%{background:transparent} }
-        @keyframes flashOrange { 0%{background:rgba(251,191,36,0.2)} 100%{background:transparent} }
-        @keyframes flash-bonus-anim { 0% { background: rgba(251,146,60,0); } 30% { background: rgba(251,146,60,0.2); } 100% { background: rgba(251,146,60,0); } }
+        @keyframes flashGreen { 
+          0%   { background: rgba(74,222,128,0); }
+          50%  { background: rgba(74,222,128,0.2); }
+          100% { background: rgba(74,222,128,0); } 
+        }
+        @keyframes flashOrange { 
+          0%   { background: rgba(251,191,36,0); }
+          50%  { background: rgba(251,191,36,0.15); } 
+          100% { background: rgba(251,191,36,0); } 
+        }
+        @keyframes flash-bonus-anim { 
+          0%   { background: rgba(255,215,0,0); }
+          50%  { background: rgba(255,215,0,0.25); }
+          100% { background: rgba(255,215,0,0); } 
+        }
         @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
         @keyframes penalty-drain { from { width: 100%; } to { width: 0%; } }
         @keyframes grace-drain { from { width: 100%; } to { width: 0%; } }
