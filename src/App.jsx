@@ -455,7 +455,7 @@ const WORDS_BY_CATEGORY = (() => {
     'genant', 'gewelddadig', 'goedzak', 'grapjas', 'halvegare', 'hamsteren', 'hardleers', 'heethoofd', 'heldhaftig', 'herrieschopper', 'hielenlikker',
     'huilebalk', 'humeurig', 'hypocriet', 'hysterisch', 'ongelukkig', 'brokkenpiloot', 'idioot', 'ijdeltuit', 'ijzersterk', 'incompetent', 'consequent',
     'intelligent', 'jaknikker', 'jokkebrok', 'liegbeest', 'kinderachtig', 'boerenkinkel', 'klikspaan', 'kluns', 'kortaf', 'kortzichtig', 'koelbloedig',
-    'krachtpatser', 'kwaadaardig', 'kwajongen', 'kwiek'
+    'krachtpatser', 'kwaadaardig', 'kwajongen', 'kwiek', 'hebzuchtig
   ];
 
   const landen = [
