@@ -366,7 +366,7 @@ const WORDS_BY_CATEGORY = (() => {
     'terreurcel', 'dagvaarding', 'radicalisering', 'zwarte markt', 'liquidatie', 'agent in burger', 'bandiet',
     'forensisch onderzoek', 'vergiftiging', 'detective', 'sheriff', 'hoger beroep', 'inbraak', 'inval', 'boete',
     'laster', 'leugendetector', 'handboeien', 'rechercheur', 'politieagent', 'undercover', 'gevangene', 'bekentenis',
-    'piraterij', 'gevangenis', 'politiebureau', 'rechtbank', 'gerechtshof', 'struikrover', 'maffia', 'bendeleider',
+    'piraterij', 'gevangenis', 'politiebureau', 'rechtbank', 'hooggerechtshof', 'struikrover', 'maffia', 'bendeleider',
     'zakkenroller', 'oplichter', 'valsmunterij', 'witwassen', 'moord', 'bodycam', 'motief', 'geweld', 'bedreiging',
     'diefstal', 'alibi', 'verdachte', 'aanklacht', 'advocaat', 'celstraf', 'hitman', 'drugsdealer', 'schuilnaam',
     'taakstraf', 'borgsom', 'huiszoeking', 'arrestatie', 'verhoor', 'verduistering', 'huisarrest', 'afluisteren',
@@ -382,7 +382,8 @@ const WORDS_BY_CATEGORY = (() => {
     'handhaver', 'handlanger', 'hechtenis', 'pimp', 'hoorzitting', 'huisvredebreuk', 'huurmoordenaar', 'eerwraak',
     'incident', 'beschuldiging', 'onschuldig', 'stelen', 'pikken', 'jatten', 'inrekenen', 'Interpol', 'isoleercel',
     'HALT', 'joyride', 'junkie', 'wijkagent', 'smeris', 'juut', 'wout', 'kannibaal', 'pedofilie', 'kleptomaan',
-    'klopjacht', 'knokploeg', 'steekpenning', 'smeergeld', 'omkoping', 'kortgeding', 'kraakpand', 'kruimeldief'
+    'klopjacht', 'knokploeg', 'steekpenning', 'smeergeld', 'omkoping', 'kortgeding', 'kraakpand', 'kruimeldief',
+    'internationaal strafrecht'
   ];
 
   const acties = [
@@ -558,8 +559,8 @@ const WORDS_BY_CATEGORY = (() => {
     'petitie', 'demonstratie', 'burgerrechten', 'grondrechten', 'privacywet', 'gelijkheid', 'kieslijst', 'prinsjesdag', 'stichting',
     'desinformatie', 'transparantie', 'integriteit', 'gedragscode', 'pressiegroep', 'plagiaat', 'miljoenennota', 'verdrag',
     'denktank', 'adviesraad', 'raad van state', 'nationale ombudsman', 'rekenkamer', 'hoge raad', 'troonrede', 'vice-premier',
-    'internationaal strafhof', 'arbitrage', 'mediation', 'raadslid', 'gedeputeerde',
-    'scheiding der machten', 'checks en balances', 'stemrecht', 'rechtsstaat', 'staatsschuld', 'BTW', 'compromis', 'keizer',
+    'arbitrage', 'mediation', 'raadslid', 'gedeputeerde',
+    'scheiding der machten', 'stemrecht', 'rechtsstaat', 'staatsschuld', 'BTW', 'compromis', 'keizer',
     'vermogensbelasting', 'accijns', 'handelsakkoord', 'handelspartner', 'stelling', 'autonoom', 'inkomstenbelasting', 'complot',
     'gezondheidszorg', 'pensioenstelsel', 'politieke partij', 'handelsverdrag', 'demissionair kabinet', 'volksgezondheid',
     'partijcongres', 'kabinet', 'minderheidskabinet', 'pensioenfonds', 'concurrentie', 'generatie', 'generatiekloof', 'dialect',
@@ -1356,7 +1357,8 @@ const EXTRA_WORD_PARTS = new Set([
 'jaar', 'getijde', 'klink', 'kalk', 'nagel', 'ochtend', 'jas', 'woonwagen', 'kamp', 'katten', 'luik', 'kerst', 'kransje', 'hulp', 'kerstman', 'pakket',
 'versiering', 'billetjes', 'achtig', 'verblijf', 'telefoon', 'kinkel', 'klapper', 'knarse', 'tanden', 'jassen', 'kleuter', 'klas', 'knie', 'knikke',
 'bollen', 'gummi', 'knuppel', 'steek', 'penning', 'kort', 'zichtig', 'bloedig', 'middelpunt', 'vliedende', 'kracht', 'kranten', 'jongen', 'kriebel',
-'hoest', 'drank', 'badkamer', 'spiegel', 'vogel', 'badje', 'kunst', 'collectie', 'kwak', 'zalver', 'flat', 'laatste', 'jaars', 'lagedruk'
+'hoest', 'drank', 'badkamer', 'spiegel', 'vogel', 'badje', 'kunst', 'collectie', 'kwak', 'zalver', 'flat', 'laatste', 'jaars', 'lagedruk', 'hoog',
+'gerechtshof'
 ]);
 
 function hyphenateWord(word) {
