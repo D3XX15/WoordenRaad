@@ -372,7 +372,7 @@ const WORDS_BY_CATEGORY = (() => {
     'taakstraf', 'borgsom', 'huiszoeking', 'arrestatie', 'verhoor', 'verduistering', 'huisarrest', 'afluisteren',
     'openbaar ministerie', 'rechtszaak', 'vluchtroute', 'vluchtauto', 'gijzeling', 'schuilplaats', 'slachtoffer',
     'ooggetuige', 'vingerafdruk', 'crimineel', 'harddrugs', 'softdrugs', 'drugskartel', 'smokkelwaar', 'stalking',
-    'heling', 'signalement', 'misdrijf', 'delict', 'tbs', 'vrijspraak', 'bloedspoor', 'phishing', 'aanrijding',
+    'heling', 'signalement', 'misdrijf', 'misbruik', 'tbs', 'vrijspraak', 'bloedspoor', 'phishing', 'aanrijding',
     'conflict', 'moordwapen', 'seriemoordenaar', 'losgeld', 'enkelband', 'bewijsstuk', 'smaad', 'aanranding', 'lijk',
     'kroongetuige', 'rapporteren', 'identiteitsfraude', 'bankoverval', 'belastingontduiking', 'mensenhandel', 'dief',
     'bekeuring', 'relschopper', 'berechten', 'beroving', 'bestraffen', 'bewaker', 'bewijslast', 'bloedbad', 'gevecht',
@@ -381,8 +381,8 @@ const WORDS_BY_CATEGORY = (() => {
     'fouilleren', 'galg', 'gangster', 'gedetineerde', 'vermomming', 'gespuis', 'gratie', 'guillotine', 'handgemeen',
     'handhaver', 'handlanger', 'hechtenis', 'pimp', 'hoorzitting', 'huisvredebreuk', 'huurmoordenaar', 'eerwraak',
     'incident', 'beschuldiging', 'onschuldig', 'stelen', 'pikken', 'jatten', 'inrekenen', 'Interpol', 'isoleercel',
-    'HALT', 'joyride', 'junkie', 'wijkagent', 'smeris', 'juut', 'wout', 'kannibaal', 'pedofilie', 'kleptomaan',
-    'klopjacht', 'knokploeg', 'steekpenning', 'smeergeld', 'omkoping', 'kortgeding', 'kraakpand', 'kruimeldief',
+    'HALT', 'joyride', 'junkie', 'wijkagent', 'smeris', 'wout', 'kannibaal', 'kleptomaan', 'kruimeldief',
+    'klopjacht', 'knokploeg', 'steekpenning', 'smeergeld', 'omkoping', 'kortgeding', 'kraakpand',
     'internationaal strafrecht'
   ];
 
