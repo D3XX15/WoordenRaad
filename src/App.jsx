@@ -1,4 +1,269 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+
+// ── Pim Pam Pet Cards ────────────────────────────────────────────────────────
+const PPP_CARDS = [
+  // ── Lijst 1 (origineel) ──
+  "een kleur", "een dier", "een land", "een stad", "een naam (jongen)",
+  "een naam (meisje)", "iets in de keuken", "iets in de tuin", "een beroep",
+  "een sport", "iets om te dragen", "iets in de supermarkt", "een voertuig",
+  "iets dat vliegt", "een instrument", "iets in de badkamer", "een film",
+  "een tv-serie", "een merk", "iets dat geluid maakt", "iets dat koud is",
+  "iets dat warm is", "iets dat rond is", "iets dat lang is", "iets in de natuur",
+  "een gebouw", "iets op school", "een feestdag", "iets in een museum",
+  "iets dat je kunt eten", "iets dat je kunt drinken", "een boom",
+  "een bloem", "iets in de slaapkamer", "iets op het strand",
+  "iets in een ziekenhuis", "een insect", "een vis", "een vogel",
+  "iets dat je kunt gooien", "iets dat je kunt zingen", "een liedje",
+  "iets dat glinstert", "iets dat stinkt", "iets dat lekker ruikt",
+  "een speelgoed", "iets in een tas", "iets op een verjaardag",
+  "iets van hout", "iets van metaal", "iets van plastic", "iets van glas",
+  "een muziekstijl", "iets dat je kunt verzamelen", "iets in een zoo",
+  "iets op kantoor", "een gereedschap", "iets dat je kunt lezen",
+  "iets dat je kunt fotograferen", "iets op een boerderij",
+  "een type hond", "een type kat", "iets in een winkelcentrum",
+  "iets van vroeger", "iets uit de toekomst", "iets op internet",
+  "een social media platform", "iets dat je kunt downloaden",
+  "iets op een kaart (spel)", "een dobbelsteenspel", "iets op een speelplein",
+  "iets in een pretpark", "iets in een bioscoop", "een acteur of actrice",
+  "een tekenfilmfiguur", "een superheld", "een sprookjesfiguur",
+  "iets in een kasteel", "een koningshuislid", "iets rond kerst",
+  "iets bij Sinterklaas", "iets bij Pasen", "iets bij Halloween",
+  "iets bij carnaval", "een Nederlander", "iets typisch Nederlands",
+  "iets typisch Belgisch", "iets in Parijs", "iets in Amsterdam",
+  "iets op een wereldkaart", "een berg", "een rivier", "een eiland",
+  "een woestijn", "iets in de ruimte", "een planeet", "een ster",
+  "iets dat je kunt meten", "een munteenheid", "iets dat duur is",
+  "iets dat gratis is", "iets dat je kunt winnen", "iets dat je kunt verliezen",
+  "een getal", "iets dat met water te maken heeft", "iets dat kan exploderen",
+  "iets dat kan zweven", "iets dat kan praten", "iets dat kan vliegen",
+  "een materiaal", "een stof", "een kleur in de regenboog",
+  "iets in een apotheek", "iets bij de tandarts", "iets dat je dagelijks doet",
+  "een gewoonte", "iets dat spannend is", "iets dat saai is",
+  "iets dat groot is", "iets dat klein is", "iets dat snel gaat",
+  "iets dat langzaam gaat", "iets dat zwaar is", "iets dat licht is",
+  "een uitvinding", "een wetenschapper", "een kunstenaar", "een schrijver",
+  "een muzikant", "een sportster", "een politicus", "een historisch figuur",
+  "iets uit de Middeleeuwen", "iets uit de oudheid", "iets uit WO II",
+  "iets Japans", "iets Frans", "iets Italiaans", "iets Amerikaans",
+  "een dessert", "een hoofdgerecht", "een voorgerecht", "een ontbijtproduct",
+  "een snack", "een alcoholisch drankje", "een frisdrank", "een theesoort",
+  "een koffietype", "iets op een pizza", "iets in een salade",
+  "een groentesoort", "een fruitsoort", "een noot", "een kruid",
+  "iets dat je kunt bakken", "iets met suiker", "iets zonder suiker",
+  "een spel", "een bordspel", "een kaartspel", "een computerspel",
+  "iets op een festival", "iets op een markt", "iets bij een concert",
+  "iets in een discotheek", "een danssoort", "een yogapose",
+  "iets dat je kunt mediteren over", "iets waarbij je concentratie nodig hebt",
+  "iets waarbij geluk een rol speelt", "iets waarbij je slim moet zijn",
+
+  // ── Lijst 2 (fysiek spel) ──
+  "een stad in de verenigde staten", "een land in afrika", "een groente",
+  "iets wat geluid maakt", "een stad in europa", "een stripfiguur",
+  "een bordspel", "een kinderliedje", "een berg of gebergte",
+  "iets wat rond is", "iets wat kan zwemmen", "een vakantiebestemming",
+  "iets wat onzichtbaar is", "een plant", "een muziekinstrument",
+  "een muziekgroep", "een dier dat kleiner is dan een kat",
+  "de titel van een liedje", "een krant of tijdschrift",
+  "iets dat je meeneemt op reis", "een melkproduct",
+  "een naam van een pretpark", "iets dat je op brood doet",
+  "een roofvogel", "iets roods", "iets wat je mee naar school neemt",
+  "een schrijver of dichter", "een held of een schurk",
+  "iets waar je op kunt zitten", "een (schier)eiland",
+  "iets wat kan vliegen", "iets wat vierkant is",
+  "iets dat kan breken", "iets dat kan groeien",
+  "iets wat je kan drinken", "een kledingmerk",
+  "iets dat licht geeft", "iets dat je hoort in de keuken",
+  "een zanger of zangeress", "iets dat je op school leert",
+  "een deel van het menselijk lichaam", "iets wat je zelf kunt maken",
+  "iets wat vleugels heeft", "iets geels", "iets blauws",
+  "een huishoudelijk apparaat", "iets wat je in de winter nodig hebt",
+  "een automerk", "een hondenras", "een voetbalclub",
+  "een familielid", "een rivier of meer", "een huisdier",
+  "een zee of oceaan", "iets dat je kan schoonmaken",
+  "een land in azië", "iets wat je in de zomer nodig hebt",
+  "iets zoets", "iets zouts", "iets wat ruikt", "iets groens", "gereedschap",
+];
+
+// ── Pim Pam Pet Component ─────────────────────────────────────────────────────
+
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+// Q and X are less common, so we optionally weight them lighter — keep all for authenticity
+
+function PimPamPetGame({ players, onRestart }) {
+  const [scores, setScores] = useState(Array(players.length).fill(0));
+  const [currentCardIdx, setCurrentCardIdx] = useState(0);
+  const [cardDeck, setCardDeck] = useState(() => shuffle([...PPP_CARDS]));
+  const [letter, setLetter] = useState(null);
+  const [spinning, setSpinning] = useState(false);
+  const [winner, setWinner] = useState(null); // index of winner
+  const [phase, setPhase] = useState("ready"); // ready | playing | awarded
+  const [lastWinners, setLastWinners] = useState([]); // for animation
+  const spinIntervalRef = useRef(null);
+  const spinCountRef = useRef(0);
+  const targetLetterRef = useRef(null);
+
+  const currentCard = cardDeck[currentCardIdx % cardDeck.length];
+
+  const spinLetter = () => {
+    if (spinning || phase === "awarded") return;
+    setPhase("playing");
+    setWinner(null);
+    setSpinning(true);
+    spinCountRef.current = 0;
+    const totalTicks = 18 + Math.floor(Math.random() * 12); // ~18–30 ticks
+    targetLetterRef.current = ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
+
+    spinIntervalRef.current = setInterval(() => {
+      spinCountRef.current++;
+      // Show random letters while spinning, then settle on target
+      if (spinCountRef.current < totalTicks) {
+        setLetter(ALPHABET[Math.floor(Math.random() * ALPHABET.length)]);
+      } else {
+        clearInterval(spinIntervalRef.current);
+        setLetter(targetLetterRef.current);
+        setSpinning(false);
+      }
+    }, spinCountRef.current < totalTicks - 6 ? 60 : 100);
+  };
+
+  useEffect(() => () => clearInterval(spinIntervalRef.current), []);
+
+  const awardPoint = (playerIdx) => {
+    if (phase !== "playing" || spinning) return;
+    const newScores = [...scores];
+    newScores[playerIdx]++;
+    setScores(newScores);
+    setWinner(playerIdx);
+    setLastWinners(prev => [...prev.slice(-4), playerIdx]);
+    setPhase("awarded");
+  };
+
+  const nextCard = () => {
+    setCurrentCardIdx(i => i + 1);
+    setLetter(null);
+    setWinner(null);
+    setPhase("ready");
+  };
+
+  const topScore = Math.max(...scores);
+  const sortedPlayers = [...players].map((p, i) => ({ name: p, score: scores[i], idx: i })).sort((a, b) => b.score - a.score);
+
+  return (
+    <div className="ppp-screen">
+      {/* Header */}
+      <div className="ppp-header">
+        <div className="ppp-logo">🎯 Pim Pam Pet</div>
+        <button className="ppp-restart-btn" onClick={onRestart}>↩ Stop</button>
+      </div>
+
+      {/* Card */}
+      <div className="ppp-card-area">
+        <div className="ppp-card-label">KAART #{currentCardIdx + 1}</div>
+        <div className="ppp-card">
+          <div className="ppp-card-inner">
+            <span className="ppp-card-text">{currentCard}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Letter display */}
+      <div className="ppp-letter-area">
+        {letter ? (
+          <div className={`ppp-letter ${spinning ? "ppp-letter-spinning" : "ppp-letter-landed"}`}>
+            {letter}
+          </div>
+        ) : (
+          <div className="ppp-letter-placeholder">?</div>
+        )}
+        <button
+          className={`ppp-spin-btn ${spinning ? "ppp-spin-spinning" : ""}`}
+          onClick={phase === "awarded" ? nextCard : spinLetter}
+          disabled={spinning}
+        >
+          {spinning ? "draaien…" : phase === "awarded" ? "volgende kaart ➜" : letter ? "opnieuw draaien" : "kies letter ▶"}
+        </button>
+      </div>
+
+      {/* Award / Next */}
+      {phase === "playing" && !spinning && (
+        <div className="ppp-award-section">
+          <div className="ppp-award-label">Wie was er het eerst?</div>
+          <div className="ppp-scores-strip">
+            {players.map((p, i) => (
+              <button key={i} className={`ppp-score-chip ppp-score-chip-btn ${scores[i] === topScore && topScore > 0 ? "ppp-score-leader" : ""}`} onClick={() => awardPoint(i)}>
+                <span className="ppp-score-chip-name">{p}</span>
+                <span className="ppp-score-chip-val">{scores[i]}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {phase === "awarded" && winner !== null && (
+        <div className="ppp-awarded-banner">
+          🏆 <span className="ppp-awarded-name">{players[winner]}</span> haalt een punt!
+        </div>
+      )}
+
+      {phase === "ready" && (
+        <div className="ppp-ready-hint">Druk op "kies letter" om te beginnen</div>
+      )}
+    </div>
+  );
+}
+
+// ── Pim Pam Pet Setup overlay ─────────────────────────────────────────────────
+function PimPamPetSetup({ onStartPPP, names, setNames }) {
+  const canStart = names.length >= 2 && names.every(n => n.trim().length > 0);
+
+  const addPlayer = () => { if (names.length < 10) setNames(prev => [...prev, ""]); };
+  const removePlayer = (i) => { if (names.length > 2) setNames(prev => prev.filter((_, j) => j !== i)); };
+  const updateName = (i, v) => setNames(prev => prev.map((n, j) => j === i ? v : n));
+
+  return (
+    <div className="ppp-setup-section">
+      <div className="ppp-setup-players-wrap">
+        <div className="setup-wrapper-badge" style={{background:"#f59e0b", top:"-14px"}}>SPELERS</div>
+        <div className="names-grid">
+          {names.map((name, i) => (
+            <div key={i} className="player-input-group small-group">
+              <div className="player-name-container player-bg">
+                <span className="player-index-badge">{i + 1}</span>
+                <input
+                  className="integrated-name-input"
+                  placeholder="Naam invullen..."
+                  value={name}
+                  onChange={e => updateName(i, e.target.value)}
+                  maxLength={16}
+                />
+              </div>
+              {names.length > 2 && (
+                <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayer(i)}>−</button>
+              )}
+            </div>
+          ))}
+          {names.length < 10 && (
+            <button className="add-player-integrated" onClick={addPlayer}>Speler toevoegen</button>
+          )}
+        </div>
+      </div>
+
+      <button
+        className={`start-btn ${canStart ? "ready-solid" : ""}`}
+        style={{marginTop: "12px"}}
+        onClick={() => canStart && onStartPPP(names.map(n => n.trim()))}
+        disabled={!canStart}
+      >
+        {canStart ? "Spel starten ➜" : "Vul alles in…"}
+      </button>
+    </div>
+  );
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ── WoordenRaad (original game) ───────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
 
 // ── Categorieën ──────────────────────────────────────────────────────────────
 const CATEGORIES = [
@@ -196,7 +461,7 @@ const WORDS_BY_CATEGORY = (() => {
     'abseilen', 'kampioensbeker', 'medaille', 'stopwatch', 'borduren', 'breien', 'touwtrekken',
     'dartpijl', 'flipperkast', 'gele kaart', 'rode kaart', 'schaakbord', 'kleiduiven schieten', 'bodybuilden',
     'trampoline', 'vogelspotten', 'stoepkrijten', 'weven', 'escaperoom', 'kogelslingeren', 'jeu de boules',
-    'halfpipe', 'rolstoelbasketbal', 'salsadansen', 'linedance', 'volksdansen', 'interland',
+    'halfpipe', 'rolstoelbasketbal', 'salsadansen', 'linedance', 'volksdansen', 'interland', 'touwtjespringen',
     'boogschieten', 'survivallen', 'raften', 'skateboarden', 'keeper', 'keu', 'klaverjassen',
     'puzzelen', 'bordspel', 'videospellen', 'kamperen', 'crossfit', 'boot camp', 'lasergame',
     'spinning', 'kickboksen', 'speedklimmen', 'zaalvoetbal', 'rolstoeltennis', 'paragliding',
@@ -409,7 +674,7 @@ const WORDS_BY_CATEGORY = (() => {
     'bedanken', 'begroeten', 'beschermen', 'bewonderen', 'boeren', 'controleren', 'scheuren', 'zoeken', 'floppen',
     'debatteren', 'flirten', 'herkennen', 'hijgen', 'doorsturen', 'zwaaien', 'zweten', 'fikkie stoken', 'inschrijven',
     'jongleren', 'knijpen', 'krabben', 'kwispelen', 'mompelen', 'ontsnappen', 'plassen', 'zwijgen', 'niezen', 'krijsen',
-    'sluimeren', 'snuffelen', 'stampen', 'staren', 'steigeren', 'trillen', 'migreren', 'touwtjesspringen', 'flossen',
+    'sluimeren', 'snuffelen', 'stampen', 'staren', 'steigeren', 'trillen', 'migreren', 'flossen',
     'wentelen', 'woelen', 'zuchten', 'reizen', 'bewijzen', 'dromen', 'schipbreuk lijden', 'triomferen', 'sissen',
     'herinneren', 'liefhebben', 'oplossen', 'pech hebben', 'teweegbrengen', 'aarzelen', 'takelen', 'oversteken',
     'roddelen', 'rusten', 'vertrouwen', 'markeren', 'imiteren', 'afwachten', 'zingen', 'sms-en', 'veroveren',
@@ -433,7 +698,7 @@ const WORDS_BY_CATEGORY = (() => {
     'verdrietig', 'narcistisch', 'geheimzinnig', 'kinds', 'somber', 'teleurgesteld', 'eenzaam', 'verveeld', 'opgelucht', 'trots', 'suf',
     'egoïstisch', 'humaan', 'nostalgisch', 'imperfect', 'wantrouwig', 'achterdochtig', 'hoopvol', 'gespannen', 'schuw', 'logisch', 'dom',
     'sympathiek', 'instinctief', 'nerveus', 'onrustig', 'prikkelbaar', 'uitgeput', 'tam', 'ethisch', 'succesvol', 'immoreel', 'agressief',
-    'speels', 'sociaal', 'teruggetrokken', 'aanhankelijk', 'onafhankelijk', 'absurd', 'eervol', 'raar', 'kenau', 'gehoorzaam', 'koppig',
+    'speels', 'sociaal', 'aanhankelijk', 'onafhankelijk', 'absurd', 'eervol', 'raar', 'kenau', 'gehoorzaam', 'koppig',
     'impulsief', 'voorzichtig', 'minderwaardig', 'opgefokt', 'stoïcijns', 'emotie', 'dominant', 'onderdanig', 'afgeleid', 'doelgericht',
     'hyperactief', 'sceptisch', 'wilskracht', 'boerenlul', 'gangmaker', 'loom', 'passief', 'lui', 'arrogant', 'eerlijk', 'oprecht', 'kattig',
     'bijgelovig', 'dankbaar', 'content', 'machteloos', 'attent', 'hardhandig', 'geliefd', 'optimistisch', 'zelfverzekerd', 'woedend', 'krent',
@@ -1294,17 +1559,11 @@ const WORDS_BY_CATEGORY = (() => {
   ];
 
   const map = { dieren, voedsel, koken, onderwijs, beroepen, kantoor, sport, huishouden, natuur, verkeer, plaatsen, kunst, kleding, religie, fictie, literatuur, acties, misdaad, emoties, landen, gereedschap, muziek, militair, wapens, ruimte, wetenschap, geneeskunde, politiek, spreekwoorden };
-  
-  // FLAT alle woorden tot 1 array, filter dubbele (zoals 'vissen') eruit:
   const allWords = [...new Set(Object.values(map).flat())];
   map.all = allWords;
 
   return map;
 })();
-
-// ── Dutch compound-word hyphenation ──────────────────────────────────────────
-// Woordenboek opgebouwd uit alle spelwoorden — dat is voldoende om samenstellingen
-// te herkennen, omdat het rechter deel vrijwel altijd zelf ook een speelwoord is.
 const HYPHENATION_DICT = (() => {
   const dict = new Set();
   WORDS_BY_CATEGORY.all
@@ -1313,8 +1572,6 @@ const HYPHENATION_DICT = (() => {
   return dict;
 })();
 
-// Deze lijst vult het HYPHENATION_DICT aan voor woorden die niet 
-// als los speelwoord voorkomen, maar wel delen zijn van samenstellingen.
 const EXTRA_WORD_PARTS = new Set([
 'bijen', 'koningin', 'dwerg', 'pinguïn', 'galapagos', 'schildpad', 'lieveheers', 'beestje', 'sprinkhaan', 'stok', 'staartje', 'omloop', 'fantoom',
 'puree', 'brandnetel', 'soep', 'caesar', 'salade', 'granaat', 'appel', 'kaneel', 'broodje', 'vanille', 'pudding', 'lichaampje', 'drempel', 'pijn',
@@ -1362,115 +1619,56 @@ const EXTRA_WORD_PARTS = new Set([
 ]);
 
 function hyphenateWord(word) {
-  // 1. Basis checks: Lege string of korte woorden overslaan
   if (!word) return word;
-
-  // Meerdere woorden: elk deel apart behandelen
-  if (word.includes(' ')) {
-    return word.split(' ').map(hyphenateWord).join(' ');
-  }
-
-  // Bestaand koppelteken: zachte afbreek (\u00AD) toevoegen na het streepje
-  if (word.includes('-')) {
-    return word.replace(/-/g, '-\u00AD');
-  }
-
-  // Alleen lange woorden verwerken (prestatie en logica)
+  if (word.includes(' ')) return word.split(' ').map(hyphenateWord).join(' ');
+  if (word.includes('-')) return word.replace(/-/g, '-\u00AD');
   if (word.length <= 10) return word;
-
   const lower = word.toLowerCase();
   const isKnown = (str) => HYPHENATION_DICT.has(str) || EXTRA_WORD_PARTS.has(str);
-
-  // --- STAP 1: Morfologische splitsing (Samenstellingen) ---
-
-  // A. Check op tussen-s (bijv. herdenkings·monument)
   for (let i = 4; i <= lower.length - 5; i++) {
     if (lower[i] === 's') {
       const stam = lower.slice(0, i);
       const rest = lower.slice(i + 1);
-      if (isKnown(stam) && isKnown(rest)) {
-        return word.slice(0, i + 1) + '\u00AD' + word.slice(i + 1);
-      }
+      if (isKnown(stam) && isKnown(rest)) return word.slice(0, i + 1) + '\u00AD' + word.slice(i + 1);
     }
   }
-
-  // B. Algemene samenstelling (van rechts naar links)
   for (let i = lower.length - 4; i >= 4; i--) {
     const links = lower.slice(0, i);
     const rechts = lower.slice(i);
-    if (isKnown(links) && isKnown(rechts)) {
-      return word.slice(0, i) + '\u00AD' + word.slice(i);
-    }
-    if (EXTRA_WORD_PARTS.has(rechts) && rechts.length >= 5) {
-      return word.slice(0, i) + '\u00AD' + word.slice(i);
-    }
+    if (isKnown(links) && isKnown(rechts)) return word.slice(0, i) + '\u00AD' + word.slice(i);
+    if (EXTRA_WORD_PARTS.has(rechts) && rechts.length >= 5) return word.slice(0, i) + '\u00AD' + word.slice(i);
   }
-
-  // --- STAP 2: Fonetisch Vangnet (alleen als Stap 1 niets vond) ---
   const vowels = 'aeiouyàáèéëïöü';
-  const diphthongs = ['ee', 'oo', 'aa', 'uu', 'ei', 'au', 'ie', 'ij', 'oe', 'ou', 'ui', 'eu'];
+  const diphthongs = ['ee','oo','aa','uu','ei','au','ie','ij','oe','ou','ui','eu'];
   let result = "";
   let i = 0;
-
   while (i < word.length) {
     result += word[i];
-
-    // Nooit afbreken in de laatste 5 letters
     if (i < word.length - 5) {
-      const char1 = word[i].toLowerCase();
-      const char2 = word[i + 1]?.toLowerCase();
-      const char3 = word[i + 2]?.toLowerCase();
-
-      // Check op tweeklanken (bijv. 'aa', 'oe')
-      // Als gevonden, voeg tweede letter toe en spring over beide heen
-      if (char2 && diphthongs.includes(char1 + char2)) {
-        result += word[i + 1]; 
-        i += 2; 
-        continue; 
-      }
-
-      const isVow1 = vowels.includes(char1);
-      const isVow2 = char2 && vowels.includes(char2);
-      const isVow3 = char3 && vowels.includes(char3);
-
-      // Regel: Klinker-Medeklinker-Klinker (bijv. ma-ken)
-      if (isVow1 && !isVow2 && isVow3 && i > 1) {
-        result += '\u00AD';
-      }
-      // Regel: Klinker-Medeklinker-Medeklinker-Klinker (bijv. kam-per)
-      else if (isVow1 && !isVow2 && !isVow3 && i < word.length - 6) {
-        const char4 = word[i + 3]?.toLowerCase();
-        if (char4 && vowels.includes(char4)) {
-          result += word[i + 1] + '\u00AD';
-          i++; // Spring over de eerste medeklinker die we zojuist hebben toegevoegd
-        }
+      const c1 = word[i].toLowerCase(), c2 = word[i+1]?.toLowerCase(), c3 = word[i+2]?.toLowerCase();
+      if (c2 && diphthongs.includes(c1+c2)) { result += word[i+1]; i+=2; continue; }
+      const v1 = vowels.includes(c1), v2 = c2 && vowels.includes(c2), v3 = c3 && vowels.includes(c3);
+      if (v1 && !v2 && v3 && i > 1) result += '\u00AD';
+      else if (v1 && !v2 && !v3 && i < word.length - 6) {
+        const c4 = word[i+3]?.toLowerCase();
+        if (c4 && vowels.includes(c4)) { result += word[i+1] + '\u00AD'; i++; }
       }
     }
-    
     i++;
   }
-
   return result;
 }
 
-// Bonus words: alle woorden uit categorieen met bonus: true (spreekwoorden)
 const BONUS_WORDS_SET = new Set(
-  CATEGORIES
-    .filter(c => c.bonus)
-    .flatMap(c => WORDS_BY_CATEGORY[c.id] || [])
+  CATEGORIES.filter(c => c.bonus).flatMap(c => WORDS_BY_CATEGORY[c.id] || [])
 );
-
-// Spreekwoorden geven +2 extra punten (totaal 3); gewone woorden 0
 const getBonusPoints = (word) => BONUS_WORDS_SET.has(word) ? 2 : 0;
-
-// Lookup: woord → categorie-object (voor categorielabel in de banner)
 const WORD_TO_CATEGORY = {};
 for (const cat of CATEGORIES) {
   for (const word of (WORDS_BY_CATEGORY[cat.id] || [])) {
     if (!WORD_TO_CATEGORY[word]) WORD_TO_CATEGORY[word] = cat;
   }
 }
-
 const DEFAULT_ROUND_TIME = 120;
 
 function shuffle(arr) {
@@ -1482,10 +1680,59 @@ function shuffle(arr) {
   return a;
 }
 
+const w = (n) => n === 1 ? "woord" : "woorden";
+const pt = (n) => n === 1 ? "punt" : "punten";
 
-// ── Screens ──────────────────────────────────────────────────────────────────
+const MESSAGES_GREAT = [
+  () => `Wat een enorme prestatie! 🏆`,
+  () => `Jij verdient een sticker! ⭐`,
+  () => `Je staat in vuur en vlam! 🔥`,
+  () => `Je bent niet te stoppen! 🚀`,
+  () => `Heb jij zitten oefenen? 🤨`,
+  () => `Dit heeft iets weg van pesten 😂`,
+  () => `Hoe? Gewoon hoe? 🤯`,
+  () => `Heb je soms een spiekbriefje? 🕵️`,
+  () => `Is de Dikke Van Dale persoonlijk aanwezig? 📚`,
+  () => `Toevallig een woordenboek opgegeten? 📖`,
+  () => `Je mag mee voor het WK woordjes raden 🌍`,
+  () => `Even checken of je geen robot bent 🤖`,
+  () => `De anderen overwegen naar huis te gaan 🚪`,
+  () => `Je hebt de groep getraumatiseerd 😵`,
+  () => `Zelfs de klok is onder de indruk ⏱️`,
+];
+const MESSAGES_OK = [
+  (_, pts) => `${pts} ${pt(pts)}, lekker bezig! 🙌`,
+  (_, pts) => `${pts} ${pt(pts)}, prima gedaan 👌`,
+  (_, pts) => `${pts} ${pt(pts)}, niet slecht 👍`,
+  (_, pts) => `${pts} ${pt(pts)}, gefeliciteerd 🥳`,
+  (_, pts) => `${pts} ${pt(pts)} bijgeschreven ✍️`,
+  (_, pts) => `${pts} ${pt(pts)} in één ronde 🤩`,
+  (_, pts) => `${pts} ${pt(pts)}, ga zo door! 💪`,
+  (_, pts) => `${pts} ${pt(pts)}, keurig gedaan 🎯`,
+  (_, pts) => `${pts} ${pt(pts)}, je bent op dreef ⚡`,
+];
+const MESSAGES_POOR = [
+  (_, pts) => `${pts} ${pt(pts)}, werk aan de winkel 🔨`,
+  (_, pts) => `${pts} ${pt(pts)}, volgende keer beter 🙈`,
+  () => `Meedoen is belangrijker dan winnen 🫠`,
+  () => `Volgende keer eerst je bril opzetten 🤓`,
+  () => `De andere spelers ruiken bloed 🩸`,
+  () => `Laten we doen alsof dit niet gebeurd is 🙊`,
+  () => `Het lag allemaal aan de woorden 😠`,
+  () => `Je gunt de rest een kans. Lief! 🎁`,
+  (_, pts) => `${pts} ${pt(pts)}, de weg omhoog begint hier ⛰️`,
+];
+const lastMessageIndex = { great: -1, ok: -1, poor: -1 };
+function getRandomEndMessage(correctCount, roundTime, totalScore = correctCount) {
+  const ratio = roundTime > 0 ? totalScore / (roundTime / 6) : 0;
+  const [pool, tier] = ratio >= 0.6 ? [MESSAGES_GREAT, "great"] : ratio >= 0.4 ? [MESSAGES_OK, "ok"] : [MESSAGES_POOR, "poor"];
+  let idx;
+  do { idx = Math.floor(Math.random() * pool.length); } while (idx === lastMessageIndex[tier] && pool.length > 1);
+  lastMessageIndex[tier] = idx;
+  return { message: pool[idx](correctCount, totalScore), tier, count: correctCount, totalScore };
+}
 
-function SetupScreen({ onStart }) {
+function SetupScreen({ onStart, gameMode, setGameMode, pppNames, setPppNames, onStartPPP }) {
   const [names, setNames] = useState(["Dennis", "Marion", "Theo"]);
   const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
   const [teamMode, setTeamMode] = useState(false);
@@ -1498,316 +1745,195 @@ function SetupScreen({ onStart }) {
 
   const toggleTeamMode = () => {
     setTeamMode((prev) => {
-      if (!prev) {
-        setTeamSizes([2, 2]);
-        setTeamNames(["Team 1", "Team 2"]);
-        setNames(Array(4).fill(""));
-      } else {
-        setNames(["Dennis", "Marion", "Theo"]);
-      }
+      if (!prev) { setTeamSizes([2, 2]); setTeamNames(["Team 1", "Team 2"]); setNames(Array(4).fill("")); }
+      else { setNames(["Dennis", "Marion", "Theo"]); }
       return !prev;
     });
   };
 
   const addPlayer = () => {
     if (teamMode) {
-      if (teamSizes.length < 10) {
-        const newTeamSizes = [...teamSizes, 2];
-        setTeamSizes(newTeamSizes);
-        setTeamNames(prev => [...prev, `Team ${prev.length + 1}`]);
-        setNames(prev => [...prev, "", ""]);
-      }
-    } else {
-      if (names.length < 10) {
-        setNames(prev => [...prev, ""]);
-      }
-    }
+      if (teamSizes.length < 10) { const ns = [...teamSizes, 2]; setTeamSizes(ns); setTeamNames(p => [...p, `Team ${p.length + 1}`]); setNames(p => [...p, "", ""]); }
+    } else { if (names.length < 10) setNames(p => [...p, ""]); }
   };
-
   const removePlayer = (index) => {
     if (teamMode) {
       if (teamSizes.length > 2) {
-        const newSizes = teamSizes.filter((_, i) => i !== index);
-        setTeamSizes(newSizes);
-        setTeamNames(prev => prev.filter((_, i) => i !== index));
-        let offset = 0;
-        for (let i = 0; i < index; i++) offset += teamSizes[i];
+        const ns = teamSizes.filter((_, i) => i !== index); setTeamSizes(ns);
+        setTeamNames(p => p.filter((_, i) => i !== index));
+        let offset = 0; for (let i = 0; i < index; i++) offset += teamSizes[i];
         const numToRemove = teamSizes[index];
-        setNames(prev => {
-          const next = [...prev];
-          next.splice(offset, numToRemove);
-          return next;
-        });
+        setNames(p => { const n = [...p]; n.splice(offset, numToRemove); return n; });
       }
-    } else {
-      if (names.length > 2) {
-        setNames(prev => prev.filter((_, i) => i !== index));
-      }
-    }
+    } else { if (names.length > 2) setNames(p => p.filter((_, i) => i !== index)); }
   };
-
   const addPlayerToTeam = (t) => {
     if (teamSizes[t] >= 10) return;
     const offset = teamSizes.slice(0, t + 1).reduce((a, b) => a + b, 0);
-    setTeamSizes((prev) => prev.map((s, i) => i === t ? s + 1 : s));
-    setNames((prev) => {
-      const next = [...prev];
-      next.splice(offset, 0, "");
-      return next;
-    });
+    setTeamSizes(p => p.map((s, i) => i === t ? s + 1 : s));
+    setNames(p => { const n = [...p]; n.splice(offset, 0, ""); return n; });
   };
-
   const removePlayerFromTeam = (t) => {
     if (teamSizes[t] <= 2) return;
     const offset = teamSizes.slice(0, t + 1).reduce((a, b) => a + b, 0);
-    setTeamSizes((prev) => prev.map((s, i) => i === t ? s - 1 : s));
-    setNames((prev) => {
-      const next = [...prev];
-      next.splice(offset - 1, 1);
-      return next;
-    });
+    setTeamSizes(p => p.map((s, i) => i === t ? s - 1 : s));
+    setNames(p => { const n = [...p]; n.splice(offset - 1, 1); return n; });
   };
-
-  const updateName = (i, v) =>
-    setNames((prev) => prev.map((n, j) => j === i ? v : n));
-
+  const updateName = (i, v) => setNames(p => p.map((n, j) => j === i ? v : n));
   const canStart = names.every((n) => n.trim().length > 0) && selectedCategories.size > 0;
 
   const buildTeams = () => {
     if (!teamMode) return null;
-    const trimmed = names.map((n) => n.trim());
-    const result = [];
-    let offset = 0;
-    for (let t = 0; t < teamSizes.length; t++) {
-      result.push({
-        name: teamNames[t] || `Team ${t + 1}`,
-        players: trimmed.slice(offset, offset + teamSizes[t]),
-      });
-      offset += teamSizes[t];
-    }
+    const trimmed = names.map(n => n.trim());
+    const result = []; let offset = 0;
+    for (let t = 0; t < teamSizes.length; t++) { result.push({ name: teamNames[t] || `Team ${t + 1}`, players: trimmed.slice(offset, offset + teamSizes[t]) }); offset += teamSizes[t]; }
     return result;
   };
 
-  const totalWordsCount = Array.from(selectedCategories).reduce((total, catId) => {
-    return total + (WORDS_BY_CATEGORY[catId]?.length || 0);
-  }, 0);
-  const absoluteTotalWords = CATEGORIES.reduce((total, cat) => {
-    return total + (WORDS_BY_CATEGORY[cat.id]?.length || 0);
-  }, 0);
-
+  const totalWordsCount = Array.from(selectedCategories).reduce((total, catId) => total + (WORDS_BY_CATEGORY[catId]?.length || 0), 0);
+  const absoluteTotalWords = CATEGORIES.reduce((total, cat) => total + (WORDS_BY_CATEGORY[cat.id]?.length || 0), 0);
   const toggleCategory = (id) => {
-    setSelectedCategories((prev) => {
-      if (id === "all") {
-        return allSelected ? new Set() : new Set(allCategoryIds);
-      }
+    setSelectedCategories(prev => {
+      if (id === "all") return allSelected ? new Set() : new Set(allCategoryIds);
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
+      if (next.has(id)) next.delete(id); else next.add(id);
       return next;
     });
   };
-
-  const handleStart = () => {
-    if (!canStart) return;
-    const trimmed = names.map((n) => n.trim());
-    onStart(trimmed, roundTime, buildTeams(), selectedCategories);
-  };
-
+  const handleStart = () => { if (!canStart) return; onStart(names.map(n => n.trim()), roundTime, buildTeams(), selectedCategories); };
   const getTeamOffset = (t) => teamSizes.slice(0, t).reduce((a, b) => a + b, 0);
 
   return (
     <div className="screen">
       <div className="setup-card">
-        <div className="logo-area">
-          <div className="logo-icon">💬</div>
-          <h1 className="logo-title">WoordenRaad</h1>
-          <p className="logo-sub">Het raad- en uitbeeldspel</p>
-        </div>
-
-        <div className="setup-mode-segmented">
+        {/* Game mode switcher */}
+        <div className="game-mode-switcher">
           <button
-            className={`mode-seg-btn ${!teamMode ? "mode-seg-active" : "mode-seg-inactive"}`}
-            onClick={() => teamMode && toggleTeamMode()}
+            className={`game-mode-btn ${gameMode === "woordenraad" ? "game-mode-active" : "game-mode-inactive"}`}
+            onClick={() => setGameMode("woordenraad")}
           >
-            👤 Solo
+            <span className="gm-icon">💬</span>
+            <span className="gm-label">WoordenRaad</span>
           </button>
           <button
-            className={`mode-seg-btn ${teamMode ? "mode-seg-active" : "mode-seg-inactive"}`}
-            onClick={() => !teamMode && toggleTeamMode()}
+            className={`game-mode-btn ${gameMode === "pimpampet" ? "game-mode-active-ppp" : "game-mode-inactive"}`}
+            onClick={() => setGameMode("pimpampet")}
           >
-            👥 Teams
+            <span className="gm-icon">🎯</span>
+            <span className="gm-label">Pim Pam Pet</span>
           </button>
         </div>
 
-        <div className="setup-section">
-          {teamMode ? (
-            <div className="teams-setup-wrapper">
-              <div className="setup-wrapper-badge">
-                TEAMS
-              </div>
+        {gameMode === "pimpampet" ? (
+          <>
+            <div className="logo-area" style={{marginBottom: "20px"}}>
+              <div className="logo-icon">🎯</div>
+              <h1 className="logo-title" style={{background:"linear-gradient(135deg,#f59e0b,#ef4444,#f97316)", WebkitBackgroundClip:"text", backgroundClip:"text", WebkitTextFillColor:"transparent"}}>Woordenraad</h1>
+              <p className="logo-sub">Noem als eerste een woord met de letter!</p>
+            </div>
+            <PimPamPetSetup onStartPPP={onStartPPP} names={pppNames} setNames={setPppNames} />
+          </>
+        ) : (
+          <>
+            <div className="logo-area">
+              <div className="logo-icon">💬</div>
+              <h1 className="logo-title">WoordenRaad</h1>
+              <p className="logo-sub">Het raad- en uitbeeldspel</p>
+            </div>
 
-              <div className="teams-grid">
-                {teamSizes.map((size, t) => {
-                  const offset = getTeamOffset(t);
-                  return (
-                    <div key={t} className="team-section-container">
-                      <div className="team-header-row">
-                        <input
-                          className="team-name-input-flat"
-                          value={teamNames[t] ?? `Team ${t + 1}`}
-                          onChange={(e) => setTeamNames((prev) => prev.map((n, i) => i === t ? e.target.value : n))}
-                          maxLength={12}
-                        />
-                        {teamSizes.length > 2 && (
-                          <button className="delete-btn-round" onClick={() => removePlayer(t)} title="Team verwijderen">
-                            ✕
-                          </button>
-                        )}
-                      </div>
-                      <div className="team-players-list">
-                        {Array.from({ length: size }, (_, p) => {
-                          const idx = offset + p;
-                          return (
-                            <div key={idx} className="player-input-group small-group">
-                              <div className="player-name-container player-bg">
-                                <span className="player-index-badge">{p + 1}</span>
-                                <input
-                                  className="integrated-name-input"
-                                  placeholder={`Speler ${p + 1}`}
-                                  value={names[idx] ?? ""}
-                                  onChange={(e) => updateName(idx, e.target.value)}
-                                  maxLength={16}
-                                />
-                              </div>
-                              {size > 2 && (
-                                <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayerFromTeam(t)}>
-                                  −
-                                </button>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                      {size < 10 && (
-                        <button 
-                          className="add-player-integrated add-player-in-team" 
-                          onClick={() => addPlayerToTeam(t)}>
-                          Speler toevoegen
-                        </button>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+            <div className="setup-mode-segmented">
+              <button className={`mode-seg-btn ${!teamMode ? "mode-seg-active" : "mode-seg-inactive"}`} onClick={() => teamMode && toggleTeamMode()}>👤 Solo</button>
+              <button className={`mode-seg-btn ${teamMode ? "mode-seg-active" : "mode-seg-inactive"}`} onClick={() => !teamMode && toggleTeamMode()}>👥 Teams</button>
+            </div>
 
-              {teamSizes.length < 6 && (
-                <button 
-                  className="add-player-integrated dashed team-add-btn" 
-                  onClick={addPlayer}
-                >
-                  Team toevoegen
-                </button>
+            <div className="setup-section">
+              {teamMode ? (
+                <div className="teams-setup-wrapper">
+                  <div className="setup-wrapper-badge">TEAMS</div>
+                  <div className="teams-grid">
+                    {teamSizes.map((size, t) => {
+                      const offset = getTeamOffset(t);
+                      return (
+                        <div key={t} className="team-section-container">
+                          <div className="team-header-row">
+                            <input className="team-name-input-flat" value={teamNames[t] ?? `Team ${t + 1}`} onChange={e => setTeamNames(p => p.map((n, i) => i === t ? e.target.value : n))} maxLength={12} />
+                            {teamSizes.length > 2 && <button className="delete-btn-round" onClick={() => removePlayer(t)} title="Team verwijderen">✕</button>}
+                          </div>
+                          <div className="team-players-list">
+                            {Array.from({ length: size }, (_, p) => {
+                              const idx = offset + p;
+                              return (
+                                <div key={idx} className="player-input-group small-group">
+                                  <div className="player-name-container player-bg">
+                                    <span className="player-index-badge">{p + 1}</span>
+                                    <input className="integrated-name-input" placeholder={`Speler ${p + 1}`} value={names[idx] ?? ""} onChange={e => updateName(idx, e.target.value)} maxLength={16} />
+                                  </div>
+                                  {size > 2 && <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayerFromTeam(t)}>−</button>}
+                                </div>
+                              );
+                            })}
+                          </div>
+                          {size < 10 && <button className="add-player-integrated add-player-in-team" onClick={() => addPlayerToTeam(t)}>Speler toevoegen</button>}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {teamSizes.length < 6 && <button className="add-player-integrated dashed team-add-btn" onClick={addPlayer}>Team toevoegen</button>}
+                </div>
+              ) : (
+                <div className="teams-setup-wrapper">
+                  <div className="setup-wrapper-badge">SPELERS</div>
+                  <div className="names-grid">
+                    {names.map((name, i) => (
+                      <div key={i} className="player-input-group small-group">
+                        <div className="player-name-container player-bg">
+                          <span className="player-index-badge">{i + 1}</span>
+                          <input className="integrated-name-input" placeholder="Naam invullen..." value={name} onChange={e => updateName(i, e.target.value)} maxLength={16} />
+                        </div>
+                        {names.length > 2 && <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayer(i)} title="Verwijder speler">−</button>}
+                      </div>
+                    ))}
+                    {names.length < 10 && <button className="add-player-integrated" onClick={addPlayer}>Speler toevoegen</button>}
+                  </div>
+                </div>
               )}
             </div>
-          ) : (
-            <div className="teams-setup-wrapper">
-              <div className="setup-wrapper-badge">
-                SPELERS
-              </div>
 
-              <div className="names-grid">
-                {names.map((name, i) => (
-                  /* TOEVOEGEN VAN small-group KLASSE VOOR DEZELFDE GROOTTE */
-                  <div key={i} className="player-input-group small-group">
-                    <div className="player-name-container player-bg">
-                      <span className="player-index-badge">{i + 1}</span>
-                      <input
-                        className="integrated-name-input"
-                        placeholder="Naam invullen..."
-                        value={name}
-                        onChange={(e) => updateName(i, e.target.value)}
-                        maxLength={16}
-                      />
-                    </div>
-                    {names.length > 2 && (
-                      <button
-                        className="integrated-delete-btn btn-subtle"
-                        onClick={() => removePlayer(i)}
-                        title="Verwijder speler"
-                      >
-                        −
-                      </button>
-                    )}
-                  </div>
-                ))}
-                {names.length < 10 && (
-                  <button className="add-player-integrated"
-                    onClick={addPlayer}>
-                    Speler toevoegen
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="setup-section">
-          <div className="cat-section-header">
-            <span className="cat-section-title">Categorieën</span>
-            <button
-              className={`cat-toggle-pill ${allSelected ? "cat-toggle-pill-active" : "cat-toggle-pill-custom"}`}
-              onClick={() => toggleCategory("all")}
-            >
-              {totalWordsCount}/{absoluteTotalWords} woorden
-            </button>
-          </div>
-
-          {allSelected ? (
-            <div className="cat-preview-chips">
-              {CATEGORIES.slice(0, 5).map((cat) => (
-                <span key={cat.id} className="cat-preview-chip">{cat.label}</span>
-              ))}
-              <span className="cat-preview-more">+{CATEGORIES.length - 5} meer</span>
-            </div>
-          ) : (
-            <div className="category-grid">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat.id}
-                  className={`category-btn${selectedCategories.has(cat.id) ? " category-btn-active" : ""}`}
-                  onClick={() => toggleCategory(cat.id)}
-                >
-                  {cat.label}
+            <div className="setup-section">
+              <div className="cat-section-header">
+                <span className="cat-section-title">Categorieën</span>
+                <button className={`cat-toggle-pill ${allSelected ? "cat-toggle-pill-active" : "cat-toggle-pill-custom"}`} onClick={() => toggleCategory("all")}>
+                  {totalWordsCount}/{absoluteTotalWords} woorden
                 </button>
-              ))}
+              </div>
+              {allSelected ? (
+                <div className="cat-preview-chips">
+                  {CATEGORIES.slice(0, 5).map(cat => <span key={cat.id} className="cat-preview-chip">{cat.label}</span>)}
+                  <span className="cat-preview-more">+{CATEGORIES.length - 5} meer</span>
+                </div>
+              ) : (
+                <div className="category-grid">
+                  {CATEGORIES.map(cat => (
+                    <button key={cat.id} className={`category-btn${selectedCategories.has(cat.id) ? " category-btn-active" : ""}`} onClick={() => toggleCategory(cat.id)}>{cat.label}</button>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
-        <div className="setup-section">
-          <span className="time-section-label">Rondetijd</span>
-          <div className="time-control">
-            <button
-              className={`time-btn time-btn-minus${roundTime <= 30 ? " time-btn-disabled" : ""}`}
-              onClick={() => setRoundTime((t) => Math.max(30, t - 30))}
-              disabled={roundTime <= 30}
-            >−</button>
-            <span className="time-display">{roundTime}s</span>
-            <button
-              className={`time-btn time-btn-plus${roundTime >= 300 ? " time-btn-disabled" : ""}`}
-              onClick={() => setRoundTime((t) => Math.min(300, t + 30))}
-              disabled={roundTime >= 300}
-            >+</button>
-          </div>
-        </div>
+            <div className="setup-section">
+              <span className="time-section-label">Rondetijd</span>
+              <div className="time-control">
+                <button className={`time-btn time-btn-minus${roundTime <= 30 ? " time-btn-disabled" : ""}`} onClick={() => setRoundTime(t => Math.max(30, t - 30))} disabled={roundTime <= 30}>−</button>
+                <span className="time-display">{roundTime}s</span>
+                <button className={`time-btn time-btn-plus${roundTime >= 300 ? " time-btn-disabled" : ""}`} onClick={() => setRoundTime(t => Math.min(300, t + 30))} disabled={roundTime >= 300}>+</button>
+              </div>
+            </div>
 
-        <button
-          className={`start-btn ${canStart ? "ready-solid" : ""}`}
-          onClick={handleStart}
-          disabled={!canStart}
-        >
-          {canStart ? "Spel starten ➜" : "Vul alles in…"}
-        </button>
+            <button className={`start-btn ${canStart ? "ready-solid" : ""}`} onClick={handleStart} disabled={!canStart}>
+              {canStart ? "Spel starten ➜" : "Vul alles in…"}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
@@ -1821,123 +1947,26 @@ function HandoffScreen({ player, teamName, onReady }) {
         <p className="handoff-sub">Geef de telefoon aan</p>
         <h2 className="handoff-name">{player}</h2>
         {teamName && <p className="handoff-team">{teamName}</p>}
-        <button className="handoff-btn" onClick={onReady}>
-          Start ronde ➜
-        </button>
+        <button className="handoff-btn" onClick={onReady}>Start ronde ➜</button>
       </div>
     </div>
   );
 }
 
-// Berichten op basis van prestatie: enthousiast (goed) vs bemoedigend (matig/slecht)
-
-const w = (n) => n === 1 ? "woord" : "woorden";
-const pt = (n) => n === 1 ? "punt" : "punten";
-
-const MESSAGES_GREAT = [
-  () => `Wat een enorme prestatie! 🏆`,
-  () => `Jij verdient een sticker! ⭐`,
-  () => `De rest is onder de indruk! 😎`,
-  () => `De rest beeft van angst! 🫨`,
-  () => `Je staat in vuur en vlam! 🔥`,
-  () => `Je bent niet te stoppen! 🚀`,
-  () => `De rest kan wel inpakken! 😄`,
-  () => `Heb jij zitten oefenen? 🤨`,
-  () => `Dit heeft iets weg van pesten 😂`,
-  () => `Even een staande ovatie 👏`,
-  () => `Dit was gewoon unfair 😭`,
-  () => `Hoe? Gewoon hoe? 🤯`,
-  () => `Heb je soms een spiekbriefje? 🕵️`,
-  () => `De anderen doen een schietgebedje 🙏`,
-  () => `Weet je zeker dat je niet vals speelt? 🧐`,
-  () => `Is de Dikke Van Dale persoonlijk aanwezig? 📚`,
-  () => `Toevallig een woordenboek opgegeten? 📖`,
-  () => `Heb je de anderen omgekocht? 💰`,
-  () => `Je mag mee voor het WK woordjes raden 🌍`,
-  () => `Even checken of je geen robot bent 🤖`,
-  () => `De anderen overwegen naar huis te gaan 🚪`,
-  () => `Iemand heeft goed geslapen vannacht 😴`,
-  () => `Je hebt de groep getraumatiseerd 😵`,
-  () => `Zelfs de klok is onder de indruk ⏱️`,
-];
-
-const MESSAGES_OK = [
-  (_, pts) => `${pts} ${pt(pts)}, lekker bezig! 🙌`,
-  (_, pts) => `${pts} ${pt(pts)}, prima gedaan 👌`,
-  (_, pts) => `${pts} ${pt(pts)}, niet slecht 👍`,
-  (_, pts) => `${pts} ${pt(pts)}, gefeliciteerd 🥳`,
-  (_, pts) => `${pts} ${pt(pts)} bijgeschreven ✍️`,
-  (_, pts) => `${pts} ${pt(pts)} in één ronde 🤩`,
-  (_, pts) => `${pts} ${pt(pts)}, ga zo door! 💪`,
-  (_, pts) => `${pts} ${pt(pts)}, keurig gedaan 🎯`,
-  (_, pts) => `${pts} ${pt(pts)}, je bent op dreef ⚡`,
-  (_, pts) => `${pts} ${pt(pts)}, netjes hoor 🤝`,
-  (_, pts) => `${pts} ${pt(pts)} de goede kant op 📈`,
-  (_, pts) => `${pts} ${pt(pts)}, solide ronde! 🧱`,
-  (_, pts) => `${pts} ${pt(pts)}, lekker gespeeld 🎮`,
-  (_, pts) => `${pts} ${pt(pts)}, lekker stabiel! ⚖️`,
-  (_, pts) => `${pts} ${pt(pts)}, je zit in een flow 🌊`,
-  (_, pts) => `${pts} ${pt(pts)}, niks mis mee 🤷`,
-];
-
-const MESSAGES_POOR = [
-  (_, pts) => `${pts} ${pt(pts)}, werk aan de winkel 🔨`,
-  (_, pts) => `${pts} ${pt(pts)}, volgende keer beter 🙈`,
-  (_, pts) => `${pts} ${pt(pts)}, haal even rustig adem 😮‍💨`,
-  (_, pts) => `Gewoon doen alsof je die ${pts} ${pt(pts)} niet ziet 🤫`,
-  () => `Meedoen is belangrijker dan winnen 🫠`,
-  () => `Volgende keer eerst je bril opzetten 🤓`,
-  () => `De volgende ronde gaat vast beter 😉`,
-  () => `De andere spelers ruiken bloed 🩸`,
-  () => `De spanning zat er zeker in 😅`,
-  () => `Je was er met je hoofd even niet bij 💭`,
-  () => `Laten we doen alsof dit niet gebeurd is 🙊`,
-  () => `Het lag allemaal aan de woorden 😠`,
-  () => `Je gunt de rest een kans. Lief! 🎁`,
-  () => `Geeft niks, iedereen heeft soms een dipje 📉`,
-  () => `De klok is je grootste vijand ⏰`,
-  () => `Hoofd omhoog, borst vooruit 💪`,
-  () => `Slaap je wel genoeg? 😪`,
-  () => `Hebben de anderen je betaald om te verliezen? 💰`,
-  (_, pts) => `${pts} ${pt(pts)}, de weg omhoog begint hier ⛰️`,
-  (_, pts) => `${pts} ${pt(pts)}, misschien even oefenen thuis 🏠`,
-  (_, pts) => `${pts} ${pt(pts)}, je hebt het geprobeerd! 🫶`,
-  () => `Even bijkomen en dan weer volle bak! 🔋`,
-  () => `De woorden waren dit keer iets te lastig 🤷`,
-];
-
-const lastMessageIndex = { great: -1, ok: -1, poor: -1 };
-
-function getRandomEndMessage(correctCount, roundTime, totalScore = correctCount) {
-  const ratio = roundTime > 0 ? totalScore / (roundTime / 6) : 0;
-  const [pool, tier] =
-    ratio >= 0.6   ? [MESSAGES_GREAT, "great"] :
-    ratio >= 0.4   ? [MESSAGES_OK,    "ok"]    :
-                     [MESSAGES_POOR,  "poor"];
-
-  let idx;
-  do {
-    idx = Math.floor(Math.random() * pool.length);
-  } while (idx === lastMessageIndex[tier] && pool.length > 1);
-  lastMessageIndex[tier] = idx;
-
-  return { message: pool[idx](correctCount, totalScore), tier, count: correctCount, totalScore };
-}
-
 function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, initialSkips = 0 }) {
   const [wordIndex, setWordIndex] = useState(0);
-  const [scores, setScores] = useState({ correct: 0, skipped: 0, points: 0 }); // points toegevoegd
-  const scoresRef = useRef({ correct: 0, skipped: 0, points: 0 }); // points toegevoegd
+  const [scores, setScores] = useState({ correct: 0, skipped: 0, points: 0 });
+  const scoresRef = useRef({ correct: 0, skipped: 0, points: 0 });
   const endMessageRef = useRef(null);
   const [timeRemaining, setTimeRemaining] = useState(roundTime);
-  const [flash, setFlash] = useState(null); 
+  const [flash, setFlash] = useState(null);
   const [timesUp, setTimesUp] = useState(false);
   const timesUpRef = useRef(false);
   const [done, setDone] = useState(false);
   const timerRef = useRef(null);
   const graceTimerRef = useRef(null);
   const [graceCountdown, setGraceCountdown] = useState(null);
-  const wordResultsRef = useRef([]); 
+  const wordResultsRef = useRef([]);
   const startTimeRef = useRef(null);
 
   useEffect(() => {
@@ -1950,7 +1979,6 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
         clearInterval(timerRef.current);
         timesUpRef.current = true;
         setTimesUp(true);
-        // Stop eventuele lopende skip-penalty en beëindig de ronde direct
         if (penaltyRef.current) {
           clearInterval(penaltyRef.current);
           penaltyRef.current = null;
@@ -1958,7 +1986,6 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
           setSkipPenalty(0);
           finishRoundRef.current(scoresRef.current, wordIndexRef.current);
         } else {
-          // Geen actieve penalty: geef speler 10 seconden extra om woord goed te rekenen
           let graceTime = 10;
           setGraceCountdown(graceTime);
           graceTimerRef.current = setInterval(() => {
@@ -1967,7 +1994,6 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
             if (graceTime <= 0) {
               clearInterval(graceTimerRef.current);
               graceTimerRef.current = null;
-              // Het huidige woord is niet geraden binnen de grace-periode: voeg het toe als geskipt
               const currentWord = words[wordIndexRef.current];
               if (currentWord) {
                 wordResultsRef.current.push({ word: currentWord, guessed: false, isBonus: getBonusPoints(currentWord) > 0, bonusPts: 0 });
@@ -1983,11 +2009,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
     return () => clearInterval(timerRef.current);
   }, [roundTime]);
 
-  const triggerFlash = (type) => {
-    setFlash(type);
-    setTimeout(() => setFlash(null), 1300);
-  };
-
+  const triggerFlash = (type) => { setFlash(type); setTimeout(() => setFlash(null), 1300); };
   const wordIndexRef = useRef(0);
   const [skipPenalty, setSkipPenalty] = useState(0);
   const penaltyRef = useRef(null);
@@ -1999,46 +2021,32 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
   const maxStreakRef = useRef(0);
 
   const finishRound = (finalScores, finalWordIndex) => {
-    if (graceTimerRef.current) {
-      clearInterval(graceTimerRef.current);
-      graceTimerRef.current = null;
-    }
+    if (graceTimerRef.current) { clearInterval(graceTimerRef.current); graceTimerRef.current = null; }
     const totalScore = finalScores.correct + wordResultsRef.current.reduce((sum, r) => sum + (r.bonusPts || 0), 0);
     endMessageRef.current = getRandomEndMessage(finalScores.correct, roundTime, totalScore);
     setDone(true);
     roundEndTimeoutRef.current = setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex, wordResults: wordResultsRef.current, maxStreak: maxStreakRef.current }), 3000);
   };
-
-  // Ref naar finishRound zodat de timer-interval er altijd de actuele versie van kan aanroepen
   const finishRoundRef = useRef(null);
   finishRoundRef.current = finishRound;
 
-const correct = () => {
+  const correct = () => {
     if (done || skipPenaltyRef.current > 0) return;
     const word = words[wordIndexRef.current];
     const bonusPts = getBonusPoints(word);
     const isBonus = bonusPts > 0;
     triggerFlash(isBonus ? "bonus" : "correct");
     wordResultsRef.current.push({ word, guessed: true, isBonus, bonusPts });
-    
-    const newScores = { 
-      correct: scoresRef.current.correct + 1, 
-      skipped: scoresRef.current.skipped,
-      points: scoresRef.current.points + 1 + bonusPts // Bereken punten (basis + bonus)
-    };
+    const newScores = { correct: scoresRef.current.correct + 1, skipped: scoresRef.current.skipped, points: scoresRef.current.points + 1 + bonusPts };
     scoresRef.current = newScores;
     setScores(newScores);
-    
     wordIndexRef.current += 1;
     setWordIndex(wordIndexRef.current);
-    // Streak bijhouden
     const newStreak = streakRef.current + 1;
     streakRef.current = newStreak;
     if (newStreak > maxStreakRef.current) maxStreakRef.current = newStreak;
     setStreak(newStreak);
-    if (timesUpRef.current) {
-      finishRound(newScores, wordIndexRef.current);
-    }
+    if (timesUpRef.current) finishRound(newScores, wordIndexRef.current);
   };
 
   const skip = () => {
@@ -2051,14 +2059,9 @@ const correct = () => {
     setScores(newScores);
     wordIndexRef.current += 1;
     setWordIndex(wordIndexRef.current);
-    // Streak resetten bij overslaan
     streakRef.current = 0;
     setStreak(0);
-    // Alleen penalty starten als tijd nog niet verstreken is
-    if (timesUpRef.current) {
-      finishRound(newScores, wordIndexRef.current);
-      return;
-    }
+    if (timesUpRef.current) { finishRound(newScores, wordIndexRef.current); return; }
     skipCountRef.current += 1;
     const penaltyDuration = skipCountRef.current === 1 ? 3 : skipCountRef.current === 2 ? 5 : 7;
     skipPenaltyRef.current = penaltyDuration;
@@ -2071,19 +2074,12 @@ const correct = () => {
       if (count <= 0) {
         clearInterval(penaltyRef.current);
         penaltyRef.current = null;
-        // Als tijd intussen is verlopen: ronde beëindigen, anders gewoon doorgaan
-        if (timesUpRef.current) {
-          finishRound(scoresRef.current, wordIndexRef.current);
-        }
+        if (timesUpRef.current) finishRound(scoresRef.current, wordIndexRef.current);
       }
     }, 1000);
   };
 
-  useEffect(() => () => {
-    clearInterval(penaltyRef.current);
-    clearInterval(graceTimerRef.current);
-    clearTimeout(roundEndTimeoutRef.current);
-  }, []);
+  useEffect(() => () => { clearInterval(penaltyRef.current); clearInterval(graceTimerRef.current); clearTimeout(roundEndTimeoutRef.current); }, []);
 
   const pct = timeRemaining / roundTime;
   const timeLeft = Math.round(timeRemaining);
@@ -2099,21 +2095,8 @@ const correct = () => {
         <div className="timer-wrap">
           <svg width="100" height="100" viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="8"/>
-            <circle
-              className="timer-circle-progress"
-              cx="50" cy="50" r="44"
-              fill="none"
-              stroke={timerColor}
-              strokeWidth="8"
-              strokeDasharray={circumference}
-              strokeDashoffset={timesUp ? circumference : circumference * (1 - pct)}
-              strokeLinecap="round"
-              transform="rotate(-90 50 50)"
-            />
-            <text x="50" y="56" textAnchor="middle" fill="white" fontSize="22" fontWeight="700" fontFamily="inherit"
-              className={timesUp ? "timer-ring" : ""}>
-              {timesUp ? "⏰" : timeLeft}
-            </text>
+            <circle className="timer-circle-progress" cx="50" cy="50" r="44" fill="none" stroke={timerColor} strokeWidth="8" strokeDasharray={circumference} strokeDashoffset={timesUp ? circumference : circumference * (1 - pct)} strokeLinecap="round" transform="rotate(-90 50 50)"/>
+            <text x="50" y="56" textAnchor="middle" fill="white" fontSize="22" fontWeight="700" fontFamily="inherit" className={timesUp ? "timer-ring" : ""}>{timesUp ? "⏰" : timeLeft}</text>
           </svg>
         </div>
         <div className="round-stats">
@@ -2127,47 +2110,39 @@ const correct = () => {
           </span>
         </div>
       </div>
-
       <div className="word-stage">
-        {done ? (
-          (() => {
-            const result = endMessageRef.current;
-            const n = result.count;
-            return (
-              <div className="word-done-wrap">
-                <div className="word-done-count">{n} {w(n)} · {result.totalScore} {pt(result.totalScore)}</div>
-                <div className={`word-done-msg tier-${result.tier}`}>{result.message}</div>
-              </div>
-            );
-          })()
-        ) : skipPenalty > 0 ? (
+        {done ? (() => {
+          const result = endMessageRef.current;
+          const n = result.count;
+          return (
+            <div className="word-done-wrap">
+              <div className="word-done-count">{n} {w(n)} · {result.totalScore} {pt(result.totalScore)}</div>
+              <div className={`word-done-msg tier-${result.tier}`}>{result.message}</div>
+            </div>
+          );
+        })() : skipPenalty > 0 ? (
           <div className="penalty-wrap">
             <div className="penalty-label">⏭️ Overgeslagen</div>
             <div className="penalty-bar-track">
               <div className="penalty-bar-fill" style={{ animationDuration: `${skipCountRef.current === 1 ? 3 : skipCountRef.current === 2 ? 5 : 7}s` }} />
             </div>
-            <div className="penalty-sublabel">
-              {skipCountRef.current === 1 ? "3 seconden wachten…" : skipCountRef.current === 2 ? "5 seconden wachten…" : "7 seconden wachten…"}
-            </div>
+            <div className="penalty-sublabel">{skipCountRef.current === 1 ? "3 seconden wachten…" : skipCountRef.current === 2 ? "5 seconden wachten…" : "7 seconden wachten…"}</div>
           </div>
         ) : (
           <>
             <div className="word-anchor">
               <div className="word-counter">woord {wordIndex + 1}</div>
               <div key={wordIndex} className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ? hyphenateWord(currentWord) : "— geen woorden meer —"}</div>
-              <div className={`times-up-banner${timesUp ? ' grace-active' : isCurrentBonus ? ' bonus-banner' : ' category-banner'}`}
-                >
+              <div className={`times-up-banner${timesUp ? ' grace-active' : isCurrentBonus ? ' bonus-banner' : ' category-banner'}`}>
                 {timesUp
                   ? <span>⏰ Tijd is om — nog <span className="grace-countdown">{graceCountdown !== null ? graceCountdown : '…'}</span>s om te raden!</span>
-                  : isCurrentBonus
-                    ? '⭐ BONUSGEZEGDE — 3 punten!'
-                    : currentWord ? (WORD_TO_CATEGORY[currentWord]?.label ?? '📦 Categorie') : ''}
+                  : isCurrentBonus ? '⭐ BONUSGEZEGDE — 3 punten!'
+                  : currentWord ? (WORD_TO_CATEGORY[currentWord]?.label ?? '📦 Categorie') : ''}
               </div>
             </div>
           </>
         )}
       </div>
-
       {!done && (
         <div className="action-row">
           <button className={`action-btn skip-btn ${skipPenalty > 0 ? "btn-disabled" : ""}`} onClick={skip}>
@@ -2186,48 +2161,18 @@ const correct = () => {
 
 function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRestart, onContinue, onShowStats, teams, teamScores, onStartTiebreaker }) {
   const isLast = currentRound >= totalRounds;
-
-  // Team mode: sorteer teams op gemiddelde score per speler en bewaar originalIndex
-  const sortedTeams = teams
-    ? [...teams]
-        .map((t, i) => ({
-          ...t,
-          originalIndex: i, // Belangrijk voor gelijke namen en tie-breakers
-          totalScore: teamScores[i],
-          avgScore: teamScores[i] === null ? null : Math.round((teamScores[i] / t.players.length) * 10) / 10,
-        }))
-        .sort((a, b) => {
-          if (a.avgScore === null && b.avgScore === null) return 0;
-          if (a.avgScore === null) return 1;
-          if (b.avgScore === null) return -1;
-          return b.avgScore - a.avgScore;
-        })
-    : null;
-
-  // Individueel: sorteer spelers op score
-  const sortedPlayers = !teams
-    ? [...players].map((p, i) => ({ name: p, score: scores[i] })).sort((a, b) => {
-      if (a.score === null && b.score === null) return 0;
-      if (a.score === null) return 1;
-      if (b.score === null) return -1;
-      return b.score - a.score;
-    })
-    : null;
-
-  // Gelijkspel detectie (alleen bij eindstand)
+  const sortedTeams = teams ? [...teams].map((t, i) => ({ ...t, originalIndex: i, totalScore: teamScores[i], avgScore: teamScores[i] === null ? null : Math.round((teamScores[i] / t.players.length) * 10) / 10 })).sort((a, b) => { if (a.avgScore === null && b.avgScore === null) return 0; if (a.avgScore === null) return 1; if (b.avgScore === null) return -1; return b.avgScore - a.avgScore; }) : null;
+  const sortedPlayers = !teams ? [...players].map((p, i) => ({ name: p, score: scores[i] })).sort((a, b) => { if (a.score === null && b.score === null) return 0; if (a.score === null) return 1; if (b.score === null) return -1; return b.score - a.score; }) : null;
   let tiedPlayerIndices = null;
   if (isLast && !teams) {
     const topScore = Math.max(...scores.filter(s => s !== null));
     const tied = scores.map((s, i) => ({ s, i })).filter(x => x.s !== null && x.s === topScore);
     if (tied.length > 1) tiedPlayerIndices = tied.map(x => x.i);
   }
-  
   const topAvg = sortedTeams ? (sortedTeams.find(t => t.avgScore !== null)?.avgScore ?? null) : null;
-
   if (isLast && teams) {
     const tiedTeams = topAvg !== null ? sortedTeams.filter(t => t.avgScore === topAvg) : [];
     if (tiedTeams.length > 1) {
-      // Geef alle spelers van elk gebonden team mee (per team gegroepeerd)
       tiedPlayerIndices = tiedTeams.flatMap(team => {
         let offset = 0;
         for (let t = 0; t < team.originalIndex; t++) offset += teams[t].players.length;
@@ -2235,245 +2180,140 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
       });
     }
   }
-
   return (
     <div className="screen">
       <div className="score-card">
         <h2 className="score-title">{isLast ? "🏆 Eindstand" : `Stand na ronde ${currentRound}`}</h2>
         {isLast && tiedPlayerIndices && (
-          <button
-            className="tiebreaker-start-btn"
-            onClick={() => onStartTiebreaker(tiedPlayerIndices)}
-          >
-            🤝 Gelijkspel! Start een tie-breaker.
-          </button>
+          <button className="tiebreaker-start-btn" onClick={() => onStartTiebreaker(tiedPlayerIndices)}>🤝 Gelijkspel! Start een tie-breaker.</button>
         )}
         <div className="scores-list">
-          {sortedTeams
-            ? (() => {
-                const medals = ["🥇","🥈","🥉"];
-                // Effectieve rang: aantal teams met strikt hogere gemiddelde score + 1
-                const getTeamEffectiveRank = (avgScore) => avgScore === null ? null : sortedTeams.filter(t2 => t2.avgScore !== null && t2.avgScore > avgScore).length + 1;
-                // topAvg is al berekend bovenaan ScoreScreen
-                const interimFirstPlaceTied = !isLast && topAvg !== null && sortedTeams.filter(t => t.avgScore === topAvg).length > 1;
-                return sortedTeams.map((team, i) => {
-                  const effectiveRank = getTeamEffectiveRank(team.avgScore);
-                  const hasPlayed = team.avgScore !== null;
-                  const isTiedFinal = isLast && hasPlayed && team.avgScore === topAvg && sortedTeams.filter(t => t.avgScore === topAvg).length > 1;
-                  const isTiedInterim = interimFirstPlaceTied && team.avgScore === topAvg;
-                  const badge = isLast
-                    ? (!hasPlayed ? "—" : isTiedFinal ? "👑" : (medals[effectiveRank - 1] ?? effectiveRank))
-                    : (!hasPlayed ? "—" : team.avgScore === topAvg ? "👑" : effectiveRank);
-                  const interimClass = !hasPlayed
-                    ? "rank-interim-unplayed"
-                    : isTiedInterim
-                      ? "rank-interim-tied"
-                      : "rank-interim";
-                  const rowClass = `score-row rank-${effectiveRank ?? 99} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : interimClass}`;
-                  return (
-                    <div key={`${team.originalIndex}-${team.name}`} className={rowClass}>
-                      <span className="rank-badge">{badge}</span>
-                      <div className="score-name-block">
-                        <span className="score-name">{team.name}</span>
-                        <span className="score-members">{team.players.join(", ")}</span>
-                      </div>
-                      <div className="score-row-right">
-                        <span className="score-pts">{hasPlayed ? `⌀ ${team.avgScore} pt` : "—"}</span>
-                        {hasPlayed && <div className="score-row-subtext">totaal {team.totalScore}</div>}
-                      </div>
-                    </div>
-                  );
-                });
-              })()
-            : (() => {
-                const topScore = sortedPlayers.find(p => p.score !== null)?.score ?? null;
-                const medals = ["🥇","🥈","🥉"];
-                // Effectieve rang: aantal spelers met strikt hogere score + 1
-                const getEffectiveRank = (score) => score === null ? null : sortedPlayers.filter(p2 => p2.score !== null && p2.score > score).length + 1;
-                // Gelijkspel detectie per plek
-                const interimFirstPlaceTied = !isLast && topScore !== null && sortedPlayers.filter(p => p.score === topScore).length > 1;
-                return sortedPlayers.map((p, i) => {
-                  const effectiveRank = getEffectiveRank(p.score);
-                  const isTiedFinal = isLast && topScore !== null && p.score === topScore && sortedPlayers.filter(p2 => p2.score === topScore).length > 1;
-                  const isTiedInterim = interimFirstPlaceTied && p.score === topScore;
-                  const originalIdx = players.indexOf(p.name);
-                  const hasPlayed = p.score !== null;
-                  const isTopScore = topScore !== null && p.score === topScore;
-                  const badge = isLast
-                    ? (isTiedFinal ? "👑" : (medals[effectiveRank - 1] ?? effectiveRank))
-                    : (!hasPlayed ? "—" : isTopScore ? "👑" : effectiveRank);
-                  const interimClass = !hasPlayed
-                    ? "rank-interim-unplayed"
-                    : isTiedInterim
-                      ? "rank-interim-tied"
-                      : (isTopScore ? "rank-interim" : "rank-interim-played");
-                  const rowClass = `score-row rank-${effectiveRank ?? 99} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : interimClass}`;
-                  return (
-                    <div
-                      key={p.name}
-                      className={rowClass + ((isLast || hasPlayed) ? " cursor-pointer" : "")}
-                      onClick={(isLast || hasPlayed) ? () => onShowStats(originalIdx) : undefined}
-                    >
-                      <span className="rank-badge">{badge}</span>
-                      <span className="score-name">{p.name}</span>
-                      <span className="score-pts">{p.score !== null ? `${p.score} pt` : "—"}</span>
-                    </div>
-                  );
-                });
-              })()
-          }
+          {sortedTeams ? (() => {
+            const medals = ["🥇","🥈","🥉"];
+            const getTeamEffectiveRank = (avgScore) => avgScore === null ? null : sortedTeams.filter(t2 => t2.avgScore !== null && t2.avgScore > avgScore).length + 1;
+            const interimFirstPlaceTied = !isLast && topAvg !== null && sortedTeams.filter(t => t.avgScore === topAvg).length > 1;
+            return sortedTeams.map((team, i) => {
+              const effectiveRank = getTeamEffectiveRank(team.avgScore);
+              const hasPlayed = team.avgScore !== null;
+              const isTiedFinal = isLast && hasPlayed && team.avgScore === topAvg && sortedTeams.filter(t => t.avgScore === topAvg).length > 1;
+              const isTiedInterim = interimFirstPlaceTied && team.avgScore === topAvg;
+              const badge = isLast ? (!hasPlayed ? "—" : isTiedFinal ? "👑" : (medals[effectiveRank - 1] ?? effectiveRank)) : (!hasPlayed ? "—" : team.avgScore === topAvg ? "👑" : effectiveRank);
+              const interimClass = !hasPlayed ? "rank-interim-unplayed" : isTiedInterim ? "rank-interim-tied" : "rank-interim";
+              const rowClass = `score-row rank-${effectiveRank ?? 99} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : interimClass}`;
+              return (
+                <div key={`${team.originalIndex}-${team.name}`} className={rowClass}>
+                  <span className="rank-badge">{badge}</span>
+                  <div className="score-name-block">
+                    <span className="score-name">{team.name}</span>
+                    <span className="score-members">{team.players.join(", ")}</span>
+                  </div>
+                  <div className="score-row-right">
+                    <span className="score-pts">{hasPlayed ? `⌀ ${team.avgScore} pt` : "—"}</span>
+                    {hasPlayed && <div className="score-row-subtext">totaal {team.totalScore}</div>}
+                  </div>
+                </div>
+              );
+            });
+          })() : (() => {
+            const topScore = sortedPlayers.find(p => p.score !== null)?.score ?? null;
+            const medals = ["🥇","🥈","🥉"];
+            const getEffectiveRank = (score) => score === null ? null : sortedPlayers.filter(p2 => p2.score !== null && p2.score > score).length + 1;
+            const interimFirstPlaceTied = !isLast && topScore !== null && sortedPlayers.filter(p => p.score === topScore).length > 1;
+            return sortedPlayers.map((p, i) => {
+              const effectiveRank = getEffectiveRank(p.score);
+              const isTiedFinal = isLast && topScore !== null && p.score === topScore && sortedPlayers.filter(p2 => p2.score === topScore).length > 1;
+              const isTiedInterim = interimFirstPlaceTied && p.score === topScore;
+              const originalIdx = players.indexOf(p.name);
+              const hasPlayed = p.score !== null;
+              const isTopScore = topScore !== null && p.score === topScore;
+              const badge = isLast ? (isTiedFinal ? "👑" : (medals[effectiveRank - 1] ?? effectiveRank)) : (!hasPlayed ? "—" : isTopScore ? "👑" : effectiveRank);
+              const interimClass = !hasPlayed ? "rank-interim-unplayed" : isTiedInterim ? "rank-interim-tied" : (isTopScore ? "rank-interim" : "rank-interim-played");
+              const rowClass = `score-row rank-${effectiveRank ?? 99} ${isLast ? (isTiedFinal ? "rank-tied" : "rank-final") : interimClass}`;
+              return (
+                <div key={p.name} className={rowClass + ((isLast || hasPlayed) ? " cursor-pointer" : "")} onClick={(isLast || hasPlayed) ? () => onShowStats(originalIdx) : undefined}>
+                  <span className="rank-badge">{badge}</span>
+                  <span className="score-name">{p.name}</span>
+                  <span className="score-pts">{p.score !== null ? `${p.score} pt` : "—"}</span>
+                </div>
+              );
+            });
+          })()}
         </div>
         {isLast ? (
           <div className="final-btns">
-            <button className="score-btn continue-btn" onClick={onContinue}>
-              Nog een ronde ➜
-            </button>
-            <button className="score-btn restart-btn" onClick={onRestart}>
-              Nieuw spel
-            </button>
+            <button className="score-btn continue-btn" onClick={onContinue}>Nog een ronde ➜</button>
+            <button className="score-btn restart-btn" onClick={onRestart}>Nieuw spel</button>
           </div>
         ) : (
-          <button className="score-btn next-btn" onClick={onNext}>
-            Volgende speler ➜
-          </button>
+          <button className="score-btn next-btn" onClick={onNext}>Volgende speler ➜</button>
         )}
       </div>
     </div>
   );
 }
 
-// ── Stats Screen ─────────────────────────────────────────────────────────────
-
 function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, onBack }) {
   const [activePlayer, setActivePlayer] = useState(initialPlayer ?? 0);
-
   const ps = playerStats[activePlayer];
   if (!ps) return null;
-
   const allRounds = ps.rounds;
   const totalCorrect = allRounds.reduce((s, r) => s + r.correct, 0);
   const totalSkipped = allRounds.reduce((s, r) => s + r.skipped, 0);
   const totalBonus = allRounds.reduce((s, r) => s + (r.bonusPoints || 0), 0);
-  const totalSeen = totalCorrect + totalSkipped;
-  const totalTime = allRounds.length * roundTime; // totale speeltijd in seconden
   const longestStreak = allRounds.reduce((max, r) => Math.max(max, r.maxStreak || 0), 0);
-
-  const bestRound = allRounds.reduce((best, r, i) => {
-    const pts = r.correct + (r.bonusPoints || 0);
-    const bestPts = (best?.correct || 0) + (best?.bonusPoints || 0);
-    return pts > bestPts ? { ...r, idx: i } : best;
-  }, null);
-
+  const bestRound = allRounds.reduce((best, r, i) => { const pts = r.correct + (r.bonusPoints || 0); const bestPts = (best?.correct || 0) + (best?.bonusPoints || 0); return pts > bestPts ? { ...r, idx: i } : best; }, null);
   const allWordResults = allRounds.flatMap(r => r.wordResults || []);
   const guessedWords = allWordResults.filter(w => w.guessed);
   const skippedWords = allWordResults.filter(w => !w.guessed);
-
   return (
     <div className="screen">
       <div className="stats-card">
         <div className="stats-header-row">
-          <button
-            className="stats-back-btn"
-            onClick={onBack}
-            title="Terug naar scorebord"
-          ><span className="stats-back-icon">➜</span></button>
+          <button className="stats-back-btn" onClick={onBack} title="Terug naar scorebord"><span className="stats-back-icon">➜</span></button>
           <h2 className="score-title stats-header-title">📊 Statistieken</h2>
           <div className="stats-header-spacer" />
         </div>
-
-        {/* Player tabs */}
         <div className="stats-tabs">
-          {players.map((p, i) => (
-            <button
-              key={i}
-              className={`stats-tab${activePlayer === i ? " stats-tab-active" : ""}`}
-              onClick={() => setActivePlayer(i)}
-            >
-              {p}
-            </button>
-          ))}
+          {players.map((p, i) => (<button key={i} className={`stats-tab${activePlayer === i ? " stats-tab-active" : ""}`} onClick={() => setActivePlayer(i)}>{p}</button>))}
         </div>
-
         <div className="stats-player-name">{players[activePlayer]}</div>
         <div className="stats-total-score">{scores[activePlayer] ?? 0} {pt(scores[activePlayer] ?? 0)}</div>
-
-        {/* Overview grid */}
         <div className="stats-grid">
-          <div className="stats-cell stats-cell-correct">
-            <div className="stats-cell-val">{totalCorrect}</div>
-            <div className="stats-cell-lbl">✓ Geraden</div>
-          </div>
-          <div className="stats-cell stats-cell-bonus">
-            <div className="stats-cell-val">{totalBonus}</div>
-            <div className="stats-cell-lbl">⭐ Bonus</div>
-          </div>
-          <div className="stats-cell stats-cell-skip">
-            <div className="stats-cell-val">{totalSkipped}</div>
-            <div className="stats-cell-lbl">↷ Geskipt</div>
-          </div>
-          <div className="stats-cell stats-cell-streak">
-            <div className="stats-cell-val">{longestStreak > 0 ? `${longestStreak}` : longestStreak}</div>
-            <div className="stats-cell-lbl">🔥 Streak</div>
-          </div>
+          <div className="stats-cell stats-cell-correct"><div className="stats-cell-val">{totalCorrect}</div><div className="stats-cell-lbl">✓ Geraden</div></div>
+          <div className="stats-cell stats-cell-bonus"><div className="stats-cell-val">{totalBonus}</div><div className="stats-cell-lbl">⭐ Bonus</div></div>
+          <div className="stats-cell stats-cell-skip"><div className="stats-cell-val">{totalSkipped}</div><div className="stats-cell-lbl">↷ Geskipt</div></div>
+          <div className="stats-cell stats-cell-streak"><div className="stats-cell-val">{longestStreak > 0 ? `${longestStreak}` : longestStreak}</div><div className="stats-cell-lbl">🔥 Streak</div></div>
         </div>
-
-        {bestRound && (
-          <div className="stats-best">
-            ✨ Ronde {bestRound.idx + 1} was je beste ronde met {bestRound.correct + (bestRound.bonusPoints || 0)} {pt(bestRound.correct + (bestRound.bonusPoints || 0))}
-          </div>
-        )}
-
-        {/* Word lists */}
+        {bestRound && (<div className="stats-best">✨ Ronde {bestRound.idx + 1} was je beste ronde met {bestRound.correct + (bestRound.bonusPoints || 0)} {pt(bestRound.correct + (bestRound.bonusPoints || 0))}</div>)}
         <div className="stats-words-section">
           <div className="stats-words-col">
             <div className="stats-words-title stats-green">✓ Goed geraden ({guessedWords.length})</div>
             <div className="stats-words-list">
-              {guessedWords.slice(0, 20).map((wr, i) => (
-                <span key={i} className={`stats-word-chip${wr.isBonus ? " stats-word-bonus" : ""}`}>
-                  {wr.word}{wr.isBonus ? " ⭐" : ""}
-                </span>
-              ))}
+              {guessedWords.slice(0, 20).map((wr, i) => (<span key={i} className={`stats-word-chip${wr.isBonus ? " stats-word-bonus" : ""}`}>{wr.word}{wr.isBonus ? " ⭐" : ""}</span>))}
               {guessedWords.length > 20 && <span className="stats-word-more">+{guessedWords.length - 20} meer</span>}
             </div>
           </div>
           <div className="stats-words-col">
             <div className="stats-words-title stats-red">↷ Geskipt ({skippedWords.length})</div>
             <div className="stats-words-list">
-              {skippedWords.slice(0, 20).map((wr, i) => (
-                <span key={i} className="stats-word-chip stats-word-skipped">{wr.word}</span>
-              ))}
+              {skippedWords.slice(0, 20).map((wr, i) => (<span key={i} className="stats-word-chip stats-word-skipped">{wr.word}</span>))}
               {skippedWords.length > 20 && <span className="stats-word-more">+{skippedWords.length - 20} meer</span>}
             </div>
           </div>
         </div>
-
-
       </div>
     </div>
   );
 }
 
-// ── Tiebreaker Screen ─────────────────────────────────────────────────────────
-
-// Categoriepicker: apart component zodat hooks in TiebreakerRound altijd worden aangeroepen.
 function TiebreakerCategoryPicker({ candidateCategories, onCategoryChosen }) {
   return (
     <div className="screen">
       <div className="score-card">
         <h2 className="score-title tiebreaker-title">⚡ Tie-breaker</h2>
-        <p className="tiebreaker-subtitle">
-          Kies samen een categorie.<br/>Alle spelers krijgen een woord uit dezelfde categorie.
-        </p>
+        <p className="tiebreaker-subtitle">Kies samen een categorie.<br/>Alle spelers krijgen een woord uit dezelfde categorie.</p>
         <div className="tiebreaker-cat-list">
-          {(candidateCategories || []).map(cat => (
-            <button
-              key={cat.id}
-              onClick={() => onCategoryChosen(cat.id)}
-              className="tiebreaker-cat-btn"
-            >
-              {cat.label}
-            </button>
-          ))}
+          {(candidateCategories || []).map(cat => (<button key={cat.id} onClick={() => onCategoryChosen(cat.id)} className="tiebreaker-cat-btn">{cat.label}</button>))}
         </div>
       </div>
     </div>
@@ -2483,250 +2323,95 @@ function TiebreakerCategoryPicker({ candidateCategories, onCategoryChosen }) {
 function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGuessed, onRestart, onStartTiebreaker }) {
   const { tiedPlayerIndices, tiedTeamGroups, candidateCategories, chosenCategoryId, words, categoryLabel, times, currentStep } = tiebreakerState;
   const allDone = currentStep >= tiedPlayerIndices.length;
-
-  // subPhase: 'handoff' | 'round' | 'results'
   const [subPhase, setSubPhase] = useState('handoff');
   const [elapsed, setElapsed] = useState(0);
   const startTimeRef = useRef(null);
   const timerRef = useRef(null);
-
-  // Reset timer when moving to a new player's round
-  useEffect(() => {
-    setSubPhase('handoff');
-    setElapsed(0);
-    clearInterval(timerRef.current);
-  }, [currentStep]);
-
+  useEffect(() => { setSubPhase('handoff'); setElapsed(0); clearInterval(timerRef.current); }, [currentStep]);
   useEffect(() => () => clearInterval(timerRef.current), []);
-
-  // Category picker: show when no category chosen yet
-  if (!chosenCategoryId) {
-    return (
-      <TiebreakerCategoryPicker
-        candidateCategories={candidateCategories}
-        onCategoryChosen={onCategoryChosen}
-      />
-    );
-  }
-
-  const startRound = () => {
-    setSubPhase('round');
-    startTimeRef.current = Date.now();
-    timerRef.current = setInterval(() => {
-      setElapsed((Date.now() - startTimeRef.current) / 1000);
-    }, 50);
-  };
-
-  const handleGuessed = () => {
-    clearInterval(timerRef.current);
-    const finalTime = (Date.now() - startTimeRef.current) / 1000;
-    setElapsed(finalTime);
-    setSubPhase('handoff');
-    onWordGuessed(finalTime);
-  };
-
+  if (!chosenCategoryId) return <TiebreakerCategoryPicker candidateCategories={candidateCategories} onCategoryChosen={onCategoryChosen} />;
+  const startRound = () => { setSubPhase('round'); startTimeRef.current = Date.now(); timerRef.current = setInterval(() => setElapsed((Date.now() - startTimeRef.current) / 1000), 50); };
+  const handleGuessed = () => { clearInterval(timerRef.current); const finalTime = (Date.now() - startTimeRef.current) / 1000; setElapsed(finalTime); setSubPhase('handoff'); onWordGuessed(finalTime); };
   const currentPlayerIdx = allDone ? null : tiedPlayerIndices[currentStep];
   const currentWord = allDone ? null : words[currentStep];
-
-  // Results view
   if (allDone) {
-    // Team-modus: groepeer per team, bereken gemiddelde tijd
     if (tiedTeamGroups) {
       const teamResults = tiedTeamGroups.map(group => {
-        const groupTimes = group.playerIndices.map(pi => {
-          const stepIdx = tiedPlayerIndices.indexOf(pi);
-          return times[stepIdx];
-        });
+        const groupTimes = group.playerIndices.map(pi => { const stepIdx = tiedPlayerIndices.indexOf(pi); return times[stepIdx]; });
         const avgTime = groupTimes.reduce((a, b) => a + b, 0) / groupTimes.length;
-        return {
-          teamName: group.teamName,
-          avgTime,
-          playerResults: group.playerIndices.map((pi, idx) => ({
-            name: players[pi],
-            time: groupTimes[idx],
-          })),
-        };
+        return { teamName: group.teamName, avgTime, playerResults: group.playerIndices.map((pi, idx) => ({ name: players[pi], time: groupTimes[idx] })) };
       }).sort((a, b) => a.avgTime - b.avgTime);
-
       const winnerTime = Math.round(teamResults[0].avgTime * 100) / 100;
       const hasJointWinner = teamResults.filter(r => Math.round(r.avgTime * 100) / 100 === winnerTime).length > 1;
-
       return (
-        <div className="screen">
-          <div className="score-card">
-            <h2 className="score-title">⚡ Tie-breaker resultaten</h2>
-            {hasJointWinner ? (
-              <button
-                className="tiebreaker-start-btn"
-                onClick={() => {
-                  const stillTiedIndices = teamResults
-                    .filter(tr => Math.round(tr.avgTime * 100) / 100 === winnerTime)
-                    .flatMap(tr => {
-                      const group = tiedTeamGroups.find(g => g.teamName === tr.teamName);
-                      return group ? group.playerIndices : [];
-                    });
-                  onStartTiebreaker(stillTiedIndices);
-                }}
-              >
-                🤝 Nog steeds gelijkspel! Start opnieuw.
-              </button>
-            ) : (
-              <div className="tiebreaker-result-banner tiebreaker-result-winner">
-                <span className="tiebreaker-result-text-winner">🏆 {teamResults[0].teamName} wint de tie-breaker!</span>
-              </div>
-            )}
-            <div className="scores-list">
-              {teamResults.map((tr, i) => {
-                const tieBadges = ["🥇", "🥈", "🥉"];
-                const sortedPlayers = [...tr.playerResults].sort((a, b) => a.time - b.time);
-                const isTied = Math.round(tr.avgTime * 100) / 100 === winnerTime && hasJointWinner;
-                const rowClass = isTied
-                  ? 'score-row rank-1 rank-tied'
-                  : `score-row rank-${i + 1} rank-final`;
-
-                return (
-                  <div key={tr.teamName} className="tiebreaker-team-block">
-                    <div className={rowClass + " tiebreaker-team-row"}>
-                      <span className="rank-badge">{isTied ? '👑' : (tieBadges[i] ?? i + 1)}</span>
-                      <span className="score-name">{tr.teamName}</span>
-                      <span className="score-pts tiebreaker-pts">⌀ {tr.avgTime.toFixed(2)}s</span>
-                    </div>
-                    <div className="tiebreaker-player-list">
-                      {sortedPlayers.map((pr, j) => (
-                        <div key={pr.name} className="tiebreaker-player-row">
-                          <span className="tiebreaker-player-name">
-                            {pr.name}
-                          </span>
-                          <span className="tiebreaker-player-time">{pr.time.toFixed(2)}s</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="final-btns">
-              <button className="score-btn restart-btn" onClick={onRestart}>Nieuw spel</button>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Individuele modus (ongewijzigd)
-    const results = tiedPlayerIndices.map((pi, i) => ({
-      name: players[pi],
-      time: times[i],
-    })).sort((a, b) => a.time - b.time);
-    const winnerTime = Math.round(results[0].time * 100) / 100;
-    const hasJointWinner = results.filter(r => Math.round(r.time * 100) / 100 === winnerTime).length > 1;
-
-    return (
-      <div className="screen">
-        <div className="score-card">
+        <div className="screen"><div className="score-card">
           <h2 className="score-title">⚡ Tie-breaker resultaten</h2>
-          {hasJointWinner ? (
-            <button
-              className="tiebreaker-start-btn"
-              onClick={() => {
-                const stillTiedIndices = results
-                  .filter(r => Math.round(r.time * 100) / 100 === winnerTime)
-                  .map(r => tiedPlayerIndices.find(pi => players[pi] === r.name))
-                  .filter(pi => pi !== undefined);
-                onStartTiebreaker(stillTiedIndices);
-              }}
-            >
-              🤝 Nog steeds gelijkspel! Start opnieuw.
-            </button>
-          ) : (
-            <div className="tiebreaker-result-banner tiebreaker-result-winner">
-              <span className="tiebreaker-result-text-winner">
-                🏆 {results[0].name} wint de tie-breaker!
-              </span>
-            </div>
-          )}
+          {hasJointWinner ? (<button className="tiebreaker-start-btn" onClick={() => { const si = teamResults.filter(tr => Math.round(tr.avgTime*100)/100===winnerTime).flatMap(tr => { const g = tiedTeamGroups.find(g=>g.teamName===tr.teamName); return g?g.playerIndices:[]; }); onStartTiebreaker(si); }}>🤝 Nog steeds gelijkspel! Start opnieuw.</button>) : (<div className="tiebreaker-result-banner tiebreaker-result-winner"><span className="tiebreaker-result-text-winner">🏆 {teamResults[0].teamName} wint de tie-breaker!</span></div>)}
           <div className="scores-list">
-            {results.map((r, i) => {
-              const tieBadges = ["🥇", "🥈", "🥉"];
-              const isTied = Math.round(r.time * 100) / 100 === winnerTime && hasJointWinner;
-              const effectiveRank = results.filter(r2 => Math.round(r2.time * 100) / 100 < Math.round(r.time * 100) / 100).length + 1;
-              const rowClass = isTied
-                ? 'score-row rank-1 rank-tied'
-                : `score-row rank-${effectiveRank} rank-final`;
-              return (
-                <div key={r.name} className={rowClass}>
-                  <span className="rank-badge">{isTied ? '👑' : (tieBadges[effectiveRank - 1] ?? effectiveRank)}</span>
-                  <span className="score-name">{r.name}</span>
-                  <span className="score-pts tiebreaker-pts">
-                    {r.time.toFixed(2)}s
-                  </span>
-                </div>
-              );
+            {teamResults.map((tr, i) => {
+              const tieBadges = ["🥇","🥈","🥉"];
+              const sortedPs = [...tr.playerResults].sort((a,b)=>a.time-b.time);
+              const isTied = Math.round(tr.avgTime*100)/100===winnerTime&&hasJointWinner;
+              const rowClass = isTied?'score-row rank-1 rank-tied':`score-row rank-${i+1} rank-final`;
+              return (<div key={tr.teamName} className="tiebreaker-team-block"><div className={rowClass+" tiebreaker-team-row"}><span className="rank-badge">{isTied?'👑':(tieBadges[i]??i+1)}</span><span className="score-name">{tr.teamName}</span><span className="score-pts tiebreaker-pts">⌀ {tr.avgTime.toFixed(2)}s</span></div><div className="tiebreaker-player-list">{sortedPs.map((pr,j)=>(<div key={pr.name} className="tiebreaker-player-row"><span className="tiebreaker-player-name">{pr.name}</span><span className="tiebreaker-player-time">{pr.time.toFixed(2)}s</span></div>))}</div></div>);
             })}
           </div>
-          <div className="final-btns">
-            <button className="score-btn restart-btn" onClick={onRestart}>Nieuw spel</button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Handoff view
-  if (subPhase === 'handoff') {
-    const currentTeamGroup = tiedTeamGroups?.find(g => g.playerIndices.includes(currentPlayerIdx));
+          <div className="final-btns"><button className="score-btn restart-btn" onClick={onRestart}>Nieuw spel</button></div>
+        </div></div>
+      );
+    }
+    const results = tiedPlayerIndices.map((pi,i)=>({name:players[pi],time:times[i]})).sort((a,b)=>a.time-b.time);
+    const winnerTime = Math.round(results[0].time*100)/100;
+    const hasJointWinner = results.filter(r=>Math.round(r.time*100)/100===winnerTime).length>1;
     return (
-      <div className="screen handoff-screen">
-        <div className="handoff-card">
-          <div className="handoff-icon">⚡</div>
-          <p className="handoff-sub tiebreaker-handoff-sub">
-            TIE-BREAKER · {currentStep + 1}/{tiedPlayerIndices.length}{currentTeamGroup ? ` · ${currentTeamGroup.teamName}` : ''}
-          </p>
-          <h2 className="handoff-name">{players[currentPlayerIdx]}</h2>
-          <p className="handoff-tip mb-2">Raad z.s.m. het random woord</p>
-          <p className="handoff-tip mt-0">in de categorie: {categoryLabel}</p>
-          <button className="handoff-btn" onClick={startRound}>
-            Start tie-breaker!
-          </button>
+      <div className="screen"><div className="score-card">
+        <h2 className="score-title">⚡ Tie-breaker resultaten</h2>
+        {hasJointWinner?(<button className="tiebreaker-start-btn" onClick={()=>{ const si=results.filter(r=>Math.round(r.time*100)/100===winnerTime).map(r=>tiedPlayerIndices.find(pi=>players[pi]===r.name)).filter(pi=>pi!==undefined); onStartTiebreaker(si); }}>🤝 Nog steeds gelijkspel! Start opnieuw.</button>):(<div className="tiebreaker-result-banner tiebreaker-result-winner"><span className="tiebreaker-result-text-winner">🏆 {results[0].name} wint de tie-breaker!</span></div>)}
+        <div className="scores-list">
+          {results.map((r,i)=>{
+            const tieBadges=["🥇","🥈","🥉"];
+            const isTied=Math.round(r.time*100)/100===winnerTime&&hasJointWinner;
+            const effectiveRank=results.filter(r2=>Math.round(r2.time*100)/100<Math.round(r.time*100)/100).length+1;
+            const rowClass=isTied?'score-row rank-1 rank-tied':`score-row rank-${effectiveRank} rank-final`;
+            return(<div key={r.name} className={rowClass}><span className="rank-badge">{isTied?'👑':(tieBadges[effectiveRank-1]??effectiveRank)}</span><span className="score-name">{r.name}</span><span className="score-pts tiebreaker-pts">{r.time.toFixed(2)}s</span></div>);
+          })}
         </div>
-      </div>
+        <div className="final-btns"><button className="score-btn restart-btn" onClick={onRestart}>Nieuw spel</button></div>
+      </div></div>
     );
   }
-
-  // Round view — show word, count-up timer, "guessed" button
+  if (subPhase === 'handoff') {
+    const currentTeamGroup = tiedTeamGroups?.find(g=>g.playerIndices.includes(currentPlayerIdx));
+    return (
+      <div className="screen handoff-screen"><div className="handoff-card">
+        <div className="handoff-icon">⚡</div>
+        <p className="handoff-sub tiebreaker-handoff-sub">TIE-BREAKER · {currentStep+1}/{tiedPlayerIndices.length}{currentTeamGroup?` · ${currentTeamGroup.teamName}`:''}</p>
+        <h2 className="handoff-name">{players[currentPlayerIdx]}</h2>
+        <p className="handoff-tip mb-2">Raad z.s.m. het random woord</p>
+        <p className="handoff-tip mt-0">in de categorie: {categoryLabel}</p>
+        <button className="handoff-btn" onClick={startRound}>Start tie-breaker!</button>
+      </div></div>
+    );
+  }
   const secs = Math.floor(elapsed);
   const tenths = Math.floor((elapsed % 1) * 10);
-
-  // Fill circle: 0→full over 60s (orange/yellow)
   const circumference = 2 * Math.PI * 44;
   const yellowFill = Math.min(elapsed / 60, 1);
   const yellowOffset = circumference * (1 - yellowFill);
-
   return (
     <div className="screen round-screen">
       <div className="round-top">
         <span className="round-player">⚡ {players[currentPlayerIdx]}</span>
         <div className="timer-wrap">
           <svg width="100" height="100" viewBox="0 0 100 100">
-            {/* Track */}
             <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="8"/>
-            {/* Yellow/orange fill — grows from 0 to full over 60s */}
-            <circle cx="50" cy="50" r="44" fill="none" stroke="#fbbf24" strokeWidth="8"
-              className="tiebreaker-timer-circle"
-              strokeDasharray={circumference}
-              strokeDashoffset={yellowOffset}
-              strokeLinecap="round"
-              transform="rotate(-90 50 50)"
-            />
+            <circle cx="50" cy="50" r="44" fill="none" stroke="#fbbf24" strokeWidth="8" className="tiebreaker-timer-circle" strokeDasharray={circumference} strokeDashoffset={yellowOffset} strokeLinecap="round" transform="rotate(-90 50 50)"/>
             <text x="50" y="50" textAnchor="middle" fill="white" fontSize="15" fontWeight="700" fontFamily="inherit" dy="0">{secs}</text>
             <text x="50" y="65" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="11" fontFamily="inherit">.{tenths}s</text>
           </svg>
         </div>
-        <div className="round-stats">
-          <span className="round-stats-cat">{categoryLabel}</span>
-        </div>
+        <div className="round-stats"><span className="round-stats-cat">{categoryLabel}</span></div>
       </div>
-
       <div className="word-stage">
         <div className="word-anchor">
           <div className="word-counter">leg z.s.m. uit</div>
@@ -2734,21 +2419,24 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
           <div className="times-up-banner is-hidden" aria-hidden="true" />
         </div>
       </div>
-
       <div className="action-row">
-        <button className="action-btn correct-btn" onClick={handleGuessed}>
-          <span className="btn-icon">✓</span>
-          <span className="btn-label">Goed geraden!</span>
-        </button>
+        <button className="action-btn correct-btn" onClick={handleGuessed}><span className="btn-icon">✓</span><span className="btn-label">Goed geraden!</span></button>
       </div>
     </div>
   );
 }
 
+// ══════════════════════════════════════════════════════════════════════════════
 // ── Main App ──────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
 
 export default function App() {
-  const [phase, setPhase] = useState("setup"); // setup | handoff | round | score | stats | tiebreaker
+  const [gameMode, setGameMode] = useState("woordenraad"); // "woordenraad" | "pimpampet"
+  const [pppPlayers, setPppPlayers] = useState(null); // null = not started
+  const [pppNames, setPppNames] = useState(["Dennis", "Marion", "Theo"]);
+
+  // WoordenRaad state
+  const [phase, setPhase] = useState("setup");
   const [players, setPlayers] = useState([]);
   const [scores, setScores] = useState([]);
   const [currentPlayerIdx, setCurrentPlayerIdx] = useState(0);
@@ -2759,13 +2447,9 @@ export default function App() {
   const [teams, setTeams] = useState(null);
   const [teamScores, setTeamScores] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(() => new Set());
-  // playerStats: array of { rounds: [{correct, skipped, words:[{word,guessed}]}] }
   const [playerStats, setPlayerStats] = useState([]);
-  // Tie-breaker state
   const [tiebreakerState, setTiebreakerState] = useState(null);
-  // Stats: welke speler wordt getoond bij openen
   const [statsInitialPlayer, setStatsInitialPlayer] = useState(0);
-  // Speelvolgorde: in team modus afwisselend per team
   const [playOrder, setPlayOrder] = useState([]);
   const [playOrderPos, setPlayOrderPos] = useState(0);
 
@@ -2774,25 +2458,16 @@ export default function App() {
   const getWordPool = (cats) => {
     const catSet = cats instanceof Set ? cats : new Set();
     const allIds = CATEGORIES.map(c => c.id);
-    // Gebruik 'alles' als niets geselecteerd is of alle categorieën aan staan
-    if (catSet.size === 0 || allIds.every(id => catSet.has(id))) {
-      return WORDS_BY_CATEGORY.all;
-    }
+    if (catSet.size === 0 || allIds.every(id => catSet.has(id))) return WORDS_BY_CATEGORY.all;
     const merged = new Set();
-    for (const id of catSet) {
-      (WORDS_BY_CATEGORY[id] || []).forEach(word => merged.add(word));
-    }
+    for (const id of catSet) (WORDS_BY_CATEGORY[id] || []).forEach(word => merged.add(word));
     return merged.size > 0 ? [...merged] : WORDS_BY_CATEGORY.all;
   };
 
   const startGame = (names, time, teamsData, categories) => {
     const empty = Array(names.length).fill(null);
-    setPlayers(names);
-    setScores(empty);
-    setCurrentPlayerIdx(0);
-    setRoundNum(0);
-    setUsedWords(new Set());
-    setRoundTime(time);
+    setPlayers(names); setScores(empty); setCurrentPlayerIdx(0); setRoundNum(0);
+    setUsedWords(new Set()); setRoundTime(time);
     const catSet = categories instanceof Set ? categories : new Set();
     setSelectedCategory(catSet);
     const pool = getWordPool(catSet);
@@ -2801,89 +2476,51 @@ export default function App() {
     setTeamScores(teamsData ? Array(teamsData.length).fill(null) : []);
     setPlayerStats(names.map(() => ({ rounds: [] })));
     const order = buildPlayOrder(teamsData, names.length);
-    setPlayOrder(order);
-    setPlayOrderPos(0);
-    setCurrentPlayerIdx(order[0] ?? 0);
+    setPlayOrder(order); setPlayOrderPos(0); setCurrentPlayerIdx(order[0] ?? 0);
     setPhase("handoff");
   };
 
-  // Speelvolgorde: in team modus afwisselend per team (A, B, S, C ipv A, S, B, C)
-  // playOrder is een array van player-indices in de juiste volgorde
-
   const buildPlayOrder = (teamsData, totalPlayers) => {
     if (!teamsData) return Array.from({ length: totalPlayers }, (_, i) => i);
-    // Bereken per team de absolute player-indices
     const teamPlayerIndices = [];
     let offset = 0;
-    for (const team of teamsData) {
-      teamPlayerIndices.push(team.players.map((_, i) => offset + i));
-      offset += team.players.length;
-    }
-    // Sorteer: team met meeste spelers begint altijd eerst (stabiel: bij gelijk aantal originele volgorde)
+    for (const team of teamsData) { teamPlayerIndices.push(team.players.map((_, i) => offset + i)); offset += team.players.length; }
     teamPlayerIndices.sort((a, b) => b.length - a.length);
-    // Interleave: ronde 0 → speler 0 van elk team, ronde 1 → speler 1 van elk team, etc.
-    // Teams met minder spelers vallen eerder af; het grootste team speelt als laatste als enige.
     const maxSize = Math.max(...teamPlayerIndices.map(t => t.length));
     const order = [];
-    for (let pos = 0; pos < maxSize; pos++) {
-      for (const indices of teamPlayerIndices) {
-        if (pos < indices.length) order.push(indices[pos]);
-      }
-    }
+    for (let pos = 0; pos < maxSize; pos++) for (const indices of teamPlayerIndices) if (pos < indices.length) order.push(indices[pos]);
     return order;
   };
 
-  // Helper: geeft het teamindex terug voor een spelerindex
   const getTeamIdxForPlayer = (playerIdx) => {
     if (!teams) return null;
     let offset = 0;
-    for (let t = 0; t < teams.length; t++) {
-      offset += teams[t].players.length;
-      if (playerIdx < offset) return t;
-    }
+    for (let t = 0; t < teams.length; t++) { offset += teams[t].players.length; if (playerIdx < offset) return t; }
     return null;
   };
 
   const onRoundEnd = ({ correct, skipped, wordsUsed, wordResults, maxStreak }) => {
-    // wordResults: [{word, guessed, isBonus, bonusPts}]
-    // spreekwoorden geven +2 extra (totaal 3)
     const bonusPoints = wordResults ? wordResults.filter(r => r.guessed).reduce((sum, r) => sum + (r.bonusPts || 0), 0) : 0;
     const totalPoints = correct + bonusPoints;
-
     const newScores = [...scores];
     newScores[currentPlayerIdx] = (newScores[currentPlayerIdx] ?? 0) + totalPoints;
     setScores(newScores);
-
     if (teams) {
       const teamIdx = getTeamIdxForPlayer(currentPlayerIdx);
-      if (teamIdx !== null) {
-        const newTeamScores = [...teamScores];
-        newTeamScores[teamIdx] = (newTeamScores[teamIdx] ?? 0) + totalPoints;
-        setTeamScores(newTeamScores);
-      }
+      if (teamIdx !== null) { const nts = [...teamScores]; nts[teamIdx] = (nts[teamIdx] ?? 0) + totalPoints; setTeamScores(nts); }
     }
-
-    // Track per-player stats
-    const newPlayerStats = playerStats.map((ps, i) => {
-      if (i !== currentPlayerIdx) return ps;
-      return {
-        ...ps,
-        rounds: [...ps.rounds, { correct, skipped, bonusPoints, wordResults: wordResults || [], maxStreak: maxStreak || 0 }]
-      };
-    });
+    const newPlayerStats = playerStats.map((ps, i) => i !== currentPlayerIdx ? ps : { ...ps, rounds: [...ps.rounds, { correct, skipped, bonusPoints, wordResults: wordResults || [], maxStreak: maxStreak || 0 }] });
     setPlayerStats(newPlayerStats);
-
     const newUsed = new Set(usedWords);
     wordDeck.slice(0, wordsUsed).forEach(word => newUsed.add(word));
     setUsedWords(newUsed);
-    setRoundNum((r) => r + 1);
+    setRoundNum(r => r + 1);
     setPhase("score");
   };
 
   const onNext = () => {
     const nextPos = (playOrderPos + 1) % playOrder.length;
-    setPlayOrderPos(nextPos);
-    setCurrentPlayerIdx(playOrder[nextPos]);
+    setPlayOrderPos(nextPos); setCurrentPlayerIdx(playOrder[nextPos]);
     const pool = getWordPool(selectedCategory);
     const available = pool.filter(w => !usedWords.has(w));
     setWordDeck(shuffle(available.length >= 10 ? available : pool));
@@ -2891,9 +2528,7 @@ export default function App() {
   };
 
   const onContinue = () => {
-    setPlayOrderPos(0);
-    setCurrentPlayerIdx(playOrder[0] ?? 0);
-    setRoundNum(0);
+    setPlayOrderPos(0); setCurrentPlayerIdx(playOrder[0] ?? 0); setRoundNum(0);
     const pool = getWordPool(selectedCategory);
     const available = pool.filter(w => !usedWords.has(w));
     setWordDeck(shuffle(available.length >= 10 ? available : pool));
@@ -2901,62 +2536,26 @@ export default function App() {
   };
 
   const onStartTiebreaker = (tiedPlayerIndices) => {
-    // Always show exactly 3 categories.
-    // Priority: categories used in this game come first,
-    // then fill up with random safe categories not yet in the list.
-    const safeCats = ['dieren', 'voedsel', 'koken', 'beroepen', 'kantoor','sport', 'natuur', 'emoties', 'landen', 'verkeer', 'plaatsen', 'kunst', 'kleding', 'religie', 'fictie', 'literatuur', 'muziek', 'acties', 'gereedschap', 'wetenschap', 'geneeskunde', 'ruimte', 'militair', 'misdaad', 'politiek', 'huishouden', 'spreekwoorden'];
+    const safeCats = ['dieren','voedsel','koken','beroepen','kantoor','sport','natuur','emoties','landen','verkeer','plaatsen','kunst','kleding','religie','fictie','literatuur','muziek','acties','gereedschap','wetenschap','geneeskunde','ruimte','militair','misdaad','politiek','huishouden','spreekwoorden'];
     const catSet = selectedCategory instanceof Set ? selectedCategory : new Set();
     const allIds = CATEGORIES.map(c => c.id);
     const allSelected = catSet.size === 0 || allIds.every(id => catSet.has(id));
-
-    // Categories used in this game
-    const usedSafe = allSelected
-      ? []
-      : safeCats.filter(c => catSet.has(c));
-
-    // Shuffle the used-safe list, take up to 3
+    const usedSafe = allSelected ? [] : safeCats.filter(c => catSet.has(c));
     const chosen = shuffle(usedSafe).slice(0, 3);
-
-    // Fill remaining slots with random safe cats not already chosen
     const remaining = shuffle(safeCats.filter(c => !chosen.includes(c)));
     while (chosen.length < 3 && remaining.length > 0) chosen.push(remaining.shift());
-
     const candidateCategories = chosen.map(id => CATEGORIES.find(c => c.id === id)).filter(Boolean);
-
-    // In team-modus: sla teamgroeperingen op voor gemiddelde-berekening achteraf
     let tiedTeamGroups = null;
     let orderedTiedPlayerIndices = tiedPlayerIndices;
     if (teams) {
       const teamMap = {};
-      tiedPlayerIndices.forEach(pi => {
-        const tIdx = getTeamIdxForPlayer(pi);
-        if (tIdx !== null) {
-          if (!teamMap[tIdx]) teamMap[tIdx] = { teamName: teams[tIdx].name, teamIdx: tIdx, playerIndices: [] };
-          teamMap[tIdx].playerIndices.push(pi);
-        }
-      });
-      // Sorteer: team met meeste spelers gaat als eerste in de tie-breaker
+      tiedPlayerIndices.forEach(pi => { const tIdx = getTeamIdxForPlayer(pi); if (tIdx !== null) { if (!teamMap[tIdx]) teamMap[tIdx] = { teamName: teams[tIdx].name, teamIdx: tIdx, playerIndices: [] }; teamMap[tIdx].playerIndices.push(pi); } });
       tiedTeamGroups = Object.values(teamMap).sort((a, b) => b.playerIndices.length - a.playerIndices.length);
-      // Herbouw tiedPlayerIndices met dezelfde interleave-logica als buildPlayOrder
       const maxSize = Math.max(...tiedTeamGroups.map(g => g.playerIndices.length));
       orderedTiedPlayerIndices = [];
-      for (let pos = 0; pos < maxSize; pos++) {
-        for (const group of tiedTeamGroups) {
-          if (pos < group.playerIndices.length) orderedTiedPlayerIndices.push(group.playerIndices[pos]);
-        }
-      }
+      for (let pos = 0; pos < maxSize; pos++) for (const group of tiedTeamGroups) if (pos < group.playerIndices.length) orderedTiedPlayerIndices.push(group.playerIndices[pos]);
     }
-
-    setTiebreakerState({
-      tiedPlayerIndices: orderedTiedPlayerIndices,
-      tiedTeamGroups,
-      candidateCategories,
-      chosenCategoryId: null,
-      words: null,
-      categoryLabel: null,
-      times: tiedPlayerIndices.map(() => null),
-      currentStep: 0,
-    });
+    setTiebreakerState({ tiedPlayerIndices: orderedTiedPlayerIndices, tiedTeamGroups, candidateCategories, chosenCategoryId: null, words: null, categoryLabel: null, times: tiedPlayerIndices.map(() => null), currentStep: 0 });
     setPhase('tiebreaker');
   };
 
@@ -2967,760 +2566,390 @@ export default function App() {
     const fresh = pool.filter(w => !usedWords.has(w));
     const src = shuffle(fresh.length >= tiedIndices.length ? fresh : shuffle(pool));
     const words = src.slice(0, tiedIndices.length);
-    setTiebreakerState(prev => ({
-      ...prev,
-      chosenCategoryId: catId,
-      categoryLabel: chosenCat?.label ?? '🎲',
-      words,
-    }));
+    setTiebreakerState(prev => ({ ...prev, chosenCategoryId: catId, categoryLabel: chosenCat?.label ?? '🎲', words }));
   };
 
   const onTiebreakerWordGuessed = (elapsedSeconds) => {
-    setTiebreakerState(prev => {
-      const newTimes = [...prev.times];
-      newTimes[prev.currentStep] = elapsedSeconds;
-      return { ...prev, times: newTimes, currentStep: prev.currentStep + 1 };
-    });
+    setTiebreakerState(prev => { const nts = [...prev.times]; nts[prev.currentStep] = elapsedSeconds; return { ...prev, times: nts, currentStep: prev.currentStep + 1 }; });
   };
 
   const onRestart = () => {
-    setPhase("setup");
-    setPlayers([]);
-    setScores([]);
-    setUsedWords(new Set());
-    setWordDeck([]);
-    setRoundTime(DEFAULT_ROUND_TIME);
-    setSelectedCategory(new Set());
-    setTeams(null);
-    setTeamScores([]);
-    setPlayerStats([]);
-    setPlayOrder([]);
-    setPlayOrderPos(0);
-    setTiebreakerState(null);
+    setPhase("setup"); setPlayers([]); setScores([]); setUsedWords(new Set()); setWordDeck([]);
+    setRoundTime(DEFAULT_ROUND_TIME); setSelectedCategory(new Set()); setTeams(null); setTeamScores([]);
+    setPlayerStats([]); setPlayOrder([]); setPlayOrderPos(0); setTiebreakerState(null);
   };
+
+  // Pim Pam Pet flow
+  if (gameMode === "pimpampet" && pppPlayers) {
+    return (
+      <>
+        <style>{CSS}</style>
+        <PimPamPetGame players={pppPlayers} onRestart={() => setPppPlayers(null)} />
+      </>
+    );
+  }
 
   return (
     <>
-<style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Righteous&display=swap');
+      <style>{CSS}</style>
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-        html, body {
-          font-family: 'Nunito', sans-serif;
-          background: #060d1a;
-          min-height: 100vh;
-          min-height: 100dvh;
-          color: white;
-          overflow-x: hidden;
-          -webkit-text-size-adjust: 100%;
-        }
-
-        .screen {
-          min-height: 100vh;
-          min-height: 100dvh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 16px;
-          padding-left: max(16px, env(safe-area-inset-left));
-          padding-right: max(16px, env(safe-area-inset-right));
-          padding-bottom: max(16px, env(safe-area-inset-bottom));
-          position: relative;
-          overflow: hidden;
-          width: 100%;
-        }
-
-        .screen::after {
-          content: '';
-          position: fixed; inset: 0;
-          z-index: 0;
-          pointer-events: none;
-          background-image:
-            url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-            url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.4' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)'/%3E%3C/svg%3E");
-          background-size: 180px 180px, 340px 340px;
-          opacity: 0.07;
-          mix-blend-mode: overlay;
-        }
-
-        .screen > * { position: relative; z-index: 1; }
-
-        /* ── Cards & Layout ── */
-        .setup-card, .score-card, .stats-card {
-          background: rgba(255,255,255,0.06);
-          border: 3px solid rgba(255,255,255,0.12);
-          border-radius: 24px;
-          padding: 28px 20px;
-          width: 100%;
-          backdrop-filter: blur(20px);
-          overflow: hidden;
-        }
-        .setup-card { max-width: 480px; }
-        .score-card { max-width: 440px; }
-        .stats-card { max-width: 480px; overflow-y: auto; max-height: 92vh; }
-
-        .logo-area { text-align: center; margin-bottom: 36px; }
-        .logo-icon { font-size: 52px; margin-bottom: 8px; }
-        .logo-title {
-          font-family: 'Righteous', cursive;
-          font-size: 36px;
-          background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-        .logo-sub { color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 4px; }
-
-        .setup-section { margin-bottom: 28px; }
-        .setup-label { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
-        
-        .names-grid { display: grid; grid-template-columns: 1fr; gap: 4px; }
-        .names-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-        .center-labels { justify-content: center; width: 100%; }
-        .center-label { text-align: center; width: 100%; }
-
-        /* ── Toggles & Buttons ── */
-        .setup-mode-segmented {
-          display: flex; margin-bottom: 28px;
-          border: 2px solid rgba(255,255,255,0.15); border-radius: 14px; overflow: hidden;
-        }
-        .mode-seg-btn {
-          flex: 1; padding: 13px 10px; font-family: 'Righteous', cursive; font-size: 17px;
-          letter-spacing: 0.04em; cursor: pointer; border: none; transition: all 0.2s;
-          display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .mode-seg-active {
-          background: rgba(74,144,226,0.18); color: #4a90e2;
-          border-right: none;
-        }
-        .mode-seg-inactive {
-          background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.45);
-        }
-        .mode-seg-inactive:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.7); }
-
-        .start-btn,
-        .handoff-btn,
-        .continue-btn,
-        .next-btn {
-          position: relative;
-          display: block;
-          width: 100%;
-          padding: 16px 32px;
-          cursor: pointer;
-          background-color: #060d1a;
-          border-radius: 12px;
-          border: none;
-          font-family: 'Righteous', cursive;
-          font-size: 20px;
-          transition: transform 0.2s ease;
-          z-index: 1;
-        }
-        .handoff-btn {
-          width: max-content;
-          margin: 0 auto;
-          min-width: 150px;
-        }
-        .continue-btn {
-          margin-bottom: 10px;
-        }
-        .start-btn::before,
-        .handoff-btn::before,
-        .continue-btn::before,
-        .next-btn::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          border-radius: 12px; 
-          padding: 3px;
-          background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
-          -webkit-mask: 
-             linear-gradient(#fff 0 0) content-box, 
-             linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-                  mask-composite: exclude;
-          pointer-events: none;
-        }
-        .start-btn,
-        .handoff-btn,
-        .continue-btn,
-        .next-btn {
-          background-image: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          color: transparent;
-        }
-
-        .start-btn:active,
-        .handoff-btn:active,
-        .continue:active,
-        .next-btn:active {
-          transform: scale(0.98);
-        }
-
-        .start-btn:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-          filter: grayscale(1);
-        }
-
-        /* ── Category Section ── */
-        .cat-section-header {
-          display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
-        }
-        .cat-section-title {
-          font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
-          color: rgba(255,255,255,0.45);
-        }
-        .cat-header-right { display: flex; align-items: center; gap: 10px; }
-        .cat-word-count {
-          font-size: 12px; font-weight: 800; letter-spacing: 0.06em;
-          color: rgba(255,255,255,0.35);
-        }
-        .cat-toggle-pill {
-          font-family: inherit;
-          font-weight: 700;
-          line-height: inherit;
-          letter-spacing: normal;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 12px; 
-          padding: 7px 14px;
-          border-radius: 20px; 
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        .cat-toggle-pill-active {
-          background: rgba(52,211,153,0.12); border: 2px solid #34d399; color: #34d399;
-        }
-        .cat-toggle-pill-active:hover { background: rgba(52,211,153,0.22); }
-        .cat-toggle-pill-custom {
-          background: rgba(74,144,226,0.1); border: 2px solid #4a90e2; color: #4a90e2;
-        }
-        .cat-toggle-pill-custom:hover { background: rgba(74,144,226,0.2); }
-        .cat-preview-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700}
-        .cat-preview-chip {
-          font-size: 12px; padding: 5px 11px; border-radius: 20px;
-          background: rgba(52,211,153,0.08); border: 2px solid rgba(52,211,153,0.3);
-          color: rgba(52,211,153,0.75);
-        }
-        .cat-preview-more {
-          font-size: 12px; padding: 5px 11px; border-radius: 20px;
-          background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.2);
-          color: rgba(255,255,255,0.35);
-        }
-
-        .category-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700}
-        .category-btn {
-          font-family: inherit;
-          font-weight: inherit;
-          line-height: inherit;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 12px; 
-          padding: 5px 11px; 
-          border-radius: 20px; 
-          border: 2px solid rgba(255,255,255,0.2);
-          background: rgba(255,255,255,0.05); 
-          color: rgba(255,255,255,0.7); 
-          cursor: pointer;
-          transition: background 0.15s, border-color 0.15s, color 0.15s; 
-          user-select: none;
-        }
-        .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
-        .category-btn-active { background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.3); color: rgba(52,211,153,0.75); }
-        .category-btn-active:hover { background: rgba(52,211,153,0.18); border-color: #34d399; color: #34d399; }
-
-        /* ── Player Inputs (Individual & Teams) ── */
-        .player-input-group { display: flex; margin-bottom: 4px; height: 48px; width: 100%; }
-        .player-name-container {
-          display: flex; align-items: center;
-          background: rgba(255, 255, 255, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          border-radius: 12px; padding: 0 12px;
-          flex-grow: 1; transition: border-color 0.2s;
-        }
-        .player-input-group:has(.integrated-delete-btn) .player-name-container { border-radius: 12px 0 0 12px; }
-        .player-bg { background: rgba(255, 255, 255, 0.06) !important; border: none; }
-        .player-index-badge { color: rgba(255, 255, 255, 0.3); font-weight: bold; font-size: 0.85rem; min-width: 20px; }
-        
-        .integrated-name-input {
-          background: transparent !important; border: none !important; color: white !important;
-          width: 100%; height: 100%; font-size: 1rem; outline: none; padding-left: 8px;
-        }
-        .integrated-delete-btn {
-          background: #ff4757; color: white; border: none; border-radius: 0 12px 12px 0;
-          width: 48px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-          font-size: 1.2rem; transition: background 0.2s;
-        }
-        .integrated-delete-btn:hover { background: #ff2e44; }
-        .btn-subtle { background: rgba(255, 255, 255, 0.1) !important; color: white !important; }
-
-        .add-player-integrated {
-          width: 100%; height: 44px; margin-top: 8px;
-          background: rgba(52, 211, 153, 0.1); border: 2px dashed #34d399; border-radius: 12px;
-          color: #34d399; display: flex; align-items: center; justify-content: center; gap: 12px;
-          cursor: pointer; font-size: 1rem; font-weight: 600;
-        }
-        .add-player-integrated:hover { background: rgba(52, 211, 153, 0.2); }
-        .add-player-in-team { margin-top: 12px; }
-
-        /* ── Team Layout ── */
-        .teams-setup-wrapper {
-          border: 3px solid #4a90e2; border-radius: 24px; padding: 25px;
-          background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative;
-        }
-        .setup-wrapper-badge {
-          position: absolute; top: -14px; left: 20px; background-color: #4a90e2; color: white;
-          padding: 4px 16px; border-radius: 12px; font-size: 0.75rem; font-weight: 900; letter-spacing: 1px; z-index: 1;
-        }
-        .teams-grid { display: flex; flex-direction: column; gap: 14px; }
-        .team-section-container {
-          margin-bottom: 14px; padding: 10px 0;
-          width: 100%; background-color: transparent; border-radius: 16px;
-        }
-        .team-header-row { position: relative; display: flex; align-items: center; margin-bottom: 8px; }
-        .team-name-input-flat {
-          background: transparent !important; border: none !important; border-bottom: 2px solid rgba(74, 144, 226, 0.4) !important;
-          color: #4a90e2 !important; font-size: 1.1rem; font-weight: bold; text-transform: uppercase;
-          padding: 2px 0; width: 100%; outline: none;
-        }
-        .delete-btn-round {
-          position: absolute; right: 0; top: 0; background: rgba(0,0,0,0.02); color: white; border: none;
-          border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
-          cursor: pointer; font-size: 10px;
-        }
-        .team-players-list { display: flex; flex-direction: column; gap: 4px; }
-        .team-add-btn { margin-top: 15px; border-color: #4a90e2; color: #4a90e2; background: rgba(74, 144, 226, 0.1); }
-        .team-add-btn:hover { background: rgba(74, 144, 226, 0.2); }
-
-        .small-group { height: 38px !important; margin-bottom: 4px !important; }
-        .small-group .player-name-container { border-radius: 10px; }
-        .small-group:has(.integrated-delete-btn) .player-name-container { border-radius: 10px 0 0 10px; }
-        .small-group .integrated-delete-btn { border-radius: 0 10px 10px 0; width: 38px !important; }
-
-        /* ── Time Control ── */
-        .time-section-label {
-          display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.12em;
-          text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 10px;
-        }
-        .time-control { display: flex; align-items: center; gap: 12px; }
-        .time-btn {
-          width: 64px; height: 44px; border-radius: 12px; border: 2px dashed #4a90e2;
-          background: rgba(52,211,153,0.1); color: #4a90e2; font-family: 'Righteous'; font-size: 24px;
-          font-weight: 700; cursor: pointer; transition: all 0.2s;
-        }
-        .time-btn-plus:hover:not(:disabled) { background: rgba(52,211,153,0.1); }
-        .time-btn-minus { border-color: #4a90e2; background: rgba(248,113,113,0.1); color: #4a90e2; }
-        .time-btn-minus:hover:not(:disabled) { background: rgba(248,113,113,0.1); }
-        .time-btn:disabled { opacity: 0.3; cursor: default; }
-        .time-btn-disabled { opacity: 1 !important; cursor: not-allowed !important; pointer-events: none; background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.35) !important; }
-        .time-display { flex: 1; text-align: center; font-family: 'Righteous', cursive; font-size: 24px; color: rgba(255,255,255,0.9); }
-
-        /* ── Handoff Screen ── */
-        .handoff-screen { background: none; }
-        .handoff-card {
-          text-align: center; padding: 40px 24px; background: rgba(255,255,255,0.06);
-          border: 3px solid rgba(255,255,255,0.12); border-radius: 28px; max-width: 400px;
-          width: 100%; backdrop-filter: blur(20px);
-        }
-        .handoff-icon { font-size: 52px; margin-bottom: 16px; animation: bounce 1.5s infinite; }
-        .handoff-sub { font-size: 12px; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; margin-bottom: 12px; }
-        .handoff-name {
-          font-family: 'Righteous', cursive; 
-          font-size: clamp(28px, 8vw, 42px);
-          margin-bottom: 24px;
-          background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          display: inline-block;
-        }
-        .handoff-team { font-size: 13px; color: #34d399; font-weight: 800; letter-spacing: 0.06em; margin-top: -10px; margin-bottom: 16px; }
-        .handoff-tip { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
-
-        /* ── Round Screen ── */
-        .round-screen { flex-direction: column; background: none; transition: background 0.2s; padding-top: max(28px, env(safe-area-inset-top)); }
-        .round-screen.flash-correct { animation: flashGreen 1.25s ease; }
-        .round-screen.flash-skip { animation: flashOrange 1.25s ease; }
-        .round-screen.flash-bonus { animation: flash-bonus-anim 1.25s ease; }
-        .round-screen.round-done { opacity: 1.0; }
-
-        .round-top {
-          display: flex; align-items: center; justify-content: space-between; width: 100%;
-          max-width: 520px; padding: 28px 0 12px; gap: 8px; flex-shrink: 0; position: relative;
-        }
-        .round-player { font-family: 'Righteous', cursive; font-size: clamp(14px, 4vw, 20px); color: #a78bfa; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .timer-wrap { position: absolute; left: 50%; transform: translateX(-50%); flex-shrink: 0; }
-        .timer-circle-progress { transition: stroke 0.5s; }
-        .timer-ring { animation: ring 0.5s infinite; transform-origin: 50px 50px; }
-
-        .round-stats { display: flex; gap: 8px; flex-shrink: 0; margin-left: auto; }
-        .stat {
-          font-size: 14px; font-weight: 800; padding: 5px 10px; border-radius: 20px; white-space: nowrap;
-          display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-width: 52px;
-        }
-        .stat-icon { display: flex; align-items: center; justify-content: center; line-height: 1; }
-        .correct-stat { background: rgba(74,222,128,0.2); color: #4ade80; }
-        .correct-stat-fire { background: rgba(251,146,60,0.25); color: #fb923c; text-shadow: 0 0 8px rgba(251,146,60,0.7); transition: background 0.3s, color 0.3s; }
-        .skip-stat { background: rgba(251,191,36,0.15); color: #fbbf24; }
-        .round-stats-cat { font-size: 12px; color: rgba(255,255,255,0.4); }
-
-        .word-stage {
-          flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-          text-align: center; max-width: 520px; width: 100%; gap: 0; padding: 20px;
-        }
-        .word-anchor { display: flex; flex-direction: column; align-items: center; }
-        .word-counter { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 10px; }
-
-        .current-word {
-          font-family: 'Righteous', cursive; font-size: clamp(38px, 11vw, 80px);
-          background: linear-gradient(135deg, #f9fafb, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-          background-clip: text; line-height: 1.15; animation: wordIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-          word-break: break-word; overflow-wrap: break-word; hyphens: manual; -webkit-hyphens: manual;
-          max-width: 100%; padding: 0 8px; text-align: center;
-        }
-        .current-word.bonus-word {
-          background: linear-gradient(135deg, #fef9c3, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-
-        .times-up-banner {
-          font-family: 'Righteous', cursive; font-size: clamp(13px, 3.5vw, 16px); color: #f87171;
-          background: rgba(248,113,113,0.12); border: 3px solid rgba(248,113,113,0.35); border-radius: 12px;
-          padding: 8px 16px; text-align: center; min-height: 40px; margin-top: 20px;
-          animation: pulse-red-banner 1.2s ease-in-out infinite;
-          position: relative; overflow: hidden;
-        }
-        .times-up-banner.grace-active::before {
-          content: ''; position: absolute; top: 0; left: 0;
-          width: 100%; height: 100%;
-          background: rgba(248,113,113,0.22);
-          animation: grace-drain 10s linear forwards;
-          border-radius: 9px 0 0 9px;
-          pointer-events: none;
-        }
-        .times-up-banner.bonus-banner {
-          color: #f59e0b; background: rgba(245,158,11, 0.08); border-color: rgba(245,158,11, 0.26);
-          animation: none;
-        }
-        .times-up-banner.category-banner {
-          color: #a78bfa; background: rgba(167,139,250,0.10); border-color: rgba(167,139,250,0.30);
-          animation: none; font-size: clamp(12px, 3.2vw, 15px);
-        }
-        .is-visible { visibility: visible; }
-        .is-hidden { visibility: hidden; }
-
-        .penalty-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-        .penalty-label { font-family: 'Righteous', cursive; font-size: clamp(15px, 4vw, 18px); color: #fbbf24; letter-spacing: 0.04em; }
-        .penalty-bar-track { width: 220px; height: 6px; background: rgba(251,191,36,0.15); border-radius: 3px; overflow: hidden; }
-        .penalty-bar-fill { height: 100%; background: #fbbf24; border-radius: 3px; width: 100%; animation: penalty-drain 3s linear forwards; }
-        .penalty-sublabel { font-size: clamp(12px, 3vw, 14px); color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 0.02em; }
-
-        .word-done-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: -80px; }
-        .word-done-count { font-size: clamp(18px, 5vw, 26px); color: rgba(255,255,255,0.6); font-family: 'Righteous', cursive; letter-spacing: 0.03em; }
-        .word-done-msg { font-family: 'Righteous', cursive; font-size: clamp(36px, 10vw, 72px); text-align: center; word-break: break-word; line-height: 1.15; }
-        .word-done-msg.tier-poor { color: #f87171; }
-        .word-done-msg.tier-ok { color: #fbbf24; }
-        .word-done-msg.tier-great { color: #4ade80; }
-
-        /* Action Row */
-        .action-row {
-          display: flex; gap: 12px; width: 100%; max-width: 520px;
-          padding: 0 0 max(24px, env(safe-area-inset-bottom)); flex-shrink: 0;
-        }
-        .action-btn {
-          flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
-          padding: 20px 12px; border-radius: 20px; border: none; cursor: pointer;
-          font-family: 'Righteous', cursive; transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
-          -webkit-tap-highlight-color: transparent; min-width: 0;
-        }
-        .action-btn:focus { outline: none; }
-        .action-btn:active { transform: scale(0.93); }
-        .btn-disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
-        .btn-icon { font-size: 28px; }
-        .btn-label { font-size: clamp(13px, 3.5vw, 16px); white-space: nowrap; }
-
-        .skip-btn { background: rgba(251,191,36,0.15); color: #fbbf24; border: 3px solid rgba(251,191,36,0.3); }
-        .correct-btn { background: rgba(74,222,128,0.2); color: #4ade80; border: 3px solid rgba(74,222,128,0.35); }
-
-        @media (hover: hover) {
-          .skip-btn:hover { background: rgba(251,191,36,0.25); }
-          .correct-btn:hover { background: rgba(74,222,128,0.35); }
-        }
-
-        /* ── Score Screen ── */
-        .score-title { font-family: 'Righteous', cursive; font-size: clamp(22px, 6vw, 28px); text-align: center; margin-bottom: 20px; }
-        .scores-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
-        .score-row {
-          display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px;
-          background: rgba(255,255,255,0.05); border: 3px solid rgba(255,255,255,0.07); animation: slideIn 0.4s ease both;
-        }
-        .score-row-right { text-align: right; }
-        .score-row-subtext { font-size: 11px; opacity: 0.5; margin-top: 2px; }
-        .cursor-pointer { cursor: pointer; }
-        .score-row.cursor-pointer:hover { filter: brightness(1.25); }
-
-        /* Basic row ranks */
-        .score-row.rank-1 { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
-        .score-row.rank-2 { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
-        .score-row.rank-3 { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
-
-        /* Tussenstand */
-        .score-row.rank-1.rank-interim { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
-        .score-row.rank-1.rank-interim .score-pts { color: #4ade80; }
-        .score-row.rank-2.rank-interim, .score-row.rank-3.rank-interim { background: rgba(255,255,255,0.05); border: 3px solid rgba(255,255,255,0.14); }
-        
-        .score-row.rank-interim-tied { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
-        .score-row.rank-interim-tied .score-pts { color: #4ade80; }
-        
-        .score-row.rank-interim-played { background: rgba(167,139,250,0.08); border: 3px solid rgba(167,139,250,0.5); }
-        .score-row.rank-interim-played .score-pts { color: #a78bfa; }
-        .score-row.rank-interim-unplayed { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
-
-        /* Eindstand */
-        .score-row.rank-1.rank-final { background: rgba(251,191,36,0.08); border: 3px solid #fbbf24; }
-        .score-row.rank-1.rank-final .score-pts { color: #fbbf24; }
-        .score-row.rank-2.rank-final { background: rgba(192,192,192,0.1); border: 3px solid #c0c0c0; }
-        .score-row.rank-2.rank-final .score-pts { color: #c0c0c0; }
-        .score-row.rank-3.rank-final { background: rgba(205,127,50,0.08); border: 3px solid #cd7f32; }
-        .score-row.rank-3.rank-final .score-pts { color: #cd7f32; }
-        .score-row.rank-4.rank-final, .score-row.rank-5.rank-final, .score-row.rank-6.rank-final,
-        .score-row.rank-7.rank-final, .score-row.rank-8.rank-final, .score-row.rank-9.rank-final,
-        .score-row.rank-10.rank-final { background: rgba(167,139,250,0.08); border: 3px solid rgba(167,139,250,0.5); }
-        .score-row.rank-final:not(.rank-1):not(.rank-2):not(.rank-3) .score-pts { color: #a78bfa; }
-
-        .score-row.rank-tied { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
-        .score-row.rank-tied .score-pts { color: #4ade80; }
-        .score-row.rank-tied .score-name { color: #4ade80; }
-
-        .rank-badge { font-size: 20px; min-width: 28px; text-align: center; flex-shrink: 0; }
-        .score-name-block { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
-        .score-name { flex: 1; font-size: clamp(14px, 4vw, 18px); font-weight: 700; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .score-members { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .score-pts { font-family: 'Righteous', cursive; font-size: clamp(16px, 4vw, 20px); color: rgba(255,255,255,0.9); flex-shrink: 0; }
-
-        .score-btn {
-          width: 100%; padding: 18px; border-radius: 16px; border: none; font-family: 'Righteous', cursive;
-          font-size: 20px; cursor: pointer; transition: filter 0.18s;
-        }
-        .restart-btn { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); border: 3px solid rgba(255,255,255,0.2); }
-        .restart-btn:hover { background: rgba(255,255,255,0.14); }
-        .final-btns { display: flex; flex-direction: column; }
-
-        /* ── Stats Screen ── */
-        .stats-header-row { display: flex; align-items: center; margin-bottom: 16px; }
-        .stats-back-btn {
-          background: rgba(255,255,255,0.08); border: 2.5px solid rgba(255,255,255,0.15);
-          border-radius: 12px; color: rgba(255,255,255,0.75); font-size: 18px; width: 36px; height: 36px;
-          display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all 0.15s;
-        }
-        .stats-back-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
-        .stats-back-icon { display: inline-block; transform: scaleX(-1); line-height: 1; vertical-align: middle; }
-        .stats-header-title { margin: 0; flex: 1; text-align: center; }
-        .stats-header-spacer { width: 36px; flex-shrink: 0; }
-
-        .stats-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
-        .stats-tab {
-          padding: 6px 14px; border-radius: 20px; border: 2.5px solid rgba(255,255,255,0.15);
-          background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 700;
-          font-family: inherit; cursor: pointer; transition: all 0.15s;
-        }
-        .stats-tab-active { background: rgba(167,139,250,0.25); border-color: rgba(167,139,250,0.6); color: #a78bfa; }
-        .stats-player-name { font-family: 'Righteous', cursive; font-size: 22px; margin-bottom: 2px; }
-        .stats-total-score { color: #a78bfa; font-size: 14px; font-weight: 700; margin-bottom: 16px; }
-        
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-        .stats-cell { background: rgba(255,255,255,0.06); border: 2.5px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 12px; text-align: center; }
-        .stats-cell-correct { background: rgba(74,222,128,0.2); border-color: rgba(74,222,128,0.35); color: #4ade80; }
-        .stats-cell-skip { background: rgba(251,191,36,0.15); border-color: rgba(251,191,36,0.3); color: #fbbf24; }
-        .stats-cell-streak { background: rgba(251,146,60,0.25); border-color: rgba(251,146,60,0.4); color: #fb923c; }
-        .stats-cell-bonus { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.26); color: #f59e0b; }
-        .stats-cell-gold { border-color: rgba(251,146,60,0.35); background: rgba(251,146,60,0.08); }
-        .stats-cell-val { font-family: 'Righteous', cursive; font-size: 26px; }
-        .stats-cell-lbl { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); margin-top: 2px; }
-        .stats-cell-correct .stats-cell-lbl,
-        .stats-cell-skip .stats-cell-lbl,
-        .stats-cell-streak .stats-cell-lbl,
-        .stats-cell-bonus .stats-cell-lbl { color: inherit; opacity: 0.7; }
-        .stats-best {
-          font-size: 13px; font-weight: 700; color: #fbbf24; background: rgba(251,191,36,0.1);
-          border: 2.5px solid rgba(251,191,36,0.25); border-radius: 12px; padding: 10px 14px; margin-bottom: 14px;
-        }
-        
-        .stats-words-section { display: flex; gap: 10px; margin-bottom: 4px; }
-        .stats-words-col { flex: 1; min-width: 0; }
-        .stats-words-title { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
-        .stats-green { color: #4ade80; }
-        .stats-red { color: #f87171; }
-        .stats-words-list { display: flex; flex-wrap: wrap; gap: 4px; }
-        .stats-word-chip {
-          font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 10px; background: rgba(74,222,128,0.1);
-          border: 2.5px solid rgba(74,222,128,0.25); color: #4ade80;
-        }
-        .stats-word-bonus { background: rgba(251,146,60,0.12); border-color: rgba(251,146,60,0.4); color: #fb923c; }
-        .stats-word-skipped { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.25); color: #f87171; }
-        .stats-word-more { font-size: 11px; color: rgba(255,255,255,0.4); align-self: center; }
-
-        /* ── Tiebreaker Screen ── */
-        .tiebreaker-start-btn {
-          width: 100%; background: rgba(251,191,36,0.1); border: 3px solid rgba(251,191,36,0.3);
-          border-radius: 14px; padding: 10px 16px; margin-bottom: 14px; text-align: center;
-          font-size: 14px; font-weight: 700; color: #fbbf24; cursor: pointer; font-family: inherit;
-          transition: background 0.15s, border-color 0.15s;
-        }
-        .tiebreaker-start-btn:hover { background: rgba(251,191,36,0.22); border-color: rgba(251,191,36,0.6); }
-        .tiebreaker-title { margin-bottom: 6px; }
-        .tiebreaker-subtitle { text-align: center; color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 22px; line-height: 1.5; }
-        .tiebreaker-cat-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
-        .tiebreaker-cat-btn {
-          width: 100%; padding: 18px 20px; border-radius: 18px; background: rgba(167,139,250,0.1);
-          border: 2.5px solid rgba(167,139,250,0.3); color: white; font-family: inherit; font-size: 20px;
-          font-weight: 800; cursor: pointer; text-align: left; transition: all 0.15s; display: flex; align-items: center; gap: 12px;
-        }
-        .tiebreaker-cat-btn:hover { background: rgba(167,139,250,0.25); border-color: rgba(167,139,250,0.7); }
-
-        .tiebreaker-result-banner { margin: 0 0 16px; padding: 10px 16px; border-radius: 14px; text-align: center; border: 2.5px solid; }
-        .tiebreaker-result-tied { background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.3); }
-        .tiebreaker-result-winner { background: rgba(74,222,128,0.08); border-color: rgba(74,222,128,0.3); }
-        .tiebreaker-result-text-tied { color: #fbbf24; font-weight: 800; font-size: 14px; }
-        .tiebreaker-result-text-winner { color: #4ade80; font-weight: 800; font-size: 14px; }
-        .tiebreaker-pts { font-size: 17px; }
-        .tiebreaker-handoff-sub { color: #fbbf24; font-weight: 800; letter-spacing: 0.06em; font-size: 13px; }
-        .mb-2 { margin-bottom: 2px; }
-        .mt-0 { margin-top: 0px; }
-        .tiebreaker-timer-circle { transition: stroke-dashoffset 0.05s linear; }
-        .tiebreaker-team-block:not(:last-child) { margin-bottom: 10px; }
-        .tiebreaker-team-row { margin-bottom: 6px; }
-        .tiebreaker-player-list {
-          margin-left: 14px; padding-left: 14px;
-          border-left: 2px solid rgba(255,255,255,0.1);
-          display: flex; flex-direction: column; gap: 5px;
-        }
-        .tiebreaker-player-row {
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 6px 10px; border-radius: 10px;
-          background: rgba(255,255,255,0.04);
-        }
-        .tiebreaker-player-name { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.75); }
-        .tiebreaker-player-time { font-size: 14px; font-weight: 800; color: rgba(255,255,255,0.6); }
-        .grace-countdown { display: inline-block; min-width: 1.5ch; text-align: center; }
-
-        /* ── Animations ── */
-        @keyframes slideIn { from{transform:translateX(-20px);opacity:0} to{transform:translateX(0);opacity:1} }
-        .score-row:nth-child(1) { animation-delay: 0.05s }
-        .score-row:nth-child(2) { animation-delay: 0.1s }
-        .score-row:nth-child(3) { animation-delay: 0.15s }
-        .score-row:nth-child(4) { animation-delay: 0.2s }
-        .score-row:nth-child(5) { animation-delay: 0.25s }
-        .score-row:nth-child(6) { animation-delay: 0.3s }
-        
-        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-        @keyframes flashGreen { 
-          0%  { background: rgba(74,222,128,0.15); }
-          100% { background: rgba(74,222,128,0); } 
-        }
-        @keyframes flashOrange { 
-          0%  { background: rgba(220, 38, 38, 0.25); }
-          100% { background: rgba(220, 38, 38, 0); } 
-        }
-        @keyframes flash-bonus-anim { 
-          0%  { background: rgba(255,215,0,0.15); }
-          100% { background: rgba(255,215,0,0); } 
-        }
-        @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
-        @keyframes penalty-drain { from { width: 100%; } to { width: 0%; } }
-        @keyframes grace-drain { from { width: 100%; } to { width: 0%; } }
-        @keyframes pulse-red-banner { 0%, 100% { box-shadow: 0 0 6px rgba(248,113,113,0.4); } 50% { box-shadow: 0 0 14px rgba(248,113,113,0.8); } }
-        @keyframes pulse-orange-banner { 0%, 100% { box-shadow: 0 0 6px rgba(251,146,60,0.4); } 50% { box-shadow: 0 0 14px rgba(251,146,60,0.8); } }
-        @keyframes ring { 0% { transform: rotate(0deg); } 15% { transform: rotate(18deg); } 30% { transform: rotate(-16deg); } 45% { transform: rotate(14deg); } 60% { transform: rotate(-10deg); } 75% { transform: rotate(6deg); } 90% { transform: rotate(-3deg); } 100% { transform: rotate(0deg); } }
-        @keyframes pulse-gold { 0%, 100% { box-shadow: 0 0 0 0 rgba(251,191,36,0.4); } 50% { box-shadow: 0 0 0 8px rgba(251,191,36,0); } }
-        @keyframes streak-pulse { 0% { transform: scale(0.7); opacity: 0; } 60% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
-
-        /* ── Media Queries ── */
-        @media (max-width: 380px) {
-          .names-grid { grid-template-columns: 1fr; }
-          .logo-title { font-size: 28px; }
-          .timer-wrap svg { width: 80px; height: 80px; }
-        }
-        @media (max-height: 680px) {
-          .handoff-card { padding: 28px 20px; }
-          .handoff-icon { font-size: 40px; margin-bottom: 10px; }
-          .word-stage { gap: 10px; padding: 12px; }
-        }
-      `}</style>
-
-      {phase === "setup" && <SetupScreen onStart={startGame} />}
-
-      {phase === "handoff" && (
-        <HandoffScreen
-          player={players[currentPlayerIdx]}
-          teamName={teams ? teams[getTeamIdxForPlayer(currentPlayerIdx)]?.name : null}
-          onReady={() => setPhase("round")}
+      {phase === "setup" && (
+        <SetupScreen
+          onStart={startGame}
+          gameMode={gameMode}
+          setGameMode={(m) => { setGameMode(m); setPppPlayers(null); }}
+          pppNames={pppNames}
+          setPppNames={setPppNames}
+          onStartPPP={(names) => setPppPlayers(names)}
         />
       )}
 
-      {phase === "round" && (() => {
-        // Bereken totaal aantal punten en skips van eerdere rondes voor deze speler
+      {gameMode === "woordenraad" && phase === "handoff" && (
+        <HandoffScreen player={players[currentPlayerIdx]} teamName={teams ? teams[getTeamIdxForPlayer(currentPlayerIdx)]?.name : null} onReady={() => setPhase("round")} />
+      )}
+
+      {gameMode === "woordenraad" && phase === "round" && (() => {
         const currentPlayerTotalPoints = scores[currentPlayerIdx] ?? 0;
         const currentPlayerTotalSkips = playerStats[currentPlayerIdx]?.rounds.reduce((sum, r) => sum + r.skipped, 0) ?? 0;
-
         return (
-          <RoundScreen
-            key={`${currentPlayerIdx}-${roundNum}`}
-            player={players[currentPlayerIdx]}
-            words={wordDeck}
-            onRoundEnd={onRoundEnd}
-            roundTime={roundTime}
-            initialPoints={currentPlayerTotalPoints}
-            initialSkips={currentPlayerTotalSkips}
-          />
+          <RoundScreen key={`${currentPlayerIdx}-${roundNum}`} player={players[currentPlayerIdx]} words={wordDeck} onRoundEnd={onRoundEnd} roundTime={roundTime} initialPoints={currentPlayerTotalPoints} initialSkips={currentPlayerTotalSkips} />
         );
       })()}
 
-      {phase === "score" && (
-        <ScoreScreen
-          players={players}
-          scores={scores}
-          currentRound={roundNum}
-          totalRounds={totalRounds}
-          onNext={onNext}
-          onRestart={onRestart}
-          onContinue={onContinue}
-          onShowStats={(playerIdx) => { setStatsInitialPlayer(playerIdx ?? 0); setPhase("stats"); }}
-          teams={teams}
-          teamScores={teamScores}
-          onStartTiebreaker={onStartTiebreaker}
-        />
+      {gameMode === "woordenraad" && phase === "score" && (
+        <ScoreScreen players={players} scores={scores} currentRound={roundNum} totalRounds={totalRounds} onNext={onNext} onRestart={onRestart} onContinue={onContinue} onShowStats={(playerIdx) => { setStatsInitialPlayer(playerIdx ?? 0); setPhase("stats"); }} teams={teams} teamScores={teamScores} onStartTiebreaker={onStartTiebreaker} />
       )}
 
-      {phase === "tiebreaker" && tiebreakerState && (
-        <TiebreakerScreen
-          players={players}
-          tiebreakerState={tiebreakerState}
-          onCategoryChosen={onTiebreakerCategoryChosen}
-          onWordGuessed={onTiebreakerWordGuessed}
-          onRestart={onRestart}
-          onStartTiebreaker={onStartTiebreaker}
-        />
+      {gameMode === "woordenraad" && phase === "tiebreaker" && tiebreakerState && (
+        <TiebreakerScreen players={players} tiebreakerState={tiebreakerState} onCategoryChosen={onTiebreakerCategoryChosen} onWordGuessed={onTiebreakerWordGuessed} onRestart={onRestart} onStartTiebreaker={onStartTiebreaker} />
       )}
 
-      {phase === "stats" && (
-        <StatsScreen
-          players={players}
-          playerStats={playerStats}
-          scores={scores}
-          initialPlayer={statsInitialPlayer}
-          roundTime={roundTime}
-          onBack={() => setPhase("score")}
-        />
+      {gameMode === "woordenraad" && phase === "stats" && (
+        <StatsScreen players={players} playerStats={playerStats} scores={scores} initialPlayer={statsInitialPlayer} roundTime={roundTime} onBack={() => setPhase("score")} />
       )}
     </>
   );
 }
+
+const CSS = `
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Righteous&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { font-family: 'Nunito', sans-serif; background: #060d1a; min-height: 100vh; min-height: 100dvh; color: white; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+
+  .screen { min-height: 100vh; min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 16px; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); padding-bottom: max(16px, env(safe-area-inset-bottom)); position: relative; overflow: hidden; width: 100%; }
+  .screen::after { content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.4' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)'/%3E%3C/svg%3E"); background-size: 180px 180px, 340px 340px; opacity: 0.07; mix-blend-mode: overlay; }
+  .screen > * { position: relative; z-index: 1; }
+
+  /* ── Game Mode Switcher ── */
+  .game-mode-switcher { display: flex; gap: 8px; margin-bottom: 24px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 6px; }
+  .game-mode-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 14px; border-radius: 12px; border: none; font-family: 'Righteous', cursive; font-size: 15px; cursor: pointer; transition: all 0.22s; }
+  .game-mode-active { background: rgba(96,165,250,0.18); color: #60a5fa; border: 2px solid rgba(96,165,250,0.4); }
+  .game-mode-active-ppp { background: rgba(245,158,11,0.18); color: #f59e0b; border: 2px solid rgba(245,158,11,0.4); }
+  .game-mode-inactive { background: transparent; color: rgba(255,255,255,0.4); border: 2px solid transparent; }
+  .game-mode-inactive:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.06); }
+  .gm-icon { font-size: 18px; }
+  .gm-label { white-space: nowrap; }
+
+  /* ── PPP Setup ── */
+  .ppp-setup-section { width: 100%; }
+  .ppp-setup-players-wrap { border: 3px solid #f59e0b; border-radius: 24px; padding: 25px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
+
+  /* ── PPP Game Screen ── */
+  .ppp-screen { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 520px; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom)); gap: 0; position: relative; z-index: 1; }
+
+  .ppp-header { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 16px 0 12px; }
+  .ppp-logo { font-family: 'Righteous', cursive; font-size: 22px; background: linear-gradient(135deg, #f59e0b, #ef4444, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .ppp-restart-btn { background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15); border-radius: 12px; color: rgba(255,255,255,0.6); font-family: inherit; font-size: 13px; font-weight: 700; padding: 8px 14px; cursor: pointer; transition: all 0.15s; }
+  .ppp-restart-btn:hover { background: rgba(255,255,255,0.15); color: white; }
+
+  /* Scores strip */
+  .ppp-scores-strip { width: 100%; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .ppp-score-chip { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 20px; background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.12); transition: all 0.2s; }
+  .ppp-score-leader { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); }
+  .ppp-score-chip-name { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); }
+  .ppp-score-chip-val { font-family: 'Righteous', cursive; font-size: 16px; color: #f59e0b; min-width: 18px; text-align: right; }
+  .ppp-score-leader .ppp-score-chip-name { color: #fde68a; }
+
+  /* Card */
+  .ppp-card-area { width: 100%; margin-bottom: 24px; }
+  .ppp-card-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 8px; text-align: center; }
+  .ppp-card { width: 100%; border-radius: 24px; background: rgba(255,255,255,0.07); border: 3px solid rgba(255,255,255,0.14); padding: 3px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  .ppp-card-inner { background: linear-gradient(145deg, rgba(245,158,11,0.08), rgba(239,68,68,0.06)); border-radius: 21px; padding: 32px 24px; text-align: center; min-height: 120px; display: flex; align-items: center; justify-content: center; }
+  .ppp-card-text { font-family: 'Righteous', cursive; font-size: clamp(22px, 6vw, 36px); background: linear-gradient(135deg, #fef9c3, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.2; text-align: center; }
+
+  /* Letter */
+  .ppp-letter-area { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 24px; }
+  .ppp-letter { font-family: 'Righteous', cursive; font-size: clamp(72px, 22vw, 140px); line-height: 1; text-align: center; min-width: 160px; display: flex; align-items: center; justify-content: center; border-radius: 28px; padding: 12px 32px; border: 4px solid; }
+  .ppp-letter-spinning { color: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); animation: ppp-spin-flash 0.07s infinite; }
+  .ppp-letter-landed { background: linear-gradient(145deg, rgba(245,158,11,0.12), rgba(239,68,68,0.08)); border-color: rgba(245,158,11,0.5); animation: ppp-letter-land 0.45s cubic-bezier(0.34,1.56,0.64,1); background-image: linear-gradient(135deg, #fef9c3, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .ppp-letter-placeholder { font-family: 'Righteous', cursive; font-size: clamp(72px, 22vw, 140px); color: rgba(255,255,255,0.1); line-height: 1; padding: 12px 32px; border-radius: 28px; border: 4px dashed rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); }
+  .ppp-spin-btn { font-family: 'Righteous', cursive; font-size: 18px; padding: 14px 36px; border-radius: 16px; border: 3px solid; cursor: pointer; transition: all 0.2s; }
+  .ppp-spin-btn:not(.ppp-spin-disabled):not(.ppp-spin-spinning) { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); color: #f59e0b; }
+  .ppp-spin-btn:not(.ppp-spin-disabled):not(.ppp-spin-spinning):hover { background: rgba(245,158,11,0.25); }
+  .ppp-spin-spinning { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); cursor: not-allowed; }
+  .ppp-spin-disabled { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.3); color: #4ade80; cursor: default; }
+
+  /* Award section */
+  .ppp-award-section { width: 100%; }
+  .ppp-award-label { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 14px; }
+  .ppp-score-chip-btn { cursor: pointer; font-family: inherit; border: none; -webkit-tap-highlight-color: transparent; transition: all 0.18s cubic-bezier(0.34,1.56,0.64,1); }
+  .ppp-score-chip-btn:hover { transform: scale(1.06); filter: brightness(1.25); }
+  .ppp-score-chip-btn:active { transform: scale(0.94); }
+
+  /* Awarded section */
+  .ppp-awarded-section { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .ppp-awarded-banner { background: rgba(74,222,128,0.12); border: 3px solid rgba(74,222,128,0.4); border-radius: 20px; padding: 16px 24px; text-align: center; font-size: clamp(16px, 4.5vw, 22px); font-weight: 800; width: 100%; animation: ppp-award-pop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+  .ppp-awarded-name { color: #4ade80; }
+  .ppp-next-btn { font-family: 'Righteous', cursive; font-size: 20px; padding: 16px 40px; border-radius: 16px; background: rgba(245,158,11,0.15); border: 3px solid rgba(245,158,11,0.4); color: #f59e0b; cursor: pointer; transition: all 0.2s; }
+  .ppp-next-btn:hover { background: rgba(245,158,11,0.28); }
+  .ppp-next-btn:active { transform: scale(0.96); }
+
+  .ppp-ready-hint { font-size: 14px; color: rgba(255,255,255,0.3); font-weight: 700; text-align: center; padding: 20px; }
+
+  /* ── Cards & Layout ── */
+  .setup-card, .score-card, .stats-card { background: rgba(255,255,255,0.06); border: 3px solid rgba(255,255,255,0.12); border-radius: 24px; padding: 28px 20px; width: 100%; backdrop-filter: blur(20px); overflow: hidden; }
+  .setup-card { max-width: 480px; }
+  .score-card { max-width: 440px; }
+  .stats-card { max-width: 480px; overflow-y: auto; max-height: 92vh; }
+  .logo-area { text-align: center; margin-bottom: 36px; }
+  .logo-icon { font-size: 52px; margin-bottom: 8px; }
+  .logo-title { font-family: 'Righteous', cursive; font-size: 36px; background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .logo-sub { color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 4px; }
+  .setup-section { margin-bottom: 28px; }
+  .names-grid { display: grid; grid-template-columns: 1fr; gap: 4px; }
+
+  /* ── Toggles & Buttons ── */
+  .setup-mode-segmented { display: flex; margin-bottom: 28px; border: 2px solid rgba(255,255,255,0.15); border-radius: 14px; overflow: hidden; }
+  .mode-seg-btn { flex: 1; padding: 13px 10px; font-family: 'Righteous', cursive; font-size: 17px; letter-spacing: 0.04em; cursor: pointer; border: none; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .mode-seg-active { background: rgba(74,144,226,0.18); color: #4a90e2; }
+  .mode-seg-inactive { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.45); }
+  .mode-seg-inactive:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.7); }
+
+  .start-btn, .handoff-btn, .continue-btn, .next-btn { position: relative; display: block; width: 100%; padding: 16px 32px; cursor: pointer; background-color: #060d1a; border-radius: 12px; border: none; font-family: 'Righteous', cursive; font-size: 20px; transition: transform 0.2s ease; z-index: 1; }
+  .handoff-btn { width: max-content; margin: 0 auto; min-width: 150px; }
+  .continue-btn { margin-bottom: 10px; }
+  .start-btn::before, .handoff-btn::before, .continue-btn::before, .next-btn::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 12px; padding: 3px; background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+  .start-btn, .handoff-btn, .continue-btn, .next-btn { background-image: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; }
+  .start-btn:active, .handoff-btn:active, .next-btn:active { transform: scale(0.98); }
+  .start-btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+
+  .cat-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .cat-section-title { font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+  .cat-toggle-pill { font-family: inherit; font-weight: 700; line-height: inherit; letter-spacing: normal; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; padding: 7px 14px; border-radius: 20px; cursor: pointer; transition: all 0.2s; }
+  .cat-toggle-pill-active { background: rgba(52,211,153,0.12); border: 2px solid #34d399; color: #34d399; }
+  .cat-toggle-pill-active:hover { background: rgba(52,211,153,0.22); }
+  .cat-toggle-pill-custom { background: rgba(74,144,226,0.1); border: 2px solid #4a90e2; color: #4a90e2; }
+  .cat-toggle-pill-custom:hover { background: rgba(74,144,226,0.2); }
+  .cat-preview-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700; }
+  .cat-preview-chip { font-size: 12px; padding: 5px 11px; border-radius: 20px; background: rgba(52,211,153,0.08); border: 2px solid rgba(52,211,153,0.3); color: rgba(52,211,153,0.75); }
+  .cat-preview-more { font-size: 12px; padding: 5px 11px; border-radius: 20px; background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.2); color: rgba(255,255,255,0.35); }
+  .category-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700; }
+  .category-btn { font-family: inherit; font-weight: inherit; line-height: inherit; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; padding: 5px 11px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s; user-select: none; }
+  .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
+  .category-btn-active { background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.3); color: rgba(52,211,153,0.75); }
+  .category-btn-active:hover { background: rgba(52,211,153,0.18); border-color: #34d399; color: #34d399; }
+
+  .player-input-group { display: flex; margin-bottom: 4px; height: 48px; width: 100%; }
+  .player-name-container { display: flex; align-items: center; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 0 12px; flex-grow: 1; transition: border-color 0.2s; }
+  .player-input-group:has(.integrated-delete-btn) .player-name-container { border-radius: 12px 0 0 12px; }
+  .player-bg { background: rgba(255,255,255,0.06) !important; border: none; }
+  .player-index-badge { color: rgba(255,255,255,0.3); font-weight: bold; font-size: 0.85rem; min-width: 20px; }
+  .integrated-name-input { background: transparent !important; border: none !important; color: white !important; width: 100%; height: 100%; font-size: 1rem; outline: none; padding-left: 8px; }
+  .integrated-delete-btn { background: #ff4757; color: white; border: none; border-radius: 0 12px 12px 0; width: 48px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: background 0.2s; }
+  .integrated-delete-btn:hover { background: #ff2e44; }
+  .btn-subtle { background: rgba(255,255,255,0.1) !important; color: white !important; }
+  .add-player-integrated { width: 100%; height: 44px; margin-top: 8px; background: rgba(52,211,153,0.1); border: 2px dashed #34d399; border-radius: 12px; color: #34d399; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; font-size: 1rem; font-weight: 600; }
+  .add-player-integrated:hover { background: rgba(52,211,153,0.2); }
+  .add-player-in-team { margin-top: 12px; }
+
+  .teams-setup-wrapper { border: 3px solid #4a90e2; border-radius: 24px; padding: 25px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
+  .setup-wrapper-badge { position: absolute; top: -14px; left: 20px; background-color: #4a90e2; color: white; padding: 4px 16px; border-radius: 12px; font-size: 0.75rem; font-weight: 900; letter-spacing: 1px; z-index: 1; }
+  .teams-grid { display: flex; flex-direction: column; gap: 14px; }
+  .team-section-container { margin-bottom: 14px; padding: 10px 0; width: 100%; background-color: transparent; border-radius: 16px; }
+  .team-header-row { position: relative; display: flex; align-items: center; margin-bottom: 8px; }
+  .team-name-input-flat { background: transparent !important; border: none !important; border-bottom: 2px solid rgba(74,144,226,0.4) !important; color: #4a90e2 !important; font-size: 1.1rem; font-weight: bold; text-transform: uppercase; padding: 2px 0; width: 100%; outline: none; }
+  .delete-btn-round { position: absolute; right: 0; top: 0; background: rgba(0,0,0,0.02); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 10px; }
+  .team-players-list { display: flex; flex-direction: column; gap: 4px; }
+  .team-add-btn { margin-top: 15px; border-color: #4a90e2; color: #4a90e2; background: rgba(74,144,226,0.1); }
+  .team-add-btn:hover { background: rgba(74,144,226,0.2); }
+  .small-group { height: 38px !important; margin-bottom: 4px !important; }
+  .small-group .player-name-container { border-radius: 10px; }
+  .small-group:has(.integrated-delete-btn) .player-name-container { border-radius: 10px 0 0 10px; }
+  .small-group .integrated-delete-btn { border-radius: 0 10px 10px 0; width: 38px !important; }
+
+  .time-section-label { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 10px; }
+  .time-control { display: flex; align-items: center; gap: 12px; }
+  .time-btn { width: 64px; height: 44px; border-radius: 12px; border: 2px dashed #4a90e2; background: rgba(52,211,153,0.1); color: #4a90e2; font-family: 'Righteous'; font-size: 24px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .time-btn-minus { border-color: #4a90e2; background: rgba(248,113,113,0.1); color: #4a90e2; }
+  .time-btn:disabled { opacity: 0.3; cursor: default; }
+  .time-btn-disabled { opacity: 1 !important; cursor: not-allowed !important; pointer-events: none; background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.35) !important; }
+  .time-display { flex: 1; text-align: center; font-family: 'Righteous', cursive; font-size: 24px; color: rgba(255,255,255,0.9); }
+
+  .handoff-screen { background: none; }
+  .handoff-card { text-align: center; padding: 40px 24px; background: rgba(255,255,255,0.06); border: 3px solid rgba(255,255,255,0.12); border-radius: 28px; max-width: 400px; width: 100%; backdrop-filter: blur(20px); }
+  .handoff-icon { font-size: 52px; margin-bottom: 16px; animation: bounce 1.5s infinite; }
+  .handoff-sub { font-size: 12px; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; margin-bottom: 12px; }
+  .handoff-name { font-family: 'Righteous', cursive; font-size: clamp(28px, 8vw, 42px); margin-bottom: 24px; background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: inline-block; }
+  .handoff-team { font-size: 13px; color: #34d399; font-weight: 800; letter-spacing: 0.06em; margin-top: -10px; margin-bottom: 16px; }
+  .handoff-tip { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
+
+  .round-screen { flex-direction: column; background: none; transition: background 0.2s; padding-top: max(28px, env(safe-area-inset-top)); }
+  .round-screen.flash-correct { animation: flashGreen 1.25s ease; }
+  .round-screen.flash-skip { animation: flashOrange 1.25s ease; }
+  .round-screen.flash-bonus { animation: flash-bonus-anim 1.25s ease; }
+  .round-top { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 520px; padding: 28px 0 12px; gap: 8px; flex-shrink: 0; position: relative; }
+  .round-player { font-family: 'Righteous', cursive; font-size: clamp(14px, 4vw, 20px); color: #a78bfa; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .timer-wrap { position: absolute; left: 50%; transform: translateX(-50%); flex-shrink: 0; }
+  .timer-circle-progress { transition: stroke 0.5s; }
+  .timer-ring { animation: ring 0.5s infinite; transform-origin: 50px 50px; }
+  .round-stats { display: flex; gap: 8px; flex-shrink: 0; margin-left: auto; }
+  .stat { font-size: 14px; font-weight: 800; padding: 5px 10px; border-radius: 20px; white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-width: 52px; }
+  .stat-icon { display: flex; align-items: center; justify-content: center; line-height: 1; }
+  .correct-stat { background: rgba(74,222,128,0.2); color: #4ade80; }
+  .correct-stat-fire { background: rgba(251,146,60,0.25); color: #fb923c; text-shadow: 0 0 8px rgba(251,146,60,0.7); transition: background 0.3s, color 0.3s; }
+  .skip-stat { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .round-stats-cat { font-size: 12px; color: rgba(255,255,255,0.4); }
+  .word-stage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; max-width: 520px; width: 100%; gap: 0; padding: 20px; }
+  .word-anchor { display: flex; flex-direction: column; align-items: center; }
+  .word-counter { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 10px; }
+  .current-word { font-family: 'Righteous', cursive; font-size: clamp(38px, 11vw, 80px); background: linear-gradient(135deg, #f9fafb, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.15; animation: wordIn 0.3s cubic-bezier(0.34,1.56,0.64,1); word-break: break-word; overflow-wrap: break-word; hyphens: manual; -webkit-hyphens: manual; max-width: 100%; padding: 0 8px; text-align: center; }
+  .current-word.bonus-word { background: linear-gradient(135deg, #fef9c3, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .times-up-banner { font-family: 'Righteous', cursive; font-size: clamp(13px, 3.5vw, 16px); color: #f87171; background: rgba(248,113,113,0.12); border: 3px solid rgba(248,113,113,0.35); border-radius: 12px; padding: 8px 16px; text-align: center; min-height: 40px; margin-top: 20px; animation: pulse-red-banner 1.2s ease-in-out infinite; position: relative; overflow: hidden; }
+  .times-up-banner.grace-active::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(248,113,113,0.22); animation: grace-drain 10s linear forwards; border-radius: 9px 0 0 9px; pointer-events: none; }
+  .times-up-banner.bonus-banner { color: #f59e0b; background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.26); animation: none; }
+  .times-up-banner.category-banner { color: #a78bfa; background: rgba(167,139,250,0.10); border-color: rgba(167,139,250,0.30); animation: none; font-size: clamp(12px, 3.2vw, 15px); }
+  .is-hidden { visibility: hidden; }
+  .penalty-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .penalty-label { font-family: 'Righteous', cursive; font-size: clamp(15px, 4vw, 18px); color: #fbbf24; letter-spacing: 0.04em; }
+  .penalty-bar-track { width: 220px; height: 6px; background: rgba(251,191,36,0.15); border-radius: 3px; overflow: hidden; }
+  .penalty-bar-fill { height: 100%; background: #fbbf24; border-radius: 3px; width: 100%; animation: penalty-drain 3s linear forwards; }
+  .penalty-sublabel { font-size: clamp(12px, 3vw, 14px); color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 0.02em; }
+  .word-done-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: -80px; }
+  .word-done-count { font-size: clamp(18px, 5vw, 26px); color: rgba(255,255,255,0.6); font-family: 'Righteous', cursive; letter-spacing: 0.03em; }
+  .word-done-msg { font-family: 'Righteous', cursive; font-size: clamp(36px, 10vw, 72px); text-align: center; word-break: break-word; line-height: 1.15; }
+  .word-done-msg.tier-poor { color: #f87171; }
+  .word-done-msg.tier-ok { color: #fbbf24; }
+  .word-done-msg.tier-great { color: #4ade80; }
+
+  .action-row { display: flex; gap: 12px; width: 100%; max-width: 520px; padding: 0 0 max(24px, env(safe-area-inset-bottom)); flex-shrink: 0; }
+  .action-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 20px 12px; border-radius: 20px; border: none; cursor: pointer; font-family: 'Righteous', cursive; transition: all 0.18s cubic-bezier(0.34,1.56,0.64,1); -webkit-tap-highlight-color: transparent; min-width: 0; }
+  .action-btn:focus { outline: none; }
+  .action-btn:active { transform: scale(0.93); }
+  .btn-disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+  .btn-icon { font-size: 28px; }
+  .btn-label { font-size: clamp(13px, 3.5vw, 16px); white-space: nowrap; }
+  .skip-btn { background: rgba(251,191,36,0.15); color: #fbbf24; border: 3px solid rgba(251,191,36,0.3); }
+  .correct-btn { background: rgba(74,222,128,0.2); color: #4ade80; border: 3px solid rgba(74,222,128,0.35); }
+  @media (hover: hover) { .skip-btn:hover { background: rgba(251,191,36,0.25); } .correct-btn:hover { background: rgba(74,222,128,0.35); } }
+
+  .score-title { font-family: 'Righteous', cursive; font-size: clamp(22px, 6vw, 28px); text-align: center; margin-bottom: 20px; }
+  .scores-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+  .score-row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px; background: rgba(255,255,255,0.05); border: 3px solid rgba(255,255,255,0.07); animation: slideIn 0.4s ease both; }
+  .score-row-right { text-align: right; }
+  .score-row-subtext { font-size: 11px; opacity: 0.5; margin-top: 2px; }
+  .cursor-pointer { cursor: pointer; }
+  .score-row.cursor-pointer:hover { filter: brightness(1.25); }
+  .score-row.rank-1.rank-interim { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
+  .score-row.rank-1.rank-interim .score-pts { color: #4ade80; }
+  .score-row.rank-interim-tied { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
+  .score-row.rank-interim-tied .score-pts { color: #4ade80; }
+  .score-row.rank-interim-played { background: rgba(167,139,250,0.08); border: 3px solid rgba(167,139,250,0.5); }
+  .score-row.rank-interim-played .score-pts { color: #a78bfa; }
+  .score-row.rank-interim-unplayed { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
+  .score-row.rank-1.rank-final { background: rgba(251,191,36,0.08); border: 3px solid #fbbf24; }
+  .score-row.rank-1.rank-final .score-pts { color: #fbbf24; }
+  .score-row.rank-2.rank-final { background: rgba(192,192,192,0.1); border: 3px solid #c0c0c0; }
+  .score-row.rank-2.rank-final .score-pts { color: #c0c0c0; }
+  .score-row.rank-3.rank-final { background: rgba(205,127,50,0.08); border: 3px solid #cd7f32; }
+  .score-row.rank-3.rank-final .score-pts { color: #cd7f32; }
+  .score-row.rank-final:not(.rank-1):not(.rank-2):not(.rank-3) .score-pts { color: #a78bfa; }
+  .score-row.rank-tied { background: rgba(74,222,128,0.08); border: 3px solid #4ade80; }
+  .score-row.rank-tied .score-pts { color: #4ade80; }
+  .score-row.rank-tied .score-name { color: #4ade80; }
+  .rank-badge { font-size: 20px; min-width: 28px; text-align: center; flex-shrink: 0; }
+  .score-name-block { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
+  .score-name { flex: 1; font-size: clamp(14px, 4vw, 18px); font-weight: 700; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .score-members { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .score-pts { font-family: 'Righteous', cursive; font-size: clamp(16px, 4vw, 20px); color: rgba(255,255,255,0.9); flex-shrink: 0; }
+  .score-btn { width: 100%; padding: 18px; border-radius: 16px; border: none; font-family: 'Righteous', cursive; font-size: 20px; cursor: pointer; transition: filter 0.18s; }
+  .restart-btn { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); border: 3px solid rgba(255,255,255,0.2); }
+  .restart-btn:hover { background: rgba(255,255,255,0.14); }
+  .final-btns { display: flex; flex-direction: column; }
+
+  .stats-header-row { display: flex; align-items: center; margin-bottom: 16px; }
+  .stats-back-btn { background: rgba(255,255,255,0.08); border: 2.5px solid rgba(255,255,255,0.15); border-radius: 12px; color: rgba(255,255,255,0.75); font-size: 18px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all 0.15s; }
+  .stats-back-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+  .stats-back-icon { display: inline-block; transform: scaleX(-1); line-height: 1; vertical-align: middle; }
+  .stats-header-title { margin: 0; flex: 1; text-align: center; }
+  .stats-header-spacer { width: 36px; flex-shrink: 0; }
+  .stats-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .stats-tab { padding: 6px 14px; border-radius: 20px; border: 2.5px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 700; font-family: inherit; cursor: pointer; transition: all 0.15s; }
+  .stats-tab-active { background: rgba(167,139,250,0.25); border-color: rgba(167,139,250,0.6); color: #a78bfa; }
+  .stats-player-name { font-family: 'Righteous', cursive; font-size: 22px; margin-bottom: 2px; }
+  .stats-total-score { color: #a78bfa; font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .stats-cell { background: rgba(255,255,255,0.06); border: 2.5px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 12px; text-align: center; }
+  .stats-cell-correct { background: rgba(74,222,128,0.2); border-color: rgba(74,222,128,0.35); color: #4ade80; }
+  .stats-cell-skip { background: rgba(251,191,36,0.15); border-color: rgba(251,191,36,0.3); color: #fbbf24; }
+  .stats-cell-streak { background: rgba(251,146,60,0.25); border-color: rgba(251,146,60,0.4); color: #fb923c; }
+  .stats-cell-bonus { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.26); color: #f59e0b; }
+  .stats-cell-val { font-family: 'Righteous', cursive; font-size: 26px; }
+  .stats-cell-lbl { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); margin-top: 2px; }
+  .stats-cell-correct .stats-cell-lbl, .stats-cell-skip .stats-cell-lbl, .stats-cell-streak .stats-cell-lbl, .stats-cell-bonus .stats-cell-lbl { color: inherit; opacity: 0.7; }
+  .stats-best { font-size: 13px; font-weight: 700; color: #fbbf24; background: rgba(251,191,36,0.1); border: 2.5px solid rgba(251,191,36,0.25); border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; }
+  .stats-words-section { display: flex; gap: 10px; margin-bottom: 4px; }
+  .stats-words-col { flex: 1; min-width: 0; }
+  .stats-words-title { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+  .stats-green { color: #4ade80; }
+  .stats-red { color: #f87171; }
+  .stats-words-list { display: flex; flex-wrap: wrap; gap: 4px; }
+  .stats-word-chip { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 10px; background: rgba(74,222,128,0.1); border: 2.5px solid rgba(74,222,128,0.25); color: #4ade80; }
+  .stats-word-bonus { background: rgba(251,146,60,0.12); border-color: rgba(251,146,60,0.4); color: #fb923c; }
+  .stats-word-skipped { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.25); color: #f87171; }
+  .stats-word-more { font-size: 11px; color: rgba(255,255,255,0.4); align-self: center; }
+
+  .tiebreaker-start-btn { width: 100%; background: rgba(251,191,36,0.1); border: 3px solid rgba(251,191,36,0.3); border-radius: 14px; padding: 10px 16px; margin-bottom: 14px; text-align: center; font-size: 14px; font-weight: 700; color: #fbbf24; cursor: pointer; font-family: inherit; transition: background 0.15s, border-color 0.15s; }
+  .tiebreaker-start-btn:hover { background: rgba(251,191,36,0.22); border-color: rgba(251,191,36,0.6); }
+  .tiebreaker-title { margin-bottom: 6px; }
+  .tiebreaker-subtitle { text-align: center; color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 22px; line-height: 1.5; }
+  .tiebreaker-cat-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .tiebreaker-cat-btn { width: 100%; padding: 18px 20px; border-radius: 18px; background: rgba(167,139,250,0.1); border: 2.5px solid rgba(167,139,250,0.3); color: white; font-family: inherit; font-size: 20px; font-weight: 800; cursor: pointer; text-align: left; transition: all 0.15s; display: flex; align-items: center; gap: 12px; }
+  .tiebreaker-cat-btn:hover { background: rgba(167,139,250,0.25); border-color: rgba(167,139,250,0.7); }
+  .tiebreaker-result-banner { margin: 0 0 16px; padding: 10px 16px; border-radius: 14px; text-align: center; border: 2.5px solid; }
+  .tiebreaker-result-tied { background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.3); }
+  .tiebreaker-result-winner { background: rgba(74,222,128,0.08); border-color: rgba(74,222,128,0.3); }
+  .tiebreaker-result-text-tied { color: #fbbf24; font-weight: 800; font-size: 14px; }
+  .tiebreaker-result-text-winner { color: #4ade80; font-weight: 800; font-size: 14px; }
+  .tiebreaker-pts { font-size: 17px; }
+  .tiebreaker-handoff-sub { color: #fbbf24; font-weight: 800; letter-spacing: 0.06em; font-size: 13px; }
+  .mb-2 { margin-bottom: 2px; }
+  .mt-0 { margin-top: 0px; }
+  .tiebreaker-timer-circle { transition: stroke-dashoffset 0.05s linear; }
+  .tiebreaker-team-block:not(:last-child) { margin-bottom: 10px; }
+  .tiebreaker-team-row { margin-bottom: 6px; }
+  .tiebreaker-player-list { margin-left: 14px; padding-left: 14px; border-left: 2px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 5px; }
+  .tiebreaker-player-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-radius: 10px; background: rgba(255,255,255,0.04); }
+  .tiebreaker-player-name { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.75); }
+  .tiebreaker-player-time { font-size: 14px; font-weight: 800; color: rgba(255,255,255,0.6); }
+  .grace-countdown { display: inline-block; min-width: 1.5ch; text-align: center; }
+
+  /* ── Animations ── */
+  @keyframes slideIn { from{transform:translateX(-20px);opacity:0} to{transform:translateX(0);opacity:1} }
+  .score-row:nth-child(1){animation-delay:0.05s} .score-row:nth-child(2){animation-delay:0.1s} .score-row:nth-child(3){animation-delay:0.15s} .score-row:nth-child(4){animation-delay:0.2s} .score-row:nth-child(5){animation-delay:0.25s} .score-row:nth-child(6){animation-delay:0.3s}
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  @keyframes flashGreen { 0%{background:rgba(74,222,128,0.15)} 100%{background:rgba(74,222,128,0)} }
+  @keyframes flashOrange { 0%{background:rgba(220,38,38,0.25)} 100%{background:rgba(220,38,38,0)} }
+  @keyframes flash-bonus-anim { 0%{background:rgba(255,215,0,0.15)} 100%{background:rgba(255,215,0,0)} }
+  @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
+  @keyframes penalty-drain { from{width:100%} to{width:0%} }
+  @keyframes grace-drain { from{width:100%} to{width:0%} }
+  @keyframes pulse-red-banner { 0%,100%{box-shadow:0 0 6px rgba(248,113,113,0.4)} 50%{box-shadow:0 0 14px rgba(248,113,113,0.8)} }
+  @keyframes ring { 0%{transform:rotate(0deg)} 15%{transform:rotate(18deg)} 30%{transform:rotate(-16deg)} 45%{transform:rotate(14deg)} 60%{transform:rotate(-10deg)} 75%{transform:rotate(6deg)} 90%{transform:rotate(-3deg)} 100%{transform:rotate(0deg)} }
+
+  @keyframes ppp-letter-land { 0%{transform:scale(0.5) rotate(-8deg);opacity:0} 70%{transform:scale(1.12) rotate(2deg)} 100%{transform:scale(1) rotate(0deg);opacity:1} }
+  @keyframes ppp-spin-flash { 0%{opacity:0.4} 50%{opacity:0.9} 100%{opacity:0.4} }
+  @keyframes ppp-award-pop { 0%{transform:scale(0.8);opacity:0} 70%{transform:scale(1.04)} 100%{transform:scale(1);opacity:1} }
+
+  @media (max-width: 380px) { .names-grid { grid-template-columns: 1fr; } .logo-title { font-size: 28px; } .timer-wrap svg { width: 80px; height: 80px; } }
+  @media (max-height: 680px) { .handoff-card { padding: 28px 20px; } .handoff-icon { font-size: 40px; margin-bottom: 10px; } .word-stage { gap: 10px; padding: 12px; } }
+`;
