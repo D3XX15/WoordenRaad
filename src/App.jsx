@@ -12,11 +12,10 @@ const LS_CARDS = [
   "iets in een winkelcentrum", "iets van vroeger", "iets op het internet", "iets in een speeltuin", "een kledingstuk", "iets in de ruimte",
   "iets in een pretpark", "iets in een bioscoop", "een acteur of actrice", "een tekenfilmfiguur", "iets in een kasteel", "iets rond Kerst",
   "iets rond Sinterklaas", "iets rond Halloween", "iets wat je niet mag doen in de klas", "iets rond carnaval", "iets op een wereldkaart",
-  "iets wat je kunt meten", "iets wat duur is", "iets wat gratis is", "iets wat je kunt winnen", "iets wat je kunt verliezen",
+  "iets wat je kunt meten", "iets wat duur is", "iets wat gratis is", "iets wat je kunt winnen", "iets wat je kunt verliezen", "een deel van een auto",
   "iets wat met water te maken heeft", "iets wat kan exploderen", "iets wat uitgestorven is", "iets wat kan zweven", "iets wat kan praten",
   "iets in een apotheek", "iets bij de (tand)arts", "iets wat je dagelijks doet", "iets wat snel gaat", "iets wat groot is", "iets wat klein is",
   "een gewoonte", "iets wat spannend is", "iets wat saai is", "iets wat je zegt als je je teen stoot", "een politicus", "iets wat plakt",
-  "een uitvinding", "een wetenschapper", "een kunstenaar", "een deel van een auto", "een muzikant", "een sportster", "een historisch figuur",
   "iets uit de Middeleeuwen", "iets uit de oudheid", "iets uit WO II", "iets Japans", "iets Frans", "iets Italiaans", "iets Amerikaans",
   "een dessert", "een hoofdgerecht", "een voorgerecht", "een ontbijtproduct", "iets wat je kunt bakken", "iets met suiker", "iets zonder suiker",
   "een snack", "iets op een pizza", "iets in een salade", "een fruitsoort", "een spel", "een computerspel", "iets waar je bang voor bent",
@@ -35,10 +34,10 @@ const LS_CARDS = [
 
 // ── LetterSnel Component ─────────────────────────────────────────────────────
 
-const ALPHABET = "ABDEFGHKLMNOPRSTW".split("");
-// Q and X are less common, so we optionally weight them lighter — keep all for authenticity
+const ALPHABET_ALL = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-function LetterSnelGame({ players, onRestart }) {
+function LetterSnelGame({ players, onRestart, activeLetters }) {
+  const alphabet = activeLetters && activeLetters.length > 0 ? activeLetters : ALPHABET_ALL;
   const [scores, setScores] = useState(Array(players.length).fill(0));
   const [currentCardIdx, setCurrentCardIdx] = useState(0);
   const [cardDeck, setCardDeck] = useState(() => shuffle([...LS_CARDS]));
@@ -60,14 +59,14 @@ function LetterSnelGame({ players, onRestart }) {
     setSpinning(true);
     spinCountRef.current = 0;
     const totalTicks = 18 + Math.floor(Math.random() * 12); // ~18–30 ticks
-    const available = ALPHABET.filter(l => l !== letter);
+    const available = alphabet.filter(l => l !== letter);
     targetLetterRef.current = available[Math.floor(Math.random() * available.length)];
 
     spinIntervalRef.current = setInterval(() => {
       spinCountRef.current++;
       // Show random letters while spinning, then settle on target
       if (spinCountRef.current < totalTicks) {
-        setLetter(ALPHABET[Math.floor(Math.random() * ALPHABET.length)]);
+        setLetter(alphabet[Math.floor(Math.random() * alphabet.length)]);
       } else {
         clearInterval(spinIntervalRef.current);
         setLetter(targetLetterRef.current);
@@ -159,17 +158,32 @@ function LetterSnelGame({ players, onRestart }) {
 }
 
 // ── LetterSnel Setup overlay ─────────────────────────────────────────────────
-function LetterSnelSetup({ onStartLS, names, setNames }) {
-  const canStart = names.length >= 2 && names.every(n => n.trim().length > 0);
+function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveLetters }) {
+  const canStart = names.length >= 2 && names.every(n => n.trim().length > 0) && activeLetters.length >= 2;
 
   const addPlayer = () => { if (names.length < 10) setNames(prev => [...prev, ""]); };
   const removePlayer = (i) => { if (names.length > 2) setNames(prev => prev.filter((_, j) => j !== i)); };
   const updateName = (i, v) => setNames(prev => prev.map((n, j) => j === i ? v : n));
 
+  const toggleLetter = (letter) => {
+    setActiveLetters(prev =>
+      prev.includes(letter)
+        ? prev.length > 2 ? prev.filter(l => l !== letter) : prev // min 2 letters
+        : [...prev, letter].sort()
+    );
+  };
+
+  const letterRows = [
+    ALPHABET_ALL.slice(0, 7),
+    ALPHABET_ALL.slice(7, 14),
+    ALPHABET_ALL.slice(14, 21),
+    ALPHABET_ALL.slice(21, 26),
+  ];
+
   return (
     <div className="ls-setup-section">
       <div className="ls-setup-players-wrap">
-        <div className="setup-wrapper-badge" style={{background:"#f59e0b", top:"-14px"}}>SPELERS</div>
+        <div className="setup-wrapper-badge" style={{background:"#d97706", top:"-14px"}}>SPELERS</div>
         <div className="names-grid">
           {names.map((name, i) => (
             <div key={i} className="player-input-group small-group">
@@ -194,13 +208,29 @@ function LetterSnelSetup({ onStartLS, names, setNames }) {
         </div>
       </div>
 
+      <div className="ls-letters-wrap">
+        <div className="setup-wrapper-badge" style={{background:"#ea580c"}}>LETTERS</div>
+        {letterRows.map((row, ri) => (
+          <div key={ri} className="ls-letter-toggle-row">
+            {row.map(l => (
+              <button
+                key={l}
+                className={`ls-letter-toggle-btn ${activeLetters.includes(l) ? "ls-letter-toggle-on" : "ls-letter-toggle-off"}`}
+                onClick={() => toggleLetter(l)}
+              >{l}</button>
+            ))}
+          </div>
+        ))}
+        <div className="ls-letters-count">{activeLetters.length} van 26 letters actief</div>
+      </div>
+
       <button
         className={`start-btn ${canStart ? "ready-solid" : ""}`}
         style={{marginTop: "12px"}}
-        onClick={() => canStart && onStartLS(names.map(n => n.trim()))}
+        onClick={() => canStart && onStartLS(names.map(n => n.trim()), activeLetters)}
         disabled={!canStart}
       >
-        {canStart ? "Spel starten ➜" : "Vul alles in…"}
+        {canStart ? "Spel starten ➜" : activeLetters.length < 2 ? "Kies minimaal 2 letters" : "Vul alles in…"}
       </button>
     </div>
   );
@@ -1678,7 +1708,7 @@ function getRandomEndMessage(correctCount, roundTime, totalScore = correctCount)
   return { message: pool[idx](correctCount, totalScore), tier, count: correctCount, totalScore };
 }
 
-function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onStartLS }) {
+function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onStartLS, lsActiveLetters, setLsActiveLetters }) {
   const [names, setNames] = useState(["Dennis", "Marion", "Theo"]);
   const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
   const [teamMode, setTeamMode] = useState(false);
@@ -1777,7 +1807,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
               <h1 className="logo-title" style={{background:"linear-gradient(135deg,#f59e0b,#ef4444,#f97316)", WebkitBackgroundClip:"text", backgroundClip:"text", WebkitTextFillColor:"transparent"}}>LetterSnel</h1>
               <p className="logo-sub">Noem een woord dat start met de letter!</p>
             </div>
-            <LetterSnelSetup onStartLS={onStartLS} names={lsNames} setNames={setLsNames} />
+            <LetterSnelSetup onStartLS={onStartLS} names={lsNames} setNames={setLsNames} activeLetters={lsActiveLetters} setActiveLetters={setLsActiveLetters} />
           </>
         ) : (
           <>
@@ -1787,15 +1817,14 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
               <p className="logo-sub">Leg het woord uit terwijl de rest raad!</p>
             </div>
 
-            <div className="setup-mode-segmented">
-              <button className={`mode-seg-btn ${!teamMode ? "mode-seg-active" : "mode-seg-inactive"}`} onClick={() => teamMode && toggleTeamMode()}>👤 Solo</button>
-              <button className={`mode-seg-btn ${teamMode ? "mode-seg-active" : "mode-seg-inactive"}`} onClick={() => !teamMode && toggleTeamMode()}>👥 Teams</button>
-            </div>
-
             <div className="setup-section">
               {teamMode ? (
                 <div className="teams-setup-wrapper">
                   <div className="setup-wrapper-badge">TEAMS</div>
+                  <div className="setup-mode-segmented" style={{marginBottom: "16px"}}>
+                    <button className={`mode-seg-btn ${!teamMode ? "mode-seg-active" : "mode-seg-inactive"}`} onClick={() => teamMode && toggleTeamMode()}>👤 Solo</button>
+                    <button className={`mode-seg-btn ${teamMode ? "mode-seg-active" : "mode-seg-inactive"}`} onClick={() => !teamMode && toggleTeamMode()}>👥 Teams</button>
+                  </div>
                   <div className="teams-grid">
                     {teamSizes.map((size, t) => {
                       const offset = getTeamOffset(t);
@@ -1829,6 +1858,10 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
               ) : (
                 <div className="teams-setup-wrapper">
                   <div className="setup-wrapper-badge">SPELERS</div>
+                  <div className="setup-mode-segmented" style={{marginBottom: "16px"}}>
+                    <button className={`mode-seg-btn ${!teamMode ? "mode-seg-active" : "mode-seg-inactive"}`} onClick={() => teamMode && toggleTeamMode()}>👤 Solo</button>
+                    <button className={`mode-seg-btn ${teamMode ? "mode-seg-active" : "mode-seg-inactive"}`} onClick={() => !teamMode && toggleTeamMode()}>👥 Teams</button>
+                  </div>
                   <div className="names-grid">
                     {names.map((name, i) => (
                       <div key={i} className="player-input-group small-group">
@@ -1845,9 +1878,9 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
               )}
             </div>
 
-            <div className="setup-section">
+            <div className="setup-section-wrap" style={{borderColor: "#60a5fa"}}>
+              <div className="setup-wrapper-badge" style={{background: "#3b82f6"}}>CATEGORIEËN</div>
               <div className="cat-section-header">
-                <span className="cat-section-title">Categorieën</span>
                 <button className={`cat-toggle-pill ${allSelected ? "cat-toggle-pill-active" : "cat-toggle-pill-custom"}`} onClick={() => toggleCategory("all")}>
                   {totalWordsCount}/{absoluteTotalWords} woorden
                 </button>
@@ -2380,6 +2413,9 @@ export default function App() {
   const [gameMode, setGameMode] = useState("woordraad"); // "woordraad" | "lettersnel"
   const [lsPlayers, setLsPlayers] = useState(null); // null = not started
   const [lsNames, setLsNames] = useState(["Dennis", "Marion", "Theo"]);
+  const LS_DEFAULT_LETTERS = ALPHABET_ALL.filter(l => !["C","Q","X","Y"].includes(l));
+  const [lsActiveLetters, setLsActiveLetters] = useState(LS_DEFAULT_LETTERS);
+  const [lsChosenLetters, setLsChosenLetters] = useState(LS_DEFAULT_LETTERS);
 
   // WoordRaad state
   const [phase, setPhase] = useState("setup");
@@ -2530,7 +2566,7 @@ export default function App() {
     return (
       <>
         <style>{CSS}</style>
-        <LetterSnelGame players={lsPlayers} onRestart={() => setLsPlayers(null)} />
+        <LetterSnelGame players={lsPlayers} onRestart={() => setLsPlayers(null)} activeLetters={lsChosenLetters} />
       </>
     );
   }
@@ -2546,7 +2582,9 @@ export default function App() {
           setGameMode={(m) => { setGameMode(m); setLsPlayers(null); }}
           lsNames={lsNames}
           setLsNames={setLsNames}
-          onStartLS={(names) => setLsPlayers(names)}
+          onStartLS={(names, letters) => { setLsChosenLetters(letters); setLsPlayers(names); }}
+          lsActiveLetters={lsActiveLetters}
+          setLsActiveLetters={setLsActiveLetters}
         />
       )}
 
@@ -2599,6 +2637,14 @@ const CSS = `
   /* ── LS Setup ── */
   .ls-setup-section { width: 100%; }
   .ls-setup-players-wrap { border: 3px solid #f59e0b; border-radius: 24px; padding: 25px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
+  .ls-letters-wrap { border: 3px solid #f97316; border-radius: 24px; padding: 20px 16px 14px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
+  .ls-letter-toggle-row { display: flex; gap: 5px; justify-content: center; margin-bottom: 7px; }
+  .ls-letter-toggle-btn { width: 36px; height: 36px; border-radius: 10px; border: 2.5px solid; font-family: 'Righteous', cursive; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.13s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ls-letter-toggle-on { background: rgba(249,115,22,0.2); border-color: #f97316; color: #fed7aa; }
+  .ls-letter-toggle-off { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.25); }
+  .ls-letter-toggle-on:hover { background: rgba(249,115,22,0.35); border-color: #fb923c; }
+  .ls-letter-toggle-off:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.6); }
+  .ls-letters-count { text-align: center; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 4px; }
 
   /* ── LS Game Screen ── */
   .ls-screen { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 520px; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom)); gap: 0; position: relative; z-index: 1; }
@@ -2659,9 +2705,10 @@ const CSS = `
   .stats-card { max-width: 480px; overflow-y: auto; max-height: 92vh; }
   .logo-area { text-align: center; margin-bottom: 36px; }
   .logo-icon { font-size: 52px; margin-bottom: 8px; }
-  .logo-title { font-family: 'Righteous', cursive; font-size: 36px; background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .logo-title { font-family: 'Righteous', cursive; font-size: 36px; background: linear-gradient(135deg, #93c5fd, #60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .logo-sub { color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 4px; }
   .setup-section { margin-bottom: 28px; }
+  .setup-section-wrap { border: 3px solid; border-radius: 24px; padding: 20px 20px 14px; margin-bottom: 28px; position: relative; }
   .names-grid { display: grid; grid-template-columns: 1fr; gap: 4px; }
 
   /* ── Toggles & Buttons ── */
@@ -2692,8 +2739,8 @@ const CSS = `
   .category-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700; }
   .category-btn { font-family: inherit; font-weight: inherit; line-height: inherit; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; padding: 5px 11px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s; user-select: none; }
   .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
-  .category-btn-active { background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.3); color: rgba(52,211,153,0.75); }
-  .category-btn-active:hover { background: rgba(52,211,153,0.18); border-color: #34d399; color: #34d399; }
+  .category-btn-active { background: rgba(96,165,250,0.1); border-color: rgba(96,165,250,0.4); color: rgba(147,197,253,0.9); }
+  .category-btn-active:hover { background: rgba(96,165,250,0.2); border-color: #60a5fa; color: #93c5fd; }
 
   .player-input-group { display: flex; margin-bottom: 4px; height: 48px; width: 100%; }
   .player-name-container { display: flex; align-items: center; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 0 12px; flex-grow: 1; transition: border-color 0.2s; }
@@ -2708,15 +2755,15 @@ const CSS = `
   .add-player-integrated:hover { background: rgba(52,211,153,0.2); }
   .add-player-in-team { margin-top: 12px; }
 
-  .teams-setup-wrapper { border: 3px solid #4a90e2; border-radius: 24px; padding: 25px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
-  .setup-wrapper-badge { position: absolute; top: -14px; left: 20px; background-color: #4a90e2; color: white; padding: 4px 16px; border-radius: 12px; font-size: 0.75rem; font-weight: 900; letter-spacing: 1px; z-index: 1; }
+  .teams-setup-wrapper { border: 3px solid #60a5fa; border-radius: 24px; padding: 25px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
+  .setup-wrapper-badge { position: absolute; top: -14px; left: 20px; background-color: #3b82f6; color: white; padding: 4px 16px; border-radius: 12px; font-size: 0.75rem; font-weight: 900; letter-spacing: 1px; z-index: 1; }
   .teams-grid { display: flex; flex-direction: column; gap: 14px; }
   .team-section-container { margin-bottom: 14px; padding: 10px 0; width: 100%; background-color: transparent; border-radius: 16px; }
   .team-header-row { position: relative; display: flex; align-items: center; margin-bottom: 8px; }
   .team-name-input-flat { background: transparent !important; border: none !important; border-bottom: 2px solid rgba(74,144,226,0.4) !important; color: #4a90e2 !important; font-size: 1.1rem; font-weight: bold; text-transform: uppercase; padding: 2px 0; width: 100%; outline: none; }
   .delete-btn-round { position: absolute; right: 0; top: 0; background: rgba(0,0,0,0.02); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 10px; }
   .team-players-list { display: flex; flex-direction: column; gap: 4px; }
-  .team-add-btn { margin-top: 15px; border-color: #4a90e2; color: #4a90e2; background: rgba(74,144,226,0.1); }
+  .team-add-btn { margin-top: 15px; border-color: #60a5fa; color: #60a5fa; background: rgba(96,165,250,0.1); }
   .team-add-btn:hover { background: rgba(74,144,226,0.2); }
   .small-group { height: 38px !important; margin-bottom: 4px !important; }
   .small-group .player-name-container { border-radius: 10px; }
@@ -2726,7 +2773,7 @@ const CSS = `
   .time-section-label { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 10px; }
   .time-control { display: flex; align-items: center; gap: 12px; }
   .time-btn { width: 64px; height: 44px; border-radius: 12px; border: 2px dashed #4a90e2; background: rgba(52,211,153,0.1); color: #4a90e2; font-family: 'Righteous'; font-size: 24px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-  .time-btn-minus { border-color: #4a90e2; background: rgba(248,113,113,0.1); color: #4a90e2; }
+  .time-btn-minus { border-color: #60a5fa; background: rgba(248,113,113,0.1); color: #60a5fa; }
   .time-btn:disabled { opacity: 0.3; cursor: default; }
   .time-btn-disabled { opacity: 1 !important; cursor: not-allowed !important; pointer-events: none; background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.35) !important; }
   .time-display { flex: 1; text-align: center; font-family: 'Righteous', cursive; font-size: 24px; color: rgba(255,255,255,0.9); }
