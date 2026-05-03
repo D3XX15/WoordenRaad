@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-// ── Pim Pam Pet Cards ────────────────────────────────────────────────────────
-const PPP_CARDS = [
+// ── LetterSnel Cards ────────────────────────────────────────────────────────
+const LS_CARDS = [
   // ── Lijst 1 (origineel) ──
   "een kleur", "een dier", "een land", "een stad", "een naam (jongen)",
   "een naam (meisje)", "iets in de keuken", "iets in de tuin", "een beroep",
@@ -84,15 +84,15 @@ const PPP_CARDS = [
   "iets zoets", "iets zouts", "iets wat ruikt", "iets groens", "gereedschap",
 ];
 
-// ── Pim Pam Pet Component ─────────────────────────────────────────────────────
+// ── LetterSnel Component ─────────────────────────────────────────────────────
 
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const ALPHABET = "ABDEFGHKLMNOPRSTW".split("");
 // Q and X are less common, so we optionally weight them lighter — keep all for authenticity
 
-function PimPamPetGame({ players, onRestart }) {
+function LetterSnelGame({ players, onRestart }) {
   const [scores, setScores] = useState(Array(players.length).fill(0));
   const [currentCardIdx, setCurrentCardIdx] = useState(0);
-  const [cardDeck, setCardDeck] = useState(() => shuffle([...PPP_CARDS]));
+  const [cardDeck, setCardDeck] = useState(() => shuffle([...LS_CARDS]));
   const [letter, setLetter] = useState(null);
   const [spinning, setSpinning] = useState(false);
   const [winner, setWinner] = useState(null); // index of winner
@@ -149,34 +149,34 @@ function PimPamPetGame({ players, onRestart }) {
   const sortedPlayers = [...players].map((p, i) => ({ name: p, score: scores[i], idx: i })).sort((a, b) => b.score - a.score);
 
   return (
-    <div className="ppp-screen">
+    <div className="ls-screen">
       {/* Header */}
-      <div className="ppp-header">
-        <div className="ppp-logo">🎯 Pim Pam Pet</div>
-        <button className="ppp-restart-btn" onClick={onRestart}>↩ Stop</button>
+      <div className="ls-header">
+        <div className="ls-logo">🎯 LetterSnel</div>
+        <button className="ls-restart-btn" onClick={onRestart}>↩ Stop</button>
       </div>
 
       {/* Card */}
-      <div className="ppp-card-area">
-        <div className="ppp-card-label">KAART #{currentCardIdx + 1}</div>
-        <div className="ppp-card">
-          <div className="ppp-card-inner">
-            <span className="ppp-card-text">{currentCard}</span>
+      <div className="ls-card-area">
+        <div className="ls-card-label">KAART #{currentCardIdx + 1}</div>
+        <div className="ls-card">
+          <div className="ls-card-inner">
+            <span className="ls-card-text">{currentCard}</span>
           </div>
         </div>
       </div>
 
       {/* Letter display */}
-      <div className="ppp-letter-area">
+      <div className="ls-letter-area">
         {letter ? (
-          <div className={`ppp-letter ${spinning ? "ppp-letter-spinning" : "ppp-letter-landed"}`}>
+          <div className={`ls-letter ${spinning ? "ls-letter-spinning" : "ls-letter-landed"}`}>
             {letter}
           </div>
         ) : (
-          <div className="ppp-letter-placeholder">?</div>
+          <div className="ls-letter-placeholder">?</div>
         )}
         <button
-          className={`ppp-spin-btn ${spinning ? "ppp-spin-spinning" : ""}`}
+          className={`ls-spin-btn ${spinning ? "ls-spin-spinning" : ""}`}
           onClick={phase === "awarded" ? nextCard : spinLetter}
           disabled={spinning}
         >
@@ -186,13 +186,13 @@ function PimPamPetGame({ players, onRestart }) {
 
       {/* Award / Next */}
       {phase === "playing" && !spinning && (
-        <div className="ppp-award-section">
-          <div className="ppp-award-label">Wie was er het eerst?</div>
-          <div className="ppp-scores-strip">
+        <div className="ls-award-section">
+          <div className="ls-award-label">Wie was er het eerst?</div>
+          <div className="ls-scores-strip">
             {players.map((p, i) => (
-              <button key={i} className={`ppp-score-chip ppp-score-chip-btn ${scores[i] === topScore && topScore > 0 ? "ppp-score-leader" : ""}`} onClick={() => awardPoint(i)}>
-                <span className="ppp-score-chip-name">{p}</span>
-                <span className="ppp-score-chip-val">{scores[i]}</span>
+              <button key={i} className={`ls-score-chip ls-score-chip-btn ${scores[i] === topScore && topScore > 0 ? "ls-score-leader" : ""}`} onClick={() => awardPoint(i)}>
+                <span className="ls-score-chip-name">{p}</span>
+                <span className="ls-score-chip-val">{scores[i]}</span>
               </button>
             ))}
           </div>
@@ -200,20 +200,20 @@ function PimPamPetGame({ players, onRestart }) {
       )}
 
       {phase === "awarded" && winner !== null && (
-        <div className="ppp-awarded-banner">
-          🏆 <span className="ppp-awarded-name">{players[winner]}</span> haalt een punt!
+        <div className="ls-awarded-banner">
+          🏆 <span className="ls-awarded-name">{players[winner]}</span> haalt een punt!
         </div>
       )}
 
       {phase === "ready" && (
-        <div className="ppp-ready-hint">Druk op "kies letter" om te beginnen</div>
+        <div className="ls-ready-hint">Druk op "kies letter" om te beginnen</div>
       )}
     </div>
   );
 }
 
-// ── Pim Pam Pet Setup overlay ─────────────────────────────────────────────────
-function PimPamPetSetup({ onStartPPP, names, setNames }) {
+// ── LetterSnel Setup overlay ─────────────────────────────────────────────────
+function LetterSnelSetup({ onStartLS, names, setNames }) {
   const canStart = names.length >= 2 && names.every(n => n.trim().length > 0);
 
   const addPlayer = () => { if (names.length < 10) setNames(prev => [...prev, ""]); };
@@ -221,8 +221,8 @@ function PimPamPetSetup({ onStartPPP, names, setNames }) {
   const updateName = (i, v) => setNames(prev => prev.map((n, j) => j === i ? v : n));
 
   return (
-    <div className="ppp-setup-section">
-      <div className="ppp-setup-players-wrap">
+    <div className="ls-setup-section">
+      <div className="ls-setup-players-wrap">
         <div className="setup-wrapper-badge" style={{background:"#f59e0b", top:"-14px"}}>SPELERS</div>
         <div className="names-grid">
           {names.map((name, i) => (
@@ -251,7 +251,7 @@ function PimPamPetSetup({ onStartPPP, names, setNames }) {
       <button
         className={`start-btn ${canStart ? "ready-solid" : ""}`}
         style={{marginTop: "12px"}}
-        onClick={() => canStart && onStartPPP(names.map(n => n.trim()))}
+        onClick={() => canStart && onStartLS(names.map(n => n.trim()))}
         disabled={!canStart}
       >
         {canStart ? "Spel starten ➜" : "Vul alles in…"}
@@ -1732,7 +1732,7 @@ function getRandomEndMessage(correctCount, roundTime, totalScore = correctCount)
   return { message: pool[idx](correctCount, totalScore), tier, count: correctCount, totalScore };
 }
 
-function SetupScreen({ onStart, gameMode, setGameMode, pppNames, setPppNames, onStartPPP }) {
+function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onStartLS }) {
   const [names, setNames] = useState(["Dennis", "Marion", "Theo"]);
   const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
   const [teamMode, setTeamMode] = useState(false);
@@ -1809,35 +1809,35 @@ function SetupScreen({ onStart, gameMode, setGameMode, pppNames, setPppNames, on
         {/* Game mode switcher */}
         <div className="game-mode-switcher">
           <button
-            className={`game-mode-btn ${gameMode === "woordenraad" ? "game-mode-active" : "game-mode-inactive"}`}
-            onClick={() => setGameMode("woordenraad")}
+            className={`game-mode-btn ${gameMode === "woordraad" ? "game-mode-active" : "game-mode-inactive"}`}
+            onClick={() => setGameMode("woordraad")}
           >
             <span className="gm-icon">💬</span>
-            <span className="gm-label">WoordenRaad</span>
+            <span className="gm-label">WoordRaad</span>
           </button>
           <button
-            className={`game-mode-btn ${gameMode === "pimpampet" ? "game-mode-active-ppp" : "game-mode-inactive"}`}
-            onClick={() => setGameMode("pimpampet")}
+            className={`game-mode-btn ${gameMode === "lettersnel" ? "game-mode-active-ls" : "game-mode-inactive"}`}
+            onClick={() => setGameMode("lettersnel")}
           >
             <span className="gm-icon">🎯</span>
-            <span className="gm-label">Pim Pam Pet</span>
+            <span className="gm-label">LetterSnel</span>
           </button>
         </div>
 
-        {gameMode === "pimpampet" ? (
+        {gameMode === "lettersnel" ? (
           <>
             <div className="logo-area" style={{marginBottom: "20px"}}>
               <div className="logo-icon">🎯</div>
-              <h1 className="logo-title" style={{background:"linear-gradient(135deg,#f59e0b,#ef4444,#f97316)", WebkitBackgroundClip:"text", backgroundClip:"text", WebkitTextFillColor:"transparent"}}>Woordenraad</h1>
+              <h1 className="logo-title" style={{background:"linear-gradient(135deg,#f59e0b,#ef4444,#f97316)", WebkitBackgroundClip:"text", backgroundClip:"text", WebkitTextFillColor:"transparent"}}>LetterSnel</h1>
               <p className="logo-sub">Noem als eerste een woord met de letter!</p>
             </div>
-            <PimPamPetSetup onStartPPP={onStartPPP} names={pppNames} setNames={setPppNames} />
+            <LetterSnelSetup onStartLS={onStartLS} names={lsNames} setNames={setLsNames} />
           </>
         ) : (
           <>
             <div className="logo-area">
               <div className="logo-icon">💬</div>
-              <h1 className="logo-title">WoordenRaad</h1>
+              <h1 className="logo-title">WoordRaad</h1>
               <p className="logo-sub">Het raad- en uitbeeldspel</p>
             </div>
 
@@ -2431,11 +2431,11 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
 // ══════════════════════════════════════════════════════════════════════════════
 
 export default function App() {
-  const [gameMode, setGameMode] = useState("woordenraad"); // "woordenraad" | "pimpampet"
-  const [pppPlayers, setPppPlayers] = useState(null); // null = not started
-  const [pppNames, setPppNames] = useState(["Dennis", "Marion", "Theo"]);
+  const [gameMode, setGameMode] = useState("woordraad"); // "woordraad" | "lettersnel"
+  const [lsPlayers, setLsPlayers] = useState(null); // null = not started
+  const [lsNames, setLsNames] = useState(["Dennis", "Marion", "Theo"]);
 
-  // WoordenRaad state
+  // WoordRaad state
   const [phase, setPhase] = useState("setup");
   const [players, setPlayers] = useState([]);
   const [scores, setScores] = useState([]);
@@ -2579,12 +2579,12 @@ export default function App() {
     setPlayerStats([]); setPlayOrder([]); setPlayOrderPos(0); setTiebreakerState(null);
   };
 
-  // Pim Pam Pet flow
-  if (gameMode === "pimpampet" && pppPlayers) {
+  // LetterSnel flow
+  if (gameMode === "lettersnel" && lsPlayers) {
     return (
       <>
         <style>{CSS}</style>
-        <PimPamPetGame players={pppPlayers} onRestart={() => setPppPlayers(null)} />
+        <LetterSnelGame players={lsPlayers} onRestart={() => setLsPlayers(null)} />
       </>
     );
   }
@@ -2597,18 +2597,18 @@ export default function App() {
         <SetupScreen
           onStart={startGame}
           gameMode={gameMode}
-          setGameMode={(m) => { setGameMode(m); setPppPlayers(null); }}
-          pppNames={pppNames}
-          setPppNames={setPppNames}
-          onStartPPP={(names) => setPppPlayers(names)}
+          setGameMode={(m) => { setGameMode(m); setLsPlayers(null); }}
+          lsNames={lsNames}
+          setLsNames={setLsNames}
+          onStartLS={(names) => setLsPlayers(names)}
         />
       )}
 
-      {gameMode === "woordenraad" && phase === "handoff" && (
+      {gameMode === "woordraad" && phase === "handoff" && (
         <HandoffScreen player={players[currentPlayerIdx]} teamName={teams ? teams[getTeamIdxForPlayer(currentPlayerIdx)]?.name : null} onReady={() => setPhase("round")} />
       )}
 
-      {gameMode === "woordenraad" && phase === "round" && (() => {
+      {gameMode === "woordraad" && phase === "round" && (() => {
         const currentPlayerTotalPoints = scores[currentPlayerIdx] ?? 0;
         const currentPlayerTotalSkips = playerStats[currentPlayerIdx]?.rounds.reduce((sum, r) => sum + r.skipped, 0) ?? 0;
         return (
@@ -2616,15 +2616,15 @@ export default function App() {
         );
       })()}
 
-      {gameMode === "woordenraad" && phase === "score" && (
+      {gameMode === "woordraad" && phase === "score" && (
         <ScoreScreen players={players} scores={scores} currentRound={roundNum} totalRounds={totalRounds} onNext={onNext} onRestart={onRestart} onContinue={onContinue} onShowStats={(playerIdx) => { setStatsInitialPlayer(playerIdx ?? 0); setPhase("stats"); }} teams={teams} teamScores={teamScores} onStartTiebreaker={onStartTiebreaker} />
       )}
 
-      {gameMode === "woordenraad" && phase === "tiebreaker" && tiebreakerState && (
+      {gameMode === "woordraad" && phase === "tiebreaker" && tiebreakerState && (
         <TiebreakerScreen players={players} tiebreakerState={tiebreakerState} onCategoryChosen={onTiebreakerCategoryChosen} onWordGuessed={onTiebreakerWordGuessed} onRestart={onRestart} onStartTiebreaker={onStartTiebreaker} />
       )}
 
-      {gameMode === "woordenraad" && phase === "stats" && (
+      {gameMode === "woordraad" && phase === "stats" && (
         <StatsScreen players={players} playerStats={playerStats} scores={scores} initialPlayer={statsInitialPlayer} roundTime={roundTime} onBack={() => setPhase("score")} />
       )}
     </>
@@ -2644,67 +2644,67 @@ const CSS = `
   .game-mode-switcher { display: flex; gap: 8px; margin-bottom: 24px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 6px; }
   .game-mode-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 14px; border-radius: 12px; border: none; font-family: 'Righteous', cursive; font-size: 15px; cursor: pointer; transition: all 0.22s; }
   .game-mode-active { background: rgba(96,165,250,0.18); color: #60a5fa; border: 2px solid rgba(96,165,250,0.4); }
-  .game-mode-active-ppp { background: rgba(245,158,11,0.18); color: #f59e0b; border: 2px solid rgba(245,158,11,0.4); }
+  .game-mode-active-ls { background: rgba(245,158,11,0.18); color: #f59e0b; border: 2px solid rgba(245,158,11,0.4); }
   .game-mode-inactive { background: transparent; color: rgba(255,255,255,0.4); border: 2px solid transparent; }
   .game-mode-inactive:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.06); }
   .gm-icon { font-size: 18px; }
   .gm-label { white-space: nowrap; }
 
-  /* ── PPP Setup ── */
-  .ppp-setup-section { width: 100%; }
-  .ppp-setup-players-wrap { border: 3px solid #f59e0b; border-radius: 24px; padding: 25px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
+  /* ── LS Setup ── */
+  .ls-setup-section { width: 100%; }
+  .ls-setup-players-wrap { border: 3px solid #f59e0b; border-radius: 24px; padding: 25px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
 
-  /* ── PPP Game Screen ── */
-  .ppp-screen { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 520px; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom)); gap: 0; position: relative; z-index: 1; }
+  /* ── LS Game Screen ── */
+  .ls-screen { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 520px; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom)); gap: 0; position: relative; z-index: 1; }
 
-  .ppp-header { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 16px 0 12px; }
-  .ppp-logo { font-family: 'Righteous', cursive; font-size: 22px; background: linear-gradient(135deg, #f59e0b, #ef4444, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .ppp-restart-btn { background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15); border-radius: 12px; color: rgba(255,255,255,0.6); font-family: inherit; font-size: 13px; font-weight: 700; padding: 8px 14px; cursor: pointer; transition: all 0.15s; }
-  .ppp-restart-btn:hover { background: rgba(255,255,255,0.15); color: white; }
+  .ls-header { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 16px 0 12px; }
+  .ls-logo { font-family: 'Righteous', cursive; font-size: 22px; background: linear-gradient(135deg, #f59e0b, #ef4444, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .ls-restart-btn { background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15); border-radius: 12px; color: rgba(255,255,255,0.6); font-family: inherit; font-size: 13px; font-weight: 700; padding: 8px 14px; cursor: pointer; transition: all 0.15s; }
+  .ls-restart-btn:hover { background: rgba(255,255,255,0.15); color: white; }
 
   /* Scores strip */
-  .ppp-scores-strip { width: 100%; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-  .ppp-score-chip { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 20px; background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.12); transition: all 0.2s; }
-  .ppp-score-leader { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); }
-  .ppp-score-chip-name { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); }
-  .ppp-score-chip-val { font-family: 'Righteous', cursive; font-size: 16px; color: #f59e0b; min-width: 18px; text-align: right; }
-  .ppp-score-leader .ppp-score-chip-name { color: #fde68a; }
+  .ls-scores-strip { width: 100%; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .ls-score-chip { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 20px; background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.12); transition: all 0.2s; }
+  .ls-score-leader { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); }
+  .ls-score-chip-name { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); }
+  .ls-score-chip-val { font-family: 'Righteous', cursive; font-size: 16px; color: #f59e0b; min-width: 18px; text-align: right; }
+  .ls-score-leader .ls-score-chip-name { color: #fde68a; }
 
   /* Card */
-  .ppp-card-area { width: 100%; margin-bottom: 24px; }
-  .ppp-card-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 8px; text-align: center; }
-  .ppp-card { width: 100%; border-radius: 24px; background: rgba(255,255,255,0.07); border: 3px solid rgba(255,255,255,0.14); padding: 3px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
-  .ppp-card-inner { background: linear-gradient(145deg, rgba(245,158,11,0.08), rgba(239,68,68,0.06)); border-radius: 21px; padding: 32px 24px; text-align: center; min-height: 120px; display: flex; align-items: center; justify-content: center; }
-  .ppp-card-text { font-family: 'Righteous', cursive; font-size: clamp(22px, 6vw, 36px); background: linear-gradient(135deg, #fef9c3, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.2; text-align: center; }
+  .ls-card-area { width: 100%; margin-bottom: 24px; }
+  .ls-card-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 8px; text-align: center; }
+  .ls-card { width: 100%; border-radius: 24px; background: rgba(255,255,255,0.07); border: 3px solid rgba(255,255,255,0.14); padding: 3px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  .ls-card-inner { background: linear-gradient(145deg, rgba(245,158,11,0.08), rgba(239,68,68,0.06)); border-radius: 21px; padding: 32px 24px; text-align: center; min-height: 120px; display: flex; align-items: center; justify-content: center; }
+  .ls-card-text { font-family: 'Righteous', cursive; font-size: clamp(22px, 6vw, 36px); background: linear-gradient(135deg, #fef9c3, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.2; text-align: center; }
 
   /* Letter */
-  .ppp-letter-area { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 24px; }
-  .ppp-letter { font-family: 'Righteous', cursive; font-size: clamp(72px, 22vw, 140px); line-height: 1; text-align: center; min-width: 160px; display: flex; align-items: center; justify-content: center; border-radius: 28px; padding: 12px 32px; border: 4px solid; }
-  .ppp-letter-spinning { color: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); animation: ppp-spin-flash 0.07s infinite; }
-  .ppp-letter-landed { background: linear-gradient(145deg, rgba(245,158,11,0.12), rgba(239,68,68,0.08)); border-color: rgba(245,158,11,0.5); animation: ppp-letter-land 0.45s cubic-bezier(0.34,1.56,0.64,1); background-image: linear-gradient(135deg, #fef9c3, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .ppp-letter-placeholder { font-family: 'Righteous', cursive; font-size: clamp(72px, 22vw, 140px); color: rgba(255,255,255,0.1); line-height: 1; padding: 12px 32px; border-radius: 28px; border: 4px dashed rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); }
-  .ppp-spin-btn { font-family: 'Righteous', cursive; font-size: 18px; padding: 14px 36px; border-radius: 16px; border: 3px solid; cursor: pointer; transition: all 0.2s; }
-  .ppp-spin-btn:not(.ppp-spin-disabled):not(.ppp-spin-spinning) { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); color: #f59e0b; }
-  .ppp-spin-btn:not(.ppp-spin-disabled):not(.ppp-spin-spinning):hover { background: rgba(245,158,11,0.25); }
-  .ppp-spin-spinning { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); cursor: not-allowed; }
-  .ppp-spin-disabled { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.3); color: #4ade80; cursor: default; }
+  .ls-letter-area { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 24px; }
+  .ls-letter { font-family: 'Righteous', cursive; font-size: clamp(72px, 22vw, 140px); line-height: 1; text-align: center; min-width: 160px; display: flex; align-items: center; justify-content: center; border-radius: 28px; padding: 12px 32px; border: 4px solid; }
+  .ls-letter-spinning { color: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); animation: ls-spin-flash 0.07s infinite; }
+  .ls-letter-landed { background: linear-gradient(145deg, rgba(245,158,11,0.12), rgba(239,68,68,0.08)); border-color: rgba(245,158,11,0.5); animation: ls-letter-land 0.45s cubic-bezier(0.34,1.56,0.64,1); background-image: linear-gradient(135deg, #fef9c3, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .ls-letter-placeholder { font-family: 'Righteous', cursive; font-size: clamp(72px, 22vw, 140px); color: rgba(255,255,255,0.1); line-height: 1; padding: 12px 32px; border-radius: 28px; border: 4px dashed rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); }
+  .ls-spin-btn { font-family: 'Righteous', cursive; font-size: 18px; padding: 14px 36px; border-radius: 16px; border: 3px solid; cursor: pointer; transition: all 0.2s; }
+  .ls-spin-btn:not(.ls-spin-disabled):not(.ls-spin-spinning) { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); color: #f59e0b; }
+  .ls-spin-btn:not(.ls-spin-disabled):not(.ls-spin-spinning):hover { background: rgba(245,158,11,0.25); }
+  .ls-spin-spinning { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); cursor: not-allowed; }
+  .ls-spin-disabled { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.3); color: #4ade80; cursor: default; }
 
   /* Award section */
-  .ppp-award-section { width: 100%; }
-  .ppp-award-label { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 14px; }
-  .ppp-score-chip-btn { cursor: pointer; font-family: inherit; border: none; -webkit-tap-highlight-color: transparent; transition: all 0.18s cubic-bezier(0.34,1.56,0.64,1); }
-  .ppp-score-chip-btn:hover { transform: scale(1.06); filter: brightness(1.25); }
-  .ppp-score-chip-btn:active { transform: scale(0.94); }
+  .ls-award-section { width: 100%; }
+  .ls-award-label { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 14px; }
+  .ls-score-chip-btn { cursor: pointer; font-family: inherit; border: none; -webkit-tap-highlight-color: transparent; transition: all 0.18s cubic-bezier(0.34,1.56,0.64,1); }
+  .ls-score-chip-btn:hover { transform: scale(1.06); filter: brightness(1.25); }
+  .ls-score-chip-btn:active { transform: scale(0.94); }
 
   /* Awarded section */
-  .ppp-awarded-section { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px; }
-  .ppp-awarded-banner { background: rgba(74,222,128,0.12); border: 3px solid rgba(74,222,128,0.4); border-radius: 20px; padding: 16px 24px; text-align: center; font-size: clamp(16px, 4.5vw, 22px); font-weight: 800; width: 100%; animation: ppp-award-pop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
-  .ppp-awarded-name { color: #4ade80; }
-  .ppp-next-btn { font-family: 'Righteous', cursive; font-size: 20px; padding: 16px 40px; border-radius: 16px; background: rgba(245,158,11,0.15); border: 3px solid rgba(245,158,11,0.4); color: #f59e0b; cursor: pointer; transition: all 0.2s; }
-  .ppp-next-btn:hover { background: rgba(245,158,11,0.28); }
-  .ppp-next-btn:active { transform: scale(0.96); }
+  .ls-awarded-section { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .ls-awarded-banner { background: rgba(74,222,128,0.12); border: 3px solid rgba(74,222,128,0.4); border-radius: 20px; padding: 16px 24px; text-align: center; font-size: clamp(16px, 4.5vw, 22px); font-weight: 800; width: 100%; animation: ls-award-pop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+  .ls-awarded-name { color: #4ade80; }
+  .ls-next-btn { font-family: 'Righteous', cursive; font-size: 20px; padding: 16px 40px; border-radius: 16px; background: rgba(245,158,11,0.15); border: 3px solid rgba(245,158,11,0.4); color: #f59e0b; cursor: pointer; transition: all 0.2s; }
+  .ls-next-btn:hover { background: rgba(245,158,11,0.28); }
+  .ls-next-btn:active { transform: scale(0.96); }
 
-  .ppp-ready-hint { font-size: 14px; color: rgba(255,255,255,0.3); font-weight: 700; text-align: center; padding: 20px; }
+  .ls-ready-hint { font-size: 14px; color: rgba(255,255,255,0.3); font-weight: 700; text-align: center; padding: 20px; }
 
   /* ── Cards & Layout ── */
   .setup-card, .score-card, .stats-card { background: rgba(255,255,255,0.06); border: 3px solid rgba(255,255,255,0.12); border-radius: 24px; padding: 28px 20px; width: 100%; backdrop-filter: blur(20px); overflow: hidden; }
@@ -2946,9 +2946,9 @@ const CSS = `
   @keyframes pulse-red-banner { 0%,100%{box-shadow:0 0 6px rgba(248,113,113,0.4)} 50%{box-shadow:0 0 14px rgba(248,113,113,0.8)} }
   @keyframes ring { 0%{transform:rotate(0deg)} 15%{transform:rotate(18deg)} 30%{transform:rotate(-16deg)} 45%{transform:rotate(14deg)} 60%{transform:rotate(-10deg)} 75%{transform:rotate(6deg)} 90%{transform:rotate(-3deg)} 100%{transform:rotate(0deg)} }
 
-  @keyframes ppp-letter-land { 0%{transform:scale(0.5) rotate(-8deg);opacity:0} 70%{transform:scale(1.12) rotate(2deg)} 100%{transform:scale(1) rotate(0deg);opacity:1} }
-  @keyframes ppp-spin-flash { 0%{opacity:0.4} 50%{opacity:0.9} 100%{opacity:0.4} }
-  @keyframes ppp-award-pop { 0%{transform:scale(0.8);opacity:0} 70%{transform:scale(1.04)} 100%{transform:scale(1);opacity:1} }
+  @keyframes ls-letter-land { 0%{transform:scale(0.5) rotate(-8deg);opacity:0} 70%{transform:scale(1.12) rotate(2deg)} 100%{transform:scale(1) rotate(0deg);opacity:1} }
+  @keyframes ls-spin-flash { 0%{opacity:0.4} 50%{opacity:0.9} 100%{opacity:0.4} }
+  @keyframes ls-award-pop { 0%{transform:scale(0.8);opacity:0} 70%{transform:scale(1.04)} 100%{transform:scale(1);opacity:1} }
 
   @media (max-width: 380px) { .names-grid { grid-template-columns: 1fr; } .logo-title { font-size: 28px; } .timer-wrap svg { width: 80px; height: 80px; } }
   @media (max-height: 680px) { .handoff-card { padding: 28px 20px; } .handoff-icon { font-size: 40px; margin-bottom: 10px; } .word-stage { gap: 10px; padding: 12px; } }
