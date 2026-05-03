@@ -2645,11 +2645,11 @@ const CSS = `
   .ls-restart-btn:hover { background: rgba(255,255,255,0.15); color: white; }
 
   /* Scores strip */
-  .ls-scores-strip { width: 100%; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-  .ls-score-chip { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 20px; background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.12); transition: all 0.2s; }
+  .ls-scores-strip { width: 100%; display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+  .ls-score-chip { display: flex; align-items: center; gap: 10px; padding: 14px 22px; border-radius: 24px; background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.12); transition: all 0.2s; flex: 1; min-width: 120px; justify-content: space-between; }
   .ls-score-leader { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); }
-  .ls-score-chip-name { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); }
-  .ls-score-chip-val { font-family: 'Righteous', cursive; font-size: 16px; color: #f59e0b; min-width: 18px; text-align: right; }
+  .ls-score-chip-name { font-size: clamp(16px, 4.5vw, 22px); font-weight: 700; color: rgba(255,255,255,0.85); }
+  .ls-score-chip-val { font-family: 'Righteous', cursive; font-size: clamp(22px, 6vw, 30px); color: #f59e0b; min-width: 28px; text-align: right; }
   .ls-score-leader .ls-score-chip-name { color: #fde68a; }
 
   /* Card */
