@@ -93,7 +93,8 @@ function LetterSnelGame({ players, onRestart }) {
     setSpinning(true);
     spinCountRef.current = 0;
     const totalTicks = 18 + Math.floor(Math.random() * 12); // ~18–30 ticks
-    targetLetterRef.current = ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
+    const available = ALPHABET.filter(l => l !== letter);
+    targetLetterRef.current = available[Math.floor(Math.random() * available.length)];
 
     spinIntervalRef.current = setInterval(() => {
       spinCountRef.current++;
@@ -134,7 +135,7 @@ function LetterSnelGame({ players, onRestart }) {
     <div className="ls-screen">
       {/* Header */}
       <div className="ls-header">
-        <div className="ls-logo">🎯 LetterSnel</div>
+        <div className="ls-logo">LetterSnel</div>
         <button className="ls-restart-btn" onClick={onRestart}>↩ Stop</button>
       </div>
 
@@ -167,12 +168,12 @@ function LetterSnelGame({ players, onRestart }) {
       </div>
 
       {/* Award / Next */}
-      {phase === "playing" && !spinning && (
+      {(phase === "ready" || (phase === "playing" && !spinning)) && (
         <div className="ls-award-section">
-          <div className="ls-award-label">Wie was er het eerst?</div>
+          <div className="ls-award-label">{phase === "ready" ? "Druk op \"kies letter\" om te beginnen" : "Wie was er het eerst?"}</div>
           <div className="ls-scores-strip">
             {players.map((p, i) => (
-              <button key={i} className={`ls-score-chip ls-score-chip-btn ${scores[i] === topScore && topScore > 0 ? "ls-score-leader" : ""}`} onClick={() => awardPoint(i)}>
+              <button key={i} className={`ls-score-chip ls-score-chip-btn ${scores[i] === topScore && topScore > 0 ? "ls-score-leader" : ""}`} onClick={() => phase === "playing" && !spinning && awardPoint(i)} disabled={phase === "ready"}>
                 <span className="ls-score-chip-name">{p}</span>
                 <span className="ls-score-chip-val">{scores[i]}</span>
               </button>
@@ -185,10 +186,6 @@ function LetterSnelGame({ players, onRestart }) {
         <div className="ls-awarded-banner">
           🏆 <span className="ls-awarded-name">{players[winner]}</span> haalt een punt!
         </div>
-      )}
-
-      {phase === "ready" && (
-        <div className="ls-ready-hint">Druk op "kies letter" om te beginnen</div>
       )}
     </div>
   );
@@ -2645,11 +2642,11 @@ const CSS = `
   .ls-restart-btn:hover { background: rgba(255,255,255,0.15); color: white; }
 
   /* Scores strip */
-  .ls-scores-strip { width: 100%; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-  .ls-score-chip { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 20px; background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.12); transition: all 0.2s; }
+  .ls-scores-strip { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+  .ls-score-chip { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 14px 18px; border-radius: 20px; background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.12); transition: all 0.2s; }
   .ls-score-leader { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); }
-  .ls-score-chip-name { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); }
-  .ls-score-chip-val { font-family: 'Righteous', cursive; font-size: 16px; color: #f59e0b; min-width: 18px; text-align: right; }
+  .ls-score-chip-name { font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.85); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ls-score-chip-val { font-family: 'Righteous', cursive; font-size: 22px; color: #f59e0b; min-width: 24px; text-align: right; flex-shrink: 0; }
   .ls-score-leader .ls-score-chip-name { color: #fde68a; }
 
   /* Card */
