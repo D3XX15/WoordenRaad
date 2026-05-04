@@ -36,16 +36,22 @@ const LS_CARDS = [
 
 const ALPHABET_ALL = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-function LetterSnelGame({ players, onRestart, activeLetters }) {
+function LetterSnelGame({ players, onRestart, activeLetters, gameMode }) {
+  if (gameMode === "ketting") return <LetterSnelKettingGame players={players} onRestart={onRestart} activeLetters={activeLetters} />;
+  return <LetterSnelKlassiekGame players={players} onRestart={onRestart} activeLetters={activeLetters} />;
+}
+
+// ── LetterSnel Klassiek ───────────────────────────────────────────────────────
+function LetterSnelKlassiekGame({ players, onRestart, activeLetters }) {
   const alphabet = activeLetters && activeLetters.length > 0 ? activeLetters : ALPHABET_ALL;
   const [scores, setScores] = useState(Array(players.length).fill(0));
   const [currentCardIdx, setCurrentCardIdx] = useState(0);
   const [cardDeck, setCardDeck] = useState(() => shuffle([...LS_CARDS]));
   const [letter, setLetter] = useState(null);
   const [spinning, setSpinning] = useState(false);
-  const [winner, setWinner] = useState(null); // index of winner
-  const [phase, setPhase] = useState("ready"); // ready | playing | awarded
-  const [lastWinners, setLastWinners] = useState([]); // for animation
+  const [winner, setWinner] = useState(null);
+  const [phase, setPhase] = useState("ready");
+  const [lastWinners, setLastWinners] = useState([]);
   const spinIntervalRef = useRef(null);
   const spinCountRef = useRef(0);
   const targetLetterRef = useRef(null);
@@ -58,13 +64,12 @@ function LetterSnelGame({ players, onRestart, activeLetters }) {
     setWinner(null);
     setSpinning(true);
     spinCountRef.current = 0;
-    const totalTicks = 18 + Math.floor(Math.random() * 12); // ~18–30 ticks
+    const totalTicks = 18 + Math.floor(Math.random() * 12);
     const available = alphabet.filter(l => l !== letter);
     targetLetterRef.current = available[Math.floor(Math.random() * available.length)];
 
     spinIntervalRef.current = setInterval(() => {
       spinCountRef.current++;
-      // Show random letters while spinning, then settle on target
       if (spinCountRef.current < totalTicks) {
         setLetter(alphabet[Math.floor(Math.random() * alphabet.length)]);
       } else {
@@ -95,11 +100,226 @@ function LetterSnelGame({ players, onRestart, activeLetters }) {
   };
 
   const topScore = Math.max(...scores);
-  const sortedPlayers = [...players].map((p, i) => ({ name: p, score: scores[i], idx: i })).sort((a, b) => b.score - a.score);
 
   return (
     <div className="ls-screen">
-      {/* Header */}
+      <div className="ls-header">
+        <div className="ls-logo">LetterSnel</div>
+        <button className="ls-restart-btn" onClick={onRestart}>↩ Stop</button>
+      </div>
+      <div className="ls-card-area">
+        <div className="ls-card-label">KAART #{currentCardIdx + 1}</div>
+        <div className="ls-card">
+          <div className="ls-card-inner">
+            <span className="ls-card-text">{currentCard}</span>
+          </div>
+        </div>
+      </div>
+      <div className="ls-letter-area">
+        {letter ? (
+          <div className={`ls-letter ${spinning ? "ls-letter-spinning" : "ls-letter-landed"}`}>{letter}</div>
+        ) : (
+          <div className="ls-letter-placeholder">?</div>
+        )}
+        <button
+          className={`ls-spin-btn ${spinning ? "ls-spin-spinning" : ""}`}
+          onClick={phase === "awarded" ? nextCard : spinLetter}
+          disabled={spinning}
+        >
+          {spinning ? "draaien…" : phase === "awarded" ? "volgende kaart ➜" : letter ? "opnieuw draaien" : "kies letter ▶"}
+        </button>
+      </div>
+      {(phase === "ready" || (phase === "playing" && !spinning)) && (
+        <div className="ls-award-section">
+          <div className="ls-award-label">{phase === "ready" ? "Druk op \"kies letter\" om te beginnen" : "Wie was er het eerst?"}</div>
+          <div className="ls-scores-strip">
+            {players.map((p, i) => (
+              <button key={i} className={`ls-score-chip ls-score-chip-btn ${scores[i] === topScore && topScore > 0 ? "ls-score-leader" : ""}`} onClick={() => phase === "playing" && !spinning && awardPoint(i)} disabled={phase === "ready"}>
+                <span className="ls-score-chip-name">{p}</span>
+                <span className="ls-score-chip-val">{scores[i]}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      {phase === "awarded" && winner !== null && (
+        <div className="ls-awarded-banner">
+          🏆 <span className="ls-awarded-name">{players[winner]}</span> haalt een punt!
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── LetterSnel Kettingreactie ─────────────────────────────────────────────────
+const KETTING_TIME = 20;
+
+function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
+  const alphabet = activeLetters && activeLetters.length > 0 ? activeLetters : ALPHABET_ALL;
+  const [scores, setScores] = useState(Array(players.length).fill(0));
+  const [currentCardIdx, setCurrentCardIdx] = useState(0);
+  const [cardDeck] = useState(() => shuffle([...LS_CARDS]));
+
+  // ketting state
+  const [phase, setPhase] = useState("ready"); // ready | spinning | playing | roundover
+  const [currentLetter, setCurrentLetter] = useState(null);
+  const [lastValidWord, setLastValidWord] = useState(null);
+  const [activePlayers, setActivePlayers] = useState(() => players.map((_, i) => i));
+  const [currentTurnIdx, setCurrentTurnIdx] = useState(0);
+  const [eliminated, setEliminated] = useState([]);
+  const [roundWinner, setRoundWinner] = useState(null);
+
+  // refs that mirror state so timer callback always has fresh values
+  const activePlayersRef = useRef(players.map((_, i) => i));
+  const currentTurnIdxRef = useRef(0);
+  const scoresRef = useRef(Array(players.length).fill(0));
+  const eliminatedRef = useRef([]);
+  const phaseRef = useRef("ready");
+  const roundStartRef = useRef(0); // which player index starts the next round
+
+  // spinning animation
+  const [spinning, setSpinning] = useState(false);
+  const spinIntervalRef = useRef(null);
+  const spinCountRef = useRef(0);
+
+  // timer
+  const [timeRemaining, setTimeRemaining] = useState(KETTING_TIME);
+  const timerRef = useRef(null);
+  const startTimeRef = useRef(null);
+
+  const currentCard = cardDeck[currentCardIdx % cardDeck.length];
+  const activePlayerIdx = activePlayers[currentTurnIdx % activePlayers.length];
+
+  const timeLeft = Math.ceil(timeRemaining);
+
+  // cleanup on unmount
+  useEffect(() => () => {
+    clearInterval(spinIntervalRef.current);
+    clearInterval(timerRef.current);
+  }, []);
+
+  const stopTimer = () => {
+    clearInterval(timerRef.current);
+    timerRef.current = null;
+  };
+
+  const doFail = () => {
+    // uses refs — safe to call from timer interval
+    const ap = activePlayersRef.current;
+    const turnIdx = currentTurnIdxRef.current;
+    const failedPlayer = ap[turnIdx % ap.length];
+    const newActivePlayers = ap.filter(i => i !== failedPlayer);
+    const newEliminated = [...eliminatedRef.current, failedPlayer];
+
+    eliminatedRef.current = newEliminated;
+    setEliminated(newEliminated);
+    activePlayersRef.current = newActivePlayers;
+    setActivePlayers(newActivePlayers);
+
+    if (newActivePlayers.length === 1) {
+      const winnerIdx = newActivePlayers[0];
+      const newScores = [...scoresRef.current];
+      newScores[winnerIdx]++;
+      scoresRef.current = newScores;
+      setScores(newScores);
+      setRoundWinner(winnerIdx);
+      phaseRef.current = "roundover";
+      setPhase("roundover");
+    } else if (newActivePlayers.length === 0) {
+      phaseRef.current = "roundover";
+      setPhase("roundover");
+      setRoundWinner(null);
+    } else {
+      const nextTurnIdx = turnIdx % newActivePlayers.length;
+      currentTurnIdxRef.current = nextTurnIdx;
+      setCurrentTurnIdx(nextTurnIdx);
+      startTimer();
+    }
+  };
+
+  const startTimer = () => {
+    stopTimer();
+    setTimeRemaining(KETTING_TIME);
+    startTimeRef.current = Date.now();
+    timerRef.current = setInterval(() => {
+      const elapsed = (Date.now() - startTimeRef.current) / 1000;
+      const remaining = Math.max(0, KETTING_TIME - elapsed);
+      setTimeRemaining(remaining);
+      if (remaining <= 0) {
+        stopTimer();
+        doFail();
+      }
+    }, 50);
+  };
+
+  const spinLetter = () => {
+    if (spinning) return;
+    setSpinning(true);
+    spinCountRef.current = 0;
+    const totalTicks = 18 + Math.floor(Math.random() * 12);
+    const target = alphabet[Math.floor(Math.random() * alphabet.length)];
+
+    spinIntervalRef.current = setInterval(() => {
+      spinCountRef.current++;
+      if (spinCountRef.current < totalTicks) {
+        setCurrentLetter(alphabet[Math.floor(Math.random() * alphabet.length)]);
+      } else {
+        clearInterval(spinIntervalRef.current);
+        setCurrentLetter(target);
+        setSpinning(false);
+        phaseRef.current = "playing";
+        setPhase("playing");
+        startTimer();
+      }
+    }, 80);
+  };
+
+  const handleCorrect = () => {
+    if (phaseRef.current !== "playing") return;
+    stopTimer();
+    const nextLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+    setLastValidWord({ playerIdx: activePlayerIdx, letter: currentLetter });
+    setCurrentLetter(nextLetter);
+    const ap = activePlayersRef.current;
+    const nextTurnIdx = (currentTurnIdxRef.current + 1) % ap.length;
+    currentTurnIdxRef.current = nextTurnIdx;
+    setCurrentTurnIdx(nextTurnIdx);
+    startTimer();
+  };
+
+  const handleFail = () => {
+    if (phaseRef.current !== "playing") return;
+    stopTimer();
+    doFail();
+  };
+
+  const nextRound = () => {
+    // rotate starting player: 0 → 1 → 2 → 0 → …
+    const nextStart = (roundStartRef.current + 1) % players.length;
+    roundStartRef.current = nextStart;
+
+    // build activePlayers starting from nextStart, wrapping around
+    const freshActive = players.map((_, i) => (i + nextStart) % players.length);
+    activePlayersRef.current = freshActive;
+    currentTurnIdxRef.current = 0;
+    eliminatedRef.current = [];
+    phaseRef.current = "ready";
+    setCurrentCardIdx(i => i + 1);
+    setCurrentLetter(null);
+    setLastValidWord(null);
+    setActivePlayers(freshActive);
+    setCurrentTurnIdx(0);
+    setEliminated([]);
+    setRoundWinner(null);
+    setPhase("ready");
+    stopTimer();
+    setTimeRemaining(KETTING_TIME);
+  };
+
+  const topScore = Math.max(...scores, 0);
+
+  return (
+    <div className="ls-screen">
       <div className="ls-header">
         <div className="ls-logo">LetterSnel</div>
         <button className="ls-restart-btn" onClick={onRestart}>↩ Stop</button>
@@ -115,50 +335,64 @@ function LetterSnelGame({ players, onRestart, activeLetters }) {
         </div>
       </div>
 
-      {/* Letter display */}
+      {/* Letter + knop */}
       <div className="ls-letter-area">
-        {letter ? (
-          <div className={`ls-letter ${spinning ? "ls-letter-spinning" : "ls-letter-landed"}`}>
-            {letter}
-          </div>
+        {currentLetter ? (
+          <div className={`ls-letter ${spinning ? "ls-letter-spinning" : "ls-letter-landed"}`}>{currentLetter}</div>
         ) : (
           <div className="ls-letter-placeholder">?</div>
         )}
-        <button
-          className={`ls-spin-btn ${spinning ? "ls-spin-spinning" : ""}`}
-          onClick={phase === "awarded" ? nextCard : spinLetter}
-          disabled={spinning}
-        >
-          {spinning ? "draaien…" : phase === "awarded" ? "volgende kaart ➜" : letter ? "opnieuw draaien" : "kies letter ▶"}
-        </button>
+        {phase === "ready" && (
+          <button className="ls-spin-btn" onClick={() => { setPhase("spinning"); spinLetter(); }}>kies letter ▶</button>
+        )}
+        {phase === "spinning" && (
+          <button className="ls-spin-btn ls-spin-spinning" disabled>draaien…</button>
+        )}
+        {phase === "playing" && (
+          <button className="ls-ketting-btn ls-ketting-btn-good" onClick={handleCorrect}>✓ Goed geraden</button>
+        )}
+        {phase === "roundover" && (
+          <button className="ls-spin-btn" onClick={nextRound}>volgende kaart ➜</button>
+        )}
       </div>
 
-      {/* Award / Next */}
-      {(phase === "ready" || (phase === "playing" && !spinning)) && (
-        <div className="ls-award-section">
-          <div className="ls-award-label">{phase === "ready" ? "Druk op \"kies letter\" om te beginnen" : "Wie was er het eerst?"}</div>
-          <div className="ls-scores-strip">
-            {players.map((p, i) => (
-              <button key={i} className={`ls-score-chip ls-score-chip-btn ${scores[i] === topScore && topScore > 0 ? "ls-score-leader" : ""}`} onClick={() => phase === "playing" && !spinning && awardPoint(i)} disabled={phase === "ready"}>
+      {/* Label + score chips */}
+      <div className="ls-award-section">
+        <div className="ls-award-label">
+          {phase === "ready" && "Druk op \"kies letter\" om te beginnen"}
+          {phase === "spinning" && "Letter kiezen…"}
+          {phase === "playing" && (<><span className="ls-ketting-turn-name">{players[activePlayerIdx]}</span> is aan de beurt</>)}
+          {phase === "roundover" && (roundWinner !== null ? <>🏆 <span className="ls-ketting-turn-name">{players[roundWinner]}</span> wint de ketting!</> : "🤝 Niemand scoort dit rondje")}
+        </div>
+
+        {/* Timer balk — zelfde als times-up-banner in WoordRaad */}
+        {phase === "playing" && (
+          <div key={activePlayerIdx + "-" + currentTurnIdx} className="times-up-banner ketting-timer-banner">
+            ⏱ {timeLeft}s
+          </div>
+        )}
+
+        <div className="ls-scores-strip">
+          {players.map((p, i) => {
+            const isElim = eliminated.includes(i);
+            const isActive = phase === "playing" && activePlayers[currentTurnIdx % activePlayers.length] === i;
+            const isWinner = roundWinner === i;
+            return (
+              <div key={i} className={`ls-score-chip ls-ketting-chip ${isActive ? "ls-ketting-chip-active" : ""} ${isElim ? "ls-ketting-chip-elim" : ""} ${isWinner ? "ls-ketting-chip-winner" : ""}`}>
                 <span className="ls-score-chip-name">{p}</span>
                 <span className="ls-score-chip-val">{scores[i]}</span>
-              </button>
-            ))}
-          </div>
+              </div>
+            );
+          })}
         </div>
-      )}
-
-      {phase === "awarded" && winner !== null && (
-        <div className="ls-awarded-banner">
-          🏆 <span className="ls-awarded-name">{players[winner]}</span> haalt een punt!
-        </div>
-      )}
+      </div>
     </div>
   );
 }
 
 // ── LetterSnel Setup overlay ─────────────────────────────────────────────────
 function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveLetters }) {
+  const [lsGameMode, setLsGameMode] = useState("klassiek");
   const canStart = names.length >= 2 && names.every(n => n.trim().length > 0) && activeLetters.length >= 2;
 
   const addPlayer = () => { if (names.length < 10) setNames(prev => [...prev, ""]); };
@@ -168,7 +402,7 @@ function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveL
   const toggleLetter = (letter) => {
     setActiveLetters(prev =>
       prev.includes(letter)
-        ? prev.length > 2 ? prev.filter(l => l !== letter) : prev // min 2 letters
+        ? prev.length > 2 ? prev.filter(l => l !== letter) : prev
         : [...prev, letter].sort()
     );
   };
@@ -182,6 +416,30 @@ function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveL
 
   return (
     <div className="ls-setup-section">
+
+      {/* Modus keuze */}
+      <div className="ls-mode-wrap">
+        <div className="setup-wrapper-badge" style={{background:"#b45309", top:"-14px"}}>MODUS</div>
+        <div className="ls-mode-grid">
+          <button
+            className={`ls-mode-btn ${lsGameMode === "klassiek" ? "ls-mode-btn-active" : "ls-mode-btn-inactive"}`}
+            onClick={() => setLsGameMode("klassiek")}
+          >
+            <span className="ls-mode-icon">⚡</span>
+            <span className="ls-mode-title">Klassiek</span>
+            <span className="ls-mode-desc">Wie roept het eerst een woord met de letter?</span>
+          </button>
+          <button
+            className={`ls-mode-btn ${lsGameMode === "ketting" ? "ls-mode-btn-active" : "ls-mode-btn-inactive"}`}
+            onClick={() => setLsGameMode("ketting")}
+          >
+            <span className="ls-mode-icon">🔗</span>
+            <span className="ls-mode-title">Kettingreactie</span>
+            <span className="ls-mode-desc">Bedenk een woord met de laatste letter van je voorganger.</span>
+          </button>
+        </div>
+      </div>
+
       <div className="ls-setup-players-wrap">
         <div className="setup-wrapper-badge" style={{background:"#d97706", top:"-14px"}}>SPELERS</div>
         <div className="names-grid">
@@ -227,7 +485,7 @@ function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveL
       <button
         className={`start-btn ${canStart ? "ready-solid" : ""}`}
         style={{marginTop: "12px"}}
-        onClick={() => canStart && onStartLS(names.map(n => n.trim()), activeLetters)}
+        onClick={() => canStart && onStartLS(names.map(n => n.trim()), activeLetters, lsGameMode)}
         disabled={!canStart}
       >
         {canStart ? "Spel starten ➜" : activeLetters.length < 2 ? "Kies minimaal 2 letters" : "Vul alles in…"}
@@ -2416,6 +2674,7 @@ export default function App() {
   const LS_DEFAULT_LETTERS = ALPHABET_ALL.filter(l => !["C","Q","X","Y"].includes(l));
   const [lsActiveLetters, setLsActiveLetters] = useState(LS_DEFAULT_LETTERS);
   const [lsChosenLetters, setLsChosenLetters] = useState(LS_DEFAULT_LETTERS);
+  const [lsChosenGameMode, setLsChosenGameMode] = useState("klassiek");
 
   // WoordRaad state
   const [phase, setPhase] = useState("setup");
@@ -2566,7 +2825,7 @@ export default function App() {
     return (
       <>
         <style>{CSS}</style>
-        <LetterSnelGame players={lsPlayers} onRestart={() => setLsPlayers(null)} activeLetters={lsChosenLetters} />
+        <LetterSnelGame players={lsPlayers} onRestart={() => setLsPlayers(null)} activeLetters={lsChosenLetters} gameMode={lsChosenGameMode} />
       </>
     );
   }
@@ -2582,7 +2841,7 @@ export default function App() {
           setGameMode={(m) => { setGameMode(m); setLsPlayers(null); }}
           lsNames={lsNames}
           setLsNames={setLsNames}
-          onStartLS={(names, letters) => { setLsChosenLetters(letters); setLsPlayers(names); }}
+          onStartLS={(names, letters, mode) => { setLsChosenLetters(letters); setLsChosenGameMode(mode); setLsPlayers(names); }}
           lsActiveLetters={lsActiveLetters}
           setLsActiveLetters={setLsActiveLetters}
         />
@@ -2645,6 +2904,28 @@ const CSS = `
   .ls-letter-toggle-on:hover { background: rgba(249,115,22,0.35); border-color: #fb923c; }
   .ls-letter-toggle-off:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.6); }
   .ls-letters-count { text-align: center; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 4px; }
+  .ls-mode-wrap { border: 3px solid #f59e0b; border-radius: 24px; padding: 20px 16px 16px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
+  .ls-mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ls-mode-btn { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 14px 10px; border-radius: 16px; border: 2.5px solid; cursor: pointer; font-family: inherit; transition: all 0.15s; text-align: center; }
+  .ls-mode-btn-active { background: rgba(245,158,11,0.15); border-color: #f59e0b; }
+  .ls-mode-btn-inactive { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); }
+  .ls-mode-btn-inactive:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.25); }
+  .ls-mode-icon { font-size: 22px; }
+  .ls-mode-title { font-size: 13px; font-weight: 800; color: white; letter-spacing: 0.03em; }
+  .ls-mode-desc { font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.3; }
+  .ls-mode-btn-active .ls-mode-title { color: #fcd34d; }
+  .ls-mode-btn-active .ls-mode-desc { color: rgba(252,211,77,0.7); }
+  .ls-ketting-mid { display: flex; align-items: center; justify-content: center; gap: 24px; margin: 4px 0; }
+  .ls-ketting-letter-row { display: flex; align-items: center; justify-content: center; gap: 24px; }
+  .ketting-timer-banner { margin-top: 0; margin-bottom: 14px; animation: pulse-red-banner 1.2s ease-in-out infinite; }
+  .ketting-timer-banner::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(248,113,113,0.22); animation: grace-drain 20s linear forwards; border-radius: 9px 0 0 9px; pointer-events: none; }
+  .ls-ketting-chip-active { border-color: #f59e0b !important; background: rgba(245,158,11,0.15) !important; box-shadow: 0 0 16px rgba(245,158,11,0.25); transform: scale(1.06); }
+  .ls-ketting-chip-elim { border-color: rgba(248,113,113,0.4) !important; background: rgba(248,113,113,0.08) !important; opacity: 0.55; }
+  .ls-ketting-chip-winner { border-color: #4ade80 !important; background: rgba(74,222,128,0.12) !important; box-shadow: 0 0 16px rgba(74,222,128,0.2); }
+  .ls-ketting-turn-name { font-weight: 800; color: #fcd34d; }
+  .ls-ketting-btn { font-family: 'Righteous', cursive; font-size: 17px; font-weight: 700; padding: 14px 28px; border-radius: 16px; border: 2.5px solid; cursor: pointer; transition: all 0.15s; }
+  .ls-ketting-btn-good { background: rgba(74,222,128,0.12); border-color: rgba(74,222,128,0.4); color: #4ade80; }
+  .ls-ketting-btn-good:hover { background: rgba(74,222,128,0.25); border-color: #4ade80; }
 
   /* ── LS Game Screen ── */
   .ls-screen { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 520px; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom)); gap: 0; position: relative; z-index: 1; }
