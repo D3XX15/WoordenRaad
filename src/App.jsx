@@ -155,7 +155,7 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters }) {
 function playTimerEnd() {
   // Trilling: kort-lang-kort (werkt op Android; iOS Safari ondersteunt dit niet)
   if (navigator.vibrate) {
-    navigator.vibrate([120, 80, 240, 80, 120]);
+    navigator.vibrate([350, 80, 450, 80, 550]);
   }
 
   // Buzzer-geluid via Web Audio API (geen extern bestand nodig)
@@ -177,9 +177,9 @@ function playTimerEnd() {
     };
 
     const now = ctx.currentTime;
-    buzz(now,        0.12, 520, 0.55);
-    buzz(now + 0.15, 0.22, 320, 0.65);
-    buzz(now + 0.40, 0.35, 200, 0.70);
+    buzz(now,        0.35, 330, 0.70);
+    buzz(now + 0.38, 0.45, 180, 0.75);
+    buzz(now + 0.80, 0.55, 100, 0.78);
   } catch (e) {
     // Web Audio niet beschikbaar — geen probleem
   }
@@ -415,7 +415,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
       {/* Label + score chips */}
       <div className="ls-award-section">
         <div className="ls-award-label">
-          {phase === "ready" && "Druk op \"kies letter\" om te beginnen"}
+          {phase === "ready" && (<><span className="ls-ketting-turn-name">{players[activePlayers[0]]}</span> begint — druk op "kies letter"</>)}
           {phase === "spinning" && "Letter kiezen…"}
           {phase === "playing" && (<><span className="ls-ketting-turn-name">{players[activePlayerIdx]}</span> is aan de beurt</>)}
           {phase === "roundover" && (roundWinner !== null ? <>🏆 <span className="ls-ketting-turn-name">{players[roundWinner]}</span> wint de ketting!</> : "🤝 Niemand scoort dit rondje")}
@@ -424,7 +424,8 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
         <div className="ls-scores-strip">
           {players.map((p, i) => {
             const isElim = eliminated.includes(i);
-            const isActive = phase === "playing" && activePlayers[currentTurnIdx % activePlayers.length] === i;
+            const isActive = (phase === "playing" && activePlayers[currentTurnIdx % activePlayers.length] === i)
+                          || ((phase === "ready" || phase === "spinning") && activePlayers[0] === i);
             const isWinner = roundWinner === i;
             return (
               <div key={i} className={`ls-score-chip ls-ketting-chip ${isActive ? "ls-ketting-chip-active" : ""} ${isElim ? "ls-ketting-chip-elim" : ""} ${isWinner ? "ls-ketting-chip-winner" : ""}`}>
@@ -475,7 +476,7 @@ function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveL
 
       {/* Modus keuze */}
       <div className="ls-mode-wrap">
-        <div className="setup-wrapper-badge" style={{background:"#b45309", top:"-14px"}}>MODUS</div>
+        <div className="setup-wrapper-badge" style={{background:"#ea580c", top:"-14px"}}>MODUS</div>
         <div className="ls-mode-grid">
           <button
             className={`ls-mode-btn ${lsGameMode === "klassiek" ? "ls-mode-btn-active" : "ls-mode-btn-inactive"}`}
@@ -497,7 +498,7 @@ function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveL
       </div>
 
       <div className="ls-setup-players-wrap">
-        <div className="setup-wrapper-badge" style={{background:"#d97706", top:"-14px"}}>SPELERS</div>
+        <div className="setup-wrapper-badge" style={{background:"#ea580c", top:"-14px"}}>SPELERS</div>
         <div className="names-grid">
           {names.map((name, i) => (
             <div key={i} className="player-input-group small-group">
@@ -2213,8 +2214,8 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
               )}
             </div>
 
-            <div className="setup-section">
-              <span className="time-section-label">Rondetijd</span>
+            <div className="setup-section-wrap" style={{borderColor: "#60a5fa"}}>
+              <div className="setup-wrapper-badge">RONDETIJD</div>
               <div className="time-control">
                 <button className={`time-btn time-btn-minus${roundTime <= 30 ? " time-btn-disabled" : ""}`} onClick={() => setRoundTime(t => Math.max(30, t - 30))} disabled={roundTime <= 30}>−</button>
                 <span className="time-display">{roundTime}s</span>
@@ -2951,7 +2952,7 @@ const CSS = `
 
   /* ── LS Setup ── */
   .ls-setup-section { width: 100%; }
-  .ls-setup-players-wrap { border: 3px solid #f59e0b; border-radius: 24px; padding: 25px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
+  .ls-setup-players-wrap { border: 3px solid #f97316; border-radius: 24px; padding: 25px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
   .ls-letters-wrap { border: 3px solid #f97316; border-radius: 24px; padding: 20px 16px 14px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
   .ls-letter-toggle-row { display: flex; gap: 5px; justify-content: center; margin-bottom: 7px; }
   .ls-letter-toggle-btn { width: 36px; height: 36px; border-radius: 10px; border: 2.5px solid; font-family: 'Righteous', cursive; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.13s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -2960,7 +2961,7 @@ const CSS = `
   .ls-letter-toggle-on:hover { background: rgba(249,115,22,0.35); border-color: #fb923c; }
   .ls-letter-toggle-off:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.6); }
   .ls-letters-count { text-align: center; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 4px; }
-  .ls-mode-wrap { border: 3px solid #f59e0b; border-radius: 24px; padding: 20px 16px 16px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
+  .ls-mode-wrap { border: 3px solid #f97316; border-radius: 24px; padding: 20px 16px 16px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
   .ls-mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .ls-mode-btn { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 14px 10px; border-radius: 16px; border: 2.5px solid; cursor: pointer; font-family: inherit; transition: all 0.15s; text-align: center; }
   .ls-mode-btn-active { background: rgba(245,158,11,0.15); border-color: #f59e0b; }
