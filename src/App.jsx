@@ -151,6 +151,40 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters }) {
   );
 }
 
+// ── Timer-end feedback: geluid + trilling ────────────────────────────────────
+function playTimerEnd() {
+  // Trilling: kort-lang-kort (werkt op Android; iOS Safari ondersteunt dit niet)
+  if (navigator.vibrate) {
+    navigator.vibrate([120, 80, 240, 80, 120]);
+  }
+
+  // Buzzer-geluid via Web Audio API (geen extern bestand nodig)
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+    const buzz = (startTime, duration, freq, gainVal) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(freq, startTime);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.5, startTime + duration);
+      gain.gain.setValueAtTime(gainVal, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+      osc.start(startTime);
+      osc.stop(startTime + duration);
+    };
+
+    const now = ctx.currentTime;
+    buzz(now,        0.12, 520, 0.55);
+    buzz(now + 0.15, 0.22, 320, 0.65);
+    buzz(now + 0.40, 0.35, 200, 0.70);
+  } catch (e) {
+    // Web Audio niet beschikbaar — geen probleem
+  }
+}
+
 // ── LetterSnel Kettingreactie ─────────────────────────────────────────────────
 const KETTING_TIME = 20;
 
@@ -256,6 +290,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
       setTimeRemaining(remaining);
       if (remaining <= 0) {
         stopTimer();
+        playTimerEnd();
         doFail();
       }
     }, 50);
