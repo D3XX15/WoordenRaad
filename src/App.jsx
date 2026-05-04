@@ -165,7 +165,7 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters }) {
 function playTimerEnd() {
   // Trilling: kort-lang-kort (werkt op Android; iOS Safari ondersteunt dit niet)
   if (navigator.vibrate) {
-    navigator.vibrate([150, 80, 150]);
+    navigator.vibrate([450, 80, 450]);
   }
 
   // Buzzer-geluid via Web Audio API (geen extern bestand nodig)
