@@ -1,5 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
+// ── Hulpfuncties ─────────────────────────────────────────────────────────────
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 // ── LetterSnel Cards ────────────────────────────────────────────────────────
 const LS_CARDS = [
   "een kleur", "een land", "een stad", "een jongensnaam", "een meisjesnaam", "keukengerei", "iets in de tuin", "een beroep", "een natuurverschijnsel",
@@ -186,7 +196,7 @@ function playTimerEnd() {
 }
 
 // ── LetterSnel Kettingreactie ─────────────────────────────────────────────────
-const KETTING_TIME = 20;
+const KETTING_TIME = 15;
 
 function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
   const alphabet = activeLetters && activeLetters.length > 0 ? activeLetters : ALPHABET_ALL;
@@ -347,13 +357,11 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
   };
 
   const nextRound = (winner) => {
-    // Winnaar van vorige ronde begint, anders roteer gewoon door
     const nextStart = winner !== null && winner !== undefined
       ? winner
       : (roundStartRef.current + 1) % players.length;
     roundStartRef.current = nextStart;
 
-    // build activePlayers starting from nextStart, wrapping around
     const freshActive = players.map((_, i) => (i + nextStart) % players.length);
     activePlayersRef.current = freshActive;
     currentTurnIdxRef.current = 0;
@@ -365,9 +373,9 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
     setLastValidWord(null);
     setActivePlayers(freshActive);
     setCurrentTurnIdx(0);
-    setEliminated([]);
-    setRoundWinner(null);
-    setPhase("ready");
+    setEliminated([]);       // ← reset eerst eliminated
+    setRoundWinner(null);    // ← dan winner, zodat chips neutraal zijn
+    setPhase("ready");       // ← dan pas ready, zodat beginchip oplicht
     stopTimer();
     setTimeRemaining(KETTING_TIME);
   };
@@ -426,7 +434,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
             const isElim = eliminated.includes(i);
             const isActive = (phase === "playing" && activePlayers[currentTurnIdx % activePlayers.length] === i)
                           || ((phase === "ready" || phase === "spinning") && activePlayers[0] === i);
-            const isWinner = roundWinner === i;
+            const isWinner = phase === "roundover" && roundWinner === i;
             return (
               <div key={i} className={`ls-score-chip ls-ketting-chip ${isActive ? "ls-ketting-chip-active" : ""} ${isElim ? "ls-ketting-chip-elim" : ""} ${isWinner ? "ls-ketting-chip-winner" : ""}`}>
                 <span className="ls-score-chip-name">{p}</span>
@@ -1961,15 +1969,6 @@ for (const cat of CATEGORIES) {
   }
 }
 const DEFAULT_ROUND_TIME = 120;
-
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 const w = (n) => n === 1 ? "woord" : "woorden";
 const pt = (n) => n === 1 ? "punt" : "punten";
