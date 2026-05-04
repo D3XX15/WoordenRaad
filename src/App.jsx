@@ -165,7 +165,7 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters }) {
 function playTimerEnd() {
   // Trilling: kort-lang-kort (werkt op Android; iOS Safari ondersteunt dit niet)
   if (navigator.vibrate) {
-    navigator.vibrate([350, 80, 450, 80, 550]);
+    navigator.vibrate([150, 80, 150]);
   }
 
   // Buzzer-geluid via Web Audio API (geen extern bestand nodig)
@@ -426,7 +426,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
           {phase === "ready" && (<><span className="ls-ketting-turn-name">{players[activePlayers[0]]}</span> begint — druk op "kies letter"</>)}
           {phase === "spinning" && "Letter kiezen…"}
           {phase === "playing" && (<><span className="ls-ketting-turn-name">{players[activePlayerIdx]}</span> is aan de beurt</>)}
-          {phase === "roundover" && (roundWinner !== null ? <>🏆 <span className="ls-ketting-turn-name">{players[roundWinner]}</span> wint de ketting!</> : "🤝 Niemand scoort dit rondje")}
+          {phase === "roundover" && (roundWinner !== null ? <>🏆 <span className="ls-ketting-turn-name">{players[roundWinner]}</span> wint de ketting!</> : "Niemand wist iets te bedenken 🤷")}
         </div>
 
         <div className="ls-scores-strip">
@@ -2974,7 +2974,7 @@ const CSS = `
   .ls-ketting-mid { display: flex; align-items: center; justify-content: center; gap: 24px; margin: 4px 0; }
   .ls-ketting-letter-row { display: flex; align-items: center; justify-content: center; gap: 24px; }
   .ketting-timer-banner { margin-top: 0; margin-bottom: 14px; animation: pulse-red-banner 1.2s ease-in-out infinite; }
-  .ketting-timer-banner::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(248,113,113,0.22); animation: grace-drain 20s linear forwards; border-radius: 9px 0 0 9px; pointer-events: none; }
+  .ketting-timer-banner::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(248,113,113,0.22); animation: grace-drain 15s linear forwards; border-radius: 9px 0 0 9px; pointer-events: none; }
   .ls-ketting-chip-active { border-color: #f59e0b !important; background: rgba(245,158,11,0.15) !important; box-shadow: 0 0 16px rgba(245,158,11,0.25); transform: scale(1.06); }
   .ls-ketting-chip-elim { border-color: rgba(248,113,113,0.4) !important; background: rgba(248,113,113,0.08) !important; opacity: 0.55; }
   .ls-ketting-chip-winner { border-color: #4ade80 !important; background: rgba(74,222,128,0.12) !important; box-shadow: 0 0 16px rgba(74,222,128,0.2); }
