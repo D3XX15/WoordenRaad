@@ -205,10 +205,10 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
   };
 
   const doFail = () => {
-    // uses refs — safe to call from timer interval
     const ap = activePlayersRef.current;
     const turnIdx = currentTurnIdxRef.current;
     const failedPlayer = ap[turnIdx % ap.length];
+  
     const newActivePlayers = ap.filter(i => i !== failedPlayer);
     const newEliminated = [...eliminatedRef.current, failedPlayer];
 
@@ -217,31 +217,33 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
     activePlayersRef.current = newActivePlayers;
     setActivePlayers(newActivePlayers);
 
-    if (newActivePlayers.length === 1) {
-      // Check of er überhaupt iemand een woord goed heeft geraden
-      if (lastValidWordRef.current !== null) {
-        const winnerIdx = newActivePlayers[0];
-        const newScores = [...scoresRef.current];
-        newScores[winnerIdx]++;
-        scoresRef.current = newScores;
-        setScores(newScores);
-        setRoundWinner(winnerIdx);
-      } else {
-        // Niemand heeft iets geraden, dus niemand krijgt het punt
-        setRoundWinner(null);
-      }
-      phaseRef.current = "roundover";
-      setPhase("roundover");
+    // Check of de ronde direct moet stoppen
+    if (newActivePlayers.length === 1 && lastValidWordRef.current !== null) {
+      // Iemand heeft al een woord geraden, dus de laatste overgebleven speler wint
+      const winnerIdx = newActivePlayers[0];
+      finishRound(winnerIdx);
     } else if (newActivePlayers.length === 0) {
-      phaseRef.current = "roundover";
-      setPhase("roundover");
-      setRoundWinner(null);
+      // Iedereen is afgevallen zonder een woord te raden
+      finishRound(null);
     } else {
+      // De ronde gaat door (ook als er nog maar 1 speler over is die nog moet raden!)
       const nextTurnIdx = turnIdx % newActivePlayers.length;
       currentTurnIdxRef.current = nextTurnIdx;
       setCurrentTurnIdx(nextTurnIdx);
       startTimer();
     }
+  };
+
+  const finishRound = (winnerIdx) => {
+    if (winnerIdx !== null) {
+      const newScores = [...scoresRef.current];
+      newScores[winnerIdx]++;
+      scoresRef.current = newScores;
+      setScores(newScores);
+    }
+    setRoundWinner(winnerIdx);
+    phaseRef.current = "roundover";
+    setPhase("roundover");
   };
 
   const startTimer = () => {
@@ -284,15 +286,19 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
   const handleCorrect = () => {
     if (phaseRef.current !== "playing") return;
     stopTimer();
-    const nextLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
-    
-    // Bewaar de data en update zowel state als ref
+
     const wordData = { playerIdx: activePlayerIdx, letter: currentLetter };
     setLastValidWord(wordData);
-    lastValidWordRef.current = wordData; 
-    
-    setCurrentLetter(nextLetter);
+    lastValidWordRef.current = wordData;
+
     const ap = activePlayersRef.current;
+
+    // Als er maar één actieve speler is, heeft die net als enige geraden → wint de ronde
+    if (ap.length === 1) {
+      finishRound(ap[0]);
+      return;
+    }
+
     const nextTurnIdx = (currentTurnIdxRef.current + 1) % ap.length;
     currentTurnIdxRef.current = nextTurnIdx;
     setCurrentTurnIdx(nextTurnIdx);
@@ -305,9 +311,11 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
     doFail();
   };
 
-  const nextRound = () => {
-    // rotate starting player: 0 → 1 → 2 → 0 → …
-    const nextStart = (roundStartRef.current + 1) % players.length;
+  const nextRound = (winner) => {
+    // Winnaar van vorige ronde begint, anders roteer gewoon door
+    const nextStart = winner !== null && winner !== undefined
+      ? winner
+      : (roundStartRef.current + 1) % players.length;
     roundStartRef.current = nextStart;
 
     // build activePlayers starting from nextStart, wrapping around
@@ -365,7 +373,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
           <button className="ls-ketting-btn ls-ketting-btn-good" onClick={handleCorrect}>✓ Goed geraden</button>
         )}
         {phase === "roundover" && (
-          <button className="ls-spin-btn" onClick={nextRound}>volgende kaart ➜</button>
+          <button className="ls-spin-btn" onClick={() => nextRound(roundWinner)}>volgende kaart ➜</button>
         )}
       </div>
 
@@ -377,13 +385,6 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
           {phase === "playing" && (<><span className="ls-ketting-turn-name">{players[activePlayerIdx]}</span> is aan de beurt</>)}
           {phase === "roundover" && (roundWinner !== null ? <>🏆 <span className="ls-ketting-turn-name">{players[roundWinner]}</span> wint de ketting!</> : "🤝 Niemand scoort dit rondje")}
         </div>
-
-        {/* Timer balk — zelfde als times-up-banner in WoordRaad */}
-        {phase === "playing" && (
-          <div key={activePlayerIdx + "-" + currentTurnIdx} className="times-up-banner ketting-timer-banner">
-            ⏱ {timeLeft}s
-          </div>
-        )}
 
         <div className="ls-scores-strip">
           {players.map((p, i) => {
@@ -398,6 +399,13 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
             );
           })}
         </div>
+
+        {/* Timer balk — onder de score chips */}
+        {phase === "playing" && (
+          <div key={activePlayerIdx + "-" + currentTurnIdx} className="times-up-banner ketting-timer-banner">
+            ⏱ {timeLeft}s
+          </div>
+        )}
       </div>
     </div>
   );
