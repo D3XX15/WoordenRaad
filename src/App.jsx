@@ -164,6 +164,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
   const [phase, setPhase] = useState("ready"); // ready | spinning | playing | roundover
   const [currentLetter, setCurrentLetter] = useState(null);
   const [lastValidWord, setLastValidWord] = useState(null);
+  const lastValidWordRef = useRef(null);
   const [activePlayers, setActivePlayers] = useState(() => players.map((_, i) => i));
   const [currentTurnIdx, setCurrentTurnIdx] = useState(0);
   const [eliminated, setEliminated] = useState([]);
@@ -217,12 +218,18 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
     setActivePlayers(newActivePlayers);
 
     if (newActivePlayers.length === 1) {
-      const winnerIdx = newActivePlayers[0];
-      const newScores = [...scoresRef.current];
-      newScores[winnerIdx]++;
-      scoresRef.current = newScores;
-      setScores(newScores);
-      setRoundWinner(winnerIdx);
+      // Check of er überhaupt iemand een woord goed heeft geraden
+      if (lastValidWordRef.current !== null) {
+        const winnerIdx = newActivePlayers[0];
+        const newScores = [...scoresRef.current];
+        newScores[winnerIdx]++;
+        scoresRef.current = newScores;
+        setScores(newScores);
+        setRoundWinner(winnerIdx);
+      } else {
+        // Niemand heeft iets geraden, dus niemand krijgt het punt
+        setRoundWinner(null);
+      }
       phaseRef.current = "roundover";
       setPhase("roundover");
     } else if (newActivePlayers.length === 0) {
@@ -278,7 +285,12 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
     if (phaseRef.current !== "playing") return;
     stopTimer();
     const nextLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
-    setLastValidWord({ playerIdx: activePlayerIdx, letter: currentLetter });
+    
+    // Bewaar de data en update zowel state als ref
+    const wordData = { playerIdx: activePlayerIdx, letter: currentLetter };
+    setLastValidWord(wordData);
+    lastValidWordRef.current = wordData; 
+    
     setCurrentLetter(nextLetter);
     const ap = activePlayersRef.current;
     const nextTurnIdx = (currentTurnIdxRef.current + 1) % ap.length;
@@ -306,6 +318,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
     phaseRef.current = "ready";
     setCurrentCardIdx(i => i + 1);
     setCurrentLetter(null);
+    lastValidWordRef.current = null;
     setLastValidWord(null);
     setActivePlayers(freshActive);
     setCurrentTurnIdx(0);
