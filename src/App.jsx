@@ -492,7 +492,7 @@ function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveL
           >
             <span className="ls-mode-icon">⚡</span>
             <span className="ls-mode-title">Klassiek</span>
-            <span className="ls-mode-desc">Wie roept het eerst een woord met de letter?</span>
+            <span className="ls-mode-desc">Wie roept als eerste een woord dat begint met de letter?</span>
           </button>
           <button
             className={`ls-mode-btn ${lsGameMode === "ketting" ? "ls-mode-btn-active" : "ls-mode-btn-inactive"}`}
@@ -500,7 +500,7 @@ function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveL
           >
             <span className="ls-mode-icon">🔗</span>
             <span className="ls-mode-title">Kettingreactie</span>
-            <span className="ls-mode-desc">Bedenk een woord met de laatste letter van je voorganger.</span>
+            <span className="ls-mode-desc">Wie staat als laatste overeind in de strijd tegen de klok?</span>
           </button>
         </div>
       </div>
