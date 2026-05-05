@@ -161,9 +161,52 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters }) {
   );
 }
 
+// ── Taboe Kaarten ────────────────────────────────────────────────────────────
+const TABOE_CARDS = [
+  { word: "olifant",      taboe: ["groot", "grijs", "slurf", "Afrika", "circus"] },
+  { word: "voetbal",      taboe: ["bal", "schop", "goal", "spelen", "veld"] },
+  { word: "vliegtuig",    taboe: ["vliegen", "lucht", "piloot", "vleugels", "reizen"] },
+  { word: "pizza",        taboe: ["Italië", "kaas", "oven", "tomaat", "ronde"] },
+  { word: "politieagent", taboe: ["wet", "arresteren", "blauw", "uniform", "agent"] },
+  { word: "tandenborstel",taboe: ["tanden", "poetsen", "mond", "pasta", "hygiëne"] },
+  { word: "brandweer",    taboe: ["vuur", "brand", "slang", "blussen", "ladder"] },
+  { word: "koelkast",     taboe: ["koud", "eten", "bewaren", "deur", "vriezer"] },
+  { word: "bibliotheek",  taboe: ["boeken", "lenen", "lezen", "stil", "kaart"] },
+  { word: "regenboog",    taboe: ["kleuren", "regen", "zon", "boog", "hemel"] },
+  { word: "schildpad",    taboe: ["schild", "langzaam", "schaal", "reptiel", "zee"] },
+  { word: "trampoline",   taboe: ["springen", "stuiteren", "tuin", "veren", "hoog"] },
+  { word: "dokter",       taboe: ["ziek", "arts", "ziekenhuis", "medicijn", "stethoscoop"] },
+  { word: "waterval",     taboe: ["water", "vallen", "natuur", "stroom", "rots"] },
+  { word: "parachute",    taboe: ["vallen", "lucht", "springen", "vliegtuig", "zijde"] },
+  { word: "barbecue",     taboe: ["grillen", "vlees", "zomer", "vuur", "tuin"] },
+  { word: "astronaut",    taboe: ["ruimte", "raket", "maan", "zweven", "pak"] },
+  { word: "accordeon",    taboe: ["muziek", "toetsen", "blazen", "Frans", "uitklappen"] },
+  { word: "haaienvin",    taboe: ["haai", "water", "rug", "zwemmen", "driehoek"] },
+  { word: "zandkasteel",  taboe: ["strand", "zand", "bouwen", "water", "kasteel"] },
+  { word: "luchtballon",  taboe: ["vliegen", "gas", "mand", "lucht", "ballon"] },
+  { word: "dolfijn",      taboe: ["zee", "springen", "slim", "vis", "zwemmen"] },
+  { word: "kameleon",     taboe: ["kleur", "veranderen", "hagedis", "tong", "camouflage"] },
+  { word: "vuurwerk",     taboe: ["knallen", "nieuwjaar", "explosie", "kleur", "lucht"] },
+  { word: "sumoworste­laar",taboe: ["zwaar", "Japan", "ring", "vechten", "groot"] },
+  { word: "iglo",         taboe: ["sneeuw", "ijs", "Eskimo", "rond", "ijsblokken"] },
+  { word: "toverbal",     taboe: ["snoep", "rollen", "rond", "strepen", "mond"] },
+  { word: "rolschaatsen", taboe: ["schaatsen", "wielen", "rijden", "disco", "schoenen"] },
+  { word: "goudvis",      taboe: ["vis", "goud", "kom", "oranje", "water"] },
+  { word: "kompas",       taboe: ["richting", "noorden", "naald", "navigatie", "kaart"] },
+  { word: "tandpasta",    taboe: ["tanden", "poetsen", "tube", "borstel", "munt"] },
+  { word: "schommelen",   taboe: ["heen", "tuin", "speeltuin", "hangen", "wiegen"] },
+  { word: "megafoon",     taboe: ["hard", "roepen", "trechter", "geluid", "politie"] },
+  { word: "boemerang",    taboe: ["gooien", "terugkomen", "Australië", "boog", "hout"] },
+  { word: "spiegelei",    taboe: ["ei", "bakken", "pan", "geel", "wit"] },
+  { word: "toverstaf",    taboe: ["magie", "heks", "staf", "toveren", "Harry"] },
+  { word: "tijdmachine",  taboe: ["tijd", "reizen", "verleden", "toekomst", "machine"] },
+  { word: "slangenbezweerder", taboe: ["slang", "fluit", "mand", "India", "cobra"] },
+  { word: "achtbaan",     taboe: ["pretpark", "snel", "angst", "rails", "hoogte"] },
+  { word: "vliegende schotel", taboe: ["UFO", "ruimte", "alien", "rond", "vliegen"] },
+];
+
 // ── Timer-end feedback: geluid + trilling ────────────────────────────────────
 function playTimerEnd() {
-  // Trilling: kort-lang-kort (werkt op Android; iOS Safari ondersteunt dit niet)
   if (navigator.vibrate) {
     navigator.vibrate([450, 80, 450]);
   }
@@ -499,7 +542,7 @@ function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveL
             onClick={() => setLsGameMode("ketting")}
           >
             <span className="ls-mode-icon">🔗</span>
-            <span className="ls-mode-title">Kettingreactie</span>
+            <span className="ls-mode-title">Ketting</span>
             <span className="ls-mode-desc">Wie staat als laatste overeind in de strijd tegen de klok?</span>
           </button>
         </div>
@@ -1968,6 +2011,170 @@ for (const cat of CATEGORIES) {
     if (!WORD_TO_CATEGORY[word]) WORD_TO_CATEGORY[word] = cat;
   }
 }
+// ── Taboe Spel ───────────────────────────────────────────────────────────────
+function TaboeGame({ players, onRestart, roundTime }) {
+  const [deck] = useState(() => shuffle([...TABOE_CARDS]));
+  const [cardIdx, setCardIdx] = useState(0);
+  const [playerIdx, setPlayerIdx] = useState(0);
+  const [scores, setScores] = useState(Array(players.length).fill(0));
+  const [phase, setPhase] = useState("handoff"); // handoff | playing | roundover
+  const [timeRemaining, setTimeRemaining] = useState(roundTime);
+  const [correct, setCorrect] = useState(0);
+  const [skipped, setSkipped] = useState(0);
+  const [flash, setFlash] = useState(null); // "correct" | "skip"
+  const timerRef = useRef(null);
+  const startRef = useRef(null);
+
+  const card = deck[cardIdx % deck.length];
+
+  const stopTimer = () => { if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; } };
+
+  const startTimer = () => {
+    stopTimer();
+    startRef.current = Date.now();
+    timerRef.current = setInterval(() => {
+      const elapsed = (Date.now() - startRef.current) / 1000;
+      const remaining = Math.max(0, roundTime - elapsed);
+      setTimeRemaining(remaining);
+      if (remaining <= 0) {
+        stopTimer();
+        playTimerEnd();
+        setPhase("roundover");
+      }
+    }, 80);
+  };
+
+  useEffect(() => () => stopTimer(), []);
+
+  const triggerFlash = (type) => {
+    setFlash(type);
+    setTimeout(() => setFlash(null), 350);
+  };
+
+  const onCorrect = () => {
+    triggerFlash("correct");
+    setCorrect(c => c + 1);
+    setCardIdx(i => i + 1);
+  };
+
+  const onSkip = () => {
+    triggerFlash("skip");
+    setSkipped(s => s + 1);
+    setCardIdx(i => i + 1);
+  };
+
+  const onEndRound = () => {
+    stopTimer();
+    setScores(prev => prev.map((s, i) => i === playerIdx ? s + correct : s));
+    setPhase("roundover");
+  };
+
+  const onNext = () => {
+    const next = (playerIdx + 1) % players.length;
+    setPlayerIdx(next);
+    setCorrect(0);
+    setSkipped(0);
+    setTimeRemaining(roundTime);
+    setPhase("handoff");
+  };
+
+  const timerPct = timeRemaining / roundTime;
+  const timerColor = timerPct > 0.5 ? "#4ade80" : timerPct > 0.25 ? "#facc15" : "#f87171";
+
+  if (phase === "handoff") {
+    return (
+      <div className="screen handoff-screen">
+        <div className="handoff-card">
+          <div className="handoff-icon">📱</div>
+          <p className="handoff-sub">Geef de telefoon aan</p>
+          <h2 className="handoff-name">{players[playerIdx]}</h2>
+          <p style={{color:"rgba(255,255,255,0.45)", fontSize:"13px", marginBottom:"20px"}}>Jij legt uit — de rest raadt</p>
+          <button className="handoff-btn" onClick={() => { setPhase("playing"); startTimer(); }}>Start ronde ➜</button>
+        </div>
+      </div>
+    );
+  }
+
+  if (phase === "roundover") {
+    return (
+      <div className="screen">
+        <div className="setup-card" style={{textAlign:"center"}}>
+          <div style={{fontSize:"48px", marginBottom:"8px"}}>🏁</div>
+          <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"22px", marginBottom:"4px"}}>{players[playerIdx]}</h2>
+          <p style={{color:"rgba(255,255,255,0.5)", fontSize:"14px", marginBottom:"24px"}}>Ronde voorbij</p>
+          <div style={{display:"flex", gap:"16px", justifyContent:"center", marginBottom:"28px"}}>
+            <div style={{background:"rgba(74,222,128,0.12)", border:"2px solid #4ade80", borderRadius:"16px", padding:"16px 24px", textAlign:"center"}}>
+              <div style={{fontSize:"32px", fontWeight:"900", color:"#4ade80"}}>{correct}</div>
+              <div style={{fontSize:"12px", color:"rgba(255,255,255,0.5)"}}>goed</div>
+            </div>
+            <div style={{background:"rgba(248,113,113,0.12)", border:"2px solid #f87171", borderRadius:"16px", padding:"16px 24px", textAlign:"center"}}>
+              <div style={{fontSize:"32px", fontWeight:"900", color:"#f87171"}}>{skipped}</div>
+              <div style={{fontSize:"12px", color:"rgba(255,255,255,0.5)"}}>overgeslagen</div>
+            </div>
+          </div>
+          <div style={{marginBottom:"28px"}}>
+            <p style={{fontSize:"13px", color:"rgba(255,255,255,0.4)", marginBottom:"12px", textTransform:"uppercase", letterSpacing:"0.08em"}}>Scorebord</p>
+            {players.map((p, i) => {
+              const sc = scores[i] + (i === playerIdx ? correct : 0);
+              return (
+                <div key={i} style={{display:"flex", justifyContent:"space-between", alignItems:"center", padding:"10px 16px", marginBottom:"6px", background:"rgba(255,255,255,0.05)", borderRadius:"12px", border: i === playerIdx ? "2px solid rgba(96,165,250,0.4)" : "2px solid transparent"}}>
+                  <span style={{fontWeight:"700"}}>{p}</span>
+                  <span style={{fontFamily:"'Righteous', cursive", fontSize:"18px", color:"#60a5fa"}}>{sc}</span>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{display:"flex", gap:"10px"}}>
+            <button onClick={onRestart} style={{flex:1, padding:"14px", borderRadius:"14px", border:"2px solid rgba(255,255,255,0.15)", background:"transparent", color:"rgba(255,255,255,0.5)", fontFamily:"'Nunito', sans-serif", fontSize:"15px", fontWeight:"700", cursor:"pointer"}}>↩ Opnieuw</button>
+            <button onClick={onNext} style={{flex:2, padding:"14px", borderRadius:"14px", border:"none", background:"linear-gradient(135deg,#3b82f6,#6366f1)", color:"white", fontFamily:"'Righteous', cursive", fontSize:"16px", cursor:"pointer"}}>Volgende speler ➜</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // playing
+  return (
+    <div className={`screen${flash === "correct" ? " taboe-flash-correct" : flash === "skip" ? " taboe-flash-skip" : ""}`}>
+      <div style={{width:"100%", maxWidth:"420px"}}>
+
+        {/* Timer balk */}
+        <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"20px", overflow:"hidden"}}>
+          <div style={{height:"100%", width:`${timerPct * 100}%`, background:timerColor, borderRadius:"4px", transition:"width 0.08s linear, background 0.5s"}} />
+        </div>
+
+        {/* Timer + speler */}
+        <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
+          <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:timerColor}}>{Math.ceil(timeRemaining)}s</span>
+          <span style={{fontSize:"13px", color:"rgba(255,255,255,0.45)", fontWeight:"700"}}>{players[playerIdx]} legt uit</span>
+          <span style={{fontSize:"13px", color:"rgba(255,255,255,0.3)"}}>✓{correct} ✗{skipped}</span>
+        </div>
+
+        {/* Kaart */}
+        <div style={{background:"linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.98))", border:"3px solid rgba(96,165,250,0.3)", borderRadius:"24px", padding:"28px 24px", marginBottom:"16px", boxShadow:"0 8px 32px rgba(0,0,0,0.4)"}}>
+          <p style={{fontSize:"11px", fontWeight:"800", letterSpacing:"0.14em", color:"rgba(255,255,255,0.3)", textTransform:"uppercase", marginBottom:"12px"}}>Raadwoord</p>
+          <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"32px", color:"white", marginBottom:"24px", lineHeight:1.1}}>{card.word}</h2>
+          <div style={{borderTop:"1px solid rgba(255,255,255,0.08)", paddingTop:"16px"}}>
+            <p style={{fontSize:"11px", fontWeight:"800", letterSpacing:"0.14em", color:"#f87171", textTransform:"uppercase", marginBottom:"10px"}}>🚫 Verboden woorden</p>
+            <div style={{display:"flex", flexWrap:"wrap", gap:"8px"}}>
+              {card.taboe.map((t, i) => (
+                <span key={i} style={{background:"rgba(248,113,113,0.12)", border:"1.5px solid rgba(248,113,113,0.35)", borderRadius:"20px", padding:"5px 12px", fontSize:"14px", fontWeight:"700", color:"#fca5a5"}}>{t}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Knoppen */}
+        <div style={{display:"flex", gap:"10px", marginBottom:"12px"}}>
+          <button onClick={onSkip} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(248,113,113,0.4)", background:"rgba(248,113,113,0.1)", color:"#f87171", fontFamily:"'Righteous', cursive", fontSize:"18px", cursor:"pointer"}}>✗ Skip</button>
+          <button onClick={onCorrect} style={{flex:2, padding:"18px", borderRadius:"16px", border:"none", background:"linear-gradient(135deg,#16a34a,#15803d)", color:"white", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor:"pointer", boxShadow:"0 4px 16px rgba(22,163,74,0.4)"}}>✓ Goed!</button>
+        </div>
+        <button onClick={onEndRound} style={{width:"100%", padding:"12px", borderRadius:"14px", border:"2px solid rgba(255,255,255,0.1)", background:"transparent", color:"rgba(255,255,255,0.35)", fontFamily:"'Nunito', sans-serif", fontSize:"14px", fontWeight:"700", cursor:"pointer"}}>Ronde beëindigen</button>
+      </div>
+    </div>
+  );
+}
+
 const DEFAULT_ROUND_TIME = 120;
 
 const w = (n) => n === 1 ? "woord" : "woorden";
@@ -2029,6 +2236,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
   const [selectedCategories, setSelectedCategories] = useState(() => new Set(CATEGORIES.map((c) => c.id)));
   const [teamSizes, setTeamSizes] = useState([2, 2]);
   const [teamNames, setTeamNames] = useState(["Team 1", "Team 2"]);
+  const [wrGameMode, setWrGameMode] = useState("klassiek"); // "klassiek" | "taboe"
 
   const allCategoryIds = CATEGORIES.map((c) => c.id);
   const allSelected = allCategoryIds.every((id) => selectedCategories.has(id));
@@ -2070,7 +2278,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
     setNames(p => { const n = [...p]; n.splice(offset - 1, 1); return n; });
   };
   const updateName = (i, v) => setNames(p => p.map((n, j) => j === i ? v : n));
-  const canStart = names.every((n) => n.trim().length > 0) && selectedCategories.size > 0;
+  const canStart = names.every((n) => n.trim().length > 0) && (wrGameMode === "taboe" || selectedCategories.size > 0);
 
   const buildTeams = () => {
     if (!teamMode) return null;
@@ -2090,7 +2298,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
       return next;
     });
   };
-  const handleStart = () => { if (!canStart) return; onStart(names.map(n => n.trim()), roundTime, buildTeams(), selectedCategories); };
+  const handleStart = () => { if (!canStart) return; onStart(names.map(n => n.trim()), roundTime, buildTeams(), selectedCategories, wrGameMode); };
   const getTeamOffset = (t) => teamSizes.slice(0, t).reduce((a, b) => a + b, 0);
 
   return (
@@ -2116,7 +2324,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
 
         {gameMode === "lettersnel" ? (
           <>
-            <div className="logo-area" style={{marginBottom: "20px"}}>
+            <div className="logo-area" style={{marginBottom: "36px"}}>
               <div className="logo-icon">🎯</div>
               <h1 className="logo-title" style={{background:"linear-gradient(135deg,#f59e0b,#ef4444,#f97316)", WebkitBackgroundClip:"text", backgroundClip:"text", WebkitTextFillColor:"transparent"}}>LetterSnel</h1>
               <p className="logo-sub">Noem een woord dat start met de letter!</p>
@@ -2128,7 +2336,32 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
             <div className="logo-area">
               <div className="logo-icon">💬</div>
               <h1 className="logo-title">WoordRaad</h1>
-              <p className="logo-sub">Leg het woord uit terwijl de rest raad!</p>
+              <p className="logo-sub">Leg het woord uit terwijl de rest raadt!</p>
+            </div>
+
+            {/* WoordRaad modus kiezer */}
+            <div className="ls-mode-wrap" style={{borderColor:"#60a5fa"}}>
+              <div className="setup-wrapper-badge" style={{background:"#2563eb", top:"-14px"}}>MODUS</div>
+              <div className="ls-mode-grid">
+                <button
+                  className={`ls-mode-btn ${wrGameMode === "klassiek" ? "ls-mode-btn-active" : "ls-mode-btn-inactive"}`}
+                  onClick={() => setWrGameMode("klassiek")}
+                  style={wrGameMode === "klassiek" ? {borderColor:"#60a5fa", background:"rgba(96,165,250,0.15)"} : {}}
+                >
+                  <span className="ls-mode-icon">💬</span>
+                  <span className="ls-mode-title">Klassiek</span>
+                  <span className="ls-mode-desc">Leg snel en duidelijk uit terwijl de rest raad.</span>
+                </button>
+                <button
+                  className={`ls-mode-btn ${wrGameMode === "taboe" ? "ls-mode-btn-active" : "ls-mode-btn-inactive"}`}
+                  onClick={() => setWrGameMode("taboe")}
+                  style={wrGameMode === "taboe" ? {borderColor:"#60a5fa", background:"rgba(96,165,250,0.15)"} : {}}
+                >
+                  <span className="ls-mode-icon">🚫</span>
+                  <span className="ls-mode-title">Taboe</span>
+                  <span className="ls-mode-desc">Leg uit zonder de verboden woorden te benoemen.</span>
+                </button>
+              </div>
             </div>
 
             <div className="setup-section">
@@ -2192,6 +2425,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
               )}
             </div>
 
+            {wrGameMode === "klassiek" && (
             <div className="setup-section-wrap" style={{borderColor: "#60a5fa"}}>
               <div className="setup-wrapper-badge" style={{background: "#3b82f6"}}>CATEGORIEËN</div>
               <div className="cat-section-header">
@@ -2212,13 +2446,20 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
                 </div>
               )}
             </div>
+            )}
 
             <div className="setup-section-wrap" style={{borderColor: "#60a5fa"}}>
               <div className="setup-wrapper-badge">RONDETIJD</div>
               <div className="time-control">
-                <button className={`time-btn time-btn-minus${roundTime <= 30 ? " time-btn-disabled" : ""}`} onClick={() => setRoundTime(t => Math.max(30, t - 30))} disabled={roundTime <= 30}>−</button>
-                <span className="time-display">{roundTime}s</span>
-                <button className={`time-btn time-btn-plus${roundTime >= 300 ? " time-btn-disabled" : ""}`} onClick={() => setRoundTime(t => Math.min(300, t + 30))} disabled={roundTime >= 300}>+</button>
+                <div className="time-click-wrap">
+                  <div className="time-click-zone time-click-left" onClick={() => setRoundTime(t => Math.max(30, t - 30))}>
+                    <span className={`time-click-symbol${roundTime <= 30 ? " time-click-disabled" : ""}`}>−</span>
+                  </div>
+                  <span className="time-display">{roundTime}s</span>
+                  <div className="time-click-zone time-click-right" onClick={() => setRoundTime(t => Math.min(300, t + 30))}>
+                    <span className={`time-click-symbol${roundTime >= 300 ? " time-click-disabled" : ""}`}>+</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -2732,6 +2973,10 @@ export default function App() {
   const [lsChosenLetters, setLsChosenLetters] = useState(LS_DEFAULT_LETTERS);
   const [lsChosenGameMode, setLsChosenGameMode] = useState("klassiek");
 
+  const [wrMode, setWrMode] = useState("klassiek"); // "klassiek" | "taboe"
+  const [taboePlayers, setTaboePlayers] = useState(null);
+  const [taboeRoundTime, setTaboeRoundTime] = useState(DEFAULT_ROUND_TIME);
+
   // WoordRaad state
   const [phase, setPhase] = useState("setup");
   const [players, setPlayers] = useState([]);
@@ -2761,7 +3006,13 @@ export default function App() {
     return merged.size > 0 ? [...merged] : WORDS_BY_CATEGORY.all;
   };
 
-  const startGame = (names, time, teamsData, categories) => {
+  const startGame = (names, time, teamsData, categories, wrGameMode) => {
+    setWrMode(wrGameMode || "klassiek");
+    if (wrGameMode === "taboe") {
+      setTaboePlayers(names);
+      setTaboeRoundTime(time);
+      return;
+    }
     const empty = Array(names.length).fill(null);
     setPlayers(names); setScores(empty); setCurrentPlayerIdx(0); setRoundNum(0);
     setUsedWords(new Set()); setRoundTime(time);
@@ -2886,6 +3137,16 @@ export default function App() {
     );
   }
 
+  // Taboe flow
+  if (gameMode === "woordraad" && wrMode === "taboe" && taboePlayers) {
+    return (
+      <>
+        <style>{CSS}</style>
+        <TaboeGame players={taboePlayers} roundTime={taboeRoundTime} onRestart={() => { setTaboePlayers(null); setWrMode("klassiek"); }} />
+      </>
+    );
+  }
+
   return (
     <>
       <style>{CSS}</style>
@@ -2934,6 +3195,11 @@ const CSS = `
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Righteous&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { font-family: 'Nunito', sans-serif; background: #060d1a; min-height: 100vh; min-height: 100dvh; color: white; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+
+  .taboe-flash-correct { animation: taboe-flash-green 0.35s ease-out; }
+  .taboe-flash-skip { animation: taboe-flash-red 0.35s ease-out; }
+  @keyframes taboe-flash-green { 0%,100% { background-color: transparent; } 30% { background-color: rgba(74,222,128,0.18); } }
+  @keyframes taboe-flash-red { 0%,100% { background-color: transparent; } 30% { background-color: rgba(248,113,113,0.18); } }
 
   .screen { min-height: 100vh; min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 16px; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); padding-bottom: max(16px, env(safe-area-inset-bottom)); position: relative; overflow: hidden; width: 100%; }
   .screen::after { content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.4' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)'/%3E%3C/svg%3E"); background-size: 180px 180px, 340px 340px; opacity: 0.07; mix-blend-mode: overlay; }
@@ -3108,12 +3374,15 @@ const CSS = `
   .small-group .integrated-delete-btn { border-radius: 0 10px 10px 0; width: 38px !important; }
 
   .time-section-label { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 10px; }
-  .time-control { display: flex; align-items: center; gap: 12px; }
-  .time-btn { width: 64px; height: 44px; border-radius: 12px; border: 2px dashed #4a90e2; background: rgba(52,211,153,0.1); color: #4a90e2; font-family: 'Righteous'; font-size: 24px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-  .time-btn-minus { border-color: #60a5fa; background: rgba(248,113,113,0.1); color: #60a5fa; }
-  .time-btn:disabled { opacity: 0.3; cursor: default; }
-  .time-btn-disabled { opacity: 1 !important; cursor: not-allowed !important; pointer-events: none; background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.2) !important; color: rgba(255,255,255,0.35) !important; }
-  .time-display { flex: 1; text-align: center; font-family: 'Righteous', cursive; font-size: 24px; color: rgba(255,255,255,0.9); }
+  .time-control { display: flex; align-items: center; }
+  .time-click-wrap { display: flex; align-items: center; width: 100%; }
+  .time-click-zone { flex: 1; display: flex; align-items: center; justify-content: center; height: 48px; cursor: pointer; user-select: none; }
+  .time-click-left { justify-content: flex-start; }
+  .time-click-right { justify-content: flex-end; }
+  .time-click-symbol { font-family: 'Righteous', cursive; font-size: 26px; color: rgba(255,255,255,0.35); transition: color 0.15s; }
+  .time-click-zone:hover .time-click-symbol { color: rgba(255,255,255,0.75); }
+  .time-click-symbol.time-click-disabled { color: rgba(255,255,255,0.12); pointer-events: none; }
+  .time-display { text-align: center; font-family: 'Righteous', cursive; font-size: 24px; color: rgba(255,255,255,0.9); min-width: 72px; }
 
   .handoff-screen { background: none; }
   .handoff-card { text-align: center; padding: 40px 24px; background: rgba(255,255,255,0.06); border: 3px solid rgba(255,255,255,0.12); border-radius: 28px; max-width: 400px; width: 100%; backdrop-filter: blur(20px); }
