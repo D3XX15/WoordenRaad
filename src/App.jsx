@@ -2359,7 +2359,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
                 >
                   <span className="ls-mode-icon">🚫</span>
                   <span className="ls-mode-title">Taboe</span>
-                  <span className="ls-mode-desc">Leg het woord uit zonder de verboden benamingen te benoemen.</span>
+                  <span className="ls-mode-desc">Leg het woord uit zonder de verboden termen te gebruiken.</span>
                 </button>
               </div>
             </div>
