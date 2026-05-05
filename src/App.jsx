@@ -2350,7 +2350,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
                 >
                   <span className="ls-mode-icon">💬</span>
                   <span className="ls-mode-title">Klassiek</span>
-                  <span className="ls-mode-desc">Leg snel en duidelijk uit terwijl de rest raad.</span>
+                  <span className="ls-mode-desc">Leg zo snel en duidelijk mogelijk uit terwijl de rest raadt.</span>
                 </button>
                 <button
                   className={`ls-mode-btn ${wrGameMode === "taboe" ? "ls-mode-btn-active" : "ls-mode-btn-inactive"}`}
@@ -2359,7 +2359,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
                 >
                   <span className="ls-mode-icon">🚫</span>
                   <span className="ls-mode-title">Taboe</span>
-                  <span className="ls-mode-desc">Leg uit zonder de verboden woorden te benoemen.</span>
+                  <span className="ls-mode-desc">Leg het woord uit zonder de verboden benamingen te benoemen.</span>
                 </button>
               </div>
             </div>
