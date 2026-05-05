@@ -2016,14 +2016,22 @@ function TaboeGame({ players, onRestart, roundTime }) {
   const [deck] = useState(() => shuffle([...TABOE_CARDS]));
   const [cardIdx, setCardIdx] = useState(0);
   const [playerIdx, setPlayerIdx] = useState(0);
-  const [scores, setScores] = useState(Array(players.length).fill(0));
-  const [phase, setPhase] = useState("handoff"); // handoff | playing | roundover
+  const [scores, setScores] = useState(Array(players.length).fill(null));
+  const [phase, setPhase] = useState("handoff"); // handoff | spinning | playing | roundover
   const [timeRemaining, setTimeRemaining] = useState(roundTime);
   const [correct, setCorrect] = useState(0);
   const [skipped, setSkipped] = useState(0);
   const [flash, setFlash] = useState(null); // "correct" | "skip"
   const timerRef = useRef(null);
   const startRef = useRef(null);
+  const roundNum = useRef(0);
+
+  // ── Verboden letter state (LetterSnel stijl) ──
+  const [forbiddenLetter, setForbiddenLetter] = useState(null);
+  const [spinning, setSpinning] = useState(false);
+  const spinIntervalRef = useRef(null);
+  const spinCountRef = useRef(0);
+  const targetLetterRef = useRef(null);
 
   const card = deck[cardIdx % deck.length];
 
@@ -2039,12 +2047,35 @@ function TaboeGame({ players, onRestart, roundTime }) {
       if (remaining <= 0) {
         stopTimer();
         playTimerEnd();
-        setPhase("roundover");
+        setCorrect(c => { endRound(c); return c; });
       }
     }, 80);
   };
 
-  useEffect(() => () => stopTimer(), []);
+  useEffect(() => () => { stopTimer(); clearInterval(spinIntervalRef.current); }, []);
+
+  const spinLetter = () => {
+    if (spinning) return;
+    setSpinning(true);
+    setPhase("spinning");
+    spinCountRef.current = 0;
+    const totalTicks = 18 + Math.floor(Math.random() * 12);
+    const target = ALPHABET_ALL[Math.floor(Math.random() * ALPHABET_ALL.length)];
+    targetLetterRef.current = target;
+
+    spinIntervalRef.current = setInterval(() => {
+      spinCountRef.current++;
+      if (spinCountRef.current < totalTicks) {
+        setForbiddenLetter(ALPHABET_ALL[Math.floor(Math.random() * ALPHABET_ALL.length)]);
+      } else {
+        clearInterval(spinIntervalRef.current);
+        setForbiddenLetter(targetLetterRef.current);
+        setSpinning(false);
+        setPhase("playing");
+        startTimer();
+      }
+    }, spinCountRef.current < totalTicks - 6 ? 60 : 100);
+  };
 
   const triggerFlash = (type) => {
     setFlash(type);
@@ -2063,18 +2094,27 @@ function TaboeGame({ players, onRestart, roundTime }) {
     setCardIdx(i => i + 1);
   };
 
-  const onEndRound = () => {
+  const endRound = (currentCorrect) => {
     stopTimer();
-    setScores(prev => prev.map((s, i) => i === playerIdx ? s + correct : s));
+    // Commit score immediately so ScoreScreen sees correct values
+    setScores(prev => prev.map((s, i) => i === playerIdx ? (s ?? 0) + currentCorrect : s));
     setPhase("roundover");
   };
 
+  const onEndRound = () => {
+    endRound(correct);
+  };
+
+  // Called when ScoreScreen's "Volgende speler" button is clicked
   const onNext = () => {
     const next = (playerIdx + 1) % players.length;
     setPlayerIdx(next);
     setCorrect(0);
     setSkipped(0);
     setTimeRemaining(roundTime);
+    setForbiddenLetter(null);
+    setCardIdx(i => i + 1);
+    roundNum.current += 1;
     setPhase("handoff");
   };
 
@@ -2082,94 +2122,95 @@ function TaboeGame({ players, onRestart, roundTime }) {
   const timerColor = timerPct > 0.5 ? "#4ade80" : timerPct > 0.25 ? "#facc15" : "#f87171";
 
   if (phase === "handoff") {
-    return (
-      <div className="screen handoff-screen">
-        <div className="handoff-card">
-          <div className="handoff-icon">📱</div>
-          <p className="handoff-sub">Geef de telefoon aan</p>
-          <h2 className="handoff-name">{players[playerIdx]}</h2>
-          <p style={{color:"rgba(255,255,255,0.45)", fontSize:"13px", marginBottom:"20px"}}>Jij legt uit — de rest raadt</p>
-          <button className="handoff-btn" onClick={() => { setPhase("playing"); startTimer(); }}>Start ronde ➜</button>
-        </div>
-      </div>
-    );
+    return <HandoffScreen player={players[playerIdx]} onReady={() => spinLetter()} />;
   }
 
   if (phase === "roundover") {
     return (
-      <div className="screen">
-        <div className="setup-card" style={{textAlign:"center"}}>
-          <div style={{fontSize:"48px", marginBottom:"8px"}}>🏁</div>
-          <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"22px", marginBottom:"4px"}}>{players[playerIdx]}</h2>
-          <p style={{color:"rgba(255,255,255,0.5)", fontSize:"14px", marginBottom:"24px"}}>Ronde voorbij</p>
-          <div style={{display:"flex", gap:"16px", justifyContent:"center", marginBottom:"28px"}}>
-            <div style={{background:"rgba(74,222,128,0.12)", border:"2px solid #4ade80", borderRadius:"16px", padding:"16px 24px", textAlign:"center"}}>
-              <div style={{fontSize:"32px", fontWeight:"900", color:"#4ade80"}}>{correct}</div>
-              <div style={{fontSize:"12px", color:"rgba(255,255,255,0.5)"}}>goed</div>
-            </div>
-            <div style={{background:"rgba(248,113,113,0.12)", border:"2px solid #f87171", borderRadius:"16px", padding:"16px 24px", textAlign:"center"}}>
-              <div style={{fontSize:"32px", fontWeight:"900", color:"#f87171"}}>{skipped}</div>
-              <div style={{fontSize:"12px", color:"rgba(255,255,255,0.5)"}}>overgeslagen</div>
-            </div>
-          </div>
-          <div style={{marginBottom:"28px"}}>
-            <p style={{fontSize:"13px", color:"rgba(255,255,255,0.4)", marginBottom:"12px", textTransform:"uppercase", letterSpacing:"0.08em"}}>Scorebord</p>
-            {players.map((p, i) => {
-              const sc = scores[i] + (i === playerIdx ? correct : 0);
-              return (
-                <div key={i} style={{display:"flex", justifyContent:"space-between", alignItems:"center", padding:"10px 16px", marginBottom:"6px", background:"rgba(255,255,255,0.05)", borderRadius:"12px", border: i === playerIdx ? "2px solid rgba(96,165,250,0.4)" : "2px solid transparent"}}>
-                  <span style={{fontWeight:"700"}}>{p}</span>
-                  <span style={{fontFamily:"'Righteous', cursive", fontSize:"18px", color:"#60a5fa"}}>{sc}</span>
-                </div>
-              );
-            })}
-          </div>
-          <div style={{display:"flex", gap:"10px"}}>
-            <button onClick={onRestart} style={{flex:1, padding:"14px", borderRadius:"14px", border:"2px solid rgba(255,255,255,0.15)", background:"transparent", color:"rgba(255,255,255,0.5)", fontFamily:"'Nunito', sans-serif", fontSize:"15px", fontWeight:"700", cursor:"pointer"}}>↩ Opnieuw</button>
-            <button onClick={onNext} style={{flex:2, padding:"14px", borderRadius:"14px", border:"none", background:"linear-gradient(135deg,#3b82f6,#6366f1)", color:"white", fontFamily:"'Righteous', cursive", fontSize:"16px", cursor:"pointer"}}>Volgende speler ➜</button>
-          </div>
-        </div>
-      </div>
+      <ScoreScreen
+        players={players}
+        scores={scores}
+        currentRound={roundNum.current + 1}
+        totalRounds={players.length}
+        onNext={onNext}
+        onRestart={onRestart}
+        onContinue={() => {
+          setScores(Array(players.length).fill(null));
+          setPlayerIdx(0);
+          setCorrect(0);
+          setSkipped(0);
+          setTimeRemaining(roundTime);
+          setForbiddenLetter(null);
+          roundNum.current = 0;
+          setPhase("handoff");
+        }}
+        onShowStats={() => {}}
+        teams={null}
+        teamScores={[]}
+        onStartTiebreaker={() => {}}
+      />
     );
   }
 
-  // playing
+  // spinning or playing
   return (
     <div className={`screen${flash === "correct" ? " taboe-flash-correct" : flash === "skip" ? " taboe-flash-skip" : ""}`}>
       <div style={{width:"100%", maxWidth:"420px"}}>
 
         {/* Timer balk */}
-        <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"20px", overflow:"hidden"}}>
+        <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"8px", overflow:"hidden"}}>
           <div style={{height:"100%", width:`${timerPct * 100}%`, background:timerColor, borderRadius:"4px", transition:"width 0.08s linear, background 0.5s"}} />
         </div>
 
-        {/* Timer + speler */}
+        {/* Speler links, timer midden, stats rechts — op één lijn */}
         <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
-          <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:timerColor}}>{Math.ceil(timeRemaining)}s</span>
-          <span style={{fontSize:"13px", color:"rgba(255,255,255,0.45)", fontWeight:"700"}}>{players[playerIdx]} legt uit</span>
-          <span style={{fontSize:"13px", color:"rgba(255,255,255,0.3)"}}>✓{correct} ✗{skipped}</span>
-        </div>
-
-        {/* Kaart */}
-        <div style={{background:"linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.98))", border:"3px solid rgba(96,165,250,0.3)", borderRadius:"24px", padding:"28px 24px", marginBottom:"16px", boxShadow:"0 8px 32px rgba(0,0,0,0.4)"}}>
-          <p style={{fontSize:"11px", fontWeight:"800", letterSpacing:"0.14em", color:"rgba(255,255,255,0.3)", textTransform:"uppercase", marginBottom:"12px"}}>Raadwoord</p>
-          <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"32px", color:"white", marginBottom:"24px", lineHeight:1.1}}>{card.word}</h2>
-          <div style={{borderTop:"1px solid rgba(255,255,255,0.08)", paddingTop:"16px"}}>
-            <p style={{fontSize:"11px", fontWeight:"800", letterSpacing:"0.14em", color:"#f87171", textTransform:"uppercase", marginBottom:"10px"}}>🚫 Verboden woorden</p>
-            <div style={{display:"flex", flexWrap:"wrap", gap:"8px"}}>
-              {card.taboe.map((t, i) => (
-                <span key={i} style={{background:"rgba(248,113,113,0.12)", border:"1.5px solid rgba(248,113,113,0.35)", borderRadius:"20px", padding:"5px 12px", fontSize:"14px", fontWeight:"700", color:"#fca5a5"}}>{t}</span>
-              ))}
-            </div>
+          <span className="round-player" style={{flex:1}}>{players[playerIdx]}</span>
+          <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:timerColor, flex:1, textAlign:"center"}}>
+            {Math.ceil(timeRemaining)}s
+          </span>
+          <div className="round-stats" style={{flex:1, justifyContent:"flex-end"}}>
+            <span className="stat correct-stat">
+              <span className="stat-icon">✓</span>
+              <span>{correct}</span>
+            </span>
+            <span className="stat skip-stat">
+              <span className="stat-icon">↷</span>
+              <span>{skipped}</span>
+            </span>
           </div>
         </div>
 
-        {/* Knoppen */}
-        <div style={{display:"flex", gap:"10px", marginBottom:"12px"}}>
-          <button onClick={onSkip} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(248,113,113,0.4)", background:"rgba(248,113,113,0.1)", color:"#f87171", fontFamily:"'Righteous', cursive", fontSize:"18px", cursor:"pointer"}}>✗ Skip</button>
-          <button onClick={onCorrect} style={{flex:2, padding:"18px", borderRadius:"16px", border:"none", background:"linear-gradient(135deg,#16a34a,#15803d)", color:"white", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor:"pointer", boxShadow:"0 4px 16px rgba(22,163,74,0.4)"}}>✓ Goed!</button>
+        {/* Verboden letter display */}
+        <div style={{display:"flex", flexDirection:"column", alignItems:"center", marginBottom:"16px", gap:"10px"}}>
+          <div style={{
+            fontFamily:"'Righteous', cursive",
+            fontSize:"clamp(56px, 18vw, 88px)",
+            color: spinning ? "rgba(248,113,113,0.5)" : "#f87171",
+            textShadow: spinning ? "none" : "0 0 32px rgba(248,113,113,0.5)",
+            letterSpacing:"0.05em",
+            lineHeight:1,
+            transition:"color 0.1s",
+            minHeight:"1em",
+            display:"flex", alignItems:"center", justifyContent:"center"
+          }}>
+            {forbiddenLetter ?? "?"}
+          </div>
+          <div style={{fontSize:"11px", fontWeight:"800", letterSpacing:"0.14em", color:"#f87171", textTransform:"uppercase"}}>
+            {spinning ? "⏳ Letter kiezen…" : "🚫 Verboden letter"}
+          </div>
         </div>
-        <button onClick={onEndRound} style={{width:"100%", padding:"12px", borderRadius:"14px", border:"2px solid rgba(255,255,255,0.1)", background:"transparent", color:"rgba(255,255,255,0.35)", fontFamily:"'Nunito', sans-serif", fontSize:"14px", fontWeight:"700", cursor:"pointer"}}>Ronde beëindigen</button>
+
+        {/* Kaart */}
+        <div style={{background:"linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.98))", border:"3px solid rgba(96,165,250,0.3)", borderRadius:"24px", padding:"28px 24px", marginBottom:"16px", boxShadow:"0 8px 32px rgba(0,0,0,0.4)", textAlign:"center"}}>
+          <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(32px, 10vw, 44px)", color:"white", margin:0, lineHeight:1.1}}>{card.word}</h2>
+        </div>
+
+        {/* Knoppen — zichtbaar tijdens spinning én playing */}
+        <div style={{display:"flex", gap:"10px", marginBottom:"12px"}}>
+          <button onClick={onSkip} disabled={spinning} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(248,113,113,0.4)", background:"rgba(248,113,113,0.1)", color: spinning ? "rgba(248,113,113,0.35)" : "#f87171", fontFamily:"'Righteous', cursive", fontSize:"18px", cursor: spinning ? "default" : "pointer"}}>✗ Skip</button>
+          <button onClick={onCorrect} disabled={spinning} style={{flex:2, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color: spinning ? "rgba(74,222,128,0.35)" : "#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor: spinning ? "default" : "pointer"}}>✓ Goed!</button>
+        </div>
+        <button onClick={onEndRound} disabled={spinning} style={{width:"100%", padding:"12px", borderRadius:"14px", border:"2px solid rgba(255,255,255,0.1)", background:"transparent", color:"rgba(255,255,255,0.35)", fontFamily:"'Nunito', sans-serif", fontSize:"14px", fontWeight:"700", cursor: spinning ? "default" : "pointer"}}>Ronde beëindigen</button>
       </div>
     </div>
   );
@@ -2618,31 +2659,36 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
   const pct = timeRemaining / roundTime;
   const timeLeft = Math.round(timeRemaining);
   const timerColor = timesUp ? "#f87171" : timeLeft > 30 ? "#4ade80" : timeLeft > 10 ? "#fbbf24" : "#f87171";
-  const circumference = 2 * Math.PI * 44;
   const currentWord = words[wordIndex];
   const isCurrentBonus = currentWord ? getBonusPoints(currentWord) > 0 : false;
 
   return (
     <div className={`screen round-screen ${flash ? `flash-${flash}` : ""} ${done ? "round-done" : ""}`}>
-      <div className="round-top">
-        <span className="round-player">{player}</span>
-        <div className="timer-wrap">
-          <svg width="100" height="100" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="8"/>
-            <circle className="timer-circle-progress" cx="50" cy="50" r="44" fill="none" stroke={timerColor} strokeWidth="8" strokeDasharray={circumference} strokeDashoffset={timesUp ? circumference : circumference * (1 - pct)} strokeLinecap="round" transform="rotate(-90 50 50)"/>
-            <text x="50" y="56" textAnchor="middle" fill="white" fontSize="22" fontWeight="700" fontFamily="inherit" className={timesUp ? "timer-ring" : ""}>{timesUp ? "⏰" : timeLeft}</text>
-          </svg>
+      <div style={{width:"100%", maxWidth:"420px"}}>
+
+        {/* Timer balk */}
+        <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"8px", overflow:"hidden"}}>
+          <div style={{height:"100%", width:`${timesUp ? 0 : pct * 100}%`, background:timerColor, borderRadius:"4px", transition:"width 0.05s linear, background 0.5s"}} />
         </div>
-        <div className="round-stats">
-          <span className={`stat ${streak >= 3 ? "correct-stat-fire" : "correct-stat"}`}>
-            <span className="stat-icon">{streak >= 3 ? "🔥" : "✓"}</span>
-            <span>{initialPoints + scores.points}</span>
+
+        {/* Speler links, timer midden, stats rechts */}
+        <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"8px"}}>
+          <span className="round-player" style={{flex:1}}>{player}</span>
+          <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:timerColor, flex:1, textAlign:"center"}}>
+            {timesUp ? "⏰" : timeLeft}
           </span>
-          <span className="stat skip-stat">
-            <span className="stat-icon">↷</span>
-            <span>{initialSkips + scores.skipped}</span>
-          </span>
+          <div className="round-stats" style={{flex:1, justifyContent:"flex-end"}}>
+            <span className={`stat ${streak >= 3 ? "correct-stat-fire" : "correct-stat"}`}>
+              <span className="stat-icon">{streak >= 3 ? "🔥" : "✓"}</span>
+              <span>{initialPoints + scores.points}</span>
+            </span>
+            <span className="stat skip-stat">
+              <span className="stat-icon">↷</span>
+              <span>{initialSkips + scores.skipped}</span>
+            </span>
+          </div>
         </div>
+
       </div>
       <div className="word-stage">
         {done ? (() => {
