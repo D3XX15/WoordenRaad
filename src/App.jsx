@@ -2362,7 +2362,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
                 >
                   <span className="ls-mode-icon">🤔</span>
                   <span className="ls-mode-title">Klassiek</span>
-                  <span className="ls-mode-desc">Leg of beeld het woord zo snel mogelijk uit zonder het te zeggen.</span>
+                  <span className="ls-mode-desc">Leg of beeld zoveel mogelijk woorden uit binnen de tijd.</span>
                 </button>
                 <button
                   className={`ls-mode-btn ${wrGameMode === "taboe" ? "ls-mode-btn-active" : "ls-mode-btn-inactive"}`}
