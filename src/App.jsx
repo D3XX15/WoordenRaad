@@ -2360,7 +2360,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
                   onClick={() => setWrGameMode("klassiek")}
                   style={wrGameMode === "klassiek" ? {borderColor:"#60a5fa", background:"rgba(96,165,250,0.15)"} : {}}
                 >
-                  <span className="ls-mode-icon">💬</span>
+                  <span className="ls-mode-icon">🤔</span>
                   <span className="ls-mode-title">Klassiek</span>
                   <span className="ls-mode-desc">Leg het woord zo snel mogelijk uit zonder het te zeggen.</span>
                 </button>
@@ -2369,7 +2369,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
                   onClick={() => setWrGameMode("taboe")}
                   style={wrGameMode === "taboe" ? {borderColor:"#60a5fa", background:"rgba(96,165,250,0.15)"} : {}}
                 >
-                  <span className="ls-mode-icon">🚫</span>
+                  <span className="ls-mode-icon">🤫</span>
                   <span className="ls-mode-title">Taboe</span>
                   <span className="ls-mode-desc">Leg het woord uit zonder de verboden letter te noemen.</span>
                 </button>
