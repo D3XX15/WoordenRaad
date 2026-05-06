@@ -2020,19 +2020,21 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
 
   useEffect(() => () => { stopTimer(); clearInterval(spinIntervalRef.current); }, []);
 
+  const TABOE_LETTERS = ALPHABET_ALL.filter(l => !["Q","X","Y"].includes(l));
+
   const spinLetter = () => {
     if (spinning) return;
     setSpinning(true);
     setPhase("spinning");
     spinCountRef.current = 0;
     const totalTicks = 18 + Math.floor(Math.random() * 12);
-    const target = ALPHABET_ALL[Math.floor(Math.random() * ALPHABET_ALL.length)];
+    const target = TABOE_LETTERS[Math.floor(Math.random() * TABOE_LETTERS.length)];
     targetLetterRef.current = target;
 
     spinIntervalRef.current = setInterval(() => {
       spinCountRef.current++;
       if (spinCountRef.current < totalTicks) {
-        setForbiddenLetter(ALPHABET_ALL[Math.floor(Math.random() * ALPHABET_ALL.length)]);
+        setForbiddenLetter(TABOE_LETTERS[Math.floor(Math.random() * TABOE_LETTERS.length)]);
       } else {
         clearInterval(spinIntervalRef.current);
         setForbiddenLetter(targetLetterRef.current);
@@ -2440,25 +2442,12 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
             {(wrGameMode === "klassiek" || wrGameMode === "taboe") && (
             <div className="setup-section-wrap" style={{borderColor: "#60a5fa"}}>
               <div className="setup-wrapper-badge" style={{background: "#3b82f6"}}>CATEGORIEËN</div>
-              <div className="cat-section-header">
-                <button className={`cat-toggle-pill ${allSelected ? "cat-toggle-pill-active" : "cat-toggle-pill-custom"}`} onClick={() => toggleCategory("all")}>
-                  {totalWordsCount}/{absoluteTotalWords} woorden
-                </button>
+              <div className="cat-word-count">{totalWordsCount} / {absoluteTotalWords} woorden</div>
+              <div className="category-grid">
+                {CATEGORIES.map(cat => (
+                  <button key={cat.id} className={`category-btn${selectedCategories.has(cat.id) ? " category-btn-active" : ""}`} onClick={() => toggleCategory(cat.id)}>{cat.label}</button>
+                ))}
               </div>
-              {allSelected ? (
-                <div className="cat-preview-chips">
-                  {CATEGORIES.slice(0, 5).map(cat => (
-                    <button key={cat.id} className="cat-preview-chip" onClick={() => toggleCategory(cat.id)}>{cat.label}</button>
-                  ))}
-                  <button className="cat-preview-more" onClick={() => toggleCategory("all")}>+{CATEGORIES.length - 5} meer</button>
-                </div>
-              ) : (
-                <div className="category-grid">
-                  {CATEGORIES.map(cat => (
-                    <button key={cat.id} className={`category-btn${selectedCategories.has(cat.id) ? " category-btn-active" : ""}`} onClick={() => toggleCategory(cat.id)}>{cat.label}</button>
-                  ))}
-                </div>
-              )}
             </div>
             )}
 
@@ -3356,6 +3345,7 @@ const CSS = `
   .start-btn:active, .handoff-btn:active, .next-btn:active { transform: scale(0.98); }
   .start-btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
 
+  .cat-word-count { text-align: center; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.28); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
   .cat-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
   .cat-section-title { font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
   .cat-toggle-pill { font-family: inherit; font-weight: 700; line-height: inherit; letter-spacing: normal; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; padding: 7px 14px; border-radius: 20px; cursor: pointer; transition: all 0.2s; }
@@ -3371,8 +3361,8 @@ const CSS = `
   .category-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700; }
   .category-btn { font-family: inherit; font-weight: inherit; line-height: inherit; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; padding: 5px 11px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s; user-select: none; }
   .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
-  .category-btn-active { background: rgba(96,165,250,0.1); border-color: rgba(96,165,250,0.4); color: rgba(147,197,253,0.9); }
-  .category-btn-active:hover { background: rgba(96,165,250,0.2); border-color: #60a5fa; color: #93c5fd; }
+  .category-btn-active { background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.45); color: rgba(110,231,183,0.95); }
+  .category-btn-active:hover { background: rgba(52,211,153,0.2); border-color: #34d399; color: #6ee7b7; }
 
   .player-input-group { display: flex; margin-bottom: 4px; height: 48px; width: 100%; }
   .player-name-container { display: flex; align-items: center; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 0 12px; flex-grow: 1; transition: border-color 0.2s; }
