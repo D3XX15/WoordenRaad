@@ -161,49 +161,7 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters }) {
   );
 }
 
-// ── Taboe Kaarten ────────────────────────────────────────────────────────────
-const TABOE_CARDS = [
-  { word: "olifant",      taboe: ["groot", "grijs", "slurf", "Afrika", "circus"] },
-  { word: "voetbal",      taboe: ["bal", "schop", "goal", "spelen", "veld"] },
-  { word: "vliegtuig",    taboe: ["vliegen", "lucht", "piloot", "vleugels", "reizen"] },
-  { word: "pizza",        taboe: ["Italië", "kaas", "oven", "tomaat", "ronde"] },
-  { word: "politieagent", taboe: ["wet", "arresteren", "blauw", "uniform", "agent"] },
-  { word: "tandenborstel",taboe: ["tanden", "poetsen", "mond", "pasta", "hygiëne"] },
-  { word: "brandweer",    taboe: ["vuur", "brand", "slang", "blussen", "ladder"] },
-  { word: "koelkast",     taboe: ["koud", "eten", "bewaren", "deur", "vriezer"] },
-  { word: "bibliotheek",  taboe: ["boeken", "lenen", "lezen", "stil", "kaart"] },
-  { word: "regenboog",    taboe: ["kleuren", "regen", "zon", "boog", "hemel"] },
-  { word: "schildpad",    taboe: ["schild", "langzaam", "schaal", "reptiel", "zee"] },
-  { word: "trampoline",   taboe: ["springen", "stuiteren", "tuin", "veren", "hoog"] },
-  { word: "dokter",       taboe: ["ziek", "arts", "ziekenhuis", "medicijn", "stethoscoop"] },
-  { word: "waterval",     taboe: ["water", "vallen", "natuur", "stroom", "rots"] },
-  { word: "parachute",    taboe: ["vallen", "lucht", "springen", "vliegtuig", "zijde"] },
-  { word: "barbecue",     taboe: ["grillen", "vlees", "zomer", "vuur", "tuin"] },
-  { word: "astronaut",    taboe: ["ruimte", "raket", "maan", "zweven", "pak"] },
-  { word: "accordeon",    taboe: ["muziek", "toetsen", "blazen", "Frans", "uitklappen"] },
-  { word: "haaienvin",    taboe: ["haai", "water", "rug", "zwemmen", "driehoek"] },
-  { word: "zandkasteel",  taboe: ["strand", "zand", "bouwen", "water", "kasteel"] },
-  { word: "luchtballon",  taboe: ["vliegen", "gas", "mand", "lucht", "ballon"] },
-  { word: "dolfijn",      taboe: ["zee", "springen", "slim", "vis", "zwemmen"] },
-  { word: "kameleon",     taboe: ["kleur", "veranderen", "hagedis", "tong", "camouflage"] },
-  { word: "vuurwerk",     taboe: ["knallen", "nieuwjaar", "explosie", "kleur", "lucht"] },
-  { word: "sumoworste­laar",taboe: ["zwaar", "Japan", "ring", "vechten", "groot"] },
-  { word: "iglo",         taboe: ["sneeuw", "ijs", "Eskimo", "rond", "ijsblokken"] },
-  { word: "toverbal",     taboe: ["snoep", "rollen", "rond", "strepen", "mond"] },
-  { word: "rolschaatsen", taboe: ["schaatsen", "wielen", "rijden", "disco", "schoenen"] },
-  { word: "goudvis",      taboe: ["vis", "goud", "kom", "oranje", "water"] },
-  { word: "kompas",       taboe: ["richting", "noorden", "naald", "navigatie", "kaart"] },
-  { word: "tandpasta",    taboe: ["tanden", "poetsen", "tube", "borstel", "munt"] },
-  { word: "schommelen",   taboe: ["heen", "tuin", "speeltuin", "hangen", "wiegen"] },
-  { word: "megafoon",     taboe: ["hard", "roepen", "trechter", "geluid", "politie"] },
-  { word: "boemerang",    taboe: ["gooien", "terugkomen", "Australië", "boog", "hout"] },
-  { word: "spiegelei",    taboe: ["ei", "bakken", "pan", "geel", "wit"] },
-  { word: "toverstaf",    taboe: ["magie", "heks", "staf", "toveren", "Harry"] },
-  { word: "tijdmachine",  taboe: ["tijd", "reizen", "verleden", "toekomst", "machine"] },
-  { word: "slangenbezweerder", taboe: ["slang", "fluit", "mand", "India", "cobra"] },
-  { word: "achtbaan",     taboe: ["pretpark", "snel", "angst", "rails", "hoogte"] },
-  { word: "vliegende schotel", taboe: ["UFO", "ruimte", "alien", "rond", "vliegen"] },
-];
+
 
 // ── Timer-end feedback: geluid + trilling ────────────────────────────────────
 function playTimerEnd() {
@@ -1247,7 +1205,7 @@ const WORDS_BY_CATEGORY = (() => {
     'boomerang', 'traangas', 'mosterdgas', 'pepperspray', 'vlammenwerper', 'stormram', 'zakmes', 'luchtbuks',
     'shotgun', 'sniper', 'vlindermes', 'waterkanon', 'blaaspijp', 'knots', 'kruisraket', 'wapenstok', 'bombrief',
     'degen', 'geschut', 'handboog', 'hellebaard', 'holster', 'kogel', 'patroon', 'huls', 'magnum', 'desert eagle',
-    '9mm', 'ar-15', 'ak-47', 'tommy gun', 'kaliber', 'strijdbijl', 'sabel', 'kromzwaard'
+    '9mm', 'ar-15', 'ak-47', 'tommy gun', 'kaliber', 'strijdbijl', 'sabel', 'kromzwaard', 'vuurwerk'
   ];
 
 
@@ -1920,7 +1878,7 @@ const EXTRA_WORD_PARTS = new Set([
 'water', 'meloen', 'biblio', 'thecaris', 'documentaire', 'maker', 'duik', 'instructeur', 'fysio', 'therapeut', 'beheerder', 'controleur', 'driehoek',
 'game', 'ontwikkelaar', 'hypno', 'ijsbeeld', 'beeld', 'houwer', 'kostuum', 'ontwerper', 'kraam', 'verzorger', 'kunst', 'criticus', 'lichaam', 'lastering',
 'luchtverkeer', 'leider', 'museum', 'conservator', 'revalidatie', 'arts', 'scenario', 'schrijver', 'comedian', 'systeem', 'divisie', 'beschermer', 'jas',
-'verzekering', 'agent', 'voeding', 'directeur', 'tram', 'bestuurder', 'belasting', 'adviseur', 'politie', 'geheim', 'kraan', 'bekdier',
+'verzekering', 'agent', 'voeding', 'directeur', 'tram', 'bestuurder', 'belasting', 'adviseur', 'politie', 'geheim', 'kraan', 'bekdier', 'stroom', 'versnelling',
 'vrachtwagen', 'chauffeur', 'vracht', 'beach', 'volleybal', 'diepzee', 'duiker', 'langebaan', 'schaatsen', 'parachute', 'springen', 'indianen', 'tooi',
 'polsstok', 'hoogspringen', 'schans', 'synchroon', 'trampoline', 'vissen', 'kampioen', 'beker', 'oven', 'gezelschap', 'spel', 'getrokken', 'studie', 'serie',
 'ring', 'afstand', 'bediening', 'regelaar', 'armband', 'horloge', 'houwwerk', 'kaarsen', 'houder', 'financiering', 'zinnig', 'huur', 'scheen', 'warm',
@@ -2012,8 +1970,16 @@ for (const cat of CATEGORIES) {
   }
 }
 // ── Taboe Spel ───────────────────────────────────────────────────────────────
-function TaboeGame({ players, onRestart, roundTime }) {
-  const [deck] = useState(() => shuffle([...TABOE_CARDS]));
+function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
+  const getTaboeWordPool = (cats) => {
+    const catSet = cats instanceof Set ? cats : new Set();
+    const allIds = CATEGORIES.map(c => c.id);
+    if (catSet.size === 0 || allIds.every(id => catSet.has(id))) return WORDS_BY_CATEGORY.all;
+    const merged = new Set();
+    for (const id of catSet) (WORDS_BY_CATEGORY[id] || []).forEach(word => merged.add(word));
+    return merged.size > 0 ? [...merged] : WORDS_BY_CATEGORY.all;
+  };
+  const [deck] = useState(() => shuffle(getTaboeWordPool(selectedCategories)));
   const [cardIdx, setCardIdx] = useState(0);
   const [playerIdx, setPlayerIdx] = useState(0);
   const [scores, setScores] = useState(Array(players.length).fill(null));
@@ -2157,15 +2123,20 @@ function TaboeGame({ players, onRestart, roundTime }) {
     <div className={`screen${flash === "correct" ? " taboe-flash-correct" : flash === "skip" ? " taboe-flash-skip" : ""}`}>
       <div style={{width:"100%", maxWidth:"420px"}}>
 
+        {/* WoordRaad header */}
+        <div className="ls-header">
+          <div className="wr-logo">WoordRaad</div>
+          <span className="round-player" style={{fontSize:"22px", textAlign:"right"}}>{players[playerIdx]}</span>
+        </div>
+
         {/* Timer balk */}
         <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"8px", overflow:"hidden"}}>
           <div style={{height:"100%", width:`${timerPct * 100}%`, background:timerColor, borderRadius:"4px", transition:"width 0.08s linear, background 0.5s"}} />
         </div>
 
-        {/* Speler links, timer midden, stats rechts — op één lijn */}
+        {/* Timer midden, stats rechts — op één lijn */}
         <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
-          <span className="round-player" style={{flex:1}}>{players[playerIdx]}</span>
-          <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:timerColor, flex:1, textAlign:"center"}}>
+          <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:timerColor, flex:1, textAlign:"left"}}>
             {Math.ceil(timeRemaining)}s
           </span>
           <div className="round-stats" style={{flex:1, justifyContent:"flex-end"}}>
@@ -2202,7 +2173,7 @@ function TaboeGame({ players, onRestart, roundTime }) {
 
         {/* Kaart */}
         <div style={{background:"linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.98))", border:"3px solid rgba(96,165,250,0.3)", borderRadius:"24px", padding:"28px 24px", marginBottom:"16px", boxShadow:"0 8px 32px rgba(0,0,0,0.4)", textAlign:"center"}}>
-          <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(32px, 10vw, 44px)", color:"white", margin:0, lineHeight:1.1}}>{card.word}</h2>
+          <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(32px, 10vw, 44px)", color:"white", margin:0, lineHeight:1.1}}>{hyphenateWord(card)}</h2>
         </div>
 
         {/* Knoppen — zichtbaar tijdens spinning én playing */}
@@ -2319,7 +2290,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
     setNames(p => { const n = [...p]; n.splice(offset - 1, 1); return n; });
   };
   const updateName = (i, v) => setNames(p => p.map((n, j) => j === i ? v : n));
-  const canStart = names.every((n) => n.trim().length > 0) && (wrGameMode === "taboe" || selectedCategories.size > 0);
+  const canStart = names.every((n) => n.trim().length > 0) && selectedCategories.size > 0;
 
   const buildTeams = () => {
     if (!teamMode) return null;
@@ -2391,7 +2362,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
                 >
                   <span className="ls-mode-icon">💬</span>
                   <span className="ls-mode-title">Klassiek</span>
-                  <span className="ls-mode-desc">Laat je medespelers zoveel mogelijk woorden raden.</span>
+                  <span className="ls-mode-desc">Leg het woord zo snel mogelijk uit zonder het te zeggen.</span>
                 </button>
                 <button
                   className={`ls-mode-btn ${wrGameMode === "taboe" ? "ls-mode-btn-active" : "ls-mode-btn-inactive"}`}
@@ -2466,7 +2437,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
               )}
             </div>
 
-            {wrGameMode === "klassiek" && (
+            {(wrGameMode === "klassiek" || wrGameMode === "taboe") && (
             <div className="setup-section-wrap" style={{borderColor: "#60a5fa"}}>
               <div className="setup-wrapper-badge" style={{background: "#3b82f6"}}>CATEGORIEËN</div>
               <div className="cat-section-header">
@@ -2476,8 +2447,10 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
               </div>
               {allSelected ? (
                 <div className="cat-preview-chips">
-                  {CATEGORIES.slice(0, 5).map(cat => <span key={cat.id} className="cat-preview-chip">{cat.label}</span>)}
-                  <span className="cat-preview-more">+{CATEGORIES.length - 5} meer</span>
+                  {CATEGORIES.slice(0, 5).map(cat => (
+                    <button key={cat.id} className="cat-preview-chip" onClick={() => toggleCategory(cat.id)}>{cat.label}</button>
+                  ))}
+                  <button className="cat-preview-more" onClick={() => toggleCategory("all")}>+{CATEGORIES.length - 5} meer</button>
                 </div>
               ) : (
                 <div className="category-grid">
@@ -2666,18 +2639,23 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
     <div className={`screen round-screen ${flash ? `flash-${flash}` : ""} ${done ? "round-done" : ""}`}>
       <div style={{width:"100%", maxWidth:"420px"}}>
 
+        {/* WoordRaad header */}
+        <div className="ls-header">
+          <div className="wr-logo">WoordRaad</div>
+          <span className="round-player" style={{fontSize:"22px", textAlign:"right"}}>{player}</span>
+        </div>
+
         {/* Timer balk */}
         <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"8px", overflow:"hidden"}}>
           <div style={{height:"100%", width:`${timesUp ? 0 : pct * 100}%`, background:timerColor, borderRadius:"4px", transition:"width 0.05s linear, background 0.5s"}} />
         </div>
 
-        {/* Speler links, timer midden, stats rechts */}
-        <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"8px"}}>
-          <span className="round-player" style={{flex:1}}>{player}</span>
-          <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:timerColor, flex:1, textAlign:"center"}}>
-            {timesUp ? "⏰" : timeLeft}
+        {/* Timer midden, stats rechts */}
+        <div style={{display:"flex", justifyContent:"flex-end", alignItems:"center", marginBottom:"8px"}}>
+          <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:timerColor, flex:1, textAlign:"left"}}>
+            {timesUp ? <span className="alarm-ringing">⏰</span> : timeLeft}
           </span>
-          <div className="round-stats" style={{flex:1, justifyContent:"flex-end"}}>
+          <div className="round-stats" style={{justifyContent:"flex-end"}}>
             <span className={`stat ${streak >= 3 ? "correct-stat-fire" : "correct-stat"}`}>
               <span className="stat-icon">{streak >= 3 ? "🔥" : "✓"}</span>
               <span>{initialPoints + scores.points}</span>
@@ -2724,15 +2702,9 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
         )}
       </div>
       {!done && (
-        <div className="action-row">
-          <button className={`action-btn skip-btn ${skipPenalty > 0 ? "btn-disabled" : ""}`} onClick={skip}>
-            <span className="btn-icon">↷</span>
-            <span className="btn-label">Sla over</span>
-          </button>
-          <button className={`action-btn correct-btn ${skipPenalty > 0 ? "btn-disabled" : ""}`} onClick={correct}>
-            <span className="btn-icon">✓</span>
-            <span className="btn-label">Goed geraden!</span>
-          </button>
+        <div style={{display:"flex", gap:"10px", width:"100%", maxWidth:"520px", padding:"0 0 max(24px, env(safe-area-inset-bottom))", flexShrink:0}}>
+          <button onClick={skip} disabled={skipPenalty > 0} style={{flex:1, padding:"18px", borderRadius:"16px", border:`2.5px solid ${skipPenalty > 0 ? "rgba(248,113,113,0.15)" : "rgba(248,113,113,0.4)"}`, background:`${skipPenalty > 0 ? "rgba(248,113,113,0.04)" : "rgba(248,113,113,0.1)"}`, color: skipPenalty > 0 ? "rgba(248,113,113,0.3)" : "#f87171", fontFamily:"'Righteous', cursive", fontSize:"18px", cursor: skipPenalty > 0 ? "default" : "pointer", transition:"all 0.18s"}}>✗ Skip</button>
+          <button onClick={correct} disabled={skipPenalty > 0} style={{flex:2, padding:"18px", borderRadius:"16px", border:`2.5px solid ${skipPenalty > 0 ? "rgba(74,222,128,0.15)" : "rgba(74,222,128,0.4)"}`, background:`${skipPenalty > 0 ? "rgba(74,222,128,0.04)" : "rgba(74,222,128,0.1)"}`, color: skipPenalty > 0 ? "rgba(74,222,128,0.3)" : "#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor: skipPenalty > 0 ? "default" : "pointer", transition:"all 0.18s"}}>✓ Goed!</button>
         </div>
       )}
     </div>
@@ -2975,22 +2947,28 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
   }
   const secs = Math.floor(elapsed);
   const tenths = Math.floor((elapsed % 1) * 10);
-  const circumference = 2 * Math.PI * 44;
-  const yellowFill = Math.min(elapsed / 60, 1);
-  const yellowOffset = circumference * (1 - yellowFill);
+  const elapsedDisplay = `${secs}.${tenths}s`;
   return (
     <div className="screen round-screen">
-      <div className="round-top">
-        <span className="round-player">⚡ {players[currentPlayerIdx]}</span>
-        <div className="timer-wrap">
-          <svg width="100" height="100" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="8"/>
-            <circle cx="50" cy="50" r="44" fill="none" stroke="#fbbf24" strokeWidth="8" className="tiebreaker-timer-circle" strokeDasharray={circumference} strokeDashoffset={yellowOffset} strokeLinecap="round" transform="rotate(-90 50 50)"/>
-            <text x="50" y="50" textAnchor="middle" fill="white" fontSize="15" fontWeight="700" fontFamily="inherit" dy="0">{secs}</text>
-            <text x="50" y="65" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="11" fontFamily="inherit">.{tenths}s</text>
-          </svg>
+      <div style={{width:"100%", maxWidth:"420px"}}>
+
+        {/* Tie-Breaker header */}
+        <div className="ls-header">
+          <div className="wr-logo">Tie-Breaker</div>
+          <span className="round-player" style={{fontSize:"22px", textAlign:"right"}}>⚡ {players[currentPlayerIdx]}</span>
         </div>
-        <div className="round-stats"><span className="round-stats-cat">{categoryLabel}</span></div>
+
+        {/* Timer balk — groeit mee met de tijd, max bij 60s */}
+        <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"8px", overflow:"hidden"}}>
+          <div style={{height:"100%", width:`${Math.min(elapsed / 60, 1) * 100}%`, background:"#fbbf24", borderRadius:"4px", transition:"width 0.05s linear"}} />
+        </div>
+
+        {/* Tijd links, categorie rechts */}
+        <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"8px"}}>
+          <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:"#fbbf24"}}>{elapsedDisplay}</span>
+          <span className="round-stats-cat" style={{textAlign:"right"}}>{categoryLabel}</span>
+        </div>
+
       </div>
       <div className="word-stage">
         <div className="word-anchor">
@@ -2999,8 +2977,8 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
           <div className="times-up-banner is-hidden" aria-hidden="true" />
         </div>
       </div>
-      <div className="action-row">
-        <button className="action-btn correct-btn" onClick={handleGuessed}><span className="btn-icon">✓</span><span className="btn-label">Goed geraden!</span></button>
+      <div style={{display:"flex", gap:"10px", width:"100%", maxWidth:"520px", padding:"0 0 max(24px, env(safe-area-inset-bottom))", flexShrink:0}}>
+        <button onClick={handleGuessed} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color:"#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor:"pointer"}}>✓ Goed geraden!</button>
       </div>
     </div>
   );
@@ -3022,6 +3000,7 @@ export default function App() {
   const [wrMode, setWrMode] = useState("klassiek"); // "klassiek" | "taboe"
   const [taboePlayers, setTaboePlayers] = useState(null);
   const [taboeRoundTime, setTaboeRoundTime] = useState(DEFAULT_ROUND_TIME);
+  const [taboeCategories, setTaboeCategories] = useState(() => new Set(CATEGORIES.map(c => c.id)));
 
   // WoordRaad state
   const [phase, setPhase] = useState("setup");
@@ -3057,6 +3036,7 @@ export default function App() {
     if (wrGameMode === "taboe") {
       setTaboePlayers(names);
       setTaboeRoundTime(time);
+      setTaboeCategories(categories instanceof Set ? categories : new Set(CATEGORIES.map(c => c.id)));
       return;
     }
     const empty = Array(names.length).fill(null);
@@ -3188,7 +3168,7 @@ export default function App() {
     return (
       <>
         <style>{CSS}</style>
-        <TaboeGame players={taboePlayers} roundTime={taboeRoundTime} onRestart={() => { setTaboePlayers(null); setWrMode("klassiek"); }} />
+        <TaboeGame players={taboePlayers} roundTime={taboeRoundTime} selectedCategories={taboeCategories} onRestart={() => { setTaboePlayers(null); setWrMode("klassiek"); }} />
       </>
     );
   }
@@ -3300,6 +3280,7 @@ const CSS = `
 
   .ls-header { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 16px 0 12px; }
   .ls-logo { font-family: 'Righteous', cursive; font-size: 22px; background: linear-gradient(135deg, #f59e0b, #ef4444, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .wr-logo { font-family: 'Righteous', cursive; font-size: 22px; background: linear-gradient(135deg, #60a5fa, #818cf8, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .ls-restart-btn { background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15); border-radius: 12px; color: rgba(255,255,255,0.6); font-family: inherit; font-size: 13px; font-weight: 700; padding: 8px 14px; cursor: pointer; transition: all 0.15s; }
   .ls-restart-btn:hover { background: rgba(255,255,255,0.15); color: white; }
 
@@ -3383,8 +3364,10 @@ const CSS = `
   .cat-toggle-pill-custom { background: rgba(74,144,226,0.1); border: 2px solid #4a90e2; color: #4a90e2; }
   .cat-toggle-pill-custom:hover { background: rgba(74,144,226,0.2); }
   .cat-preview-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700; }
-  .cat-preview-chip { font-size: 12px; padding: 5px 11px; border-radius: 20px; background: rgba(52,211,153,0.08); border: 2px solid rgba(52,211,153,0.3); color: rgba(52,211,153,0.75); }
-  .cat-preview-more { font-size: 12px; padding: 5px 11px; border-radius: 20px; background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.2); color: rgba(255,255,255,0.35); }
+  .cat-preview-chip { font-size: 12px; padding: 5px 11px; border-radius: 20px; background: rgba(52,211,153,0.08); border: 2px solid rgba(52,211,153,0.3); color: rgba(52,211,153,0.75); cursor: pointer; font-family: inherit; font-weight: 700; transition: background 0.15s, border-color 0.15s; }
+  .cat-preview-chip:hover { background: rgba(52,211,153,0.18); border-color: rgba(52,211,153,0.6); color: #34d399; }
+  .cat-preview-more { font-size: 12px; padding: 5px 11px; border-radius: 20px; background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.2); color: rgba(255,255,255,0.35); cursor: pointer; font-family: inherit; font-weight: 700; transition: background 0.15s; }
+  .cat-preview-more:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.6); }
   .category-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700; }
   .category-btn { font-family: inherit; font-weight: inherit; line-height: inherit; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; padding: 5px 11px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s; user-select: none; }
   .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
@@ -3590,6 +3573,8 @@ const CSS = `
   @keyframes grace-drain { from{width:100%} to{width:0%} }
   @keyframes pulse-red-banner { 0%,100%{box-shadow:0 0 6px rgba(248,113,113,0.4)} 50%{box-shadow:0 0 14px rgba(248,113,113,0.8)} }
   @keyframes ring { 0%{transform:rotate(0deg)} 15%{transform:rotate(18deg)} 30%{transform:rotate(-16deg)} 45%{transform:rotate(14deg)} 60%{transform:rotate(-10deg)} 75%{transform:rotate(6deg)} 90%{transform:rotate(-3deg)} 100%{transform:rotate(0deg)} }
+  @keyframes alarm-ring { 0%{transform:rotate(0deg) scale(1)} 10%{transform:rotate(-18deg) scale(1.15)} 25%{transform:rotate(18deg) scale(1.15)} 40%{transform:rotate(-14deg) scale(1.1)} 55%{transform:rotate(14deg) scale(1.1)} 70%{transform:rotate(-8deg) scale(1.05)} 85%{transform:rotate(8deg) scale(1.05)} 100%{transform:rotate(0deg) scale(1)} }
+  .alarm-ringing { display:inline-block; animation: alarm-ring 0.6s ease-in-out infinite; transform-origin: center center; }
 
   @keyframes ls-letter-land { 0%{transform:scale(0.5) rotate(-8deg);opacity:0} 70%{transform:scale(1.12) rotate(2deg)} 100%{transform:scale(1) rotate(0deg);opacity:1} }
   @keyframes ls-spin-flash { 0%{opacity:0.4} 50%{opacity:0.9} 100%{opacity:0.4} }
