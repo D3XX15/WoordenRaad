@@ -46,13 +46,13 @@ const LS_CARDS = [
 
 const ALPHABET_ALL = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-function LetterSnelGame({ players, onRestart, activeLetters, gameMode }) {
-  if (gameMode === "ketting") return <LetterSnelKettingGame players={players} onRestart={onRestart} activeLetters={activeLetters} />;
-  return <LetterSnelKlassiekGame players={players} onRestart={onRestart} activeLetters={activeLetters} />;
+function LetterSnelGame({ players, onRestart, activeLetters, gameMode, targetScore }) {
+  if (gameMode === "ketting") return <LetterSnelKettingGame players={players} onRestart={onRestart} activeLetters={activeLetters} targetScore={targetScore} />;
+  return <LetterSnelKlassiekGame players={players} onRestart={onRestart} activeLetters={activeLetters} targetScore={targetScore} />;
 }
 
 // ── LetterSnel Klassiek ───────────────────────────────────────────────────────
-function LetterSnelKlassiekGame({ players, onRestart, activeLetters }) {
+function LetterSnelKlassiekGame({ players, onRestart, activeLetters, targetScore }) {
   const alphabet = activeLetters && activeLetters.length > 0 ? activeLetters : ALPHABET_ALL;
   const [scores, setScores] = useState(Array(players.length).fill(0));
   const [currentCardIdx, setCurrentCardIdx] = useState(0);
@@ -62,6 +62,7 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters }) {
   const [winner, setWinner] = useState(null);
   const [phase, setPhase] = useState("ready");
   const [lastWinners, setLastWinners] = useState([]);
+  const [gameWinner, setGameWinner] = useState(null);
   const spinIntervalRef = useRef(null);
   const spinCountRef = useRef(0);
   const targetLetterRef = useRef(null);
@@ -99,6 +100,10 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters }) {
     setScores(newScores);
     setWinner(playerIdx);
     setLastWinners(prev => [...prev.slice(-4), playerIdx]);
+    if (newScores[playerIdx] >= targetScore) {
+      setGameWinner(playerIdx);
+      return;
+    }
     setPhase("awarded");
   };
 
@@ -110,6 +115,10 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters }) {
   };
 
   const topScore = Math.max(...scores);
+
+  if (gameWinner !== null) {
+    return <LetterSnelWinnaarScreen players={players} scores={scores} winnaarIdx={gameWinner} onRestart={onRestart} />;
+  }
 
   return (
     <div className="ls-screen">
@@ -139,12 +148,12 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters }) {
           {spinning ? "draaien…" : phase === "awarded" ? "volgende kaart ➜" : letter ? "opnieuw draaien" : "kies letter ▶"}
         </button>
       </div>
-      {(phase === "ready" || (phase === "playing" && !spinning)) && (
+      {(phase === "ready" || phase === "playing" || phase === "awarded") && (
         <div className="ls-award-section">
-          <div className="ls-award-label">{phase === "ready" ? "Druk op \"kies letter\" om te beginnen" : "Wie was er het eerst?"}</div>
+          <div className="ls-award-label">{phase === "ready" ? "Druk op \"kies letter\" om te beginnen" : phase === "awarded" ? "" : "Wie was er het eerst?"}</div>
           <div className="ls-scores-strip">
             {players.map((p, i) => (
-              <button key={i} className={`ls-score-chip ls-score-chip-btn ${scores[i] === topScore && topScore > 0 ? "ls-score-leader" : ""}`} onClick={() => phase === "playing" && !spinning && awardPoint(i)} disabled={phase === "ready"}>
+              <button key={i} className={`ls-score-chip ls-score-chip-btn ${scores[i] === topScore && topScore > 0 ? "ls-score-leader" : ""}`} onClick={() => phase === "playing" && !spinning && awardPoint(i)} disabled={phase === "ready" || spinning || phase === "awarded"}>
                 <span className="ls-score-chip-name">{p}</span>
                 <span className="ls-score-chip-val">{scores[i]}</span>
               </button>
@@ -162,6 +171,36 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters }) {
 }
 
 
+
+// ── LetterSnel Winnaar Scherm ─────────────────────────────────────────────────
+function LetterSnelWinnaarScreen({ players, scores, winnaarIdx, onRestart }) {
+  const sorted = [...scores.map((s, i) => ({ s, i }))].sort((a, b) => b.s - a.s);
+  const medals = ["🥇","🥈","🥉"];
+  const getEffectiveRank = (score) => sorted.filter(e => e.s > score).length + 1;
+  const medal = (score) => {
+    const rank = getEffectiveRank(score);
+    return medals[rank - 1] ?? `${rank}.`;
+  };
+  return (
+    <div className="ls-screen" style={{justifyContent:"center"}}>
+      <div style={{textAlign:"center", padding:"32px 24px", display:"flex", flexDirection:"column", alignItems:"center", gap:"24px"}}>
+        <div style={{fontSize:"64px"}}>🏆</div>
+        <div style={{fontFamily:"'Righteous', cursive", fontSize:"13px", letterSpacing:"0.15em", color:"rgba(255,255,255,0.45)", textTransform:"uppercase"}}>Winnaar</div>
+        <div style={{fontFamily:"'Righteous', cursive", fontSize:"36px", color:"#facc15", textShadow:"0 0 24px rgba(250,204,21,0.5)"}}>{players[winnaarIdx]}</div>
+        <div style={{width:"100%", display:"flex", flexDirection:"column", gap:"10px", marginTop:"8px"}}>
+          {sorted.map(({ s, i }) => (
+            <div key={i} style={{display:"flex", alignItems:"center", gap:"12px", background: i === winnaarIdx ? "rgba(250,204,21,0.08)" : "rgba(255,255,255,0.04)", border: `2px solid ${i === winnaarIdx ? "rgba(250,204,21,0.35)" : "rgba(255,255,255,0.08)"}`, borderRadius:"14px", padding:"12px 16px"}}>
+              <span style={{fontFamily:"'Righteous', cursive", fontSize:"16px", color:"rgba(255,255,255,0.35)", width:"24px"}}>{medal(s)}</span>
+              <span style={{flex:1, fontFamily:"'Righteous', cursive", fontSize:"18px", color: i === winnaarIdx ? "#facc15" : "rgba(255,255,255,0.8)"}}>{players[i]}</span>
+              <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color: i === winnaarIdx ? "#facc15" : "rgba(255,255,255,0.6)"}}>{s} pt</span>
+            </div>
+          ))}
+        </div>
+        <button className="start-btn ready-solid" style={{marginTop:"8px", width:"100%"}} onClick={onRestart}>Nieuw spel ↩</button>
+      </div>
+    </div>
+  );
+}
 
 // ── Timer-end feedback: geluid + trilling ────────────────────────────────────
 function playTimerEnd() {
@@ -196,14 +235,54 @@ function playTimerEnd() {
   }
 }
 
-// ── LetterSnel Kettingreactie ─────────────────────────────────────────────────
+function playPling() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(1046, now);
+    osc.frequency.exponentialRampToValueAtTime(1318, now + 0.06);
+    gain.gain.setValueAtTime(0.45, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+    osc.start(now);
+    osc.stop(now + 0.55);
+  } catch (e) {}
+}
+
+// ── Taboe timer-end: kort aflopend twee-noot geluidje ────────────────────────
+function playTaboeTimeUp() {
+  if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const note = (startTime, freq, duration) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, startTime);
+      gain.gain.setValueAtTime(0.5, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+      osc.start(startTime);
+      osc.stop(startTime + duration);
+    };
+    const now = ctx.currentTime;
+    note(now,        523, 0.18); // C5
+    note(now + 0.20, 349, 0.30); // F4
+  } catch (e) {}
+}
 const KETTING_TIME = 15;
 
-function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
+function LetterSnelKettingGame({ players, onRestart, activeLetters, targetScore }) {
   const alphabet = activeLetters && activeLetters.length > 0 ? activeLetters : ALPHABET_ALL;
   const [scores, setScores] = useState(Array(players.length).fill(0));
   const [currentCardIdx, setCurrentCardIdx] = useState(0);
   const [cardDeck] = useState(() => shuffle([...LS_CARDS]));
+  const [gameWinner, setGameWinner] = useState(null);
 
   // ketting state
   const [phase, setPhase] = useState("ready"); // ready | spinning | playing | roundover
@@ -285,6 +364,11 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
       newScores[winnerIdx]++;
       scoresRef.current = newScores;
       setScores(newScores);
+      if (newScores[winnerIdx] >= targetScore) {
+        setGameWinner(winnerIdx);
+        phaseRef.current = "gameover";
+        return;
+      }
     }
     setRoundWinner(winnerIdx);
     phaseRef.current = "roundover";
@@ -301,7 +385,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
       setTimeRemaining(remaining);
       if (remaining <= 0) {
         stopTimer();
-        playTimerEnd();
+        playTaboeTimeUp();
         doFail();
       }
     }, 50);
@@ -332,6 +416,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
   const handleCorrect = () => {
     if (phaseRef.current !== "playing") return;
     stopTimer();
+    playPling();
 
     const wordData = { playerIdx: activePlayerIdx, letter: currentLetter };
     setLastValidWord(wordData);
@@ -382,6 +467,10 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
   };
 
   const topScore = Math.max(...scores, 0);
+
+  if (gameWinner !== null) {
+    return <LetterSnelWinnaarScreen players={players} scores={scores} winnaarIdx={gameWinner} onRestart={onRestart} />;
+  }
 
   return (
     <div className="ls-screen">
@@ -459,6 +548,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters }) {
 // ── LetterSnel Setup overlay ─────────────────────────────────────────────────
 function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveLetters }) {
   const [lsGameMode, setLsGameMode] = useState("klassiek");
+  const [targetScore, setTargetScore] = useState(10);
   const canStart = names.length >= 2 && names.every(n => n.trim().length > 0) && activeLetters.length >= 2;
 
   const addPlayer = () => { if (names.length < 10) setNames(prev => [...prev, ""]); };
@@ -548,10 +638,25 @@ function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveL
         <div className="ls-letters-count">{activeLetters.length} van 26 letters actief</div>
       </div>
 
+      <div className="setup-section-wrap" style={{borderColor: "#ea580c"}}>
+        <div className="setup-wrapper-badge" style={{background:"#ea580c"}}>DOELPUNTEN</div>
+        <div className="time-control">
+          <div className="time-click-wrap">
+            <div className="time-click-zone time-click-left" onClick={() => setTargetScore(s => Math.max(1, s - 1))}>
+              <span className={`time-click-symbol${targetScore <= 1 ? " time-click-disabled" : ""}`}>−</span>
+            </div>
+            <span className="time-display">{targetScore} pt</span>
+            <div className="time-click-zone time-click-right" onClick={() => setTargetScore(s => Math.min(50, s + 1))}>
+              <span className={`time-click-symbol${targetScore >= 50 ? " time-click-disabled" : ""}`}>+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <button
         className={`start-btn ${canStart ? "ready-solid" : ""}`}
         style={{marginTop: "12px"}}
-        onClick={() => canStart && onStartLS(names.map(n => n.trim()), activeLetters, lsGameMode)}
+        onClick={() => canStart && onStartLS(names.map(n => n.trim()), activeLetters, lsGameMode, targetScore)}
         disabled={!canStart}
       >
         {canStart ? "Spel starten ➜" : activeLetters.length < 2 ? "Kies minimaal 2 letters" : "Vul alles in…"}
@@ -1998,6 +2103,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   const spinIntervalRef = useRef(null);
   const spinCountRef = useRef(0);
   const targetLetterRef = useRef(null);
+  const roundLetterRef = useRef(null); // gedeelde letter voor de hele spelronde
 
   const card = deck[cardIdx % deck.length];
 
@@ -2012,7 +2118,6 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
       setTimeRemaining(remaining);
       if (remaining <= 0) {
         stopTimer();
-        playTimerEnd();
         setCorrect(c => { endRound(c); return c; });
       }
     }, 80);
@@ -2038,6 +2143,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
       } else {
         clearInterval(spinIntervalRef.current);
         setForbiddenLetter(targetLetterRef.current);
+        roundLetterRef.current = targetLetterRef.current;
         setSpinning(false);
         setPhase("playing");
         startTimer();
@@ -2076,13 +2182,18 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   // Called when ScoreScreen's "Volgende speler" button is clicked
   const onNext = () => {
     const next = (playerIdx + 1) % players.length;
+    const isNewGameRound = next === 0;
     setPlayerIdx(next);
     setCorrect(0);
     setSkipped(0);
     setTimeRemaining(roundTime);
-    setForbiddenLetter(null);
     setCardIdx(i => i + 1);
     roundNum.current += 1;
+    if (isNewGameRound) {
+      // Nieuwe spelronde: letter resetten zodat er opnieuw gesponnen wordt
+      roundLetterRef.current = null;
+      setForbiddenLetter(null);
+    }
     setPhase("handoff");
   };
 
@@ -2090,7 +2201,16 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   const timerColor = timerPct > 0.5 ? "#4ade80" : timerPct > 0.25 ? "#facc15" : "#f87171";
 
   if (phase === "handoff") {
-    return <HandoffScreen player={players[playerIdx]} onReady={() => spinLetter()} />;
+    return <HandoffScreen player={players[playerIdx]} onReady={() => {
+      if (roundLetterRef.current) {
+        // Zelfde spelronde: bestaande letter tonen en direct starten
+        setForbiddenLetter(roundLetterRef.current);
+        setPhase("playing");
+        startTimer();
+      } else {
+        spinLetter();
+      }
+    }} />;
   }
 
   if (phase === "roundover") {
@@ -2103,7 +2223,8 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
         onNext={onNext}
         onRestart={onRestart}
         onContinue={() => {
-          setScores(Array(players.length).fill(null));
+          roundLetterRef.current = null;
+          setForbiddenLetter(null);
           setPlayerIdx(0);
           setCorrect(0);
           setSkipped(0);
@@ -2251,6 +2372,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
   const [teamSizes, setTeamSizes] = useState([2, 2]);
   const [teamNames, setTeamNames] = useState(["Team 1", "Team 2"]);
   const [wrGameMode, setWrGameMode] = useState("klassiek"); // "klassiek" | "taboe"
+  const [showAllCategories, setShowAllCategories] = useState(false);
 
   const allCategoryIds = CATEGORIES.map((c) => c.id);
   const allSelected = allCategoryIds.every((id) => selectedCategories.has(id));
@@ -2444,9 +2566,14 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
               <div className="setup-wrapper-badge" style={{background: "#3b82f6"}}>CATEGORIEËN</div>
               <div className="cat-word-count">{totalWordsCount} / {absoluteTotalWords} woorden</div>
               <div className="category-grid">
-                {CATEGORIES.map(cat => (
+                {(showAllCategories ? CATEGORIES : CATEGORIES.slice(0, 8)).map(cat => (
                   <button key={cat.id} className={`category-btn${selectedCategories.has(cat.id) ? " category-btn-active" : ""}`} onClick={() => toggleCategory(cat.id)}>{cat.label}</button>
                 ))}
+                {!showAllCategories && (
+                  <button className="category-btn cat-expand-btn" onClick={() => setShowAllCategories(true)}>
+                    +{CATEGORIES.length - 8} meer
+                  </button>
+                )}
               </div>
             </div>
             )}
@@ -2985,6 +3112,7 @@ export default function App() {
   const [lsActiveLetters, setLsActiveLetters] = useState(LS_DEFAULT_LETTERS);
   const [lsChosenLetters, setLsChosenLetters] = useState(LS_DEFAULT_LETTERS);
   const [lsChosenGameMode, setLsChosenGameMode] = useState("klassiek");
+  const [lsTargetScore, setLsTargetScore] = useState(10);
 
   const [wrMode, setWrMode] = useState("klassiek"); // "klassiek" | "taboe"
   const [taboePlayers, setTaboePlayers] = useState(null);
@@ -3147,7 +3275,7 @@ export default function App() {
     return (
       <>
         <style>{CSS}</style>
-        <LetterSnelGame players={lsPlayers} onRestart={() => setLsPlayers(null)} activeLetters={lsChosenLetters} gameMode={lsChosenGameMode} />
+        <LetterSnelGame players={lsPlayers} onRestart={() => setLsPlayers(null)} activeLetters={lsChosenLetters} gameMode={lsChosenGameMode} targetScore={lsTargetScore} />
       </>
     );
   }
@@ -3173,7 +3301,7 @@ export default function App() {
           setGameMode={(m) => { setGameMode(m); setLsPlayers(null); }}
           lsNames={lsNames}
           setLsNames={setLsNames}
-          onStartLS={(names, letters, mode) => { setLsChosenLetters(letters); setLsChosenGameMode(mode); setLsPlayers(names); }}
+          onStartLS={(names, letters, mode, tScore) => { setLsChosenLetters(letters); setLsChosenGameMode(mode); setLsTargetScore(tScore ?? 10); setLsPlayers(names); }}
           lsActiveLetters={lsActiveLetters}
           setLsActiveLetters={setLsActiveLetters}
         />
@@ -3361,6 +3489,8 @@ const CSS = `
   .category-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700; }
   .category-btn { font-family: inherit; font-weight: inherit; line-height: inherit; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; padding: 5px 11px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s; user-select: none; }
   .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
+  .cat-expand-btn { border-style: dashed; color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.25); }
+  .cat-expand-btn:hover { color: white; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.08); }
   .category-btn-active { background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.45); color: rgba(110,231,183,0.95); }
   .category-btn-active:hover { background: rgba(52,211,153,0.2); border-color: #34d399; color: #6ee7b7; }
 
