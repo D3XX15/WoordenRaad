@@ -3382,7 +3382,7 @@ const CSS = `
   .ls-mode-btn-active .ls-mode-desc { color: rgba(252,211,77,0.7); }
   .ls-ketting-mid { display: flex; align-items: center; justify-content: center; gap: 24px; margin: 4px 0; }
   .ls-ketting-letter-row { display: flex; align-items: center; justify-content: center; gap: 24px; }
-  .ketting-timer-banner { margin-top: 0; margin-bottom: 14px; animation: pulse-red-banner 1.2s ease-in-out infinite; }
+  .ketting-timer-banner { margin-top: 0; margin-bottom: 14px; animation: none; }
   .ketting-timer-banner::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(248,113,113,0.22); animation: grace-drain 15s linear forwards; border-radius: 9px 0 0 9px; pointer-events: none; }
   .ls-ketting-chip-active { border-color: #f59e0b !important; background: rgba(245,158,11,0.15) !important; box-shadow: 0 0 16px rgba(245,158,11,0.25); transform: scale(1.06); }
   .ls-ketting-chip-elim { border-color: rgba(248,113,113,0.4) !important; background: rgba(248,113,113,0.08) !important; opacity: 0.55; }
