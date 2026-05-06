@@ -579,6 +579,7 @@ const CATEGORIES = [
   { id: "kantoor",        label: "💼 Werk & Kantoor" },
   { id: "gereedschap",    label: "🔧 Gereedschap" },
   { id: "emoties",        label: "🎭 Emoties & Gedrag" },
+  { id: "acties",         label: "🏃 Werkwoorden" },
   { id: "misdaad",        label: "🚔 Misdaad & Justitie" },
   { id: "fictie",         label: "🧙 Fictie & Mythe" },
   { id: "literatuur",     label: "✍️ Literatuur" },
@@ -594,7 +595,6 @@ const CATEGORIES = [
   { id: "ruimte",         label: "🚀 Ruimte" },
   { id: "plaatsen",       label: "🧭 Plaatsen" },
   { id: "landen",         label: "🌍 Landen" },
-  { id: "acties",         label: "🏃 Werkwoorden" },
   { id: "spreekwoorden",  label: "💬 Spreekwoorden & Gezegden", bonus: true },
 ];
 
