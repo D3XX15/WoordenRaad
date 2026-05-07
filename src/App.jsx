@@ -61,7 +61,7 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters, targetScore
   const [spinning, setSpinning] = useState(false);
   const [winner, setWinner] = useState(null);
   const [phase, setPhase] = useState("ready");
-  const [lastWinners, setLastWinners] = useState([]);
+
   const [gameWinner, setGameWinner] = useState(null);
   const spinIntervalRef = useRef(null);
   const spinCountRef = useRef(0);
@@ -99,7 +99,6 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters, targetScore
     newScores[playerIdx]++;
     setScores(newScores);
     setWinner(playerIdx);
-    setLastWinners(prev => [...prev.slice(-4), playerIdx]);
     if (newScores[playerIdx] >= targetScore) {
       setGameWinner(playerIdx);
       return;
@@ -188,13 +187,18 @@ function LetterSnelWinnaarScreen({ players, scores, winnaarIdx, onRestart }) {
         <div style={{fontFamily:"'Righteous', cursive", fontSize:"13px", letterSpacing:"0.15em", color:"rgba(255,255,255,0.45)", textTransform:"uppercase"}}>Winnaar</div>
         <div style={{fontFamily:"'Righteous', cursive", fontSize:"36px", color:"#facc15", textShadow:"0 0 24px rgba(250,204,21,0.5)"}}>{players[winnaarIdx]}</div>
         <div style={{width:"100%", display:"flex", flexDirection:"column", gap:"10px", marginTop:"8px"}}>
-          {sorted.map(({ s, i }) => (
-            <div key={i} style={{display:"flex", alignItems:"center", gap:"12px", background: i === winnaarIdx ? "rgba(250,204,21,0.08)" : "rgba(255,255,255,0.04)", border: `2px solid ${i === winnaarIdx ? "rgba(250,204,21,0.35)" : "rgba(255,255,255,0.08)"}`, borderRadius:"14px", padding:"12px 16px"}}>
-              <span style={{fontFamily:"'Righteous', cursive", fontSize:"16px", color:"rgba(255,255,255,0.35)", width:"24px"}}>{medal(s)}</span>
-              <span style={{flex:1, fontFamily:"'Righteous', cursive", fontSize:"18px", color: i === winnaarIdx ? "#facc15" : "rgba(255,255,255,0.8)"}}>{players[i]}</span>
-              <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color: i === winnaarIdx ? "#facc15" : "rgba(255,255,255,0.6)"}}>{s} pt</span>
-            </div>
-          ))}
+          {sorted.map(({ s, i }) => {
+            const rank = getEffectiveRank(s);
+            const rankColors = { 1: { bg: "rgba(251,191,36,0.08)", border: "#fbbf24", pts: "#fbbf24" }, 2: { bg: "rgba(192,192,192,0.1)", border: "#c0c0c0", pts: "#c0c0c0" }, 3: { bg: "rgba(205,127,50,0.08)", border: "#cd7f32", pts: "#cd7f32" } };
+            const col = rankColors[rank] ?? { bg: "rgba(255,255,255,0.05)", border: "rgba(255,255,255,0.07)", pts: "rgba(255,255,255,0.9)" };
+            return (
+              <div key={i} style={{display:"flex", alignItems:"center", gap:"12px", background: col.bg, border: `3px solid ${col.border}`, borderRadius:"16px", padding:"14px 16px"}}>
+                <span style={{fontFamily:"'Righteous', cursive", fontSize:"16px", color: col.pts, width:"24px"}}>{medal(s)}</span>
+                <span style={{flex:1, fontFamily:"'Righteous', cursive", fontSize:"18px", color:"white"}}>{players[i]}</span>
+                <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color: col.pts}}>{s} pt</span>
+              </div>
+            );
+          })}
         </div>
         <button className="start-btn ready-solid" style={{marginTop:"8px", width:"100%"}} onClick={onRestart}>Nieuw spel ↩</button>
       </div>
@@ -2074,6 +2078,225 @@ for (const cat of CATEGORIES) {
     if (!WORD_TO_CATEGORY[word]) WORD_TO_CATEGORY[word] = cat;
   }
 }
+// ── Taboe Tie-breaker ────────────────────────────────────────────────────────
+function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories, onRestart, onStartTiebreaker }) {
+  const [chosenCategoryId, setChosenCategoryId] = useState(null);
+  const [forbiddenLetter, setForbiddenLetter] = useState(null);
+  const [spinning, setSpinning] = useState(false);
+  const [letterLocked, setLetterLocked] = useState(false);
+  const [words, setWords] = useState(null);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [times, setTimes] = useState(tiedPlayerIndices.map(() => null));
+  const [subPhase, setSubPhase] = useState("pick"); // pick | play | results
+  const [elapsed, setElapsed] = useState(0);
+  const [flash, setFlash] = useState(null);
+  const spinIntervalRef = useRef(null);
+  const spinCountRef = useRef(0);
+  const timerRef = useRef(null);
+  const startTimeRef = useRef(null);
+
+  useEffect(() => () => { clearInterval(spinIntervalRef.current); clearInterval(timerRef.current); }, []);
+
+  const spinLetter = () => {
+    if (spinning || letterLocked) return;
+    setSpinning(true);
+    spinCountRef.current = 0;
+    const totalTicks = 18 + Math.floor(Math.random() * 12);
+    const target = TABOE_LETTERS[Math.floor(Math.random() * TABOE_LETTERS.length)];
+    spinIntervalRef.current = setInterval(() => {
+      spinCountRef.current++;
+      if (spinCountRef.current < totalTicks) {
+        setForbiddenLetter(TABOE_LETTERS[Math.floor(Math.random() * TABOE_LETTERS.length)]);
+      } else {
+        clearInterval(spinIntervalRef.current);
+        setForbiddenLetter(target);
+        setSpinning(false);
+        setLetterLocked(true);
+      }
+    }, spinCountRef.current < totalTicks - 6 ? 60 : 100);
+  };
+
+  const chooseCategory = (catId) => {
+    const pool = WORDS_BY_CATEGORY[catId] || [];
+    const chosen = shuffle([...pool]).slice(0, tiedPlayerIndices.length);
+    setChosenCategoryId(catId);
+    setWords(chosen);
+  };
+
+  const canStart = chosenCategoryId && letterLocked;
+
+  const startPlay = () => {
+    setCurrentStep(0);
+    setSubPhase("handoff");
+  };
+
+  const triggerFlash = (type) => { setFlash(type); setTimeout(() => setFlash(null), 350); };
+
+  const startRound = () => {
+    setElapsed(0);
+    startTimeRef.current = Date.now();
+    timerRef.current = setInterval(() => setElapsed((Date.now() - startTimeRef.current) / 1000), 50);
+    setSubPhase("playing");
+  };
+
+  const handleCorrect = () => {
+    clearInterval(timerRef.current);
+    triggerFlash("correct");
+    const finalTime = (Date.now() - startTimeRef.current) / 1000;
+    setElapsed(finalTime);
+    const newTimes = [...times];
+    newTimes[currentStep] = finalTime;
+    setTimes(newTimes);
+    const next = currentStep + 1;
+    if (next >= tiedPlayerIndices.length) {
+      setCurrentStep(next);
+      setSubPhase("results");
+    } else {
+      setCurrentStep(next);
+      setSubPhase("handoff");
+    }
+  };
+
+
+
+  const categoryLabel = CATEGORIES.find(c => c.id === chosenCategoryId)?.label ?? "";
+  const currentPlayerIdx = tiedPlayerIndices[currentStep];
+  const currentWord = words?.[currentStep];
+
+  // ── Resultaten ──
+  if (subPhase === "results") {
+    const results = tiedPlayerIndices.map((pi, i) => ({ name: players[pi], time: times[i] })).sort((a, b) => a.time - b.time);
+    const winnerTime = Math.round(results[0].time * 100) / 100;
+    const hasJointWinner = results.filter(r => Math.round(r.time * 100) / 100 === winnerTime).length > 1;
+    const tieBadges = ["🥇","🥈","🥉"];
+    return (
+      <div className="screen"><div className="score-card">
+        <h2 className="score-title">⚡ Tie-breaker resultaten</h2>
+        {hasJointWinner
+          ? <button className="tiebreaker-start-btn" onClick={() => { const si = results.filter(r => Math.round(r.time*100)/100 === winnerTime).map(r => tiedPlayerIndices.find(pi => players[pi] === r.name)).filter(pi => pi !== undefined); onStartTiebreaker(si); }}>🤝 Nog steeds gelijkspel! Start opnieuw.</button>
+          : <div className="tiebreaker-result-banner tiebreaker-result-winner"><span className="tiebreaker-result-text-winner">🏆 {results[0].name} wint de tie-breaker!</span></div>
+        }
+        <div className="scores-list">
+          {results.map((r, i) => {
+            const effectiveRank = results.filter(r2 => Math.round(r2.time*100)/100 < Math.round(r.time*100)/100).length + 1;
+            const isTied = Math.round(r.time*100)/100 === winnerTime && hasJointWinner;
+            const rowClass = isTied ? "score-row rank-1 rank-tied" : `score-row rank-${effectiveRank} rank-final`;
+            return (
+              <div key={r.name} className={rowClass}>
+                <span className="rank-badge">{isTied ? "👑" : (tieBadges[effectiveRank-1] ?? effectiveRank)}</span>
+                <span className="score-name">{r.name}</span>
+                <span className="score-pts tiebreaker-pts">{r.time >= 999 ? "—" : `${r.time.toFixed(2)}s`}</span>
+              </div>
+            );
+          })}
+        </div>
+        <div className="final-btns"><button className="score-btn restart-btn" onClick={onRestart}>Nieuw spel</button></div>
+      </div></div>
+    );
+  }
+
+  // ── Handoff ──
+  if (subPhase === "handoff") {
+    return (
+      <div className="screen handoff-screen"><div className="handoff-card">
+        <div className="handoff-icon">⚡</div>
+        <p className="handoff-sub tiebreaker-handoff-sub">TIE-BREAKER · {currentStep+1}/{tiedPlayerIndices.length}</p>
+        <h2 className="handoff-name">{players[currentPlayerIdx]}</h2>
+        <p className="handoff-tip mb-2">Leg z.s.m. het woord uit</p>
+        <p className="handoff-tip mt-0">Verboden letter: <span style={{color:"#f87171", fontWeight:800}}>{forbiddenLetter}</span> · {categoryLabel}</p>
+        <button className="handoff-btn" onClick={startRound}>Start tie-breaker!</button>
+      </div></div>
+    );
+  }
+
+  // ── Spelscherm ──
+  if (subPhase === "playing") {
+    const secs = Math.floor(elapsed);
+    const tenths = Math.floor((elapsed % 1) * 10);
+    const elapsedDisplay = `${secs}.${tenths}s`;
+    return (
+      <div className={`screen${flash === "correct" ? " taboe-flash-correct" : flash === "skip" ? " taboe-flash-skip" : ""}`}>
+        <div style={{width:"100%", maxWidth:"420px"}}>
+          <div className="ls-header">
+            <div className="wr-logo">Tie-Breaker</div>
+            <span className="round-player" style={{fontSize:"22px", textAlign:"right"}}>⚡ {players[currentPlayerIdx]}</span>
+          </div>
+          <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"8px", overflow:"hidden"}}>
+            <div style={{height:"100%", width:`${Math.min(elapsed/60,1)*100}%`, background:"#fbbf24", borderRadius:"4px", transition:"width 0.05s linear"}} />
+          </div>
+          <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
+            <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:"#fbbf24", flex:1, textAlign:"left"}}>{elapsedDisplay}</span>
+            <div className="round-stats" style={{flex:1, justifyContent:"flex-end"}}>
+              <span className="stat correct-stat"><span className="stat-icon">⚡</span><span>{currentStep+1}/{tiedPlayerIndices.length}</span></span>
+            </div>
+          </div>
+          {/* Verboden letter */}
+          <div style={{display:"flex", flexDirection:"column", alignItems:"center", marginBottom:"16px", gap:"10px"}}>
+            <div style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(56px,18vw,88px)", color:"#f87171", textShadow:"0 0 32px rgba(248,113,113,0.5)", letterSpacing:"0.05em", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center"}}>
+              {forbiddenLetter}
+            </div>
+            <div style={{fontSize:"11px", fontWeight:"800", letterSpacing:"0.14em", color:"#f87171", textTransform:"uppercase"}}>🚫 Verboden letter</div>
+          </div>
+          {/* Woord kaart */}
+          <div style={{background:"linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.98))", border:"3px solid rgba(96,165,250,0.3)", borderRadius:"24px", padding:"28px 24px", marginBottom:"16px", boxShadow:"0 8px 32px rgba(0,0,0,0.4)", textAlign:"center"}}>
+            <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(32px,10vw,44px)", color:"white", margin:0, lineHeight:1.1}}>{currentWord ? hyphenateWord(currentWord) : "—"}</h2>
+          </div>
+          <div style={{display:"flex", gap:"10px", marginBottom:"12px"}}>
+            <button onClick={handleCorrect} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color:"#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor:"pointer"}}>✓ Goed!</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Categorie + letter kiezen ──
+  return (
+    <div className="screen">
+      <div className="score-card">
+        <h2 className="score-title tiebreaker-title">⚡ Tie-breaker</h2>
+        <p className="tiebreaker-subtitle">Kies samen een categorie en genereer een verboden letter.</p>
+
+        {/* Categorie */}
+        <div className="tiebreaker-cat-list">
+          {candidateCategories.map(cat => (
+            <button key={cat.id} onClick={() => chooseCategory(cat.id)}
+              className="tiebreaker-cat-btn"
+              style={chosenCategoryId === cat.id ? {background:"rgba(167,139,250,0.25)", borderColor:"rgba(167,139,250,0.7)"} : {}}>
+              {cat.label} {chosenCategoryId === cat.id ? "✓" : ""}
+            </button>
+          ))}
+        </div>
+
+        {/* Verboden letter */}
+        <div style={{display:"flex", flexDirection:"column", alignItems:"center", gap:"12px", marginBottom:"20px"}}>
+          <div style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(56px,18vw,80px)", color: spinning ? "rgba(248,113,113,0.5)" : letterLocked ? "#f87171" : "rgba(255,255,255,0.2)", textShadow: letterLocked && !spinning ? "0 0 32px rgba(248,113,113,0.5)" : "none", lineHeight:1, minHeight:"1em", display:"flex", alignItems:"center", justifyContent:"center", transition:"color 0.1s"}}>
+            {forbiddenLetter ?? "?"}
+          </div>
+          <div style={{fontSize:"11px", fontWeight:"800", letterSpacing:"0.14em", color: letterLocked ? "#f87171" : "rgba(255,255,255,0.35)", textTransform:"uppercase"}}>
+            {spinning ? "⏳ Letter kiezen…" : letterLocked ? "🚫 Verboden letter (vergrendeld)" : "🎲 Genereer een verboden letter"}
+          </div>
+          {!letterLocked && (
+            <button onClick={spinLetter} disabled={spinning}
+              style={{fontFamily:"'Righteous', cursive", fontSize:"16px", padding:"12px 28px", borderRadius:"14px", border:"2.5px solid rgba(248,113,113,0.4)", background:"rgba(248,113,113,0.1)", color: spinning ? "rgba(248,113,113,0.4)" : "#f87171", cursor: spinning ? "default" : "pointer"}}>
+              {spinning ? "Draaien…" : "Genereer letter 🎲"}
+            </button>
+          )}
+        </div>
+
+        <button
+          onClick={startPlay}
+          disabled={!canStart}
+          className={`start-btn${canStart ? " ready-solid" : ""}`}
+          style={{width:"100%"}}>
+          {canStart ? "Tie-breaker starten ➜" : "Kies een categorie en genereer een letter"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+const TABOE_LETTERS = ALPHABET_ALL.filter(l => !["Q","X","Y"].includes(l));
+
 // ── Taboe Spel ───────────────────────────────────────────────────────────────
 function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   const getTaboeWordPool = (cats) => {
@@ -2125,7 +2348,22 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
 
   useEffect(() => () => { stopTimer(); clearInterval(spinIntervalRef.current); }, []);
 
-  const TABOE_LETTERS = ALPHABET_ALL.filter(l => !["Q","X","Y"].includes(l));
+  // ── Tiebreaker state ──
+  const [tiebreakerState, setTiebreakerState] = useState(null); // null | { tiedPlayerIndices, candidateCategories }
+
+  const startTiebreaker = (tiedPlayerIndices) => {
+    const safeCats = ['dieren','voedsel','koken','beroepen','kantoor','sport','natuur','emoties','landen','verkeer','plaatsen','kunst','kleding','religie','fictie','literatuur','muziek','acties','gereedschap','wetenschap','geneeskunde','ruimte','militair','misdaad','politiek','huishouden','spreekwoorden'];
+    const catSet = selectedCategories instanceof Set ? selectedCategories : new Set();
+    const allIds = CATEGORIES.map(c => c.id);
+    const allSelected = catSet.size === 0 || allIds.every(id => catSet.has(id));
+    const usedSafe = allSelected ? [] : safeCats.filter(c => catSet.has(c));
+    const chosen = shuffle(usedSafe).slice(0, 3);
+    const remaining = shuffle(safeCats.filter(c => !chosen.includes(c)));
+    while (chosen.length < 3 && remaining.length > 0) chosen.push(remaining.shift());
+    const candidateCategories = chosen.map(id => CATEGORIES.find(c => c.id === id)).filter(Boolean);
+    setTiebreakerState({ tiedPlayerIndices, candidateCategories });
+    setPhase("tiebreaker");
+  };
 
   const spinLetter = () => {
     if (spinning) return;
@@ -2236,7 +2474,19 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
         onShowStats={() => {}}
         teams={null}
         teamScores={[]}
-        onStartTiebreaker={() => {}}
+        onStartTiebreaker={startTiebreaker}
+      />
+    );
+  }
+
+  if (phase === "tiebreaker" && tiebreakerState) {
+    return (
+      <TaboeTiebreakerScreen
+        players={players}
+        tiedPlayerIndices={tiebreakerState.tiedPlayerIndices}
+        candidateCategories={tiebreakerState.candidateCategories}
+        onRestart={onRestart}
+        onStartTiebreaker={startTiebreaker}
       />
     );
   }
@@ -3380,8 +3630,7 @@ const CSS = `
   .ls-mode-desc { font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.3; }
   .ls-mode-btn-active .ls-mode-title { color: #fcd34d; }
   .ls-mode-btn-active .ls-mode-desc { color: rgba(252,211,77,0.7); }
-  .ls-ketting-mid { display: flex; align-items: center; justify-content: center; gap: 24px; margin: 4px 0; }
-  .ls-ketting-letter-row { display: flex; align-items: center; justify-content: center; gap: 24px; }
+
   .ketting-timer-banner { margin-top: 0; margin-bottom: 14px; animation: none; }
   .ketting-timer-banner::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(248,113,113,0.22); animation: grace-drain 15s linear forwards; border-radius: 9px 0 0 9px; pointer-events: none; }
   .ls-ketting-chip-active { border-color: #f59e0b !important; background: rgba(245,158,11,0.15) !important; box-shadow: 0 0 16px rgba(245,158,11,0.25); transform: scale(1.06); }
@@ -3426,7 +3675,6 @@ const CSS = `
   .ls-spin-btn:not(.ls-spin-disabled):not(.ls-spin-spinning) { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); color: #f59e0b; }
   .ls-spin-btn:not(.ls-spin-disabled):not(.ls-spin-spinning):hover { background: rgba(245,158,11,0.25); }
   .ls-spin-spinning { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); cursor: not-allowed; }
-  .ls-spin-disabled { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.3); color: #4ade80; cursor: default; }
 
   /* Award section */
   .ls-award-section { width: 100%; }
@@ -3434,16 +3682,9 @@ const CSS = `
   .ls-score-chip-btn { cursor: pointer; font-family: inherit; border: none; -webkit-tap-highlight-color: transparent; transition: all 0.18s cubic-bezier(0.34,1.56,0.64,1); }
   .ls-score-chip-btn:hover { transform: scale(1.06); filter: brightness(1.25); }
   .ls-score-chip-btn:active { transform: scale(0.94); }
-
-  /* Awarded section */
-  .ls-awarded-section { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px; }
   .ls-awarded-banner { background: rgba(74,222,128,0.12); border: 3px solid rgba(74,222,128,0.4); border-radius: 20px; padding: 16px 24px; text-align: center; font-size: clamp(16px, 4.5vw, 22px); font-weight: 800; width: 100%; animation: ls-award-pop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
   .ls-awarded-name { color: #4ade80; }
-  .ls-next-btn { font-family: 'Righteous', cursive; font-size: 20px; padding: 16px 40px; border-radius: 16px; background: rgba(245,158,11,0.15); border: 3px solid rgba(245,158,11,0.4); color: #f59e0b; cursor: pointer; transition: all 0.2s; }
-  .ls-next-btn:hover { background: rgba(245,158,11,0.28); }
-  .ls-next-btn:active { transform: scale(0.96); }
 
-  .ls-ready-hint { font-size: 14px; color: rgba(255,255,255,0.3); font-weight: 700; text-align: center; padding: 20px; }
 
   /* ── Cards & Layout ── */
   .setup-card, .score-card, .stats-card { background: rgba(255,255,255,0.06); border: 3px solid rgba(255,255,255,0.12); border-radius: 24px; padding: 28px 20px; width: 100%; backdrop-filter: blur(20px); overflow: hidden; }
@@ -3562,7 +3803,7 @@ const CSS = `
   .word-counter { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 10px; }
   .current-word { font-family: 'Righteous', cursive; font-size: clamp(38px, 11vw, 80px); background: linear-gradient(135deg, #f9fafb, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.15; animation: wordIn 0.3s cubic-bezier(0.34,1.56,0.64,1); word-break: break-word; overflow-wrap: break-word; hyphens: manual; -webkit-hyphens: manual; max-width: 100%; padding: 0 8px; text-align: center; }
   .current-word.bonus-word { background: linear-gradient(135deg, #fef9c3, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .times-up-banner { font-family: 'Righteous', cursive; font-size: clamp(13px, 3.5vw, 16px); color: #f87171; background: rgba(248,113,113,0.12); border: 3px solid rgba(248,113,113,0.35); border-radius: 12px; padding: 8px 16px; text-align: center; min-height: 40px; margin-top: 20px; animation: pulse-red-banner 1.2s ease-in-out infinite; position: relative; overflow: hidden; }
+  .times-up-banner { font-family: 'Righteous', cursive; font-size: clamp(13px, 3.5vw, 16px); color: #f87171; background: rgba(248,113,113,0.12); border: 3px solid rgba(248,113,113,0.35); border-radius: 12px; padding: 8px 16px; text-align: center; min-height: 40px; margin-top: 20px; position: relative; overflow: hidden; }
   .times-up-banner.grace-active::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(248,113,113,0.22); animation: grace-drain 10s linear forwards; border-radius: 9px 0 0 9px; pointer-events: none; }
   .times-up-banner.bonus-banner { color: #f59e0b; background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.26); animation: none; }
   .times-up-banner.category-banner { color: #a78bfa; background: rgba(167,139,250,0.10); border-color: rgba(167,139,250,0.30); animation: none; font-size: clamp(12px, 3.2vw, 15px); }
@@ -3691,7 +3932,7 @@ const CSS = `
   @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
   @keyframes penalty-drain { from{width:100%} to{width:0%} }
   @keyframes grace-drain { from{width:100%} to{width:0%} }
-  @keyframes pulse-red-banner { 0%,100%{box-shadow:0 0 6px rgba(248,113,113,0.4)} 50%{box-shadow:0 0 14px rgba(248,113,113,0.8)} }
+
   @keyframes ring { 0%{transform:rotate(0deg)} 15%{transform:rotate(18deg)} 30%{transform:rotate(-16deg)} 45%{transform:rotate(14deg)} 60%{transform:rotate(-10deg)} 75%{transform:rotate(6deg)} 90%{transform:rotate(-3deg)} 100%{transform:rotate(0deg)} }
   @keyframes alarm-ring { 0%{transform:rotate(0deg) scale(1)} 10%{transform:rotate(-18deg) scale(1.15)} 25%{transform:rotate(18deg) scale(1.15)} 40%{transform:rotate(-14deg) scale(1.1)} 55%{transform:rotate(14deg) scale(1.1)} 70%{transform:rotate(-8deg) scale(1.05)} 85%{transform:rotate(8deg) scale(1.05)} 100%{transform:rotate(0deg) scale(1)} }
   .alarm-ringing { display:inline-block; animation: alarm-ring 0.6s ease-in-out infinite; transform-origin: center center; }
