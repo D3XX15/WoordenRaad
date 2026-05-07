@@ -149,7 +149,7 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters, targetScore
       </div>
       {(phase === "ready" || phase === "playing" || phase === "awarded") && (
         <div className="ls-award-section">
-          <div className="ls-award-label">{phase === "ready" ? "Druk op \"kies letter\" om te beginnen" : phase === "awarded" ? "" : "Wie was er het eerst?"}</div>
+          <div className="ls-award-label">{phase === "ready" ? "Druk op \"kies letter\" om te beginnen" : phase === "awarded" ? "" : spinning ? "Letter kiezen…" : "Wie was er het eerst?"}</div>
           <div className="ls-scores-strip">
             {players.map((p, i) => (
               <button key={i} className={`ls-score-chip ls-score-chip-btn ${scores[i] === topScore && topScore > 0 ? "ls-score-leader" : ""}`} onClick={() => phase === "playing" && !spinning && awardPoint(i)} disabled={phase === "ready" || spinning || phase === "awarded"}>
@@ -642,7 +642,7 @@ function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveL
         <div className="ls-letters-count">{activeLetters.length} van 26 letters actief</div>
       </div>
 
-      <div className="setup-section-wrap" style={{borderColor: "#ea580c"}}>
+      <div className="setup-section-wrap" style={{borderColor: "#f97316"}}>
         <div className="setup-wrapper-badge" style={{background:"#ea580c"}}>DOELPUNTEN</div>
         <div className="time-control">
           <div className="time-click-wrap">
@@ -2413,9 +2413,6 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
     setPhase("roundover");
   };
 
-  const onEndRound = () => {
-    endRound(correct);
-  };
 
   // Called when ScoreScreen's "Volgende speler" button is clicked
   const onNext = () => {
@@ -2518,7 +2515,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
               <span>{correct}</span>
             </span>
             <span className="stat skip-stat">
-              <span className="stat-icon">↷</span>
+              <span className="stat-icon">✗</span>
               <span>{skipped}</span>
             </span>
           </div>
@@ -2554,7 +2551,6 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
           <button onClick={onSkip} disabled={spinning} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(248,113,113,0.4)", background:"rgba(248,113,113,0.1)", color: spinning ? "rgba(248,113,113,0.35)" : "#f87171", fontFamily:"'Righteous', cursive", fontSize:"18px", cursor: spinning ? "default" : "pointer"}}>✗ Skip</button>
           <button onClick={onCorrect} disabled={spinning} style={{flex:2, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color: spinning ? "rgba(74,222,128,0.35)" : "#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor: spinning ? "default" : "pointer"}}>✓ Goed!</button>
         </div>
-        <button onClick={onEndRound} disabled={spinning} style={{width:"100%", padding:"12px", borderRadius:"14px", border:"2px solid rgba(255,255,255,0.1)", background:"transparent", color:"rgba(255,255,255,0.35)", fontFamily:"'Nunito', sans-serif", fontSize:"14px", fontWeight:"700", cursor: spinning ? "default" : "pointer"}}>Ronde beëindigen</button>
       </div>
     </div>
   );
@@ -3027,7 +3023,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
               <span>{initialPoints + scores.points}</span>
             </span>
             <span className="stat skip-stat">
-              <span className="stat-icon">↷</span>
+              <span className="stat-icon">✗</span>
               <span>{initialSkips + scores.skipped}</span>
             </span>
           </div>
@@ -3796,7 +3792,7 @@ const CSS = `
   .stat-icon { display: flex; align-items: center; justify-content: center; line-height: 1; }
   .correct-stat { background: rgba(74,222,128,0.2); color: #4ade80; }
   .correct-stat-fire { background: rgba(251,146,60,0.25); color: #fb923c; text-shadow: 0 0 8px rgba(251,146,60,0.7); transition: background 0.3s, color 0.3s; }
-  .skip-stat { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .skip-stat { background: rgba(248,113,113,0.15); color: #f87171; }
   .round-stats-cat { font-size: 12px; color: rgba(255,255,255,0.4); }
   .word-stage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; max-width: 520px; width: 100%; gap: 0; padding: 20px; }
   .word-anchor { display: flex; flex-direction: column; align-items: center; }
