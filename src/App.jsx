@@ -2078,6 +2078,33 @@ for (const cat of CATEGORIES) {
     if (!WORD_TO_CATEGORY[word]) WORD_TO_CATEGORY[word] = cat;
   }
 }
+// ── Gedeelde hulpfuncties ─────────────────────────────────────────────────────
+
+// Woordpool samenstellen op basis van categorieset (gebruikt in TaboeGame en WoordRaadGame)
+function getWordPool(cats) {
+  const catSet = cats instanceof Set ? cats : new Set();
+  const allIds = CATEGORIES.map(c => c.id);
+  if (catSet.size === 0 || allIds.every(id => catSet.has(id))) return WORDS_BY_CATEGORY.all;
+  const merged = new Set();
+  for (const id of catSet) (WORDS_BY_CATEGORY[id] || []).forEach(word => merged.add(word));
+  return merged.size > 0 ? [...merged] : WORDS_BY_CATEGORY.all;
+}
+
+// Veilige categorielijst voor tiebreakers
+const TIEBREAKER_SAFE_CATS = ['dieren','voedsel','koken','beroepen','kantoor','sport','natuur','emoties','landen','verkeer','plaatsen','kunst','kleding','religie','fictie','literatuur','muziek','acties','gereedschap','wetenschap','geneeskunde','ruimte','militair','misdaad','politiek','huishouden','spreekwoorden'];
+
+// Kies 3 kandidaat-tiebreakercategorieën op basis van de actieve categorieset
+function buildTiebreakerCandidates(selectedCats) {
+  const catSet = selectedCats instanceof Set ? selectedCats : new Set();
+  const allIds = CATEGORIES.map(c => c.id);
+  const allSelected = catSet.size === 0 || allIds.every(id => catSet.has(id));
+  const usedSafe = allSelected ? [] : TIEBREAKER_SAFE_CATS.filter(c => catSet.has(c));
+  const chosen = shuffle(usedSafe).slice(0, 3);
+  const remaining = shuffle(TIEBREAKER_SAFE_CATS.filter(c => !chosen.includes(c)));
+  while (chosen.length < 3 && remaining.length > 0) chosen.push(remaining.shift());
+  return chosen.map(id => CATEGORIES.find(c => c.id === id)).filter(Boolean);
+}
+
 // ── Taboe Tie-breaker ────────────────────────────────────────────────────────
 function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories, onRestart, onStartTiebreaker }) {
   const [chosenCategoryId, setChosenCategoryId] = useState(null);
@@ -2297,17 +2324,59 @@ function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories
 
 const TABOE_LETTERS = ALPHABET_ALL.filter(l => !["Q","X","Y"].includes(l));
 
+function TaboeStatsScreen({ players, playerStats, scores, initialPlayer, onBack }) {
+  const [activePlayer, setActivePlayer] = useState(initialPlayer ?? 0);
+  const ps = playerStats[activePlayer];
+  if (!ps) return null;
+  const allRounds = ps.rounds;
+  const totalCorrect = allRounds.reduce((s, r) => s + r.correct, 0);
+  const totalSkipped = allRounds.reduce((s, r) => s + r.skipped, 0);
+  const bestRound = allRounds.reduce((best, r, i) => r.correct > (best?.correct ?? -1) ? { ...r, idx: i } : best, null);
+  const allWordResults = allRounds.flatMap(r => r.wordResults || []);
+  const guessedWords = allWordResults.filter(w => w.guessed);
+  const skippedWords = allWordResults.filter(w => !w.guessed);
+  return (
+    <div className="screen">
+      <div className="stats-card">
+        <div className="stats-header-row">
+          <button className="stats-back-btn" onClick={onBack} title="Terug naar scorebord"><span className="stats-back-icon">➜</span></button>
+          <h2 className="score-title stats-header-title">📊 Statistieken</h2>
+          <div className="stats-header-spacer" />
+        </div>
+        <div className="stats-tabs">
+          {players.map((p, i) => (<button key={i} className={`stats-tab${activePlayer === i ? " stats-tab-active" : ""}`} onClick={() => setActivePlayer(i)}>{p}</button>))}
+        </div>
+        <div className="stats-player-name">{players[activePlayer]}</div>
+        <div className="stats-total-score">{scores[activePlayer] ?? 0} {pt(scores[activePlayer] ?? 0)}</div>
+        <div className="stats-grid">
+          <div className="stats-cell stats-cell-correct"><div className="stats-cell-val">{totalCorrect}</div><div className="stats-cell-lbl">✓ Geraden</div></div>
+          <div className="stats-cell stats-cell-skip"><div className="stats-cell-val">{totalSkipped}</div><div className="stats-cell-lbl">↷ Geskipt</div></div>
+        </div>
+        {bestRound && (<div className="stats-best">✨ Ronde {bestRound.idx + 1} was je beste ronde met {bestRound.correct} {w(bestRound.correct)}</div>)}
+        <div className="stats-words-section">
+          <div className="stats-words-col">
+            <div className="stats-words-title stats-green">✓ Goed geraden ({guessedWords.length})</div>
+            <div className="stats-words-list">
+              {guessedWords.map((wr, i) => (<span key={i} className="stats-word-chip">{wr.word}</span>))}
+            </div>
+          </div>
+          <div className="stats-words-col">
+            <div className="stats-words-title stats-red">↷ Geskipt ({skippedWords.length})</div>
+            <div className="stats-words-list">
+              {skippedWords.map((wr, i) => (<span key={i} className="stats-word-chip stats-word-skipped">{wr.word}</span>))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
 // ── Taboe Spel ───────────────────────────────────────────────────────────────
 function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
-  const getTaboeWordPool = (cats) => {
-    const catSet = cats instanceof Set ? cats : new Set();
-    const allIds = CATEGORIES.map(c => c.id);
-    if (catSet.size === 0 || allIds.every(id => catSet.has(id))) return WORDS_BY_CATEGORY.all;
-    const merged = new Set();
-    for (const id of catSet) (WORDS_BY_CATEGORY[id] || []).forEach(word => merged.add(word));
-    return merged.size > 0 ? [...merged] : WORDS_BY_CATEGORY.all;
-  };
-  const [deck] = useState(() => shuffle(getTaboeWordPool(selectedCategories)));
+  const [deck] = useState(() => shuffle(getWordPool(selectedCategories)));
   const [cardIdx, setCardIdx] = useState(0);
   const [playerIdx, setPlayerIdx] = useState(0);
   const [scores, setScores] = useState(Array(players.length).fill(null));
@@ -2315,10 +2384,20 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   const [timeRemaining, setTimeRemaining] = useState(roundTime);
   const [correct, setCorrect] = useState(0);
   const [skipped, setSkipped] = useState(0);
+  const [correctOffset, setCorrectOffset] = useState(0);
+  const [skippedOffset, setSkippedOffset] = useState(0);
   const [flash, setFlash] = useState(null); // "correct" | "skip"
+  const [timesUp, setTimesUp] = useState(false);
+  const [graceCountdown, setGraceCountdown] = useState(null);
+  const timesUpRef = useRef(false);
   const timerRef = useRef(null);
+  const graceTimerRef = useRef(null);
   const startRef = useRef(null);
   const roundNum = useRef(0);
+  const [playerStats, setPlayerStats] = useState(() => Array(players.length).fill(null).map(() => ({ rounds: [] })));
+  const [statsPhase, setStatsPhase] = useState(false);
+  const [statsInitialPlayer, setStatsInitialPlayer] = useState(0);
+  const currentRoundStatsRef = useRef({ correct: 0, skipped: 0, wordResults: [] });
 
   // ── Verboden letter state (LetterSnel stijl) ──
   const [forbiddenLetter, setForbiddenLetter] = useState(null);
@@ -2331,9 +2410,13 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   const card = deck[cardIdx % deck.length];
 
   const stopTimer = () => { if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; } };
+  const stopGraceTimer = () => { if (graceTimerRef.current) { clearInterval(graceTimerRef.current); graceTimerRef.current = null; } };
 
   const startTimer = () => {
     stopTimer();
+    timesUpRef.current = false;
+    setTimesUp(false);
+    setGraceCountdown(null);
     startRef.current = Date.now();
     timerRef.current = setInterval(() => {
       const elapsed = (Date.now() - startRef.current) / 1000;
@@ -2341,26 +2424,40 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
       setTimeRemaining(remaining);
       if (remaining <= 0) {
         stopTimer();
-        setCorrect(c => { endRound(c); return c; });
+        if (!timesUpRef.current) {
+          timesUpRef.current = true;
+          setTimesUp(true);
+          playTimerEnd();
+          let graceTime = 10;
+          setGraceCountdown(graceTime);
+          graceTimerRef.current = setInterval(() => {
+            graceTime -= 1;
+            setGraceCountdown(graceTime);
+            if (graceTime <= 0) {
+              stopGraceTimer();
+              // Huidig woord telt als skip
+              const currentCardAtEnd = cardIdx; // captured via closure is stale; use ref below
+              setCardIdx(i => {
+                currentRoundStatsRef.current.skipped += 1;
+                currentRoundStatsRef.current.wordResults.push({ word: deck[i % deck.length], guessed: false });
+                return i + 1;
+              });
+              setSkipped(s => s + 1);
+              setCorrect(c => { endRound(c); return c; });
+            }
+          }, 1000);
+        }
       }
     }, 80);
   };
 
-  useEffect(() => () => { stopTimer(); clearInterval(spinIntervalRef.current); }, []);
+  useEffect(() => () => { stopTimer(); stopGraceTimer(); clearInterval(spinIntervalRef.current); }, []);
 
   // ── Tiebreaker state ──
   const [tiebreakerState, setTiebreakerState] = useState(null); // null | { tiedPlayerIndices, candidateCategories }
 
   const startTiebreaker = (tiedPlayerIndices) => {
-    const safeCats = ['dieren','voedsel','koken','beroepen','kantoor','sport','natuur','emoties','landen','verkeer','plaatsen','kunst','kleding','religie','fictie','literatuur','muziek','acties','gereedschap','wetenschap','geneeskunde','ruimte','militair','misdaad','politiek','huishouden','spreekwoorden'];
-    const catSet = selectedCategories instanceof Set ? selectedCategories : new Set();
-    const allIds = CATEGORIES.map(c => c.id);
-    const allSelected = catSet.size === 0 || allIds.every(id => catSet.has(id));
-    const usedSafe = allSelected ? [] : safeCats.filter(c => catSet.has(c));
-    const chosen = shuffle(usedSafe).slice(0, 3);
-    const remaining = shuffle(safeCats.filter(c => !chosen.includes(c)));
-    while (chosen.length < 3 && remaining.length > 0) chosen.push(remaining.shift());
-    const candidateCategories = chosen.map(id => CATEGORIES.find(c => c.id === id)).filter(Boolean);
+    const candidateCategories = buildTiebreakerCandidates(selectedCategories);
     setTiebreakerState({ tiedPlayerIndices, candidateCategories });
     setPhase("tiebreaker");
   };
@@ -2384,6 +2481,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
         roundLetterRef.current = targetLetterRef.current;
         setSpinning(false);
         setPhase("playing");
+        currentRoundStatsRef.current = { correct: 0, skipped: 0, wordResults: [] };
         startTimer();
       }
     }, spinCountRef.current < totalTicks - 6 ? 60 : 100);
@@ -2395,19 +2493,41 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   };
 
   const onCorrect = () => {
+    const wasTimesUp = timesUpRef.current;
+    if (wasTimesUp) stopGraceTimer();
     triggerFlash("correct");
-    setCorrect(c => c + 1);
+    const currentWord = deck[cardIdx % deck.length];
+    currentRoundStatsRef.current.correct += 1;
+    currentRoundStatsRef.current.wordResults.push({ word: currentWord, guessed: true });
+    setCorrect(c => {
+      const newC = c + 1;
+      if (wasTimesUp) endRound(newC);
+      return newC;
+    });
     setCardIdx(i => i + 1);
   };
 
   const onSkip = () => {
+    const wasTimesUp = timesUpRef.current;
+    if (wasTimesUp) stopGraceTimer();
     triggerFlash("skip");
+    const currentWord = deck[cardIdx % deck.length];
+    currentRoundStatsRef.current.skipped += 1;
+    currentRoundStatsRef.current.wordResults.push({ word: currentWord, guessed: false });
     setSkipped(s => s + 1);
     setCardIdx(i => i + 1);
+    if (wasTimesUp) setCorrect(c => { endRound(c); return c; });
   };
 
   const endRound = (currentCorrect) => {
     stopTimer();
+    stopGraceTimer();
+    // Commit ronde stats voor deze speler
+    const roundStats = { ...currentRoundStatsRef.current };
+    setPlayerStats(prev => prev.map((ps, i) => i === playerIdx
+      ? { ...ps, rounds: [...ps.rounds, roundStats] }
+      : ps
+    ));
     // Commit score immediately so ScoreScreen sees correct values
     setScores(prev => prev.map((s, i) => i === playerIdx ? (s ?? 0) + currentCorrect : s));
     setPhase("roundover");
@@ -2421,11 +2541,18 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
     setPlayerIdx(next);
     setCorrect(0);
     setSkipped(0);
+    // Offsets = cumulatieve totalen van de volgende speler uit eerdere rondes
+    const nextStats = playerStats[next];
+    setCorrectOffset(nextStats?.rounds.reduce((s, r) => s + r.correct, 0) ?? 0);
+    setSkippedOffset(nextStats?.rounds.reduce((s, r) => s + r.skipped, 0) ?? 0);
     setTimeRemaining(roundTime);
     setCardIdx(i => i + 1);
+    setTimesUp(false);
+    setGraceCountdown(null);
+    timesUpRef.current = false;
+    currentRoundStatsRef.current = { correct: 0, skipped: 0, wordResults: [] };
     roundNum.current += 1;
     if (isNewGameRound) {
-      // Nieuwe spelronde: letter resetten zodat er opnieuw gesponnen wordt
       roundLetterRef.current = null;
       setForbiddenLetter(null);
     }
@@ -2433,7 +2560,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   };
 
   const timerPct = timeRemaining / roundTime;
-  const timerColor = timerPct > 0.5 ? "#4ade80" : timerPct > 0.25 ? "#facc15" : "#f87171";
+  const timerColor = timesUp ? "#f87171" : timerPct > 0.5 ? "#4ade80" : timerPct > 0.25 ? "#facc15" : "#f87171";
 
   if (phase === "handoff") {
     return <HandoffScreen player={players[playerIdx]} onReady={() => {
@@ -2441,6 +2568,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
         // Zelfde spelronde: bestaande letter tonen en direct starten
         setForbiddenLetter(roundLetterRef.current);
         setPhase("playing");
+        currentRoundStatsRef.current = { correct: 0, skipped: 0, wordResults: [] };
         startTimer();
       } else {
         spinLetter();
@@ -2449,6 +2577,17 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   }
 
   if (phase === "roundover") {
+    if (statsPhase) {
+      return (
+        <TaboeStatsScreen
+          players={players}
+          playerStats={playerStats}
+          scores={scores}
+          initialPlayer={statsInitialPlayer}
+          onBack={() => setStatsPhase(false)}
+        />
+      );
+    }
     return (
       <ScoreScreen
         players={players}
@@ -2463,12 +2602,18 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
           setPlayerIdx(0);
           setCorrect(0);
           setSkipped(0);
+          // Zet offsets op de cumulatieve totalen van alle gespeelde rondes
+          setCorrectOffset(playerStats[0]?.rounds.reduce((s, r) => s + r.correct, 0) ?? 0);
+          setSkippedOffset(playerStats[0]?.rounds.reduce((s, r) => s + r.skipped, 0) ?? 0);
           setTimeRemaining(roundTime);
-          setForbiddenLetter(null);
+          setTimesUp(false);
+          setGraceCountdown(null);
+          timesUpRef.current = false;
+          currentRoundStatsRef.current = { correct: 0, skipped: 0, wordResults: [] };
           roundNum.current = 0;
           setPhase("handoff");
         }}
-        onShowStats={() => {}}
+        onShowStats={(idx) => { setStatsInitialPlayer(idx ?? 0); setStatsPhase(true); }}
         teams={null}
         teamScores={[]}
         onStartTiebreaker={startTiebreaker}
@@ -2501,22 +2646,22 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
 
         {/* Timer balk */}
         <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"8px", overflow:"hidden"}}>
-          <div style={{height:"100%", width:`${timerPct * 100}%`, background:timerColor, borderRadius:"4px", transition:"width 0.08s linear, background 0.5s"}} />
+          <div style={{height:"100%", width:`${timesUp ? 0 : timerPct * 100}%`, background:timerColor, borderRadius:"4px", transition:"width 0.08s linear, background 0.5s"}} />
         </div>
 
         {/* Timer midden, stats rechts — op één lijn */}
         <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
           <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:timerColor, flex:1, textAlign:"left"}}>
-            {Math.ceil(timeRemaining)}s
+            {timesUp ? <span className="alarm-ringing">⏰</span> : `${Math.ceil(timeRemaining)}s`}
           </span>
           <div className="round-stats" style={{flex:1, justifyContent:"flex-end"}}>
             <span className="stat correct-stat">
               <span className="stat-icon">✓</span>
-              <span>{correct}</span>
+              <span>{correctOffset + correct}</span>
             </span>
             <span className="stat skip-stat">
               <span className="stat-icon">✗</span>
-              <span>{skipped}</span>
+              <span>{skippedOffset + skipped}</span>
             </span>
           </div>
         </div>
@@ -2542,9 +2687,16 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
         </div>
 
         {/* Kaart */}
-        <div style={{background:"linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.98))", border:"3px solid rgba(96,165,250,0.3)", borderRadius:"24px", padding:"28px 24px", marginBottom:"16px", boxShadow:"0 8px 32px rgba(0,0,0,0.4)", textAlign:"center"}}>
+        <div style={{background:"linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.98))", border:"3px solid rgba(96,165,250,0.3)", borderRadius:"24px", padding:"28px 24px", marginBottom:"8px", boxShadow:"0 8px 32px rgba(0,0,0,0.4)", textAlign:"center"}}>
           <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(32px, 10vw, 44px)", color:"white", margin:0, lineHeight:1.1}}>{hyphenateWord(card)}</h2>
         </div>
+
+        {/* Times Up Banner */}
+        {timesUp && (
+          <div className={`times-up-banner grace-active`} style={{marginBottom:"12px"}}>
+            <span>Tijd is op — nog <span className="grace-countdown">{graceCountdown !== null ? graceCountdown : '…'}</span>s om te raden!</span>
+          </div>
+        )}
 
         {/* Knoppen — zichtbaar tijdens spinning én playing */}
         <div style={{display:"flex", gap:"10px", marginBottom:"12px"}}>
@@ -3203,15 +3355,13 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, o
           <div className="stats-words-col">
             <div className="stats-words-title stats-green">✓ Goed geraden ({guessedWords.length})</div>
             <div className="stats-words-list">
-              {guessedWords.slice(0, 20).map((wr, i) => (<span key={i} className={`stats-word-chip${wr.isBonus ? " stats-word-bonus" : ""}`}>{wr.word}{wr.isBonus ? " ⭐" : ""}</span>))}
-              {guessedWords.length > 20 && <span className="stats-word-more">+{guessedWords.length - 20} meer</span>}
+              {guessedWords.map((wr, i) => (<span key={i} className={`stats-word-chip${wr.isBonus ? " stats-word-bonus" : ""}`}>{wr.word}{wr.isBonus ? " ⭐" : ""}</span>))}
             </div>
           </div>
           <div className="stats-words-col">
             <div className="stats-words-title stats-red">↷ Geskipt ({skippedWords.length})</div>
             <div className="stats-words-list">
-              {skippedWords.slice(0, 20).map((wr, i) => (<span key={i} className="stats-word-chip stats-word-skipped">{wr.word}</span>))}
-              {skippedWords.length > 20 && <span className="stats-word-more">+{skippedWords.length - 20} meer</span>}
+              {skippedWords.map((wr, i) => (<span key={i} className="stats-word-chip stats-word-skipped">{wr.word}</span>))}
             </div>
           </div>
         </div>
@@ -3385,15 +3535,6 @@ export default function App() {
 
   const totalRounds = players.length;
 
-  const getWordPool = (cats) => {
-    const catSet = cats instanceof Set ? cats : new Set();
-    const allIds = CATEGORIES.map(c => c.id);
-    if (catSet.size === 0 || allIds.every(id => catSet.has(id))) return WORDS_BY_CATEGORY.all;
-    const merged = new Set();
-    for (const id of catSet) (WORDS_BY_CATEGORY[id] || []).forEach(word => merged.add(word));
-    return merged.size > 0 ? [...merged] : WORDS_BY_CATEGORY.all;
-  };
-
   const startGame = (names, time, teamsData, categories, wrGameMode) => {
     setWrMode(wrGameMode || "klassiek");
     if (wrGameMode === "taboe") {
@@ -3473,15 +3614,7 @@ export default function App() {
   };
 
   const onStartTiebreaker = (tiedPlayerIndices) => {
-    const safeCats = ['dieren','voedsel','koken','beroepen','kantoor','sport','natuur','emoties','landen','verkeer','plaatsen','kunst','kleding','religie','fictie','literatuur','muziek','acties','gereedschap','wetenschap','geneeskunde','ruimte','militair','misdaad','politiek','huishouden','spreekwoorden'];
-    const catSet = selectedCategory instanceof Set ? selectedCategory : new Set();
-    const allIds = CATEGORIES.map(c => c.id);
-    const allSelected = catSet.size === 0 || allIds.every(id => catSet.has(id));
-    const usedSafe = allSelected ? [] : safeCats.filter(c => catSet.has(c));
-    const chosen = shuffle(usedSafe).slice(0, 3);
-    const remaining = shuffle(safeCats.filter(c => !chosen.includes(c)));
-    while (chosen.length < 3 && remaining.length > 0) chosen.push(remaining.shift());
-    const candidateCategories = chosen.map(id => CATEGORIES.find(c => c.id === id)).filter(Boolean);
+    const candidateCategories = buildTiebreakerCandidates(selectedCategory);
     let tiedTeamGroups = null;
     let orderedTiedPlayerIndices = tiedPlayerIndices;
     if (teams) {
