@@ -2242,7 +2242,7 @@ function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories
             <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(32px,10vw,44px)", color:"white", margin:0, lineHeight:1.1}}>{currentWord ? hyphenateWord(currentWord) : "—"}</h2>
           </div>
           <div style={{display:"flex", gap:"10px", marginBottom:"12px"}}>
-            <button onClick={handleCorrect} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color:"#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor:"pointer"}}>✓ Goed!</button>
+            <button onClick={handleCorrect} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color:"#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor:"pointer"}}>✓ Goed</button>
           </div>
         </div>
       </div>
@@ -2549,7 +2549,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
         {/* Knoppen — zichtbaar tijdens spinning én playing */}
         <div style={{display:"flex", gap:"10px", marginBottom:"12px"}}>
           <button onClick={onSkip} disabled={spinning} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(248,113,113,0.4)", background:"rgba(248,113,113,0.1)", color: spinning ? "rgba(248,113,113,0.35)" : "#f87171", fontFamily:"'Righteous', cursive", fontSize:"18px", cursor: spinning ? "default" : "pointer"}}>✗ Skip</button>
-          <button onClick={onCorrect} disabled={spinning} style={{flex:2, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color: spinning ? "rgba(74,222,128,0.35)" : "#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor: spinning ? "default" : "pointer"}}>✓ Goed!</button>
+          <button onClick={onCorrect} disabled={spinning} style={{flex:2, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color: spinning ? "rgba(74,222,128,0.35)" : "#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor: spinning ? "default" : "pointer"}}>✓ Goed</button>
         </div>
       </div>
     </div>
@@ -3066,7 +3066,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
       {!done && (
         <div style={{display:"flex", gap:"10px", width:"100%", maxWidth:"520px", padding:"0 0 max(24px, env(safe-area-inset-bottom))", flexShrink:0}}>
           <button onClick={skip} disabled={skipPenalty > 0} style={{flex:1, padding:"18px", borderRadius:"16px", border:`2.5px solid ${skipPenalty > 0 ? "rgba(248,113,113,0.15)" : "rgba(248,113,113,0.4)"}`, background:`${skipPenalty > 0 ? "rgba(248,113,113,0.04)" : "rgba(248,113,113,0.1)"}`, color: skipPenalty > 0 ? "rgba(248,113,113,0.3)" : "#f87171", fontFamily:"'Righteous', cursive", fontSize:"18px", cursor: skipPenalty > 0 ? "default" : "pointer", transition:"all 0.18s"}}>✗ Skip</button>
-          <button onClick={correct} disabled={skipPenalty > 0} style={{flex:2, padding:"18px", borderRadius:"16px", border:`2.5px solid ${skipPenalty > 0 ? "rgba(74,222,128,0.15)" : "rgba(74,222,128,0.4)"}`, background:`${skipPenalty > 0 ? "rgba(74,222,128,0.04)" : "rgba(74,222,128,0.1)"}`, color: skipPenalty > 0 ? "rgba(74,222,128,0.3)" : "#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor: skipPenalty > 0 ? "default" : "pointer", transition:"all 0.18s"}}>✓ Goed!</button>
+          <button onClick={correct} disabled={skipPenalty > 0} style={{flex:2, padding:"18px", borderRadius:"16px", border:`2.5px solid ${skipPenalty > 0 ? "rgba(74,222,128,0.15)" : "rgba(74,222,128,0.4)"}`, background:`${skipPenalty > 0 ? "rgba(74,222,128,0.04)" : "rgba(74,222,128,0.1)"}`, color: skipPenalty > 0 ? "rgba(74,222,128,0.3)" : "#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor: skipPenalty > 0 ? "default" : "pointer", transition:"all 0.18s"}}>✓ Goed</button>
         </div>
       )}
     </div>
