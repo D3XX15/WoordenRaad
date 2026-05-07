@@ -2227,7 +2227,7 @@ function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories
           <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
             <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:"#fbbf24", flex:1, textAlign:"left"}}>{elapsedDisplay}</span>
             <div className="round-stats" style={{flex:1, justifyContent:"flex-end"}}>
-              <span className="stat correct-stat"><span className="stat-icon">⚡</span><span>{currentStep+1}/{tiedPlayerIndices.length}</span></span>
+              <span className="stat correct-stat"><span>{currentStep+1}/{tiedPlayerIndices.length}</span></span>
             </div>
           </div>
           {/* Verboden letter */}
