@@ -3055,7 +3055,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
               <div key={wordIndex} className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ? hyphenateWord(currentWord) : "— geen woorden meer —"}</div>
               <div className={`times-up-banner${timesUp ? ' grace-active' : isCurrentBonus ? ' bonus-banner' : ' category-banner'}`}>
                 {timesUp
-                  ? <span>⏰ Tijd is om — nog <span className="grace-countdown">{graceCountdown !== null ? graceCountdown : '…'}</span>s om te raden!</span>
+                  ? <span>Tijd is op — nog <span className="grace-countdown">{graceCountdown !== null ? graceCountdown : '…'}</span>s om te raden!</span>
                   : isCurrentBonus ? '⭐ BONUSGEZEGDE — 3 punten!'
                   : currentWord ? (WORD_TO_CATEGORY[currentWord]?.label ?? '📦 Categorie') : ''}
               </div>
