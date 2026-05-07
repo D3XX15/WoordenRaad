@@ -2219,7 +2219,7 @@ function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories
         <div style={{width:"100%", maxWidth:"420px"}}>
           <div className="ls-header">
             <div className="wr-logo">Tie-Breaker</div>
-            <span className="round-player" style={{fontSize:"22px", textAlign:"right"}}>⚡ {players[currentPlayerIdx]}</span>
+            <span className="round-player" style={{fontSize:"22px", textAlign:"right"}}>{players[currentPlayerIdx]}</span>
           </div>
           <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"8px", overflow:"hidden"}}>
             <div style={{height:"100%", width:`${Math.min(elapsed/60,1)*100}%`, background:"#fbbf24", borderRadius:"4px", transition:"width 0.05s linear"}} />
@@ -3321,7 +3321,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
         {/* Tie-Breaker header */}
         <div className="ls-header">
           <div className="wr-logo">Tie-Breaker</div>
-          <span className="round-player" style={{fontSize:"22px", textAlign:"right"}}>⚡ {players[currentPlayerIdx]}</span>
+          <span className="round-player" style={{fontSize:"22px", textAlign:"right"}}>{players[currentPlayerIdx]}</span>
         </div>
 
         {/* Timer balk — groeit mee met de tijd, max bij 60s */}
