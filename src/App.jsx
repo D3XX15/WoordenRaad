@@ -26,6 +26,12 @@ function useSpinLetter({ pool, exclude = null, onLetter, onDone }) {
   const [spinning, setSpinning] = useState(false);
   const spinIntervalRef = useRef(null);
   const spinCountRef = useRef(0);
+  const onLetterRef = useRef(onLetter);
+  const onDoneRef = useRef(onDone);
+
+  // Houd refs altijd actueel zodat de interval nooit verouderde callbacks aanroept
+  useEffect(() => { onLetterRef.current = onLetter; }, [onLetter]);
+  useEffect(() => { onDoneRef.current = onDone; }, [onDone]);
 
   useEffect(() => () => clearInterval(spinIntervalRef.current), []);
 
@@ -37,25 +43,20 @@ function useSpinLetter({ pool, exclude = null, onLetter, onDone }) {
     const available = exclude ? pool.filter(l => l !== exclude) : pool;
     const target = available[Math.floor(Math.random() * available.length)];
 
-    // Draait snel (60ms) en herstart als een langzamere interval (100ms) voor de laatste 6 ticks
+    // Vaste interval van 60ms, identiek aan v23 — geen herstart halverwege
     const tick = () => {
       spinCountRef.current++;
       if (spinCountRef.current < totalTicks) {
-        onLetter(pool[Math.floor(Math.random() * pool.length)]);
-        if (spinCountRef.current === totalTicks - 6) {
-          // Schakel over naar langzamere interval voor het afremmen
-          clearInterval(spinIntervalRef.current);
-          spinIntervalRef.current = setInterval(tick, 100);
-        }
+        onLetterRef.current(pool[Math.floor(Math.random() * pool.length)]);
       } else {
         clearInterval(spinIntervalRef.current);
-        onLetter(target);
+        onLetterRef.current(target);
         setSpinning(false);
-        onDone(target);
+        onDoneRef.current(target);
       }
     };
     spinIntervalRef.current = setInterval(tick, 60);
-  }, [spinning, pool, exclude, onLetter, onDone]);
+  }, [spinning, pool, exclude]);
 
   return { spin, spinning };
 }
@@ -168,8 +169,12 @@ function TiebreakerHandoff({ subtitle, player, tip1, tip2, onStart }) {
   );
 }
 
+/** Tijdweergave: toont seconden of een rinkelende wekker als de tijd op is. */
+function TimerDisplay({ secs, timesUp }) {
+  return timesUp ? <span className="alarm-ringing">⏰</span> : <>{secs}s</>;
+}
+
 /**
- * Invoerveld voor één spelernaam, inclusief verwijder-knop.
  * Hergebruikt in SetupScreen (WoordRaad) en LetterSnelSetup.
  */
 function PlayerNameInput({ index, value, onChange, onRemove, canRemove, placeholder = "Naam invullen..." }) {
@@ -190,6 +195,14 @@ function PlayerNameInput({ index, value, onChange, onRemove, canRemove, placehol
       )}
     </div>
   );
+}
+
+/** Geeft de CSS-klasse terug voor een flash-type (correct / skip / bonus). */
+function flashClass(flash) {
+  if (flash === "correct") return " taboe-flash-correct";
+  if (flash === "skip")    return " taboe-flash-skip";
+  if (flash === "bonus")   return " taboe-flash-bonus";
+  return "";
 }
 
 // ── LetterSnel Cards ────────────────────────────────────────────────────────
@@ -448,6 +461,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters, targetScore 
   // spinning animation via gedeelde hook
   const { spin: doSpinLetter, spinning } = useSpinLetter({
     pool: alphabet,
+    exclude: currentLetter,
     onLetter: setCurrentLetter,
     onDone: (_target) => {
       phaseRef.current = "playing";
@@ -2308,7 +2322,7 @@ function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories
   if (subPhase === "playing") {
     const elapsedDisplay = formatElapsed(elapsed);
     return (
-      <div className={`screen${flash === "correct" ? " taboe-flash-correct" : flash === "skip" ? " taboe-flash-skip" : ""}`}>
+      <div className={`screen${flashClass(flash)}`}>
         <div style={{width:"100%", maxWidth:"420px"}}>
           <div className="ls-header">
             <div className="wr-logo">Tie-Breaker</div>
@@ -2423,6 +2437,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
 
   const { spin: doSpinLetter, spinning } = useSpinLetter({
     pool: TABOE_LETTERS,
+    exclude: forbiddenLetter,
     onLetter: setForbiddenLetter,
     onDone: (target) => {
       roundLetterRef.current = target;
@@ -2642,7 +2657,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
 
   // spinning or playing
   return (
-    <div className={`screen${flash === "correct" ? " taboe-flash-correct" : flash === "skip" ? " taboe-flash-skip" : ""}`}>
+    <div className={`screen${flashClass(flash)}`}>
       <div style={{width:"100%", maxWidth:"420px"}}>
 
         {/* WoordRaad header */}
@@ -2657,7 +2672,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
         {/* Timer midden, stats rechts — op één lijn */}
         <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
           <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:timerColor, flex:1, textAlign:"left"}}>
-            {timesUp ? <span className="alarm-ringing">⏰</span> : `${Math.ceil(timeRemaining)}s`}
+            <TimerDisplay secs={Math.ceil(timeRemaining)} timesUp={timesUp} />
           </span>
           <div className="round-stats" style={{flex:1, justifyContent:"flex-end"}}>
             <span className="stat correct-stat">
@@ -2696,18 +2711,18 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
           <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(32px, 10vw, 44px)", color:"white", margin:0, lineHeight:1.1}}>{hyphenateWord(card)}</h2>
         </div>
 
+        {/* Knoppen — zichtbaar tijdens spinning én playing */}
+        <div style={{display:"flex", gap:"10px", marginBottom:"12px"}}>
+          <button onClick={onSkip} disabled={spinning} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(248,113,113,0.4)", background:"rgba(248,113,113,0.1)", color: spinning ? "rgba(248,113,113,0.35)" : "#f87171", fontFamily:"'Righteous', cursive", fontSize:"18px", cursor: spinning ? "default" : "pointer"}}>✗ Skip</button>
+          <button onClick={onCorrect} disabled={spinning} style={{flex:2, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color: spinning ? "rgba(74,222,128,0.35)" : "#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor: spinning ? "default" : "pointer"}}>✓ Goed</button>
+        </div>
+
         {/* Times Up Banner */}
         {timesUp && (
           <div className={`times-up-banner grace-active`} style={{marginBottom:"12px"}}>
             <span>Tijd is op — nog <span className="grace-countdown">{graceCountdown !== null ? graceCountdown : '…'}</span>s om te raden!</span>
           </div>
         )}
-
-        {/* Knoppen — zichtbaar tijdens spinning én playing */}
-        <div style={{display:"flex", gap:"10px", marginBottom:"12px"}}>
-          <button onClick={onSkip} disabled={spinning} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(248,113,113,0.4)", background:"rgba(248,113,113,0.1)", color: spinning ? "rgba(248,113,113,0.35)" : "#f87171", fontFamily:"'Righteous', cursive", fontSize:"18px", cursor: spinning ? "default" : "pointer"}}>✗ Skip</button>
-          <button onClick={onCorrect} disabled={spinning} style={{flex:2, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color: spinning ? "rgba(74,222,128,0.35)" : "#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor: spinning ? "default" : "pointer"}}>✓ Goed</button>
-        </div>
       </div>
     </div>
   );
@@ -3080,7 +3095,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
     return () => clearInterval(timerRef.current);
   }, [roundTime]);
 
-  const triggerFlash = (type) => { setFlash(type); setTimeout(() => setFlash(null), 1300); };
+  const triggerFlash = (type) => { setFlash(type); setTimeout(() => setFlash(null), 350); };
   const wordIndexRef = useRef(0);
   const [skipPenalty, setSkipPenalty] = useState(0);
   const penaltyRef = useRef(null);
@@ -3155,13 +3170,13 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
   useEffect(() => () => { clearInterval(penaltyRef.current); clearInterval(graceTimerRef.current); clearTimeout(roundEndTimeoutRef.current); }, []);
 
   const pct = timeRemaining / roundTime;
-  const timeLeft = Math.round(timeRemaining);
+  const timeLeft = Math.ceil(timeRemaining);
   const timerColor = timesUp ? "#f87171" : timeLeft > 30 ? "#4ade80" : timeLeft > 10 ? "#fbbf24" : "#f87171";
   const currentWord = words[wordIndex];
   const isCurrentBonus = currentWord ? getBonusPoints(currentWord) > 0 : false;
 
   return (
-    <div className={`screen round-screen ${flash ? `flash-${flash}` : ""} ${done ? "round-done" : ""}`}>
+    <div className={`screen round-screen${flashClass(flash)} ${done ? "round-done" : ""}`}>
       <div style={{width:"100%", maxWidth:"420px"}}>
 
         {/* WoordRaad header */}
@@ -3176,7 +3191,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
         {/* Timer midden, stats rechts */}
         <div style={{display:"flex", justifyContent:"flex-end", alignItems:"center", marginBottom:"8px"}}>
           <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:timerColor, flex:1, textAlign:"left"}}>
-            {timesUp ? <span className="alarm-ringing">⏰</span> : timeLeft}
+            <TimerDisplay secs={timeLeft} timesUp={timesUp} />
           </span>
           <div className="round-stats" style={{justifyContent:"flex-end"}}>
             <span className={`stat ${streak >= 3 ? "correct-stat-fire" : "correct-stat"}`}>
@@ -3715,8 +3730,10 @@ const CSS = `
 
   .taboe-flash-correct { animation: taboe-flash-green 0.35s ease-out; }
   .taboe-flash-skip { animation: taboe-flash-red 0.35s ease-out; }
+  .taboe-flash-bonus { animation: taboe-flash-bonus 0.35s ease-out; }
   @keyframes taboe-flash-green { 0%,100% { background-color: transparent; } 30% { background-color: rgba(74,222,128,0.18); } }
   @keyframes taboe-flash-red { 0%,100% { background-color: transparent; } 30% { background-color: rgba(248,113,113,0.18); } }
+  @keyframes taboe-flash-bonus { 0%,100% { background-color: transparent; } 30% { background-color: rgba(255,215,0,0.22); } }
 
   .screen { min-height: 100vh; min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 16px; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); padding-bottom: max(16px, env(safe-area-inset-bottom)); position: relative; overflow: hidden; width: 100%; }
   .screen::after { content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.4' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)'/%3E%3C/svg%3E"); background-size: 180px 180px, 340px 340px; opacity: 0.07; mix-blend-mode: overlay; }
@@ -3907,9 +3924,7 @@ const CSS = `
   .handoff-tip { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
 
   .round-screen { flex-direction: column; background: none; transition: background 0.2s; padding-top: max(28px, env(safe-area-inset-top)); }
-  .round-screen.flash-correct { animation: flashGreen 1.25s ease; }
-  .round-screen.flash-skip { animation: flashOrange 1.25s ease; }
-  .round-screen.flash-bonus { animation: flash-bonus-anim 1.25s ease; }
+
   .round-top { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 520px; padding: 28px 0 12px; gap: 8px; flex-shrink: 0; position: relative; }
   .round-player { font-family: 'Righteous', cursive; font-size: clamp(14px, 4vw, 20px); color: #a78bfa; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .timer-wrap { position: absolute; left: 50%; transform: translateX(-50%); flex-shrink: 0; }
@@ -4050,9 +4065,7 @@ const CSS = `
   @keyframes slideIn { from{transform:translateX(-20px);opacity:0} to{transform:translateX(0);opacity:1} }
   .score-row:nth-child(1){animation-delay:0.05s} .score-row:nth-child(2){animation-delay:0.1s} .score-row:nth-child(3){animation-delay:0.15s} .score-row:nth-child(4){animation-delay:0.2s} .score-row:nth-child(5){animation-delay:0.25s} .score-row:nth-child(6){animation-delay:0.3s}
   @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-  @keyframes flashGreen { 0%{background:rgba(74,222,128,0.15)} 100%{background:rgba(74,222,128,0)} }
-  @keyframes flashOrange { 0%{background:rgba(220,38,38,0.25)} 100%{background:rgba(220,38,38,0)} }
-  @keyframes flash-bonus-anim { 0%{background:rgba(255,215,0,0.15)} 100%{background:rgba(255,215,0,0)} }
+
   @keyframes wordIn { from{transform:scale(0.7) translateY(20px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
   @keyframes penalty-drain { from{width:100%} to{width:0%} }
   @keyframes grace-drain { from{width:100%} to{width:0%} }
