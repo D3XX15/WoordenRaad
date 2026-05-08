@@ -10,6 +10,188 @@ function shuffle(arr) {
   return a;
 }
 
+// ══════════════════════════════════════════════════════════════════════════════
+// ── Gedeelde UI-componenten ────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * useSpinLetter — herbruikbare spin-animatie voor letter-kiezen.
+ * @param {string[]} pool       - Array van letters om uit te kiezen
+ * @param {string|null} exclude - Letter om uit te sluiten (bijv. huidige letter)
+ * @param {(l: string) => void} onLetter - Callback bij elke tussentijdse letter
+ * @param {(l: string) => void} onDone   - Callback als de uiteindelijke letter vaststaat
+ * @returns {{ spin, spinning }}
+ */
+function useSpinLetter({ pool, exclude = null, onLetter, onDone }) {
+  const [spinning, setSpinning] = useState(false);
+  const spinIntervalRef = useRef(null);
+  const spinCountRef = useRef(0);
+
+  useEffect(() => () => clearInterval(spinIntervalRef.current), []);
+
+  const spin = useCallback(() => {
+    if (spinning) return;
+    setSpinning(true);
+    spinCountRef.current = 0;
+    const totalTicks = 18 + Math.floor(Math.random() * 12);
+    const available = exclude ? pool.filter(l => l !== exclude) : pool;
+    const target = available[Math.floor(Math.random() * available.length)];
+
+    // Draait snel (60ms) en herstart als een langzamere interval (100ms) voor de laatste 6 ticks
+    const tick = () => {
+      spinCountRef.current++;
+      if (spinCountRef.current < totalTicks) {
+        onLetter(pool[Math.floor(Math.random() * pool.length)]);
+        if (spinCountRef.current === totalTicks - 6) {
+          // Schakel over naar langzamere interval voor het afremmen
+          clearInterval(spinIntervalRef.current);
+          spinIntervalRef.current = setInterval(tick, 100);
+        }
+      } else {
+        clearInterval(spinIntervalRef.current);
+        onLetter(target);
+        setSpinning(false);
+        onDone(target);
+      }
+    };
+    spinIntervalRef.current = setInterval(tick, 60);
+  }, [spinning, pool, exclude, onLetter, onDone]);
+
+  return { spin, spinning };
+}
+
+/** Header-balk bovenaan een game-scherm (logo links, stop-knop rechts). */
+function GameHeader({ logo, onStop }) {
+  return (
+    <div className="ls-header">
+      <div className="ls-logo">{logo}</div>
+      <button className="ls-restart-btn" onClick={onStop}>↩ Stop</button>
+    </div>
+  );
+}
+
+/** Kaartgebied voor LetterSnel (kaart-label + kaart-tekst). */
+function LsCardArea({ cardIdx, card }) {
+  return (
+    <div className="ls-card-area">
+      <div className="ls-card-label">KAART #{cardIdx + 1}</div>
+      <div className="ls-card">
+        <div className="ls-card-inner">
+          <span className="ls-card-text">{card}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Grote letter-display voor LetterSnel. */
+function LsLetterDisplay({ letter, spinning }) {
+  if (letter) {
+    return <div className={`ls-letter ${spinning ? "ls-letter-spinning" : "ls-letter-landed"}`}>{letter}</div>;
+  }
+  return <div className="ls-letter-placeholder">?</div>;
+}
+
+/**
+ * Horizontale tijdsbalk.
+ * @param {number} pct      - Voortgang 0–1 (1 = volledig gevuld)
+ * @param {string} color    - CSS-kleur van de balk
+ * @param {boolean} empty   - Als true: balk is leeg (bijv. als tijd op is)
+ * @param {string} [transition] - CSS transition-waarde (optioneel)
+ */
+function TimerBar({ pct, color, empty = false, transition = "width 0.05s linear, background 0.5s" }) {
+  return (
+    <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"8px", overflow:"hidden"}}>
+      <div style={{height:"100%", width:`${empty ? 0 : pct * 100}%`, background:color, borderRadius:"4px", transition}} />
+    </div>
+  );
+}
+
+/**
+ * Gedeelde resultatenweergave voor solo tie-breakers (Taboe en WoordRaad Klassiek).
+ * Toont ranking op tijd, gelijkspel-banner of winnaar-banner, en een "Nieuw spel"-knop.
+ */
+function TiebreakerSoloResults({ players, tiedPlayerIndices, times, onRestart, onStartTiebreaker }) {
+  const tieBadges = ["🥇","🥈","🥉"];
+  const results = tiedPlayerIndices.map((pi, i) => ({ name: players[pi], time: times[i] })).sort((a, b) => a.time - b.time);
+  const winnerTime = Math.round(results[0].time * 100) / 100;
+  const hasJointWinner = results.filter(r => Math.round(r.time * 100) / 100 === winnerTime).length > 1;
+  return (
+    <div className="screen"><div className="score-card">
+      <h2 className="score-title">⚡ Tie-breaker resultaten</h2>
+      {hasJointWinner
+        ? <button className="tiebreaker-start-btn" onClick={() => {
+            const si = results.filter(r => Math.round(r.time*100)/100 === winnerTime).map(r => tiedPlayerIndices.find(pi => players[pi] === r.name)).filter(pi => pi !== undefined);
+            onStartTiebreaker(si);
+          }}>🤝 Nog steeds gelijkspel! Start opnieuw.</button>
+        : <div className="tiebreaker-result-banner tiebreaker-result-winner"><span className="tiebreaker-result-text-winner">🏆 {results[0].name} wint de tie-breaker!</span></div>
+      }
+      <div className="scores-list">
+        {results.map((r) => {
+          const effectiveRank = results.filter(r2 => Math.round(r2.time*100)/100 < Math.round(r.time*100)/100).length + 1;
+          const isTied = Math.round(r.time*100)/100 === winnerTime && hasJointWinner;
+          const rowClass = isTied ? "score-row rank-1 rank-tied" : `score-row rank-${effectiveRank} rank-final`;
+          return (
+            <div key={r.name} className={rowClass}>
+              <span className="rank-badge">{isTied ? "👑" : (tieBadges[effectiveRank-1] ?? effectiveRank)}</span>
+              <span className="score-name">{r.name}</span>
+              <span className="score-pts tiebreaker-pts">{r.time == null ? "—" : `${r.time.toFixed(2)}s`}</span>
+            </div>
+          );
+        })}
+      </div>
+      <div className="final-btns"><button className="score-btn restart-btn" onClick={onRestart}>Nieuw spel</button></div>
+    </div></div>
+  );
+}
+
+/** Formatteer verstreken tijd als "seconden.tienden" (bijv. "4.2s"). */
+function formatElapsed(elapsed) {
+  const secs = Math.floor(elapsed);
+  const tenths = Math.floor((elapsed % 1) * 10);
+  return `${secs}.${tenths}s`;
+}
+
+/**
+ * Gedeeld handoff-scherm voor tie-breakers (Taboe en WoordRaad Klassiek).
+ */
+function TiebreakerHandoff({ subtitle, player, tip1, tip2, onStart }) {
+  return (
+    <div className="screen handoff-screen"><div className="handoff-card">
+      <div className="handoff-icon">⚡</div>
+      <p className="handoff-sub tiebreaker-handoff-sub">{subtitle}</p>
+      <h2 className="handoff-name">{player}</h2>
+      <p className="handoff-tip mb-2">{tip1}</p>
+      <p className="handoff-tip mt-0">{tip2}</p>
+      <button className="handoff-btn" onClick={onStart}>Start tie-breaker!</button>
+    </div></div>
+  );
+}
+
+/**
+ * Invoerveld voor één spelernaam, inclusief verwijder-knop.
+ * Hergebruikt in SetupScreen (WoordRaad) en LetterSnelSetup.
+ */
+function PlayerNameInput({ index, value, onChange, onRemove, canRemove, placeholder = "Naam invullen..." }) {
+  return (
+    <div className="player-input-group small-group">
+      <div className="player-name-container player-bg">
+        <span className="player-index-badge">{index + 1}</span>
+        <input
+          className="integrated-name-input"
+          placeholder={placeholder}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          maxLength={16}
+        />
+      </div>
+      {canRemove && (
+        <button className="integrated-delete-btn btn-subtle" onClick={onRemove}>−</button>
+      )}
+    </div>
+  );
+}
+
 // ── LetterSnel Cards ────────────────────────────────────────────────────────
 const LS_CARDS = [
   "een kleur", "een land", "een stad", "een jongensnaam", "een meisjesnaam", "keukengerei", "iets in de tuin", "een beroep", "een natuurverschijnsel",
@@ -18,7 +200,7 @@ const LS_CARDS = [
   "iets wat je kunt eten", "een superkracht", "een bloem of boom", "iets in de slaapkamer", "iets op het strand", "iets op een boerderij",
   "iets in een ziekenhuis", "een insect", "een roofvogel", "iets wat je kunt gooien", "iets wat glinstert", "iets wat zwaar is", "iets wat licht is",
   "iets wat lekker ruikt", "speelgoed", "iets van hout", "iets van metaal", "iets van plastic", "iets van glas", "een reden om te laat te komen",
-  "iets wat je kunt verzamelen", "iets in een tas", "iets wat je in je broekzak hebt", "iets op kantoor", "iets wat je kunt lezen",
+  "iets wat je kunt verzamelen", "iets in een tas", "iets wat je in je broekzak hebt", "iets op kantoor", "iets wat je kunt lezen", "een voertuig",
   "iets in een winkelcentrum", "iets van vroeger", "iets op het internet", "iets in een speeltuin", "een kledingstuk", "iets in de ruimte",
   "iets in een pretpark", "iets in een bioscoop", "een acteur of actrice", "een tekenfilmfiguur", "iets in een kasteel", "iets rond Kerst",
   "iets rond Sinterklaas", "iets rond Halloween", "iets wat je niet mag doen in de klas", "iets rond carnaval", "iets op een wereldkaart",
@@ -56,42 +238,27 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters, targetScore
   const alphabet = activeLetters && activeLetters.length > 0 ? activeLetters : ALPHABET_ALL;
   const [scores, setScores] = useState(Array(players.length).fill(0));
   const [currentCardIdx, setCurrentCardIdx] = useState(0);
-  const [cardDeck, setCardDeck] = useState(() => shuffle([...LS_CARDS]));
+  const [cardDeck] = useState(() => shuffle([...LS_CARDS]));
   const [letter, setLetter] = useState(null);
-  const [spinning, setSpinning] = useState(false);
   const [winner, setWinner] = useState(null);
   const [phase, setPhase] = useState("ready");
-
   const [gameWinner, setGameWinner] = useState(null);
-  const spinIntervalRef = useRef(null);
-  const spinCountRef = useRef(0);
-  const targetLetterRef = useRef(null);
 
   const currentCard = cardDeck[currentCardIdx % cardDeck.length];
+
+  const { spin: doSpin, spinning } = useSpinLetter({
+    pool: alphabet,
+    exclude: letter,
+    onLetter: setLetter,
+    onDone: () => {},
+  });
 
   const spinLetter = () => {
     if (spinning || phase === "awarded") return;
     setPhase("playing");
     setWinner(null);
-    setSpinning(true);
-    spinCountRef.current = 0;
-    const totalTicks = 18 + Math.floor(Math.random() * 12);
-    const available = alphabet.filter(l => l !== letter);
-    targetLetterRef.current = available[Math.floor(Math.random() * available.length)];
-
-    spinIntervalRef.current = setInterval(() => {
-      spinCountRef.current++;
-      if (spinCountRef.current < totalTicks) {
-        setLetter(alphabet[Math.floor(Math.random() * alphabet.length)]);
-      } else {
-        clearInterval(spinIntervalRef.current);
-        setLetter(targetLetterRef.current);
-        setSpinning(false);
-      }
-    }, spinCountRef.current < totalTicks - 6 ? 60 : 100);
+    doSpin();
   };
-
-  useEffect(() => () => clearInterval(spinIntervalRef.current), []);
 
   const awardPoint = (playerIdx) => {
     if (phase !== "playing" || spinning) return;
@@ -121,24 +288,10 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters, targetScore
 
   return (
     <div className="ls-screen">
-      <div className="ls-header">
-        <div className="ls-logo">LetterSnel</div>
-        <button className="ls-restart-btn" onClick={onRestart}>↩ Stop</button>
-      </div>
-      <div className="ls-card-area">
-        <div className="ls-card-label">KAART #{currentCardIdx + 1}</div>
-        <div className="ls-card">
-          <div className="ls-card-inner">
-            <span className="ls-card-text">{currentCard}</span>
-          </div>
-        </div>
-      </div>
+      <GameHeader logo="LetterSnel" onStop={onRestart} />
+      <LsCardArea cardIdx={currentCardIdx} card={currentCard} />
       <div className="ls-letter-area">
-        {letter ? (
-          <div className={`ls-letter ${spinning ? "ls-letter-spinning" : "ls-letter-landed"}`}>{letter}</div>
-        ) : (
-          <div className="ls-letter-placeholder">?</div>
-        )}
+        <LsLetterDisplay letter={letter} spinning={spinning} />
         <button
           className={`ls-spin-btn ${spinning ? "ls-spin-spinning" : ""}`}
           onClick={phase === "awarded" ? nextCard : spinLetter}
@@ -207,38 +360,6 @@ function LetterSnelWinnaarScreen({ players, scores, winnaarIdx, onRestart }) {
 }
 
 // ── Timer-end feedback: geluid + trilling ────────────────────────────────────
-function playTimerEnd() {
-  if (navigator.vibrate) {
-    navigator.vibrate([450, 80, 450]);
-  }
-
-  // Buzzer-geluid via Web Audio API (geen extern bestand nodig)
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-
-    const buzz = (startTime, duration, freq, gainVal) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.type = "sawtooth";
-      osc.frequency.setValueAtTime(freq, startTime);
-      osc.frequency.exponentialRampToValueAtTime(freq * 0.5, startTime + duration);
-      gain.gain.setValueAtTime(gainVal, startTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-      osc.start(startTime);
-      osc.stop(startTime + duration);
-    };
-
-    const now = ctx.currentTime;
-    buzz(now,        0.35, 330, 0.70);
-    buzz(now + 0.38, 0.45, 180, 0.75);
-    buzz(now + 0.80, 0.55, 100, 0.78);
-  } catch (e) {
-    // Web Audio niet beschikbaar — geen probleem
-  }
-}
-
 function playPling() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -258,7 +379,25 @@ function playPling() {
 }
 
 // ── Taboe timer-end: kort aflopend twee-noot geluidje ────────────────────────
-function playTaboeTimeUp() {
+function playSkip() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(1046, now);
+    osc.frequency.exponentialRampToValueAtTime(784, now + 0.08);
+    gain.gain.setValueAtTime(0.35, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+    osc.start(now);
+    osc.stop(now + 0.25);
+  } catch (e) {}
+}
+
+function playTimeUp() {
   if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -306,10 +445,16 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters, targetScore 
   const phaseRef = useRef("ready");
   const roundStartRef = useRef(0); // which player index starts the next round
 
-  // spinning animation
-  const [spinning, setSpinning] = useState(false);
-  const spinIntervalRef = useRef(null);
-  const spinCountRef = useRef(0);
+  // spinning animation via gedeelde hook
+  const { spin: doSpinLetter, spinning } = useSpinLetter({
+    pool: alphabet,
+    onLetter: setCurrentLetter,
+    onDone: (_target) => {
+      phaseRef.current = "playing";
+      setPhase("playing");
+      startTimer();
+    },
+  });
 
   // timer
   const [timeRemaining, setTimeRemaining] = useState(KETTING_TIME);
@@ -318,12 +463,10 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters, targetScore 
 
   const currentCard = cardDeck[currentCardIdx % cardDeck.length];
   const activePlayerIdx = activePlayers[currentTurnIdx % activePlayers.length];
-
   const timeLeft = Math.ceil(timeRemaining);
 
   // cleanup on unmount
   useEffect(() => () => {
-    clearInterval(spinIntervalRef.current);
     clearInterval(timerRef.current);
   }, []);
 
@@ -389,7 +532,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters, targetScore 
       setTimeRemaining(remaining);
       if (remaining <= 0) {
         stopTimer();
-        playTaboeTimeUp();
+        playTimeUp();
         doFail();
       }
     }, 50);
@@ -397,24 +540,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters, targetScore 
 
   const spinLetter = () => {
     if (spinning) return;
-    setSpinning(true);
-    spinCountRef.current = 0;
-    const totalTicks = 18 + Math.floor(Math.random() * 12);
-    const target = alphabet[Math.floor(Math.random() * alphabet.length)];
-
-    spinIntervalRef.current = setInterval(() => {
-      spinCountRef.current++;
-      if (spinCountRef.current < totalTicks) {
-        setCurrentLetter(alphabet[Math.floor(Math.random() * alphabet.length)]);
-      } else {
-        clearInterval(spinIntervalRef.current);
-        setCurrentLetter(target);
-        setSpinning(false);
-        phaseRef.current = "playing";
-        setPhase("playing");
-        startTimer();
-      }
-    }, 80);
+    doSpinLetter();
   };
 
   const handleCorrect = () => {
@@ -478,28 +604,14 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters, targetScore 
 
   return (
     <div className="ls-screen">
-      <div className="ls-header">
-        <div className="ls-logo">LetterSnel</div>
-        <button className="ls-restart-btn" onClick={onRestart}>↩ Stop</button>
-      </div>
+      <GameHeader logo="LetterSnel" onStop={onRestart} />
 
       {/* Card */}
-      <div className="ls-card-area">
-        <div className="ls-card-label">KAART #{currentCardIdx + 1}</div>
-        <div className="ls-card">
-          <div className="ls-card-inner">
-            <span className="ls-card-text">{currentCard}</span>
-          </div>
-        </div>
-      </div>
+      <LsCardArea cardIdx={currentCardIdx} card={currentCard} />
 
       {/* Letter + knop */}
       <div className="ls-letter-area">
-        {currentLetter ? (
-          <div className={`ls-letter ${spinning ? "ls-letter-spinning" : "ls-letter-landed"}`}>{currentLetter}</div>
-        ) : (
-          <div className="ls-letter-placeholder">?</div>
-        )}
+        <LsLetterDisplay letter={currentLetter} spinning={spinning} />
         {phase === "ready" && (
           <button className="ls-spin-btn" onClick={() => { setPhase("spinning"); spinLetter(); }}>kies letter ▶</button>
         )}
@@ -604,21 +716,14 @@ function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveL
         <div className="setup-wrapper-badge" style={{background:"#ea580c", top:"-14px"}}>SPELERS</div>
         <div className="names-grid">
           {names.map((name, i) => (
-            <div key={i} className="player-input-group small-group">
-              <div className="player-name-container player-bg">
-                <span className="player-index-badge">{i + 1}</span>
-                <input
-                  className="integrated-name-input"
-                  placeholder="Naam invullen..."
-                  value={name}
-                  onChange={e => updateName(i, e.target.value)}
-                  maxLength={16}
-                />
-              </div>
-              {names.length > 2 && (
-                <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayer(i)}>−</button>
-              )}
-            </div>
+            <PlayerNameInput
+              key={i}
+              index={i}
+              value={name}
+              onChange={v => updateName(i, v)}
+              onRemove={() => removePlayer(i)}
+              canRemove={names.length > 2}
+            />
           ))}
           {names.length < 10 && (
             <button className="add-player-integrated" onClick={addPlayer}>Speler toevoegen</button>
@@ -2105,11 +2210,12 @@ function buildTiebreakerCandidates(selectedCats) {
   return chosen.map(id => CATEGORIES.find(c => c.id === id)).filter(Boolean);
 }
 
+const TABOE_LETTERS = ALPHABET_ALL.filter(l => !["Q","X","Y"].includes(l));
+
 // ── Taboe Tie-breaker ────────────────────────────────────────────────────────
 function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories, onRestart, onStartTiebreaker }) {
   const [chosenCategoryId, setChosenCategoryId] = useState(null);
   const [forbiddenLetter, setForbiddenLetter] = useState(null);
-  const [spinning, setSpinning] = useState(false);
   const [letterLocked, setLetterLocked] = useState(false);
   const [words, setWords] = useState(null);
   const [currentStep, setCurrentStep] = useState(0);
@@ -2117,30 +2223,20 @@ function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories
   const [subPhase, setSubPhase] = useState("pick"); // pick | play | results
   const [elapsed, setElapsed] = useState(0);
   const [flash, setFlash] = useState(null);
-  const spinIntervalRef = useRef(null);
-  const spinCountRef = useRef(0);
   const timerRef = useRef(null);
   const startTimeRef = useRef(null);
 
-  useEffect(() => () => { clearInterval(spinIntervalRef.current); clearInterval(timerRef.current); }, []);
+  const { spin: doSpinLetter, spinning } = useSpinLetter({
+    pool: TABOE_LETTERS,
+    onLetter: setForbiddenLetter,
+    onDone: (_target) => { setLetterLocked(true); },
+  });
+
+  useEffect(() => () => { clearInterval(timerRef.current); }, []);
 
   const spinLetter = () => {
     if (spinning || letterLocked) return;
-    setSpinning(true);
-    spinCountRef.current = 0;
-    const totalTicks = 18 + Math.floor(Math.random() * 12);
-    const target = TABOE_LETTERS[Math.floor(Math.random() * TABOE_LETTERS.length)];
-    spinIntervalRef.current = setInterval(() => {
-      spinCountRef.current++;
-      if (spinCountRef.current < totalTicks) {
-        setForbiddenLetter(TABOE_LETTERS[Math.floor(Math.random() * TABOE_LETTERS.length)]);
-      } else {
-        clearInterval(spinIntervalRef.current);
-        setForbiddenLetter(target);
-        setSpinning(false);
-        setLetterLocked(true);
-      }
-    }, spinCountRef.current < totalTicks - 6 ? 60 : 100);
+    doSpinLetter();
   };
 
   const chooseCategory = (catId) => {
@@ -2192,55 +2288,25 @@ function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories
 
   // ── Resultaten ──
   if (subPhase === "results") {
-    const results = tiedPlayerIndices.map((pi, i) => ({ name: players[pi], time: times[i] })).sort((a, b) => a.time - b.time);
-    const winnerTime = Math.round(results[0].time * 100) / 100;
-    const hasJointWinner = results.filter(r => Math.round(r.time * 100) / 100 === winnerTime).length > 1;
-    const tieBadges = ["🥇","🥈","🥉"];
-    return (
-      <div className="screen"><div className="score-card">
-        <h2 className="score-title">⚡ Tie-breaker resultaten</h2>
-        {hasJointWinner
-          ? <button className="tiebreaker-start-btn" onClick={() => { const si = results.filter(r => Math.round(r.time*100)/100 === winnerTime).map(r => tiedPlayerIndices.find(pi => players[pi] === r.name)).filter(pi => pi !== undefined); onStartTiebreaker(si); }}>🤝 Nog steeds gelijkspel! Start opnieuw.</button>
-          : <div className="tiebreaker-result-banner tiebreaker-result-winner"><span className="tiebreaker-result-text-winner">🏆 {results[0].name} wint de tie-breaker!</span></div>
-        }
-        <div className="scores-list">
-          {results.map((r, i) => {
-            const effectiveRank = results.filter(r2 => Math.round(r2.time*100)/100 < Math.round(r.time*100)/100).length + 1;
-            const isTied = Math.round(r.time*100)/100 === winnerTime && hasJointWinner;
-            const rowClass = isTied ? "score-row rank-1 rank-tied" : `score-row rank-${effectiveRank} rank-final`;
-            return (
-              <div key={r.name} className={rowClass}>
-                <span className="rank-badge">{isTied ? "👑" : (tieBadges[effectiveRank-1] ?? effectiveRank)}</span>
-                <span className="score-name">{r.name}</span>
-                <span className="score-pts tiebreaker-pts">{r.time >= 999 ? "—" : `${r.time.toFixed(2)}s`}</span>
-              </div>
-            );
-          })}
-        </div>
-        <div className="final-btns"><button className="score-btn restart-btn" onClick={onRestart}>Nieuw spel</button></div>
-      </div></div>
-    );
+    return <TiebreakerSoloResults players={players} tiedPlayerIndices={tiedPlayerIndices} times={times} onRestart={onRestart} onStartTiebreaker={onStartTiebreaker} />;
   }
 
   // ── Handoff ──
   if (subPhase === "handoff") {
     return (
-      <div className="screen handoff-screen"><div className="handoff-card">
-        <div className="handoff-icon">⚡</div>
-        <p className="handoff-sub tiebreaker-handoff-sub">TIE-BREAKER · {currentStep+1}/{tiedPlayerIndices.length}</p>
-        <h2 className="handoff-name">{players[currentPlayerIdx]}</h2>
-        <p className="handoff-tip mb-2">Leg z.s.m. het woord uit</p>
-        <p className="handoff-tip mt-0">Verboden letter: <span style={{color:"#f87171", fontWeight:800}}>{forbiddenLetter}</span> · {categoryLabel}</p>
-        <button className="handoff-btn" onClick={startRound}>Start tie-breaker!</button>
-      </div></div>
+      <TiebreakerHandoff
+        subtitle={`TIE-BREAKER · ${currentStep+1}/${tiedPlayerIndices.length}`}
+        player={players[currentPlayerIdx]}
+        tip1="Leg z.s.m. het woord uit"
+        tip2={<>Verboden letter: <span style={{color:"#f87171", fontWeight:800}}>{forbiddenLetter}</span> · {categoryLabel}</>}
+        onStart={startRound}
+      />
     );
   }
 
   // ── Spelscherm ──
   if (subPhase === "playing") {
-    const secs = Math.floor(elapsed);
-    const tenths = Math.floor((elapsed % 1) * 10);
-    const elapsedDisplay = `${secs}.${tenths}s`;
+    const elapsedDisplay = formatElapsed(elapsed);
     return (
       <div className={`screen${flash === "correct" ? " taboe-flash-correct" : flash === "skip" ? " taboe-flash-skip" : ""}`}>
         <div style={{width:"100%", maxWidth:"420px"}}>
@@ -2248,9 +2314,7 @@ function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories
             <div className="wr-logo">Tie-Breaker</div>
             <span className="round-player" style={{fontSize:"22px", textAlign:"right"}}>{players[currentPlayerIdx]}</span>
           </div>
-          <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"8px", overflow:"hidden"}}>
-            <div style={{height:"100%", width:`${Math.min(elapsed/60,1)*100}%`, background:"#fbbf24", borderRadius:"4px", transition:"width 0.05s linear"}} />
-          </div>
+          <TimerBar pct={Math.min(elapsed / 60, 1)} color="#fbbf24" transition="width 0.05s linear" />
           <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
             <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:"#fbbf24", flex:1, textAlign:"left"}}>{elapsedDisplay}</span>
             <div className="round-stats" style={{flex:1, justifyContent:"flex-end"}}>
@@ -2322,57 +2386,11 @@ function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories
   );
 }
 
-const TABOE_LETTERS = ALPHABET_ALL.filter(l => !["Q","X","Y"].includes(l));
-
-function TaboeStatsScreen({ players, playerStats, scores, initialPlayer, onBack }) {
-  const [activePlayer, setActivePlayer] = useState(initialPlayer ?? 0);
-  const ps = playerStats[activePlayer];
-  if (!ps) return null;
-  const allRounds = ps.rounds;
-  const totalCorrect = allRounds.reduce((s, r) => s + r.correct, 0);
-  const totalSkipped = allRounds.reduce((s, r) => s + r.skipped, 0);
-  const bestRound = allRounds.reduce((best, r, i) => r.correct > (best?.correct ?? -1) ? { ...r, idx: i } : best, null);
-  const allWordResults = allRounds.flatMap(r => r.wordResults || []);
-  const guessedWords = allWordResults.filter(w => w.guessed);
-  const skippedWords = allWordResults.filter(w => !w.guessed);
-  return (
-    <div className="screen">
-      <div className="stats-card">
-        <div className="stats-header-row">
-          <button className="stats-back-btn" onClick={onBack} title="Terug naar scorebord"><span className="stats-back-icon">➜</span></button>
-          <h2 className="score-title stats-header-title">📊 Statistieken</h2>
-          <div className="stats-header-spacer" />
-        </div>
-        <div className="stats-tabs">
-          {players.map((p, i) => (<button key={i} className={`stats-tab${activePlayer === i ? " stats-tab-active" : ""}`} onClick={() => setActivePlayer(i)}>{p}</button>))}
-        </div>
-        <div className="stats-player-name">{players[activePlayer]}</div>
-        <div className="stats-total-score">{scores[activePlayer] ?? 0} {pt(scores[activePlayer] ?? 0)}</div>
-        <div className="stats-grid">
-          <div className="stats-cell stats-cell-correct"><div className="stats-cell-val">{totalCorrect}</div><div className="stats-cell-lbl">✓ Geraden</div></div>
-          <div className="stats-cell stats-cell-skip"><div className="stats-cell-val">{totalSkipped}</div><div className="stats-cell-lbl">↷ Geskipt</div></div>
-        </div>
-        {bestRound && (<div className="stats-best">✨ Ronde {bestRound.idx + 1} was je beste ronde met {bestRound.correct} {w(bestRound.correct)}</div>)}
-        <div className="stats-words-section">
-          <div className="stats-words-col">
-            <div className="stats-words-title stats-green">✓ Goed geraden ({guessedWords.length})</div>
-            <div className="stats-words-list">
-              {guessedWords.map((wr, i) => (<span key={i} className="stats-word-chip">{wr.word}</span>))}
-            </div>
-          </div>
-          <div className="stats-words-col">
-            <div className="stats-words-title stats-red">↷ Geskipt ({skippedWords.length})</div>
-            <div className="stats-words-list">
-              {skippedWords.map((wr, i) => (<span key={i} className="stats-word-chip stats-word-skipped">{wr.word}</span>))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-
+// TaboeStatsScreen is een alias voor de gedeelde StatsScreen met variant="taboe"
+// (geen bonus/streak-kolommen, bestRound puur op correct-count)
+const TaboeStatsScreen = ({ players, playerStats, scores, initialPlayer, onBack }) => (
+  <StatsScreen players={players} playerStats={playerStats} scores={scores} initialPlayer={initialPlayer} onBack={onBack} variant="taboe" />
+);
 
 // ── Taboe Spel ───────────────────────────────────────────────────────────────
 function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
@@ -2399,13 +2417,20 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   const [statsInitialPlayer, setStatsInitialPlayer] = useState(0);
   const currentRoundStatsRef = useRef({ correct: 0, skipped: 0, wordResults: [] });
 
-  // ── Verboden letter state (LetterSnel stijl) ──
+  // ── Verboden letter state (via gedeelde hook) ──
   const [forbiddenLetter, setForbiddenLetter] = useState(null);
-  const [spinning, setSpinning] = useState(false);
-  const spinIntervalRef = useRef(null);
-  const spinCountRef = useRef(0);
-  const targetLetterRef = useRef(null);
   const roundLetterRef = useRef(null); // gedeelde letter voor de hele spelronde
+
+  const { spin: doSpinLetter, spinning } = useSpinLetter({
+    pool: TABOE_LETTERS,
+    onLetter: setForbiddenLetter,
+    onDone: (target) => {
+      roundLetterRef.current = target;
+      setPhase("playing");
+      currentRoundStatsRef.current = { correct: 0, skipped: 0, wordResults: [] };
+      startTimer();
+    },
+  });
 
   const card = deck[cardIdx % deck.length];
 
@@ -2427,7 +2452,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
         if (!timesUpRef.current) {
           timesUpRef.current = true;
           setTimesUp(true);
-          playTimerEnd();
+          playTimeUp();
           let graceTime = 10;
           setGraceCountdown(graceTime);
           graceTimerRef.current = setInterval(() => {
@@ -2436,7 +2461,6 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
             if (graceTime <= 0) {
               stopGraceTimer();
               // Huidig woord telt als skip
-              const currentCardAtEnd = cardIdx; // captured via closure is stale; use ref below
               setCardIdx(i => {
                 currentRoundStatsRef.current.skipped += 1;
                 currentRoundStatsRef.current.wordResults.push({ word: deck[i % deck.length], guessed: false });
@@ -2451,7 +2475,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
     }, 80);
   };
 
-  useEffect(() => () => { stopTimer(); stopGraceTimer(); clearInterval(spinIntervalRef.current); }, []);
+  useEffect(() => () => { stopTimer(); stopGraceTimer(); }, []);
 
   // ── Tiebreaker state ──
   const [tiebreakerState, setTiebreakerState] = useState(null); // null | { tiedPlayerIndices, candidateCategories }
@@ -2464,27 +2488,8 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
 
   const spinLetter = () => {
     if (spinning) return;
-    setSpinning(true);
     setPhase("spinning");
-    spinCountRef.current = 0;
-    const totalTicks = 18 + Math.floor(Math.random() * 12);
-    const target = TABOE_LETTERS[Math.floor(Math.random() * TABOE_LETTERS.length)];
-    targetLetterRef.current = target;
-
-    spinIntervalRef.current = setInterval(() => {
-      spinCountRef.current++;
-      if (spinCountRef.current < totalTicks) {
-        setForbiddenLetter(TABOE_LETTERS[Math.floor(Math.random() * TABOE_LETTERS.length)]);
-      } else {
-        clearInterval(spinIntervalRef.current);
-        setForbiddenLetter(targetLetterRef.current);
-        roundLetterRef.current = targetLetterRef.current;
-        setSpinning(false);
-        setPhase("playing");
-        currentRoundStatsRef.current = { correct: 0, skipped: 0, wordResults: [] };
-        startTimer();
-      }
-    }, spinCountRef.current < totalTicks - 6 ? 60 : 100);
+    doSpinLetter();
   };
 
   const triggerFlash = (type) => {
@@ -2495,6 +2500,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   const onCorrect = () => {
     const wasTimesUp = timesUpRef.current;
     if (wasTimesUp) stopGraceTimer();
+    playPling();
     triggerFlash("correct");
     const currentWord = deck[cardIdx % deck.length];
     currentRoundStatsRef.current.correct += 1;
@@ -2510,6 +2516,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   const onSkip = () => {
     const wasTimesUp = timesUpRef.current;
     if (wasTimesUp) stopGraceTimer();
+    playSkip();
     triggerFlash("skip");
     const currentWord = deck[cardIdx % deck.length];
     currentRoundStatsRef.current.skipped += 1;
@@ -2645,9 +2652,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
         </div>
 
         {/* Timer balk */}
-        <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"8px", overflow:"hidden"}}>
-          <div style={{height:"100%", width:`${timesUp ? 0 : timerPct * 100}%`, background:timerColor, borderRadius:"4px", transition:"width 0.08s linear, background 0.5s"}} />
-        </div>
+        <TimerBar pct={timerPct} color={timerColor} empty={timesUp} transition="width 0.08s linear, background 0.5s" />
 
         {/* Timer midden, stats rechts — op één lijn */}
         <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
@@ -2899,13 +2904,18 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
             </div>
 
             <div className="setup-section">
-              {teamMode ? (
-                <div className="teams-setup-wrapper">
-                  <div className="setup-wrapper-badge">TEAMS</div>
+              {/* Solo/Teams toggle — gedeeld tussen beide branches */}
+              {(() => {
+                const SoloTeamsToggle = () => (
                   <div className="setup-mode-segmented" style={{marginBottom: "16px"}}>
                     <button className={`mode-seg-btn ${!teamMode ? "mode-seg-active" : "mode-seg-inactive"}`} onClick={() => teamMode && toggleTeamMode()}>👤 Solo</button>
                     <button className={`mode-seg-btn ${teamMode ? "mode-seg-active" : "mode-seg-inactive"}`} onClick={() => !teamMode && toggleTeamMode()}>👥 Teams</button>
                   </div>
+                );
+                return teamMode ? (
+                <div className="teams-setup-wrapper">
+                  <div className="setup-wrapper-badge">TEAMS</div>
+                  <SoloTeamsToggle />
                   <div className="teams-grid">
                     {teamSizes.map((size, t) => {
                       const offset = getTeamOffset(t);
@@ -2939,24 +2949,23 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
               ) : (
                 <div className="teams-setup-wrapper">
                   <div className="setup-wrapper-badge">SPELERS</div>
-                  <div className="setup-mode-segmented" style={{marginBottom: "16px"}}>
-                    <button className={`mode-seg-btn ${!teamMode ? "mode-seg-active" : "mode-seg-inactive"}`} onClick={() => teamMode && toggleTeamMode()}>👤 Solo</button>
-                    <button className={`mode-seg-btn ${teamMode ? "mode-seg-active" : "mode-seg-inactive"}`} onClick={() => !teamMode && toggleTeamMode()}>👥 Teams</button>
-                  </div>
+                  <SoloTeamsToggle />
                   <div className="names-grid">
                     {names.map((name, i) => (
-                      <div key={i} className="player-input-group small-group">
-                        <div className="player-name-container player-bg">
-                          <span className="player-index-badge">{i + 1}</span>
-                          <input className="integrated-name-input" placeholder="Naam invullen..." value={name} onChange={e => updateName(i, e.target.value)} maxLength={16} />
-                        </div>
-                        {names.length > 2 && <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayer(i)} title="Verwijder speler">−</button>}
-                      </div>
+                      <PlayerNameInput
+                        key={i}
+                        index={i}
+                        value={name}
+                        onChange={v => updateName(i, v)}
+                        onRemove={() => removePlayer(i)}
+                        canRemove={names.length > 2}
+                      />
                     ))}
                     {names.length < 10 && <button className="add-player-integrated" onClick={addPlayer}>Speler toevoegen</button>}
                   </div>
                 </div>
-              )}
+              );
+              })()}
             </div>
 
             {(wrGameMode === "klassiek" || wrGameMode === "taboe") && (
@@ -3097,6 +3106,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
     const word = words[wordIndexRef.current];
     const bonusPts = getBonusPoints(word);
     const isBonus = bonusPts > 0;
+    playPling();
     triggerFlash(isBonus ? "bonus" : "correct");
     wordResultsRef.current.push({ word, guessed: true, isBonus, bonusPts });
     const newScores = { correct: scoresRef.current.correct + 1, skipped: scoresRef.current.skipped, points: scoresRef.current.points + 1 + bonusPts };
@@ -3114,6 +3124,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
   const skip = () => {
     if (done || skipPenaltyRef.current > 0) return;
     const word = words[wordIndexRef.current];
+    playSkip();
     triggerFlash("skip");
     wordResultsRef.current.push({ word, guessed: false, isBonus: getBonusPoints(word) > 0, bonusPts: 0 });
     const newScores = { ...scoresRef.current, skipped: scoresRef.current.skipped + 1 };
@@ -3160,9 +3171,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
         </div>
 
         {/* Timer balk */}
-        <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"8px", overflow:"hidden"}}>
-          <div style={{height:"100%", width:`${timesUp ? 0 : pct * 100}%`, background:timerColor, borderRadius:"4px", transition:"width 0.05s linear, background 0.5s"}} />
-        </div>
+        <TimerBar pct={pct} color={timerColor} empty={timesUp} />
 
         {/* Timer midden, stats rechts */}
         <div style={{display:"flex", justifyContent:"flex-end", alignItems:"center", marginBottom:"8px"}}>
@@ -3318,16 +3327,21 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
   );
 }
 
-function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, onBack }) {
+function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, onBack, variant = "klassiek" }) {
+  const isTaboe = variant === "taboe";
   const [activePlayer, setActivePlayer] = useState(initialPlayer ?? 0);
   const ps = playerStats[activePlayer];
   if (!ps) return null;
   const allRounds = ps.rounds;
   const totalCorrect = allRounds.reduce((s, r) => s + r.correct, 0);
   const totalSkipped = allRounds.reduce((s, r) => s + r.skipped, 0);
-  const totalBonus = allRounds.reduce((s, r) => s + (r.bonusPoints || 0), 0);
-  const longestStreak = allRounds.reduce((max, r) => Math.max(max, r.maxStreak || 0), 0);
-  const bestRound = allRounds.reduce((best, r, i) => { const pts = r.correct + (r.bonusPoints || 0); const bestPts = (best?.correct || 0) + (best?.bonusPoints || 0); return pts > bestPts ? { ...r, idx: i } : best; }, null);
+  // Bonus en streak alleen in Klassiek-modus
+  const totalBonus = isTaboe ? 0 : allRounds.reduce((s, r) => s + (r.bonusPoints || 0), 0);
+  const longestStreak = isTaboe ? 0 : allRounds.reduce((max, r) => Math.max(max, r.maxStreak || 0), 0);
+  const bestRound = isTaboe
+    ? allRounds.reduce((best, r, i) => r.correct > (best?.correct ?? -1) ? { ...r, idx: i } : best, null)
+    : allRounds.reduce((best, r, i) => { const pts = r.correct + (r.bonusPoints || 0); const bestPts = (best?.correct || 0) + (best?.bonusPoints || 0); return pts > bestPts ? { ...r, idx: i } : best; }, null);
+  const bestPts = bestRound ? (isTaboe ? bestRound.correct : bestRound.correct + (bestRound.bonusPoints || 0)) : 0;
   const allWordResults = allRounds.flatMap(r => r.wordResults || []);
   const guessedWords = allWordResults.filter(w => w.guessed);
   const skippedWords = allWordResults.filter(w => !w.guessed);
@@ -3346,16 +3360,20 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, o
         <div className="stats-total-score">{scores[activePlayer] ?? 0} {pt(scores[activePlayer] ?? 0)}</div>
         <div className="stats-grid">
           <div className="stats-cell stats-cell-correct"><div className="stats-cell-val">{totalCorrect}</div><div className="stats-cell-lbl">✓ Geraden</div></div>
-          <div className="stats-cell stats-cell-bonus"><div className="stats-cell-val">{totalBonus}</div><div className="stats-cell-lbl">⭐ Bonus</div></div>
+          {!isTaboe && <div className="stats-cell stats-cell-bonus"><div className="stats-cell-val">{totalBonus}</div><div className="stats-cell-lbl">⭐ Bonus</div></div>}
           <div className="stats-cell stats-cell-skip"><div className="stats-cell-val">{totalSkipped}</div><div className="stats-cell-lbl">↷ Geskipt</div></div>
-          <div className="stats-cell stats-cell-streak"><div className="stats-cell-val">{longestStreak > 0 ? `${longestStreak}` : longestStreak}</div><div className="stats-cell-lbl">🔥 Streak</div></div>
+          {!isTaboe && <div className="stats-cell stats-cell-streak"><div className="stats-cell-val">{longestStreak > 0 ? `${longestStreak}` : longestStreak}</div><div className="stats-cell-lbl">🔥 Streak</div></div>}
         </div>
-        {bestRound && (<div className="stats-best">✨ Ronde {bestRound.idx + 1} was je beste ronde met {bestRound.correct + (bestRound.bonusPoints || 0)} {pt(bestRound.correct + (bestRound.bonusPoints || 0))}</div>)}
+        {bestRound && (<div className="stats-best">✨ Ronde {bestRound.idx + 1} was je beste ronde met {bestPts} {pt(bestPts)}</div>)}
         <div className="stats-words-section">
           <div className="stats-words-col">
             <div className="stats-words-title stats-green">✓ Goed geraden ({guessedWords.length})</div>
             <div className="stats-words-list">
-              {guessedWords.map((wr, i) => (<span key={i} className={`stats-word-chip${wr.isBonus ? " stats-word-bonus" : ""}`}>{wr.word}{wr.isBonus ? " ⭐" : ""}</span>))}
+              {guessedWords.map((wr, i) => (
+                <span key={i} className={`stats-word-chip${!isTaboe && wr.isBonus ? " stats-word-bonus" : ""}`}>
+                  {wr.word}{!isTaboe && wr.isBonus ? " ⭐" : ""}
+                </span>
+              ))}
             </div>
           </div>
           <div className="stats-words-col">
@@ -3424,42 +3442,21 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
         </div></div>
       );
     }
-    const results = tiedPlayerIndices.map((pi,i)=>({name:players[pi],time:times[i]})).sort((a,b)=>a.time-b.time);
-    const winnerTime = Math.round(results[0].time*100)/100;
-    const hasJointWinner = results.filter(r=>Math.round(r.time*100)/100===winnerTime).length>1;
-    return (
-      <div className="screen"><div className="score-card">
-        <h2 className="score-title">⚡ Tie-breaker resultaten</h2>
-        {hasJointWinner?(<button className="tiebreaker-start-btn" onClick={()=>{ const si=results.filter(r=>Math.round(r.time*100)/100===winnerTime).map(r=>tiedPlayerIndices.find(pi=>players[pi]===r.name)).filter(pi=>pi!==undefined); onStartTiebreaker(si); }}>🤝 Nog steeds gelijkspel! Start opnieuw.</button>):(<div className="tiebreaker-result-banner tiebreaker-result-winner"><span className="tiebreaker-result-text-winner">🏆 {results[0].name} wint de tie-breaker!</span></div>)}
-        <div className="scores-list">
-          {results.map((r,i)=>{
-            const tieBadges=["🥇","🥈","🥉"];
-            const isTied=Math.round(r.time*100)/100===winnerTime&&hasJointWinner;
-            const effectiveRank=results.filter(r2=>Math.round(r2.time*100)/100<Math.round(r.time*100)/100).length+1;
-            const rowClass=isTied?'score-row rank-1 rank-tied':`score-row rank-${effectiveRank} rank-final`;
-            return(<div key={r.name} className={rowClass}><span className="rank-badge">{isTied?'👑':(tieBadges[effectiveRank-1]??effectiveRank)}</span><span className="score-name">{r.name}</span><span className="score-pts tiebreaker-pts">{r.time.toFixed(2)}s</span></div>);
-          })}
-        </div>
-        <div className="final-btns"><button className="score-btn restart-btn" onClick={onRestart}>Nieuw spel</button></div>
-      </div></div>
-    );
+    return <TiebreakerSoloResults players={players} tiedPlayerIndices={tiedPlayerIndices} times={times} onRestart={onRestart} onStartTiebreaker={onStartTiebreaker} />;
   }
   if (subPhase === 'handoff') {
     const currentTeamGroup = tiedTeamGroups?.find(g=>g.playerIndices.includes(currentPlayerIdx));
     return (
-      <div className="screen handoff-screen"><div className="handoff-card">
-        <div className="handoff-icon">⚡</div>
-        <p className="handoff-sub tiebreaker-handoff-sub">TIE-BREAKER · {currentStep+1}/{tiedPlayerIndices.length}{currentTeamGroup?` · ${currentTeamGroup.teamName}`:''}</p>
-        <h2 className="handoff-name">{players[currentPlayerIdx]}</h2>
-        <p className="handoff-tip mb-2">Raad z.s.m. het random woord</p>
-        <p className="handoff-tip mt-0">in de categorie: {categoryLabel}</p>
-        <button className="handoff-btn" onClick={startRound}>Start tie-breaker!</button>
-      </div></div>
+      <TiebreakerHandoff
+        subtitle={`TIE-BREAKER · ${currentStep+1}/${tiedPlayerIndices.length}${currentTeamGroup ? ` · ${currentTeamGroup.teamName}` : ''}`}
+        player={players[currentPlayerIdx]}
+        tip1="Raad z.s.m. het random woord"
+        tip2={`in de categorie: ${categoryLabel}`}
+        onStart={startRound}
+      />
     );
   }
-  const secs = Math.floor(elapsed);
-  const tenths = Math.floor((elapsed % 1) * 10);
-  const elapsedDisplay = `${secs}.${tenths}s`;
+  const elapsedDisplay = formatElapsed(elapsed);
   return (
     <div className="screen round-screen">
       <div style={{width:"100%", maxWidth:"420px"}}>
@@ -3471,9 +3468,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
         </div>
 
         {/* Timer balk — groeit mee met de tijd, max bij 60s */}
-        <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"8px", overflow:"hidden"}}>
-          <div style={{height:"100%", width:`${Math.min(elapsed / 60, 1) * 100}%`, background:"#fbbf24", borderRadius:"4px", transition:"width 0.05s linear"}} />
-        </div>
+        <TimerBar pct={Math.min(elapsed / 60, 1)} color="#fbbf24" transition="width 0.05s linear" />
 
         {/* Tijd links, categorie rechts */}
         <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"8px"}}>
