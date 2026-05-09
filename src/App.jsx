@@ -615,6 +615,9 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
   };
 
   const topScore = Math.max(...scores, 0);
+  const timerPct = timeRemaining / CHAIN_ROUND_SECONDS;
+  const timesUp = timeRemaining <= 0;
+  const timerColor = timerPct > 0.5 ? "#4ade80" : timerPct > 0.25 ? "#fbbf24" : "#f87171";
 
   if (gameWinner !== null) {
     return <LetterSnelWinnerScreen players={players} scores={scores} winnaarIdx={gameWinner} onRestart={onRestart} />;
@@ -670,8 +673,11 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
 
         {/* Timer balk — onder de score chips */}
         {phase === "playing" && (
-          <div key={activePlayerIdx + "-" + currentTurnIdx} className="times-up-banner ketting-timer-banner">
-            ⏱ {timeLeft}s
+          <div key={activePlayerIdx + "-" + currentTurnIdx}>
+            <TimerProgressBar pct={timerPct} color={timerColor} empty={timesUp} transition="width 0.05s linear, background 0.5s" />
+            <div style={{textAlign:"center", fontFamily:"'Righteous', cursive", fontSize:"clamp(13px, 3.5vw, 16px)", color:timerColor, transition:"color 0.5s"}}>
+              <TimerCountdown secs={timeLeft} timesUp={timesUp} />
+            </div>
           </div>
         )}
       </div>
@@ -827,7 +833,7 @@ const CATEGORIES = [
   { id: "ruimte",         label: "🚀 Ruimte" },
   { id: "plaatsen",       label: "🧭 Plaatsen" },
   { id: "landen",         label: "🌍 Landen" },
-  { id: "spreekwoorden",  label: "💬 Spreekwoorden & Gezegden", bonus: true },
+  { id: "spreekwoorden",  label: "💬 Gezegden", bonus: true },
 ];
 
 // WORDS_BY_CATEGORY maps category id → word array
@@ -2254,7 +2260,8 @@ function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, 
   useEffect(() => () => { clearInterval(timerRef.current); }, []);
 
   const spinLetter = () => {
-    if (spinning || letterLocked) return;
+    if (spinning) return;
+    if (letterLocked) setLetterLocked(false); // reset lock so we can spin again
     doSpinLetter();
   };
 
@@ -2362,8 +2369,8 @@ function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, 
         </div>
 
         {/* ── Onderste sectie: knop ── */}
-        <div style={{display:"flex", gap:"10px", width:"100%", maxWidth:"520px", padding:"0 0 max(24px, env(safe-area-inset-bottom))", flexShrink:0}}>
-          <button onClick={handleCorrect} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color:"#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor:"pointer"}}>✓ Goed</button>
+        <div className="action-row">
+          <button onClick={handleCorrect} className="action-btn correct-btn">✓ Goed</button>
         </div>
 
       </div>
@@ -2375,7 +2382,21 @@ function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, 
     <div className="screen">
       <div className="score-card">
         <h2 className="score-title tiebreaker-title">⚡ Tie-breaker</h2>
-        <p className="tiebreaker-subtitle">Kies samen een categorie en genereer een verboden letter.</p>
+        <p className="tiebreaker-subtitle">Genereer een verboden letter en kies samen een categorie.</p>
+
+        {/* Verboden letter */}
+        <div style={{display:"flex", flexDirection:"column", alignItems:"center", gap:"12px", marginBottom:"24px"}}>
+          <div style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(56px,18vw,80px)", color: spinning ? "rgba(248,113,113,0.5)" : letterLocked ? "#f87171" : "rgba(255,255,255,0.2)", textShadow: letterLocked && !spinning ? "0 0 32px rgba(248,113,113,0.5)" : "none", lineHeight:1, width:"1.1em", height:"1.1em", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", transition:"color 0.1s"}}>
+            {forbiddenLetter ?? "?"}
+          </div>
+          <div style={{fontSize:"11px", fontWeight:"800", letterSpacing:"0.14em", color: letterLocked ? "#f87171" : "rgba(255,255,255,0.35)", textTransform:"uppercase"}}>
+            {spinning ? "⏳ Letter kiezen…" : letterLocked ? "🚫 Verboden letter" : "Genereer een verboden letter"}
+          </div>
+          <button onClick={spinLetter} disabled={spinning}
+            style={{fontFamily:"'Righteous', cursive", fontSize:"16px", padding:"12px 28px", borderRadius:"14px", border:"2.5px solid rgba(248,113,113,0.4)", background:"rgba(248,113,113,0.1)", color: spinning ? "rgba(248,113,113,0.4)" : "#f87171", cursor: spinning ? "default" : "pointer"}}>
+            {spinning ? "Draaien…" : letterLocked ? "Opnieuw draaien 🎲" : "Genereer letter 🎲"}
+          </button>
+        </div>
 
         {/* Categorie */}
         <div className="tiebreaker-cat-list">
@@ -2386,22 +2407,6 @@ function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, 
               {cat.label} {chosenCategoryId === cat.id ? "✓" : ""}
             </button>
           ))}
-        </div>
-
-        {/* Verboden letter */}
-        <div style={{display:"flex", flexDirection:"column", alignItems:"center", gap:"12px", marginBottom:"20px"}}>
-          <div style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(56px,18vw,80px)", color: spinning ? "rgba(248,113,113,0.5)" : letterLocked ? "#f87171" : "rgba(255,255,255,0.2)", textShadow: letterLocked && !spinning ? "0 0 32px rgba(248,113,113,0.5)" : "none", lineHeight:1, width:"1.1em", height:"1.1em", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", transition:"color 0.1s"}}>
-            {forbiddenLetter ?? "?"}
-          </div>
-          <div style={{fontSize:"11px", fontWeight:"800", letterSpacing:"0.14em", color: letterLocked ? "#f87171" : "rgba(255,255,255,0.35)", textTransform:"uppercase"}}>
-            {spinning ? "⏳ Letter kiezen…" : letterLocked ? "🚫 Verboden letter (vergrendeld)" : "Genereer een verboden letter"}
-          </div>
-          {!letterLocked && (
-            <button onClick={spinLetter} disabled={spinning}
-              style={{fontFamily:"'Righteous', cursive", fontSize:"16px", padding:"12px 28px", borderRadius:"14px", border:"2.5px solid rgba(248,113,113,0.4)", background:"rgba(248,113,113,0.1)", color: spinning ? "rgba(248,113,113,0.4)" : "#f87171", cursor: spinning ? "default" : "pointer"}}>
-              {spinning ? "Draaien…" : "Genereer letter 🎲"}
-            </button>
-          )}
         </div>
 
         <button
@@ -2750,9 +2755,9 @@ function TaboeRoundGame({ players, onRestart, roundTime, selectedCategories }) {
       </div>
 
       {/* ── Onderste sectie: knoppen (vastzittend onderaan) ── */}
-      <div style={{display:"flex", gap:"10px", width:"100%", maxWidth:"520px", padding:"0 0 max(24px, env(safe-area-inset-bottom))", flexShrink:0}}>
-        <button onClick={onSkip} disabled={spinning} style={{flex:1, padding:"18px", borderRadius:"16px", border:`2.5px solid ${spinning ? "rgba(248,113,113,0.15)" : "rgba(248,113,113,0.4)"}`, background:`${spinning ? "rgba(248,113,113,0.04)" : "rgba(248,113,113,0.1)"}`, color: spinning ? "rgba(248,113,113,0.3)" : "#f87171", fontFamily:"'Righteous', cursive", fontSize:"18px", cursor: spinning ? "default" : "pointer", transition:"all 0.18s"}}>✗ Skip</button>
-        <button onClick={onCorrect} disabled={spinning} style={{flex:2, padding:"18px", borderRadius:"16px", border:`2.5px solid ${spinning ? "rgba(74,222,128,0.15)" : "rgba(74,222,128,0.4)"}`, background:`${spinning ? "rgba(74,222,128,0.04)" : "rgba(74,222,128,0.1)"}`, color: spinning ? "rgba(74,222,128,0.3)" : "#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor: spinning ? "default" : "pointer", transition:"all 0.18s"}}>✓ Goed</button>
+      <div className="action-row">
+        <button onClick={onSkip} disabled={spinning} className={`action-btn skip-btn${spinning ? " btn-disabled" : ""}`}>✗ Skip</button>
+        <button onClick={onCorrect} disabled={spinning} className={`action-btn correct-btn${spinning ? " btn-disabled" : ""}`} style={{flex:2}}>✓ Goed</button>
       </div>
 
     </div>
@@ -3271,9 +3276,9 @@ function ActiveRoundScreen({ player, words, onRoundEnd, roundTime, initialPoints
         )}
       </div>
       {!done && (
-        <div style={{display:"flex", gap:"10px", width:"100%", maxWidth:"520px", padding:"0 0 max(24px, env(safe-area-inset-bottom))", flexShrink:0}}>
-          <button onClick={skip} disabled={skipPenalty > 0} style={{flex:1, padding:"18px", borderRadius:"16px", border:`2.5px solid ${skipPenalty > 0 ? "rgba(248,113,113,0.15)" : "rgba(248,113,113,0.4)"}`, background:`${skipPenalty > 0 ? "rgba(248,113,113,0.04)" : "rgba(248,113,113,0.1)"}`, color: skipPenalty > 0 ? "rgba(248,113,113,0.3)" : "#f87171", fontFamily:"'Righteous', cursive", fontSize:"18px", cursor: skipPenalty > 0 ? "default" : "pointer", transition:"all 0.18s"}}>✗ Skip</button>
-          <button onClick={correct} disabled={skipPenalty > 0} style={{flex:2, padding:"18px", borderRadius:"16px", border:`2.5px solid ${skipPenalty > 0 ? "rgba(74,222,128,0.15)" : "rgba(74,222,128,0.4)"}`, background:`${skipPenalty > 0 ? "rgba(74,222,128,0.04)" : "rgba(74,222,128,0.1)"}`, color: skipPenalty > 0 ? "rgba(74,222,128,0.3)" : "#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor: skipPenalty > 0 ? "default" : "pointer", transition:"all 0.18s"}}>✓ Goed</button>
+        <div className="action-row">
+          <button onClick={skip} disabled={skipPenalty > 0} className={`action-btn skip-btn${skipPenalty > 0 ? " btn-disabled" : ""}`}>✗ Skip</button>
+          <button onClick={correct} disabled={skipPenalty > 0} className={`action-btn correct-btn${skipPenalty > 0 ? " btn-disabled" : ""}`} style={{flex:2}}>✓ Goed</button>
         </div>
       )}
     </div>
@@ -3530,8 +3535,8 @@ function TiebreakerRoundScreen({ players, tiebreakerState, onCategoryChosen, onW
           <div className="times-up-banner is-hidden" aria-hidden="true" />
         </div>
       </div>
-      <div style={{display:"flex", gap:"10px", width:"100%", maxWidth:"520px", padding:"0 0 max(24px, env(safe-area-inset-bottom))", flexShrink:0}}>
-        <button onClick={handleGuessed} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color:"#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor:"pointer"}}>✓ Goed geraden!</button>
+      <div className="action-row">
+        <button onClick={handleGuessed} className="action-btn correct-btn">✓ Goed geraden!</button>
       </div>
     </div>
   );
@@ -3803,8 +3808,7 @@ const CSS = `
   .ls-mode-btn-active .ls-mode-title { color: #fcd34d; }
   .ls-mode-btn-active .ls-mode-desc { color: rgba(252,211,77,0.7); }
 
-  .ketting-timer-banner { margin-top: 0; margin-bottom: 14px; animation: none; }
-  .ketting-timer-banner::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(248,113,113,0.22); animation: grace-drain 15s linear forwards; border-radius: 9px 0 0 9px; pointer-events: none; }
+  
   .ls-ketting-chip-active { border-color: #f59e0b !important; background: rgba(245,158,11,0.15) !important; box-shadow: 0 0 16px rgba(245,158,11,0.25); transform: scale(1.06); }
   .ls-ketting-chip-elim { border-color: rgba(248,113,113,0.4) !important; background: rgba(248,113,113,0.08) !important; opacity: 0.55; }
   .ls-ketting-chip-winner { border-color: #4ade80 !important; background: rgba(74,222,128,0.12) !important; box-shadow: 0 0 16px rgba(74,222,128,0.2); }
@@ -3839,13 +3843,13 @@ const CSS = `
 
   /* Letter */
   .ls-letter-area { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 24px; }
-  .ls-letter { font-family: 'Righteous', cursive; font-size: clamp(72px, 22vw, 140px); line-height: 1; text-align: center; min-width: 160px; display: flex; align-items: center; justify-content: center; border-radius: 28px; padding: 12px 32px; border: 4px solid; }
+  .ls-letter { font-family: 'Righteous', cursive; font-size: clamp(72px, 22vw, 140px); line-height: 1; text-align: center; width: 200px; height: 200px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px solid; }
   .ls-letter-spinning { color: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); animation: ls-spin-flash 0.07s infinite; }
   .ls-letter-landed { background: linear-gradient(145deg, rgba(245,158,11,0.12), rgba(239,68,68,0.08)); border-color: rgba(245,158,11,0.5); animation: ls-letter-land 0.45s cubic-bezier(0.34,1.56,0.64,1); background-image: linear-gradient(135deg, #fef9c3, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .ls-letter-placeholder { font-family: 'Righteous', cursive; font-size: clamp(72px, 22vw, 140px); color: rgba(255,255,255,0.1); line-height: 1; padding: 12px 32px; border-radius: 28px; border: 4px dashed rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); }
+  .ls-letter-placeholder { font-family: 'Righteous', cursive; font-size: clamp(72px, 22vw, 140px); color: rgba(255,255,255,0.1); line-height: 1; width: 200px; height: 200px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px dashed rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); }
   .ls-spin-btn { font-family: 'Righteous', cursive; font-size: 18px; padding: 14px 36px; border-radius: 16px; border: 3px solid; cursor: pointer; transition: all 0.2s; }
-  .ls-spin-btn:not(.ls-spin-disabled):not(.ls-spin-spinning) { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); color: #f59e0b; }
-  .ls-spin-btn:not(.ls-spin-disabled):not(.ls-spin-spinning):hover { background: rgba(245,158,11,0.25); }
+  .ls-spin-btn:not(.ls-spin-spinning) { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); color: #f59e0b; }
+  .ls-spin-btn:not(.ls-spin-spinning):hover { background: rgba(245,158,11,0.25); }
   .ls-spin-spinning { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); cursor: not-allowed; }
 
   /* Award section */
@@ -3887,18 +3891,7 @@ const CSS = `
   .start-btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
 
   .cat-word-count { text-align: center; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.28); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
-  .cat-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .cat-section-title { font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
-  .cat-toggle-pill { font-family: inherit; font-weight: 700; line-height: inherit; letter-spacing: normal; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; padding: 7px 14px; border-radius: 20px; cursor: pointer; transition: all 0.2s; }
-  .cat-toggle-pill-active { background: rgba(52,211,153,0.12); border: 2px solid #34d399; color: #34d399; }
-  .cat-toggle-pill-active:hover { background: rgba(52,211,153,0.22); }
-  .cat-toggle-pill-custom { background: rgba(74,144,226,0.1); border: 2px solid #4a90e2; color: #4a90e2; }
-  .cat-toggle-pill-custom:hover { background: rgba(74,144,226,0.2); }
-  .cat-preview-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700; }
-  .cat-preview-chip { font-size: 12px; padding: 5px 11px; border-radius: 20px; background: rgba(52,211,153,0.08); border: 2px solid rgba(52,211,153,0.3); color: rgba(52,211,153,0.75); cursor: pointer; font-family: inherit; font-weight: 700; transition: background 0.15s, border-color 0.15s; }
-  .cat-preview-chip:hover { background: rgba(52,211,153,0.18); border-color: rgba(52,211,153,0.6); color: #34d399; }
-  .cat-preview-more { font-size: 12px; padding: 5px 11px; border-radius: 20px; background: rgba(255,255,255,0.04); border: 2px dashed rgba(255,255,255,0.2); color: rgba(255,255,255,0.35); cursor: pointer; font-family: inherit; font-weight: 700; transition: background 0.15s; }
-  .cat-preview-more:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.6); }
+  
   .category-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700; }
   .category-btn { font-family: inherit; font-weight: inherit; line-height: inherit; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; padding: 5px 11px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s; user-select: none; }
   .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
@@ -3935,7 +3928,7 @@ const CSS = `
   .small-group:has(.integrated-delete-btn) .player-name-container { border-radius: 10px 0 0 10px; }
   .small-group .integrated-delete-btn { border-radius: 0 10px 10px 0; width: 38px !important; }
 
-  .time-section-label { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 10px; }
+  
   .time-control { display: flex; align-items: center; }
   .time-click-wrap { display: flex; align-items: center; width: 100%; }
   .time-click-zone { flex: 1; display: flex; align-items: center; justify-content: center; height: 48px; cursor: pointer; user-select: none; }
@@ -3956,11 +3949,7 @@ const CSS = `
 
   .round-screen { flex-direction: column; background: none; transition: background 0.2s; padding-top: max(28px, env(safe-area-inset-top)); }
 
-  .round-top { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 520px; padding: 28px 0 12px; gap: 8px; flex-shrink: 0; position: relative; }
   .round-player { font-family: 'Righteous', cursive; font-size: clamp(14px, 4vw, 20px); color: #a78bfa; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .timer-wrap { position: absolute; left: 50%; transform: translateX(-50%); flex-shrink: 0; }
-  .timer-circle-progress { transition: stroke 0.5s; }
-  .timer-ring { animation: ring 0.5s infinite; transform-origin: 50px 50px; }
   .round-stats { display: flex; gap: 8px; flex-shrink: 0; margin-left: auto; }
   .stat { font-size: 14px; font-weight: 800; padding: 5px 10px; border-radius: 20px; white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-width: 52px; }
   .stat-icon { display: flex; align-items: center; justify-content: center; line-height: 1; }
@@ -3995,11 +3984,9 @@ const CSS = `
   .action-btn:focus { outline: none; }
   .action-btn:active { transform: scale(0.93); }
   .btn-disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
-  .btn-icon { font-size: 28px; }
-  .btn-label { font-size: clamp(13px, 3.5vw, 16px); white-space: nowrap; }
-  .skip-btn { background: rgba(251,191,36,0.15); color: #fbbf24; border: 3px solid rgba(251,191,36,0.3); }
+  .skip-btn { background: rgba(248,113,113,0.1); color: #f87171; border: 3px solid rgba(248,113,113,0.4); }
   .correct-btn { background: rgba(74,222,128,0.2); color: #4ade80; border: 3px solid rgba(74,222,128,0.35); }
-  @media (hover: hover) { .skip-btn:hover { background: rgba(251,191,36,0.25); } .correct-btn:hover { background: rgba(74,222,128,0.35); } }
+  @media (hover: hover) { .skip-btn:hover { background: rgba(248,113,113,0.2); } .correct-btn:hover { background: rgba(74,222,128,0.35); } }
 
   .score-title { font-family: 'Righteous', cursive; font-size: clamp(22px, 6vw, 28px); text-align: center; margin-bottom: 20px; }
   .scores-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
@@ -4065,7 +4052,6 @@ const CSS = `
   .stats-word-chip { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 10px; background: rgba(74,222,128,0.1); border: 2.5px solid rgba(74,222,128,0.25); color: #4ade80; }
   .stats-word-bonus { background: rgba(251,146,60,0.12); border-color: rgba(251,146,60,0.4); color: #fb923c; }
   .stats-word-skipped { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.25); color: #f87171; }
-  .stats-word-more { font-size: 11px; color: rgba(255,255,255,0.4); align-self: center; }
 
   .tiebreaker-start-btn { width: 100%; background: rgba(251,191,36,0.1); border: 3px solid rgba(251,191,36,0.3); border-radius: 14px; padding: 10px 16px; margin-bottom: 14px; text-align: center; font-size: 14px; font-weight: 700; color: #fbbf24; cursor: pointer; font-family: inherit; transition: background 0.15s, border-color 0.15s; }
   .tiebreaker-start-btn:hover { background: rgba(251,191,36,0.22); border-color: rgba(251,191,36,0.6); }
@@ -4075,15 +4061,12 @@ const CSS = `
   .tiebreaker-cat-btn { width: 100%; padding: 18px 20px; border-radius: 18px; background: rgba(167,139,250,0.1); border: 2.5px solid rgba(167,139,250,0.3); color: white; font-family: inherit; font-size: 20px; font-weight: 800; cursor: pointer; text-align: left; transition: all 0.15s; display: flex; align-items: center; gap: 12px; }
   .tiebreaker-cat-btn:hover { background: rgba(167,139,250,0.25); border-color: rgba(167,139,250,0.7); }
   .tiebreaker-result-banner { margin: 0 0 16px; padding: 10px 16px; border-radius: 14px; text-align: center; border: 2.5px solid; }
-  .tiebreaker-result-tied { background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.3); }
   .tiebreaker-result-winner { background: rgba(74,222,128,0.08); border-color: rgba(74,222,128,0.3); }
-  .tiebreaker-result-text-tied { color: #fbbf24; font-weight: 800; font-size: 14px; }
   .tiebreaker-result-text-winner { color: #4ade80; font-weight: 800; font-size: 14px; }
   .tiebreaker-pts { font-size: 17px; }
   .tiebreaker-handoff-sub { color: #fbbf24; font-weight: 800; letter-spacing: 0.06em; font-size: 13px; }
   .mb-2 { margin-bottom: 2px; }
   .mt-0 { margin-top: 0px; }
-  .tiebreaker-timer-circle { transition: stroke-dashoffset 0.05s linear; }
   .tiebreaker-team-block:not(:last-child) { margin-bottom: 10px; }
   .tiebreaker-team-row { margin-bottom: 6px; }
   .tiebreaker-player-list { margin-left: 14px; padding-left: 14px; border-left: 2px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 5px; }
@@ -4109,6 +4092,6 @@ const CSS = `
   @keyframes ls-spin-flash { 0%{opacity:0.4} 50%{opacity:0.9} 100%{opacity:0.4} }
   @keyframes ls-award-pop { 0%{transform:scale(0.8);opacity:0} 70%{transform:scale(1.04)} 100%{transform:scale(1);opacity:1} }
 
-  @media (max-width: 380px) { .names-grid { grid-template-columns: 1fr; } .logo-title { font-size: 28px; } .timer-wrap svg { width: 80px; height: 80px; } }
+  @media (max-width: 380px) { .names-grid { grid-template-columns: 1fr; } .logo-title { font-size: 28px; } }
   @media (max-height: 680px) { .handoff-card { padding: 28px 20px; } .handoff-icon { font-size: 40px; margin-bottom: 10px; } .word-stage { gap: 10px; padding: 12px; } }
 `;
