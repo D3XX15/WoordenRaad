@@ -319,7 +319,7 @@ function LetterSnelClassicGame({ players, onRestart, activeLetters, targetScore 
       {(phase === "ready" || phase === "playing" || phase === "awarded") && (
         <div className="ls-award-section">
           <div className="ls-award-label">{phase === "ready" ? "Druk op \"kies letter\" om te beginnen" : phase === "awarded" ? "" : spinning ? "Letter kiezen…" : "Wie was er het eerst?"}</div>
-          <div className="ls-scores-strip" style={{gridTemplateColumns:`repeat(${players.length % 4 === 0 ? 4 : players.length % 3 === 0 ? 3 : players.length % 2 === 0 ? 2 : [2,3,4].reduce((b,c) => (players.length % c > players.length % b ? c : b))}, 1fr)`}}>
+          <div className="ls-scores-strip" style={{gridTemplateColumns:`repeat(${Math.min(3, players.length % 2 === 0 ? 2 : players.length % 3 === 0 ? 3 : 2)}, 1fr)`}}>
             {players.map((p, i) => (
               <button key={i} className={`ls-score-chip ls-score-chip-btn ${scores[i] === topScore && topScore > 0 ? "ls-score-leader" : ""}`} onClick={() => phase === "playing" && !spinning && awardPoint(i)} disabled={phase === "ready" || spinning || phase === "awarded"}>
                 <span className="ls-score-chip-name">{p}</span>
@@ -653,7 +653,7 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
           {phase === "roundover" && (roundWinner !== null ? <>🏆 <span className="ls-ketting-turn-name">{players[roundWinner]}</span> wint de ketting!</> : "Niemand wist iets te bedenken 🤷")}
         </div>
 
-        <div className="ls-scores-strip" style={{gridTemplateColumns:`repeat(${players.length % 4 === 0 ? 4 : players.length % 3 === 0 ? 3 : players.length % 2 === 0 ? 2 : [2,3,4].reduce((b,c) => (players.length % c > players.length % b ? c : b))}, 1fr)`}}>
+        <div className="ls-scores-strip" style={{gridTemplateColumns:`repeat(${Math.min(3, players.length % 2 === 0 ? 2 : players.length % 3 === 0 ? 3 : 2)}, 1fr)`}}>
           {players.map((p, i) => {
             const isElim = eliminated.includes(i);
             const isActive = (phase === "playing" && activePlayers[currentTurnIdx % activePlayers.length] === i)
@@ -2349,7 +2349,7 @@ function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, 
         <div className="word-stage">
           <div className="word-anchor">
             <div style={{display:"flex", flexDirection:"column", alignItems:"center", marginBottom:"16px", gap:"6px"}}>
-              <div style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(56px,18vw,88px)", color:"#f87171", textShadow:"0 0 32px rgba(248,113,113,0.5)", letterSpacing:"0.05em", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center"}}>
+              <div style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(56px,18vw,88px)", color:"#f87171", textShadow:"0 0 32px rgba(248,113,113,0.5)", letterSpacing:"0.05em", lineHeight:1, width:"1.1em", height:"1.1em", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center"}}>
                 {forbiddenLetter}
               </div>
               <div style={{fontSize:"11px", fontWeight:"800", letterSpacing:"0.14em", color:"#f87171", textTransform:"uppercase"}}>🚫 Verboden letter</div>
@@ -2390,7 +2390,7 @@ function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, 
 
         {/* Verboden letter */}
         <div style={{display:"flex", flexDirection:"column", alignItems:"center", gap:"12px", marginBottom:"20px"}}>
-          <div style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(56px,18vw,80px)", color: spinning ? "rgba(248,113,113,0.5)" : letterLocked ? "#f87171" : "rgba(255,255,255,0.2)", textShadow: letterLocked && !spinning ? "0 0 32px rgba(248,113,113,0.5)" : "none", lineHeight:1, minHeight:"1em", display:"flex", alignItems:"center", justifyContent:"center", transition:"color 0.1s"}}>
+          <div style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(56px,18vw,80px)", color: spinning ? "rgba(248,113,113,0.5)" : letterLocked ? "#f87171" : "rgba(255,255,255,0.2)", textShadow: letterLocked && !spinning ? "0 0 32px rgba(248,113,113,0.5)" : "none", lineHeight:1, width:"1.1em", height:"1.1em", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", transition:"color 0.1s"}}>
             {forbiddenLetter ?? "?"}
           </div>
           <div style={{fontSize:"11px", fontWeight:"800", letterSpacing:"0.14em", color: letterLocked ? "#f87171" : "rgba(255,255,255,0.35)", textTransform:"uppercase"}}>
@@ -2722,7 +2722,9 @@ function TaboeRoundGame({ players, onRestart, roundTime, selectedCategories }) {
               letterSpacing:"0.05em",
               lineHeight:1,
               transition:"color 0.1s",
-              minHeight:"1em",
+              width:"1.1em",
+              height:"1.1em",
+              flexShrink:0,
               display:"flex", alignItems:"center", justifyContent:"center"
             }}>
               {forbiddenLetter ?? "?"}
