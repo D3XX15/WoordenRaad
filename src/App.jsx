@@ -2290,6 +2290,7 @@ function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, 
 
   const handleCorrect = () => {
     clearInterval(timerRef.current);
+    playCorrectSound();
     triggerFlash("correct");
     const finalTime = (Date.now() - startTimeRef.current) / 1000;
     setElapsed(finalTime);
@@ -2747,7 +2748,7 @@ function TaboeRoundGame({ players, onRestart, roundTime, selectedCategories }) {
           {/* Categorie label / Times Up Banner */}
           <div className={`times-up-banner${timesUp ? " grace-active" : " category-banner"}`}>
             {timesUp
-              ? <span>Tijd is op — nog <span className="grace-countdown">{graceCountdown !== null ? graceCountdown : '…'}</span>s om te raden!</span>
+              ? <span>Tijd is op — nog <span className="grace-countdown">{graceCountdown !== null ? graceCountdown : '…'}</span>s om te raden</span>
               : WORD_TO_CATEGORY[card]?.label ?? '📦 Categorie'}
           </div>
 
@@ -3464,7 +3465,7 @@ function TiebreakerRoundScreen({ players, tiebreakerState, onCategoryChosen, onW
   useEffect(() => () => clearInterval(timerRef.current), []);
   if (!chosenCategoryId) return <TiebreakerCategoryPickerScreen candidateCategories={candidateCategories} onCategoryChosen={onCategoryChosen} />;
   const startRound = () => { setSubPhase('round'); startTimeRef.current = Date.now(); timerRef.current = setInterval(() => setElapsed((Date.now() - startTimeRef.current) / 1000), 50); };
-  const handleGuessed = () => { clearInterval(timerRef.current); const finalTime = (Date.now() - startTimeRef.current) / 1000; setElapsed(finalTime); setSubPhase('handoff'); onWordGuessed(finalTime); };
+  const handleGuessed = () => { clearInterval(timerRef.current); playCorrectSound(); const finalTime = (Date.now() - startTimeRef.current) / 1000; setElapsed(finalTime); setSubPhase('handoff'); onWordGuessed(finalTime); };
   const currentPlayerIdx = allDone ? null : tiedPlayerIndices[currentStep];
   const currentWord = allDone ? null : words[currentStep];
   if (allDone) {
@@ -3843,10 +3844,10 @@ const CSS = `
 
   /* Letter */
   .ls-letter-area { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 24px; }
-  .ls-letter { font-family: 'Righteous', cursive; font-size: clamp(72px, 22vw, 140px); line-height: 1; text-align: center; width: 200px; height: 200px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px solid; }
+  .ls-letter { font-family: 'Righteous', cursive; font-size: clamp(100px, 30vw, 175px); line-height: 1; text-align: center; width: 200px; height: 200px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px solid; }
   .ls-letter-spinning { color: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); animation: ls-spin-flash 0.07s infinite; }
   .ls-letter-landed { background: linear-gradient(145deg, rgba(245,158,11,0.12), rgba(239,68,68,0.08)); border-color: rgba(245,158,11,0.5); animation: ls-letter-land 0.45s cubic-bezier(0.34,1.56,0.64,1); background-image: linear-gradient(135deg, #fef9c3, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .ls-letter-placeholder { font-family: 'Righteous', cursive; font-size: clamp(72px, 22vw, 140px); color: rgba(255,255,255,0.1); line-height: 1; width: 200px; height: 200px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px dashed rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); }
+  .ls-letter-placeholder { font-family: 'Righteous', cursive; font-size: clamp(100px, 30vw, 175px); color: rgba(255,255,255,0.1); line-height: 1; width: 200px; height: 200px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px dashed rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); }
   .ls-spin-btn { font-family: 'Righteous', cursive; font-size: 18px; padding: 14px 36px; border-radius: 16px; border: 3px solid; cursor: pointer; transition: all 0.2s; }
   .ls-spin-btn:not(.ls-spin-spinning) { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); color: #f59e0b; }
   .ls-spin-btn:not(.ls-spin-spinning):hover { background: rgba(245,158,11,0.25); }
@@ -3984,8 +3985,8 @@ const CSS = `
   .action-btn:focus { outline: none; }
   .action-btn:active { transform: scale(0.93); }
   .btn-disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
-  .skip-btn { background: rgba(248,113,113,0.1); color: #f87171; border: 3px solid rgba(248,113,113,0.4); }
-  .correct-btn { background: rgba(74,222,128,0.2); color: #4ade80; border: 3px solid rgba(74,222,128,0.35); }
+  .skip-btn { background: rgba(248,113,113,0.1); color: #f87171; border: 3px solid rgba(248,113,113,0.4); font-size: 22px; }
+  .correct-btn { background: rgba(74,222,128,0.2); color: #4ade80; border: 3px solid rgba(74,222,128,0.35); font-size: 22px; }
   @media (hover: hover) { .skip-btn:hover { background: rgba(248,113,113,0.2); } .correct-btn:hover { background: rgba(74,222,128,0.35); } }
 
   .score-title { font-family: 'Righteous', cursive; font-size: clamp(22px, 6vw, 28px); text-align: center; margin-bottom: 20px; }
