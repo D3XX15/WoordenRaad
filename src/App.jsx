@@ -15,14 +15,14 @@ function shuffle(arr) {
 // ══════════════════════════════════════════════════════════════════════════════
 
 /**
- * useSpinLetter — herbruikbare spin-animatie voor letter-kiezen.
+ * useLetterSpinAnimation — herbruikbare spin-animatie voor letter-kiezen.
  * @param {string[]} pool       - Array van letters om uit te kiezen
  * @param {string|null} exclude - Letter om uit te sluiten (bijv. huidige letter)
  * @param {(l: string) => void} onLetter - Callback bij elke tussentijdse letter
  * @param {(l: string) => void} onDone   - Callback als de uiteindelijke letter vaststaat
  * @returns {{ spin, spinning }}
  */
-function useSpinLetter({ pool, exclude = null, onLetter, onDone }) {
+function useLetterSpinAnimation({ pool, exclude = null, onLetter, onDone }) {
   const [spinning, setSpinning] = useState(false);
   const spinIntervalRef = useRef(null);
   const spinCountRef = useRef(0);
@@ -62,7 +62,7 @@ function useSpinLetter({ pool, exclude = null, onLetter, onDone }) {
 }
 
 /** Header-balk bovenaan een game-scherm (logo links, stop-knop rechts). */
-function GameHeader({ logo, onStop }) {
+function GameHeaderBar({ logo, onStop }) {
   return (
     <div className="ls-header">
       <div className="ls-logo">{logo}</div>
@@ -72,7 +72,7 @@ function GameHeader({ logo, onStop }) {
 }
 
 /** Kaartgebied voor LetterSnel (kaart-label + kaart-tekst). */
-function LsCardArea({ cardIdx, card }) {
+function LetterSnelCardDisplay({ cardIdx, card }) {
   return (
     <div className="ls-card-area">
       <div className="ls-card-label">KAART #{cardIdx + 1}</div>
@@ -86,7 +86,7 @@ function LsCardArea({ cardIdx, card }) {
 }
 
 /** Grote letter-display voor LetterSnel. */
-function LsLetterDisplay({ letter, spinning }) {
+function LetterSnelActiveLetter({ letter, spinning }) {
   if (letter) {
     return <div className={`ls-letter ${spinning ? "ls-letter-spinning" : "ls-letter-landed"}`}>{letter}</div>;
   }
@@ -100,7 +100,7 @@ function LsLetterDisplay({ letter, spinning }) {
  * @param {boolean} empty   - Als true: balk is leeg (bijv. als tijd op is)
  * @param {string} [transition] - CSS transition-waarde (optioneel)
  */
-function TimerBar({ pct, color, empty = false, transition = "width 0.05s linear, background 0.5s" }) {
+function TimerProgressBar({ pct, color, empty = false, transition = "width 0.05s linear, background 0.5s" }) {
   return (
     <div style={{height:"8px", background:"rgba(255,255,255,0.1)", borderRadius:"4px", marginBottom:"8px", overflow:"hidden"}}>
       <div style={{height:"100%", width:`${empty ? 0 : pct * 100}%`, background:color, borderRadius:"4px", transition}} />
@@ -112,7 +112,7 @@ function TimerBar({ pct, color, empty = false, transition = "width 0.05s linear,
  * Gedeelde resultatenweergave voor solo tie-breakers (Taboe en WoordRaad Klassiek).
  * Toont ranking op tijd, gelijkspel-banner of winnaar-banner, en een "Nieuw spel"-knop.
  */
-function TiebreakerSoloResults({ players, tiedPlayerIndices, times, onRestart, onStartTiebreaker }) {
+function TiebreakerSoloResultScreen({ players, tiedPlayerIndices, times, onRestart, onStartTiebreaker }) {
   const tieBadges = ["🥇","🥈","🥉"];
   const results = tiedPlayerIndices.map((pi, i) => ({ name: players[pi], time: times[i] })).sort((a, b) => a.time - b.time);
   const winnerTime = Math.round(results[0].time * 100) / 100;
@@ -147,7 +147,7 @@ function TiebreakerSoloResults({ players, tiedPlayerIndices, times, onRestart, o
 }
 
 /** Formatteer verstreken tijd als "seconden.tienden" (bijv. "4.2s"). */
-function formatElapsed(elapsed) {
+function formatElapsedTime(elapsed) {
   const secs = Math.floor(elapsed);
   const tenths = Math.floor((elapsed % 1) * 10);
   return `${secs}.${tenths}s`;
@@ -156,7 +156,7 @@ function formatElapsed(elapsed) {
 /**
  * Gedeeld handoff-scherm voor tie-breakers (Taboe en WoordRaad Klassiek).
  */
-function TiebreakerHandoff({ subtitle, player, tip1, tip2, onStart }) {
+function TiebreakerHandoffScreen({ subtitle, player, tip1, tip2, onStart }) {
   return (
     <div className="screen handoff-screen"><div className="handoff-card">
       <div className="handoff-icon">⚡</div>
@@ -170,14 +170,14 @@ function TiebreakerHandoff({ subtitle, player, tip1, tip2, onStart }) {
 }
 
 /** Tijdweergave: toont seconden of een rinkelende wekker als de tijd op is. */
-function TimerDisplay({ secs, timesUp }) {
+function TimerCountdown({ secs, timesUp }) {
   return timesUp ? <span className="alarm-ringing">⏰</span> : <>{secs}s</>;
 }
 
 /**
- * Hergebruikt in SetupScreen (WoordRaad) en LetterSnelSetup.
+ * Hergebruikt in GameSetupScreen (WoordRaad) en LetterSnelSetupPanel.
  */
-function PlayerNameInput({ index, value, onChange, onRemove, canRemove, placeholder = "Naam invullen..." }) {
+function PlayerNameField({ index, value, onChange, onRemove, canRemove, placeholder = "Naam invullen..." }) {
   return (
     <div className="player-input-group small-group">
       <div className="player-name-container player-bg">
@@ -198,7 +198,7 @@ function PlayerNameInput({ index, value, onChange, onRemove, canRemove, placehol
 }
 
 /** Geeft de CSS-klasse terug voor een flash-type (correct / skip / bonus). */
-function flashClass(flash) {
+function getFlashClass(flash) {
   if (flash === "correct") return " taboe-flash-correct";
   if (flash === "skip")    return " taboe-flash-skip";
   if (flash === "bonus")   return " taboe-flash-bonus";
@@ -206,7 +206,7 @@ function flashClass(flash) {
 }
 
 // ── LetterSnel Cards ────────────────────────────────────────────────────────
-const LS_CARDS = [
+const LETTER_SNEL_CARD_PROMPTS = [
   "een kleur", "een land", "een stad", "een jongensnaam", "een meisjesnaam", "keukengerei", "iets in de tuin", "een beroep", "een natuurverschijnsel",
   "een sport", "iets in de supermarkt", "een voertuig", "iets in de badkamer", "een film of serie", "een merk", "iets wat koud is", "een knaagdier",
   "iets wat warm is", "iets wat lang is", "iets in de natuur", "iets op een verjaardag", "een gebouw", "iets in een museum", "iets wat stinkt",
@@ -239,19 +239,19 @@ const LS_CARDS = [
 
 // ── LetterSnel Component ─────────────────────────────────────────────────────
 
-const ALPHABET_ALL = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const FULL_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-function LetterSnelGame({ players, onRestart, activeLetters, gameMode, targetScore }) {
-  if (gameMode === "ketting") return <LetterSnelKettingGame players={players} onRestart={onRestart} activeLetters={activeLetters} targetScore={targetScore} />;
-  return <LetterSnelKlassiekGame players={players} onRestart={onRestart} activeLetters={activeLetters} targetScore={targetScore} />;
+function LetterSnelGameRouter({ players, onRestart, activeLetters, gameMode, targetScore }) {
+  if (gameMode === "ketting") return <LetterSnelChainGame players={players} onRestart={onRestart} activeLetters={activeLetters} targetScore={targetScore} />;
+  return <LetterSnelClassicGame players={players} onRestart={onRestart} activeLetters={activeLetters} targetScore={targetScore} />;
 }
 
 // ── LetterSnel Klassiek ───────────────────────────────────────────────────────
-function LetterSnelKlassiekGame({ players, onRestart, activeLetters, targetScore }) {
-  const alphabet = activeLetters && activeLetters.length > 0 ? activeLetters : ALPHABET_ALL;
+function LetterSnelClassicGame({ players, onRestart, activeLetters, targetScore }) {
+  const alphabet = activeLetters && activeLetters.length > 0 ? activeLetters : FULL_ALPHABET;
   const [scores, setScores] = useState(Array(players.length).fill(0));
   const [currentCardIdx, setCurrentCardIdx] = useState(0);
-  const [cardDeck] = useState(() => shuffle([...LS_CARDS]));
+  const [cardDeck] = useState(() => shuffle([...LETTER_SNEL_CARD_PROMPTS]));
   const [letter, setLetter] = useState(null);
   const [winner, setWinner] = useState(null);
   const [phase, setPhase] = useState("ready");
@@ -259,7 +259,7 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters, targetScore
 
   const currentCard = cardDeck[currentCardIdx % cardDeck.length];
 
-  const { spin: doSpin, spinning } = useSpinLetter({
+  const { spin: doSpin, spinning } = useLetterSpinAnimation({
     pool: alphabet,
     exclude: letter,
     onLetter: setLetter,
@@ -288,7 +288,9 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters, targetScore
 
   const nextCard = () => {
     setCurrentCardIdx(i => i + 1);
-    setLetter(null);
+    // Letter bewust NIET gereset: de huidige letter blijft als `exclude` actief
+    // zodat de volgende spin nooit dezelfde letter kan opleveren.
+    // De letter-display wordt verborgen via phase === "ready".
     setWinner(null);
     setPhase("ready");
   };
@@ -296,21 +298,21 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters, targetScore
   const topScore = Math.max(...scores);
 
   if (gameWinner !== null) {
-    return <LetterSnelWinnaarScreen players={players} scores={scores} winnaarIdx={gameWinner} onRestart={onRestart} />;
+    return <LetterSnelWinnerScreen players={players} scores={scores} winnaarIdx={gameWinner} onRestart={onRestart} />;
   }
 
   return (
     <div className="ls-screen">
-      <GameHeader logo="LetterSnel" onStop={onRestart} />
-      <LsCardArea cardIdx={currentCardIdx} card={currentCard} />
+      <GameHeaderBar logo="LetterSnel" onStop={onRestart} />
+      <LetterSnelCardDisplay cardIdx={currentCardIdx} card={currentCard} />
       <div className="ls-letter-area">
-        <LsLetterDisplay letter={letter} spinning={spinning} />
+        <LetterSnelActiveLetter letter={phase === "ready" ? null : letter} spinning={spinning} />
         <button
           className={`ls-spin-btn ${spinning ? "ls-spin-spinning" : ""}`}
           onClick={phase === "awarded" ? nextCard : spinLetter}
           disabled={spinning}
         >
-          {spinning ? "draaien…" : phase === "awarded" ? "volgende kaart ➜" : letter ? "opnieuw draaien" : "kies letter ▶"}
+          {spinning ? "draaien…" : phase === "awarded" ? "volgende kaart ➜" : phase === "ready" ? "kies letter ▶" : "opnieuw draaien"}
         </button>
       </div>
       {(phase === "ready" || phase === "playing" || phase === "awarded") && (
@@ -338,7 +340,7 @@ function LetterSnelKlassiekGame({ players, onRestart, activeLetters, targetScore
 
 
 // ── LetterSnel Winnaar Scherm ─────────────────────────────────────────────────
-function LetterSnelWinnaarScreen({ players, scores, winnaarIdx, onRestart }) {
+function LetterSnelWinnerScreen({ players, scores, winnaarIdx, onRestart }) {
   const sorted = [...scores.map((s, i) => ({ s, i }))].sort((a, b) => b.s - a.s);
   const medals = ["🥇","🥈","🥉"];
   const getEffectiveRank = (score) => sorted.filter(e => e.s > score).length + 1;
@@ -373,7 +375,7 @@ function LetterSnelWinnaarScreen({ players, scores, winnaarIdx, onRestart }) {
 }
 
 // ── Timer-end feedback: geluid + trilling ────────────────────────────────────
-function playPling() {
+function playCorrectSound() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const now = ctx.currentTime;
@@ -392,7 +394,7 @@ function playPling() {
 }
 
 // ── Taboe timer-end: kort aflopend twee-noot geluidje ────────────────────────
-function playSkip() {
+function playSkipSound() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const now = ctx.currentTime;
@@ -410,7 +412,7 @@ function playSkip() {
   } catch (e) {}
 }
 
-function playTimeUp() {
+function playTimeUpSound() {
   if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -431,13 +433,13 @@ function playTimeUp() {
     note(now + 0.20, 349, 0.30); // F4
   } catch (e) {}
 }
-const KETTING_TIME = 15;
+const CHAIN_ROUND_SECONDS = 15;
 
-function LetterSnelKettingGame({ players, onRestart, activeLetters, targetScore }) {
-  const alphabet = activeLetters && activeLetters.length > 0 ? activeLetters : ALPHABET_ALL;
+function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore }) {
+  const alphabet = activeLetters && activeLetters.length > 0 ? activeLetters : FULL_ALPHABET;
   const [scores, setScores] = useState(Array(players.length).fill(0));
   const [currentCardIdx, setCurrentCardIdx] = useState(0);
-  const [cardDeck] = useState(() => shuffle([...LS_CARDS]));
+  const [cardDeck] = useState(() => shuffle([...LETTER_SNEL_CARD_PROMPTS]));
   const [gameWinner, setGameWinner] = useState(null);
 
   // ketting state
@@ -459,7 +461,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters, targetScore 
   const roundStartRef = useRef(0); // which player index starts the next round
 
   // spinning animation via gedeelde hook
-  const { spin: doSpinLetter, spinning } = useSpinLetter({
+  const { spin: doSpinLetter, spinning } = useLetterSpinAnimation({
     pool: alphabet,
     exclude: currentLetter,
     onLetter: setCurrentLetter,
@@ -471,7 +473,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters, targetScore 
   });
 
   // timer
-  const [timeRemaining, setTimeRemaining] = useState(KETTING_TIME);
+  const [timeRemaining, setTimeRemaining] = useState(CHAIN_ROUND_SECONDS);
   const timerRef = useRef(null);
   const startTimeRef = useRef(null);
 
@@ -538,15 +540,15 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters, targetScore 
 
   const startTimer = () => {
     stopTimer();
-    setTimeRemaining(KETTING_TIME);
+    setTimeRemaining(CHAIN_ROUND_SECONDS);
     startTimeRef.current = Date.now();
     timerRef.current = setInterval(() => {
       const elapsed = (Date.now() - startTimeRef.current) / 1000;
-      const remaining = Math.max(0, KETTING_TIME - elapsed);
+      const remaining = Math.max(0, CHAIN_ROUND_SECONDS - elapsed);
       setTimeRemaining(remaining);
       if (remaining <= 0) {
         stopTimer();
-        playTimeUp();
+        playTimeUpSound();
         doFail();
       }
     }, 50);
@@ -560,7 +562,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters, targetScore 
   const handleCorrect = () => {
     if (phaseRef.current !== "playing") return;
     stopTimer();
-    playPling();
+    playCorrectSound();
 
     const wordData = { playerIdx: activePlayerIdx, letter: currentLetter };
     setLastValidWord(wordData);
@@ -598,34 +600,35 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters, targetScore 
     eliminatedRef.current = [];
     phaseRef.current = "ready";
     setCurrentCardIdx(i => i + 1);
-    setCurrentLetter(null);
+    // currentLetter bewust NIET gereset: blijft als `exclude` actief zodat
+    // de volgende spin nooit dezelfde letter oplevert. Display verbergt via phase === "ready".
     lastValidWordRef.current = null;
     setLastValidWord(null);
     setActivePlayers(freshActive);
     setCurrentTurnIdx(0);
-    setEliminated([]);       // ← reset eerst eliminated
-    setRoundWinner(null);    // ← dan winner, zodat chips neutraal zijn
-    setPhase("ready");       // ← dan pas ready, zodat beginchip oplicht
+    setEliminated([]);
+    setRoundWinner(null);
+    setPhase("ready");
     stopTimer();
-    setTimeRemaining(KETTING_TIME);
+    setTimeRemaining(CHAIN_ROUND_SECONDS);
   };
 
   const topScore = Math.max(...scores, 0);
 
   if (gameWinner !== null) {
-    return <LetterSnelWinnaarScreen players={players} scores={scores} winnaarIdx={gameWinner} onRestart={onRestart} />;
+    return <LetterSnelWinnerScreen players={players} scores={scores} winnaarIdx={gameWinner} onRestart={onRestart} />;
   }
 
   return (
     <div className="ls-screen">
-      <GameHeader logo="LetterSnel" onStop={onRestart} />
+      <GameHeaderBar logo="LetterSnel" onStop={onRestart} />
 
       {/* Card */}
-      <LsCardArea cardIdx={currentCardIdx} card={currentCard} />
+      <LetterSnelCardDisplay cardIdx={currentCardIdx} card={currentCard} />
 
       {/* Letter + knop */}
       <div className="ls-letter-area">
-        <LsLetterDisplay letter={currentLetter} spinning={spinning} />
+        <LetterSnelActiveLetter letter={phase === "ready" ? null : currentLetter} spinning={spinning} />
         {phase === "ready" && (
           <button className="ls-spin-btn" onClick={() => { setPhase("spinning"); spinLetter(); }}>kies letter ▶</button>
         )}
@@ -676,7 +679,7 @@ function LetterSnelKettingGame({ players, onRestart, activeLetters, targetScore 
 }
 
 // ── LetterSnel Setup overlay ─────────────────────────────────────────────────
-function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveLetters }) {
+function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setActiveLetters }) {
   const [lsGameMode, setLsGameMode] = useState("klassiek");
   const [targetScore, setTargetScore] = useState(10);
   const canStart = names.length >= 2 && names.every(n => n.trim().length > 0) && activeLetters.length >= 2;
@@ -694,10 +697,10 @@ function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveL
   };
 
   const letterRows = [
-    ALPHABET_ALL.slice(0, 7),
-    ALPHABET_ALL.slice(7, 14),
-    ALPHABET_ALL.slice(14, 21),
-    ALPHABET_ALL.slice(21, 26),
+    FULL_ALPHABET.slice(0, 7),
+    FULL_ALPHABET.slice(7, 14),
+    FULL_ALPHABET.slice(14, 21),
+    FULL_ALPHABET.slice(21, 26),
   ];
 
   return (
@@ -730,7 +733,7 @@ function LetterSnelSetup({ onStartLS, names, setNames, activeLetters, setActiveL
         <div className="setup-wrapper-badge" style={{background:"#ea580c", top:"-14px"}}>SPELERS</div>
         <div className="names-grid">
           {names.map((name, i) => (
-            <PlayerNameInput
+            <PlayerNameField
               key={i}
               index={i}
               value={name}
@@ -2146,9 +2149,9 @@ const EXTRA_WORD_PARTS = new Set([
 'gerechtshof'
 ]);
 
-function hyphenateWord(word) {
+function insertSoftHyphens(word) {
   if (!word) return word;
-  if (word.includes(' ')) return word.split(' ').map(hyphenateWord).join(' ');
+  if (word.includes(' ')) return word.split(' ').map(insertSoftHyphens).join(' ');
   if (word.includes('-')) return word.replace(/-/g, '-\u00AD');
   if (word.length <= 10) return word;
   const lower = word.toLowerCase();
@@ -2190,7 +2193,7 @@ function hyphenateWord(word) {
 const BONUS_WORDS_SET = new Set(
   CATEGORIES.filter(c => c.bonus).flatMap(c => WORDS_BY_CATEGORY[c.id] || [])
 );
-const getBonusPoints = (word) => BONUS_WORDS_SET.has(word) ? 2 : 0;
+const getBonusPointValue = (word) => BONUS_WORDS_SET.has(word) ? 2 : 0;
 const WORD_TO_CATEGORY = {};
 for (const cat of CATEGORIES) {
   for (const word of (WORDS_BY_CATEGORY[cat.id] || [])) {
@@ -2199,8 +2202,8 @@ for (const cat of CATEGORIES) {
 }
 // ── Gedeelde hulpfuncties ─────────────────────────────────────────────────────
 
-// Woordpool samenstellen op basis van categorieset (gebruikt in TaboeGame en WoordRaadGame)
-function getWordPool(cats) {
+// Woordpool samenstellen op basis van categorieset (gebruikt in TaboeRoundGame en WoordRaadGame)
+function buildWordPool(cats) {
   const catSet = cats instanceof Set ? cats : new Set();
   const allIds = CATEGORIES.map(c => c.id);
   if (catSet.size === 0 || allIds.every(id => catSet.has(id))) return WORDS_BY_CATEGORY.all;
@@ -2210,24 +2213,24 @@ function getWordPool(cats) {
 }
 
 // Veilige categorielijst voor tiebreakers
-const TIEBREAKER_SAFE_CATS = ['dieren','voedsel','koken','beroepen','kantoor','sport','natuur','emoties','landen','verkeer','plaatsen','kunst','kleding','religie','fictie','literatuur','muziek','acties','gereedschap','wetenschap','geneeskunde','ruimte','militair','misdaad','politiek','huishouden','spreekwoorden'];
+const TIEBREAKER_ELIGIBLE_CATEGORIES = ['dieren','voedsel','koken','beroepen','kantoor','sport','natuur','emoties','landen','verkeer','plaatsen','kunst','kleding','religie','fictie','literatuur','muziek','acties','gereedschap','wetenschap','geneeskunde','ruimte','militair','misdaad','politiek','huishouden','spreekwoorden'];
 
 // Kies 3 kandidaat-tiebreakercategorieën op basis van de actieve categorieset
-function buildTiebreakerCandidates(selectedCats) {
+function buildTiebreakerCategoryOptions(selectedCats) {
   const catSet = selectedCats instanceof Set ? selectedCats : new Set();
   const allIds = CATEGORIES.map(c => c.id);
   const allSelected = catSet.size === 0 || allIds.every(id => catSet.has(id));
-  const usedSafe = allSelected ? [] : TIEBREAKER_SAFE_CATS.filter(c => catSet.has(c));
+  const usedSafe = allSelected ? [] : TIEBREAKER_ELIGIBLE_CATEGORIES.filter(c => catSet.has(c));
   const chosen = shuffle(usedSafe).slice(0, 3);
-  const remaining = shuffle(TIEBREAKER_SAFE_CATS.filter(c => !chosen.includes(c)));
+  const remaining = shuffle(TIEBREAKER_ELIGIBLE_CATEGORIES.filter(c => !chosen.includes(c)));
   while (chosen.length < 3 && remaining.length > 0) chosen.push(remaining.shift());
   return chosen.map(id => CATEGORIES.find(c => c.id === id)).filter(Boolean);
 }
 
-const TABOE_LETTERS = ALPHABET_ALL.filter(l => !["Q","X","Y"].includes(l));
+const TABOE_LETTER_POOL = FULL_ALPHABET.filter(l => !["Q","X","Y"].includes(l));
 
 // ── Taboe Tie-breaker ────────────────────────────────────────────────────────
-function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories, onRestart, onStartTiebreaker }) {
+function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, onRestart, onStartTiebreaker }) {
   const [chosenCategoryId, setChosenCategoryId] = useState(null);
   const [forbiddenLetter, setForbiddenLetter] = useState(null);
   const [letterLocked, setLetterLocked] = useState(false);
@@ -2240,8 +2243,8 @@ function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories
   const timerRef = useRef(null);
   const startTimeRef = useRef(null);
 
-  const { spin: doSpinLetter, spinning } = useSpinLetter({
-    pool: TABOE_LETTERS,
+  const { spin: doSpinLetter, spinning } = useLetterSpinAnimation({
+    pool: TABOE_LETTER_POOL,
     onLetter: setForbiddenLetter,
     onDone: (_target) => { setLetterLocked(true); },
   });
@@ -2302,13 +2305,13 @@ function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories
 
   // ── Resultaten ──
   if (subPhase === "results") {
-    return <TiebreakerSoloResults players={players} tiedPlayerIndices={tiedPlayerIndices} times={times} onRestart={onRestart} onStartTiebreaker={onStartTiebreaker} />;
+    return <TiebreakerSoloResultScreen players={players} tiedPlayerIndices={tiedPlayerIndices} times={times} onRestart={onRestart} onStartTiebreaker={onStartTiebreaker} />;
   }
 
   // ── Handoff ──
   if (subPhase === "handoff") {
     return (
-      <TiebreakerHandoff
+      <TiebreakerHandoffScreen
         subtitle={`TIE-BREAKER · ${currentStep+1}/${tiedPlayerIndices.length}`}
         player={players[currentPlayerIdx]}
         tip1="Leg z.s.m. het woord uit"
@@ -2320,15 +2323,15 @@ function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories
 
   // ── Spelscherm ──
   if (subPhase === "playing") {
-    const elapsedDisplay = formatElapsed(elapsed);
+    const elapsedDisplay = formatElapsedTime(elapsed);
     return (
-      <div className={`screen${flashClass(flash)}`}>
+      <div className={`screen${getFlashClass(flash)}`}>
         <div style={{width:"100%", maxWidth:"420px"}}>
           <div className="ls-header">
             <div className="wr-logo">Tie-Breaker</div>
             <span className="round-player" style={{fontSize:"22px", textAlign:"right"}}>{players[currentPlayerIdx]}</span>
           </div>
-          <TimerBar pct={Math.min(elapsed / 60, 1)} color="#fbbf24" transition="width 0.05s linear" />
+          <TimerProgressBar pct={Math.min(elapsed / 60, 1)} color="#fbbf24" transition="width 0.05s linear" />
           <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
             <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:"#fbbf24", flex:1, textAlign:"left"}}>{elapsedDisplay}</span>
             <div className="round-stats" style={{flex:1, justifyContent:"flex-end"}}>
@@ -2344,7 +2347,7 @@ function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories
           </div>
           {/* Woord kaart */}
           <div style={{background:"linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.98))", border:"3px solid rgba(96,165,250,0.3)", borderRadius:"24px", padding:"28px 24px", marginBottom:"16px", boxShadow:"0 8px 32px rgba(0,0,0,0.4)", textAlign:"center"}}>
-            <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(32px,10vw,44px)", color:"white", margin:0, lineHeight:1.1}}>{currentWord ? hyphenateWord(currentWord) : "—"}</h2>
+            <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(32px,10vw,44px)", color:"white", margin:0, lineHeight:1.1}}>{currentWord ? insertSoftHyphens(currentWord) : "—"}</h2>
           </div>
           <div style={{display:"flex", gap:"10px", marginBottom:"12px"}}>
             <button onClick={handleCorrect} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color:"#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor:"pointer"}}>✓ Goed</button>
@@ -2400,15 +2403,15 @@ function TaboeTiebreakerScreen({ players, tiedPlayerIndices, candidateCategories
   );
 }
 
-// TaboeStatsScreen is een alias voor de gedeelde StatsScreen met variant="taboe"
+// TaboeStatsScreen is een alias voor de gedeelde PlayerStatsScreen met variant="taboe"
 // (geen bonus/streak-kolommen, bestRound puur op correct-count)
 const TaboeStatsScreen = ({ players, playerStats, scores, initialPlayer, onBack }) => (
-  <StatsScreen players={players} playerStats={playerStats} scores={scores} initialPlayer={initialPlayer} onBack={onBack} variant="taboe" />
+  <PlayerStatsScreen players={players} playerStats={playerStats} scores={scores} initialPlayer={initialPlayer} onBack={onBack} variant="taboe" />
 );
 
 // ── Taboe Spel ───────────────────────────────────────────────────────────────
-function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
-  const [deck] = useState(() => shuffle(getWordPool(selectedCategories)));
+function TaboeRoundGame({ players, onRestart, roundTime, selectedCategories }) {
+  const [deck] = useState(() => shuffle(buildWordPool(selectedCategories)));
   const [cardIdx, setCardIdx] = useState(0);
   const [playerIdx, setPlayerIdx] = useState(0);
   const [scores, setScores] = useState(Array(players.length).fill(null));
@@ -2435,8 +2438,8 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   const [forbiddenLetter, setForbiddenLetter] = useState(null);
   const roundLetterRef = useRef(null); // gedeelde letter voor de hele spelronde
 
-  const { spin: doSpinLetter, spinning } = useSpinLetter({
-    pool: TABOE_LETTERS,
+  const { spin: doSpinLetter, spinning } = useLetterSpinAnimation({
+    pool: TABOE_LETTER_POOL,
     exclude: forbiddenLetter,
     onLetter: setForbiddenLetter,
     onDone: (target) => {
@@ -2467,7 +2470,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
         if (!timesUpRef.current) {
           timesUpRef.current = true;
           setTimesUp(true);
-          playTimeUp();
+          playTimeUpSound();
           let graceTime = 10;
           setGraceCountdown(graceTime);
           graceTimerRef.current = setInterval(() => {
@@ -2496,7 +2499,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   const [tiebreakerState, setTiebreakerState] = useState(null); // null | { tiedPlayerIndices, candidateCategories }
 
   const startTiebreaker = (tiedPlayerIndices) => {
-    const candidateCategories = buildTiebreakerCandidates(selectedCategories);
+    const candidateCategories = buildTiebreakerCategoryOptions(selectedCategories);
     setTiebreakerState({ tiedPlayerIndices, candidateCategories });
     setPhase("tiebreaker");
   };
@@ -2515,7 +2518,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   const onCorrect = () => {
     const wasTimesUp = timesUpRef.current;
     if (wasTimesUp) stopGraceTimer();
-    playPling();
+    playCorrectSound();
     triggerFlash("correct");
     const currentWord = deck[cardIdx % deck.length];
     currentRoundStatsRef.current.correct += 1;
@@ -2531,7 +2534,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   const onSkip = () => {
     const wasTimesUp = timesUpRef.current;
     if (wasTimesUp) stopGraceTimer();
-    playSkip();
+    playSkipSound();
     triggerFlash("skip");
     const currentWord = deck[cardIdx % deck.length];
     currentRoundStatsRef.current.skipped += 1;
@@ -2550,13 +2553,13 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
       ? { ...ps, rounds: [...ps.rounds, roundStats] }
       : ps
     ));
-    // Commit score immediately so ScoreScreen sees correct values
+    // Commit score immediately so ScoreboardScreen sees correct values
     setScores(prev => prev.map((s, i) => i === playerIdx ? (s ?? 0) + currentCorrect : s));
     setPhase("roundover");
   };
 
 
-  // Called when ScoreScreen's "Volgende speler" button is clicked
+  // Called when ScoreboardScreen's "Volgende speler" button is clicked
   const onNext = () => {
     const next = (playerIdx + 1) % players.length;
     const isNewGameRound = next === 0;
@@ -2576,7 +2579,9 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
     roundNum.current += 1;
     if (isNewGameRound) {
       roundLetterRef.current = null;
-      setForbiddenLetter(null);
+      // forbiddenLetter bewust NIET gereset: de eerste speler van de nieuwe spelronde
+      // gaat spinnen, en dan moet `exclude` nog de oude letter bevatten zodat
+      // dezelfde verboden letter niet opnieuw gekozen kan worden.
     }
     setPhase("handoff");
   };
@@ -2585,7 +2590,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
   const timerColor = timesUp ? "#f87171" : timerPct > 0.5 ? "#4ade80" : timerPct > 0.25 ? "#facc15" : "#f87171";
 
   if (phase === "handoff") {
-    return <HandoffScreen player={players[playerIdx]} onReady={() => {
+    return <PlayerHandoffScreen player={players[playerIdx]} onReady={() => {
       if (roundLetterRef.current) {
         // Zelfde spelronde: bestaande letter tonen en direct starten
         setForbiddenLetter(roundLetterRef.current);
@@ -2611,7 +2616,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
       );
     }
     return (
-      <ScoreScreen
+      <ScoreboardScreen
         players={players}
         scores={scores}
         currentRound={roundNum.current + 1}
@@ -2620,7 +2625,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
         onRestart={onRestart}
         onContinue={() => {
           roundLetterRef.current = null;
-          setForbiddenLetter(null);
+          // forbiddenLetter bewust NIET gereset: zie onNext hierboven.
           setPlayerIdx(0);
           setCorrect(0);
           setSkipped(0);
@@ -2645,7 +2650,7 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
 
   if (phase === "tiebreaker" && tiebreakerState) {
     return (
-      <TaboeTiebreakerScreen
+      <TaboeTiebreakerGame
         players={players}
         tiedPlayerIndices={tiebreakerState.tiedPlayerIndices}
         candidateCategories={tiebreakerState.candidateCategories}
@@ -2657,7 +2662,9 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
 
   // spinning or playing
   return (
-    <div className={`screen${flashClass(flash)}`}>
+    <div className={`screen round-screen${getFlashClass(flash)}`}>
+
+      {/* ── Bovenste sectie: header + timer (vastzittend bovenaan) ── */}
       <div style={{width:"100%", maxWidth:"420px"}}>
 
         {/* WoordRaad header */}
@@ -2667,12 +2674,12 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
         </div>
 
         {/* Timer balk */}
-        <TimerBar pct={timerPct} color={timerColor} empty={timesUp} transition="width 0.08s linear, background 0.5s" />
+        <TimerProgressBar pct={timerPct} color={timerColor} empty={timesUp} transition="width 0.08s linear, background 0.5s" />
 
-        {/* Timer midden, stats rechts — op één lijn */}
-        <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
+        {/* Timer links, stats rechts */}
+        <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"8px"}}>
           <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:timerColor, flex:1, textAlign:"left"}}>
-            <TimerDisplay secs={Math.ceil(timeRemaining)} timesUp={timesUp} />
+            <TimerCountdown secs={Math.ceil(timeRemaining)} timesUp={timesUp} />
           </span>
           <div className="round-stats" style={{flex:1, justifyContent:"flex-end"}}>
             <span className="stat correct-stat">
@@ -2686,54 +2693,61 @@ function TaboeGame({ players, onRestart, roundTime, selectedCategories }) {
           </div>
         </div>
 
-        {/* Verboden letter display */}
-        <div style={{display:"flex", flexDirection:"column", alignItems:"center", marginBottom:"16px", gap:"10px"}}>
-          <div style={{
-            fontFamily:"'Righteous', cursive",
-            fontSize:"clamp(56px, 18vw, 88px)",
-            color: spinning ? "rgba(248,113,113,0.5)" : "#f87171",
-            textShadow: spinning ? "none" : "0 0 32px rgba(248,113,113,0.5)",
-            letterSpacing:"0.05em",
-            lineHeight:1,
-            transition:"color 0.1s",
-            minHeight:"1em",
-            display:"flex", alignItems:"center", justifyContent:"center"
-          }}>
-            {forbiddenLetter ?? "?"}
-          </div>
-          <div style={{fontSize:"11px", fontWeight:"800", letterSpacing:"0.14em", color:"#f87171", textTransform:"uppercase"}}>
-            {spinning ? "⏳ Letter kiezen…" : "🚫 Verboden letter"}
-          </div>
-        </div>
-
-        {/* Kaart */}
-        <div style={{background:"linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.98))", border:"3px solid rgba(96,165,250,0.3)", borderRadius:"24px", padding:"28px 24px", marginBottom:"8px", boxShadow:"0 8px 32px rgba(0,0,0,0.4)", textAlign:"center"}}>
-          <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(32px, 10vw, 44px)", color:"white", margin:0, lineHeight:1.1}}>{hyphenateWord(card)}</h2>
-        </div>
-
-        {/* Knoppen — zichtbaar tijdens spinning én playing */}
-        <div style={{display:"flex", gap:"10px", marginBottom:"12px"}}>
-          <button onClick={onSkip} disabled={spinning} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(248,113,113,0.4)", background:"rgba(248,113,113,0.1)", color: spinning ? "rgba(248,113,113,0.35)" : "#f87171", fontFamily:"'Righteous', cursive", fontSize:"18px", cursor: spinning ? "default" : "pointer"}}>✗ Skip</button>
-          <button onClick={onCorrect} disabled={spinning} style={{flex:2, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color: spinning ? "rgba(74,222,128,0.35)" : "#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor: spinning ? "default" : "pointer"}}>✓ Goed</button>
-        </div>
-
-        {/* Times Up Banner */}
-        {timesUp && (
-          <div className={`times-up-banner grace-active`} style={{marginBottom:"12px"}}>
-            <span>Tijd is op — nog <span className="grace-countdown">{graceCountdown !== null ? graceCountdown : '…'}</span>s om te raden!</span>
-          </div>
-        )}
       </div>
+
+      {/* ── Middelste sectie: verboden letter + woord (vult resterende ruimte) ── */}
+      <div className="word-stage">
+        <div className="word-anchor">
+
+          {/* Verboden letter */}
+          <div style={{display:"flex", flexDirection:"column", alignItems:"center", marginBottom:"16px", gap:"6px"}}>
+            <div style={{
+              fontFamily:"'Righteous', cursive",
+              fontSize:"clamp(56px, 18vw, 88px)",
+              color: spinning ? "rgba(248,113,113,0.5)" : "#f87171",
+              textShadow: spinning ? "none" : "0 0 32px rgba(248,113,113,0.5)",
+              letterSpacing:"0.05em",
+              lineHeight:1,
+              transition:"color 0.1s",
+              minHeight:"1em",
+              display:"flex", alignItems:"center", justifyContent:"center"
+            }}>
+              {forbiddenLetter ?? "?"}
+            </div>
+            <div style={{fontSize:"11px", fontWeight:"800", letterSpacing:"0.14em", color:"#f87171", textTransform:"uppercase"}}>
+              {spinning ? "⏳ Letter kiezen…" : "🚫 Verboden letter"}
+            </div>
+          </div>
+
+          {/* Woord kaart */}
+          <div style={{background:"linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.98))", border:"3px solid rgba(96,165,250,0.3)", borderRadius:"24px", padding:"28px 24px", boxShadow:"0 8px 32px rgba(0,0,0,0.4)", textAlign:"center"}}>
+            <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(32px, 10vw, 44px)", color:"white", margin:0, lineHeight:1.1}}>{insertSoftHyphens(card)}</h2>
+          </div>
+
+          {/* Times Up Banner */}
+          <div className={`times-up-banner${timesUp ? " grace-active" : " is-hidden"}`} aria-hidden={!timesUp}>
+            {timesUp && <span>Tijd is op — nog <span className="grace-countdown">{graceCountdown !== null ? graceCountdown : '\u2026'}</span>s om te raden!</span>}
+          </div>
+
+        </div>
+      </div>
+
+      {/* ── Onderste sectie: knoppen (vastzittend onderaan) ── */}
+      <div style={{display:"flex", gap:"10px", width:"100%", maxWidth:"520px", padding:"0 0 max(24px, env(safe-area-inset-bottom))", flexShrink:0}}>
+        <button onClick={onSkip} disabled={spinning} style={{flex:1, padding:"18px", borderRadius:"16px", border:`2.5px solid ${spinning ? "rgba(248,113,113,0.15)" : "rgba(248,113,113,0.4)"}`, background:`${spinning ? "rgba(248,113,113,0.04)" : "rgba(248,113,113,0.1)"}`, color: spinning ? "rgba(248,113,113,0.3)" : "#f87171", fontFamily:"'Righteous', cursive", fontSize:"18px", cursor: spinning ? "default" : "pointer", transition:"all 0.18s"}}>✗ Skip</button>
+        <button onClick={onCorrect} disabled={spinning} style={{flex:2, padding:"18px", borderRadius:"16px", border:`2.5px solid ${spinning ? "rgba(74,222,128,0.15)" : "rgba(74,222,128,0.4)"}`, background:`${spinning ? "rgba(74,222,128,0.04)" : "rgba(74,222,128,0.1)"}`, color: spinning ? "rgba(74,222,128,0.3)" : "#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor: spinning ? "default" : "pointer", transition:"all 0.18s"}}>✓ Goed</button>
+      </div>
+
     </div>
   );
 }
 
-const DEFAULT_ROUND_TIME = 120;
+const DEFAULT_ROUND_SECONDS = 120;
 
 const w = (n) => n === 1 ? "woord" : "woorden";
 const pt = (n) => n === 1 ? "punt" : "punten";
 
-const MESSAGES_GREAT = [
+const MESSAGES_EXCELLENT = [
   () => `Wat een enorme prestatie! 🏆`,
   () => `Jij verdient een sticker! ⭐`,
   () => `Je staat in vuur en vlam! 🔥`,
@@ -2750,7 +2764,7 @@ const MESSAGES_GREAT = [
   () => `Je hebt de groep getraumatiseerd 😵`,
   () => `Zelfs de klok is onder de indruk ⏱️`,
 ];
-const MESSAGES_OK = [
+const MESSAGES_DECENT = [
   (_, pts) => `${pts} ${pt(pts)}, lekker bezig! 🙌`,
   (_, pts) => `${pts} ${pt(pts)}, prima gedaan 👌`,
   (_, pts) => `${pts} ${pt(pts)}, niet slecht 👍`,
@@ -2761,7 +2775,7 @@ const MESSAGES_OK = [
   (_, pts) => `${pts} ${pt(pts)}, keurig gedaan 🎯`,
   (_, pts) => `${pts} ${pt(pts)}, je bent op dreef ⚡`,
 ];
-const MESSAGES_POOR = [
+const MESSAGES_LOW = [
   (_, pts) => `${pts} ${pt(pts)}, werk aan de winkel 🔨`,
   (_, pts) => `${pts} ${pt(pts)}, volgende keer beter 🙈`,
   () => `Meedoen is belangrijker dan winnen 🫠`,
@@ -2772,19 +2786,19 @@ const MESSAGES_POOR = [
   () => `Je gunt de rest een kans. Lief! 🎁`,
   (_, pts) => `${pts} ${pt(pts)}, de weg omhoog begint hier ⛰️`,
 ];
-const lastMessageIndex = { great: -1, ok: -1, poor: -1 };
-function getRandomEndMessage(correctCount, roundTime, totalScore = correctCount) {
+const lastShownMessageIndex = { great: -1, ok: -1, poor: -1 };
+function pickRoundEndMessage(correctCount, roundTime, totalScore = correctCount) {
   const ratio = roundTime > 0 ? totalScore / (roundTime / 6) : 0;
-  const [pool, tier] = ratio >= 0.6 ? [MESSAGES_GREAT, "great"] : ratio >= 0.4 ? [MESSAGES_OK, "ok"] : [MESSAGES_POOR, "poor"];
+  const [pool, tier] = ratio >= 0.6 ? [MESSAGES_EXCELLENT, "great"] : ratio >= 0.4 ? [MESSAGES_DECENT, "ok"] : [MESSAGES_LOW, "poor"];
   let idx;
-  do { idx = Math.floor(Math.random() * pool.length); } while (idx === lastMessageIndex[tier] && pool.length > 1);
-  lastMessageIndex[tier] = idx;
+  do { idx = Math.floor(Math.random() * pool.length); } while (idx === lastShownMessageIndex[tier] && pool.length > 1);
+  lastShownMessageIndex[tier] = idx;
   return { message: pool[idx](correctCount, totalScore), tier, count: correctCount, totalScore };
 }
 
-function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onStartLS, lsActiveLetters, setLsActiveLetters }) {
+function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onStartLS, lsActiveLetters, setLsActiveLetters }) {
   const [names, setNames] = useState(["Dennis", "Marion", "Theo"]);
-  const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
+  const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_SECONDS);
   const [teamMode, setTeamMode] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState(() => new Set(CATEGORIES.map((c) => c.id)));
   const [teamSizes, setTeamSizes] = useState([2, 2]);
@@ -2883,7 +2897,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
               <h1 className="logo-title" style={{background:"linear-gradient(135deg,#f59e0b,#ef4444,#f97316)", WebkitBackgroundClip:"text", backgroundClip:"text", WebkitTextFillColor:"transparent"}}>LetterSnel</h1>
               <p className="logo-sub">Noem een woord dat start met de letter!</p>
             </div>
-            <LetterSnelSetup onStartLS={onStartLS} names={lsNames} setNames={setLsNames} activeLetters={lsActiveLetters} setActiveLetters={setLsActiveLetters} />
+            <LetterSnelSetupPanel onStartLS={onStartLS} names={lsNames} setNames={setLsNames} activeLetters={lsActiveLetters} setActiveLetters={setLsActiveLetters} />
           </>
         ) : (
           <>
@@ -2967,7 +2981,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
                   <SoloTeamsToggle />
                   <div className="names-grid">
                     {names.map((name, i) => (
-                      <PlayerNameInput
+                      <PlayerNameField
                         key={i}
                         index={i}
                         value={name}
@@ -3025,7 +3039,7 @@ function SetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onSt
   );
 }
 
-function HandoffScreen({ player, teamName, onReady }) {
+function PlayerHandoffScreen({ player, teamName, onReady }) {
   return (
     <div className="screen handoff-screen">
       <div className="handoff-card">
@@ -3039,7 +3053,7 @@ function HandoffScreen({ player, teamName, onReady }) {
   );
 }
 
-function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, initialSkips = 0 }) {
+function ActiveRoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, initialSkips = 0 }) {
   const [wordIndex, setWordIndex] = useState(0);
   const [scores, setScores] = useState({ correct: 0, skipped: 0, points: 0 });
   const scoresRef = useRef({ correct: 0, skipped: 0, points: 0 });
@@ -3082,7 +3096,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
               graceTimerRef.current = null;
               const currentWord = words[wordIndexRef.current];
               if (currentWord) {
-                wordResultsRef.current.push({ word: currentWord, guessed: false, isBonus: getBonusPoints(currentWord) > 0, bonusPts: 0 });
+                wordResultsRef.current.push({ word: currentWord, guessed: false, isBonus: getBonusPointValue(currentWord) > 0, bonusPts: 0 });
                 scoresRef.current = { ...scoresRef.current, skipped: scoresRef.current.skipped + 1 };
                 setScores(s => ({ ...s, skipped: s.skipped + 1 }));
               }
@@ -3109,7 +3123,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
   const finishRound = (finalScores, finalWordIndex) => {
     if (graceTimerRef.current) { clearInterval(graceTimerRef.current); graceTimerRef.current = null; }
     const totalScore = finalScores.correct + wordResultsRef.current.reduce((sum, r) => sum + (r.bonusPts || 0), 0);
-    endMessageRef.current = getRandomEndMessage(finalScores.correct, roundTime, totalScore);
+    endMessageRef.current = pickRoundEndMessage(finalScores.correct, roundTime, totalScore);
     setDone(true);
     roundEndTimeoutRef.current = setTimeout(() => onRoundEnd({ ...finalScores, wordsUsed: finalWordIndex, wordResults: wordResultsRef.current, maxStreak: maxStreakRef.current }), 3000);
   };
@@ -3119,9 +3133,9 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
   const correct = () => {
     if (done || skipPenaltyRef.current > 0) return;
     const word = words[wordIndexRef.current];
-    const bonusPts = getBonusPoints(word);
+    const bonusPts = getBonusPointValue(word);
     const isBonus = bonusPts > 0;
-    playPling();
+    playCorrectSound();
     triggerFlash(isBonus ? "bonus" : "correct");
     wordResultsRef.current.push({ word, guessed: true, isBonus, bonusPts });
     const newScores = { correct: scoresRef.current.correct + 1, skipped: scoresRef.current.skipped, points: scoresRef.current.points + 1 + bonusPts };
@@ -3139,9 +3153,9 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
   const skip = () => {
     if (done || skipPenaltyRef.current > 0) return;
     const word = words[wordIndexRef.current];
-    playSkip();
+    playSkipSound();
     triggerFlash("skip");
-    wordResultsRef.current.push({ word, guessed: false, isBonus: getBonusPoints(word) > 0, bonusPts: 0 });
+    wordResultsRef.current.push({ word, guessed: false, isBonus: getBonusPointValue(word) > 0, bonusPts: 0 });
     const newScores = { ...scoresRef.current, skipped: scoresRef.current.skipped + 1 };
     scoresRef.current = newScores;
     setScores(newScores);
@@ -3173,10 +3187,10 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
   const timeLeft = Math.ceil(timeRemaining);
   const timerColor = timesUp ? "#f87171" : timeLeft > 30 ? "#4ade80" : timeLeft > 10 ? "#fbbf24" : "#f87171";
   const currentWord = words[wordIndex];
-  const isCurrentBonus = currentWord ? getBonusPoints(currentWord) > 0 : false;
+  const isCurrentBonus = currentWord ? getBonusPointValue(currentWord) > 0 : false;
 
   return (
-    <div className={`screen round-screen${flashClass(flash)} ${done ? "round-done" : ""}`}>
+    <div className={`screen round-screen${getFlashClass(flash)} ${done ? "round-done" : ""}`}>
       <div style={{width:"100%", maxWidth:"420px"}}>
 
         {/* WoordRaad header */}
@@ -3186,12 +3200,12 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
         </div>
 
         {/* Timer balk */}
-        <TimerBar pct={pct} color={timerColor} empty={timesUp} />
+        <TimerProgressBar pct={pct} color={timerColor} empty={timesUp} />
 
         {/* Timer midden, stats rechts */}
         <div style={{display:"flex", justifyContent:"flex-end", alignItems:"center", marginBottom:"8px"}}>
           <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:timerColor, flex:1, textAlign:"left"}}>
-            <TimerDisplay secs={timeLeft} timesUp={timesUp} />
+            <TimerCountdown secs={timeLeft} timesUp={timesUp} />
           </span>
           <div className="round-stats" style={{justifyContent:"flex-end"}}>
             <span className={`stat ${streak >= 3 ? "correct-stat-fire" : "correct-stat"}`}>
@@ -3228,7 +3242,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
           <>
             <div className="word-anchor">
               <div className="word-counter">woord {wordIndex + 1}</div>
-              <div key={wordIndex} className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ? hyphenateWord(currentWord) : "— geen woorden meer —"}</div>
+              <div key={wordIndex} className={`current-word${isCurrentBonus ? " bonus-word" : ""}`}>{currentWord ? insertSoftHyphens(currentWord) : "— geen woorden meer —"}</div>
               <div className={`times-up-banner${timesUp ? ' grace-active' : isCurrentBonus ? ' bonus-banner' : ' category-banner'}`}>
                 {timesUp
                   ? <span>Tijd is op — nog <span className="grace-countdown">{graceCountdown !== null ? graceCountdown : '…'}</span>s om te raden!</span>
@@ -3249,7 +3263,7 @@ function RoundScreen({ player, words, onRoundEnd, roundTime, initialPoints = 0, 
   );
 }
 
-function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRestart, onContinue, onShowStats, teams, teamScores, onStartTiebreaker }) {
+function ScoreboardScreen({ players, scores, currentRound, totalRounds, onNext, onRestart, onContinue, onShowStats, teams, teamScores, onStartTiebreaker }) {
   const isLast = currentRound >= totalRounds;
   const sortedTeams = teams ? [...teams].map((t, i) => ({ ...t, originalIndex: i, totalScore: teamScores[i], avgScore: teamScores[i] === null ? null : Math.round((teamScores[i] / t.players.length) * 10) / 10 })).sort((a, b) => { if (a.avgScore === null && b.avgScore === null) return 0; if (a.avgScore === null) return 1; if (b.avgScore === null) return -1; return b.avgScore - a.avgScore; }) : null;
   const sortedPlayers = !teams ? [...players].map((p, i) => ({ name: p, score: scores[i] })).sort((a, b) => { if (a.score === null && b.score === null) return 0; if (a.score === null) return 1; if (b.score === null) return -1; return b.score - a.score; }) : null;
@@ -3342,7 +3356,7 @@ function ScoreScreen({ players, scores, currentRound, totalRounds, onNext, onRes
   );
 }
 
-function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, onBack, variant = "klassiek" }) {
+function PlayerStatsScreen({ players, playerStats, scores, initialPlayer, roundTime, onBack, variant = "klassiek" }) {
   const isTaboe = variant === "taboe";
   const [activePlayer, setActivePlayer] = useState(initialPlayer ?? 0);
   const ps = playerStats[activePlayer];
@@ -3403,7 +3417,7 @@ function StatsScreen({ players, playerStats, scores, initialPlayer, roundTime, o
   );
 }
 
-function TiebreakerCategoryPicker({ candidateCategories, onCategoryChosen }) {
+function TiebreakerCategoryPickerScreen({ candidateCategories, onCategoryChosen }) {
   return (
     <div className="screen">
       <div className="score-card">
@@ -3417,7 +3431,7 @@ function TiebreakerCategoryPicker({ candidateCategories, onCategoryChosen }) {
   );
 }
 
-function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGuessed, onRestart, onStartTiebreaker }) {
+function TiebreakerRoundScreen({ players, tiebreakerState, onCategoryChosen, onWordGuessed, onRestart, onStartTiebreaker }) {
   const { tiedPlayerIndices, tiedTeamGroups, candidateCategories, chosenCategoryId, words, categoryLabel, times, currentStep } = tiebreakerState;
   const allDone = currentStep >= tiedPlayerIndices.length;
   const [subPhase, setSubPhase] = useState('handoff');
@@ -3426,7 +3440,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
   const timerRef = useRef(null);
   useEffect(() => { setSubPhase('handoff'); setElapsed(0); clearInterval(timerRef.current); }, [currentStep]);
   useEffect(() => () => clearInterval(timerRef.current), []);
-  if (!chosenCategoryId) return <TiebreakerCategoryPicker candidateCategories={candidateCategories} onCategoryChosen={onCategoryChosen} />;
+  if (!chosenCategoryId) return <TiebreakerCategoryPickerScreen candidateCategories={candidateCategories} onCategoryChosen={onCategoryChosen} />;
   const startRound = () => { setSubPhase('round'); startTimeRef.current = Date.now(); timerRef.current = setInterval(() => setElapsed((Date.now() - startTimeRef.current) / 1000), 50); };
   const handleGuessed = () => { clearInterval(timerRef.current); const finalTime = (Date.now() - startTimeRef.current) / 1000; setElapsed(finalTime); setSubPhase('handoff'); onWordGuessed(finalTime); };
   const currentPlayerIdx = allDone ? null : tiedPlayerIndices[currentStep];
@@ -3457,12 +3471,12 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
         </div></div>
       );
     }
-    return <TiebreakerSoloResults players={players} tiedPlayerIndices={tiedPlayerIndices} times={times} onRestart={onRestart} onStartTiebreaker={onStartTiebreaker} />;
+    return <TiebreakerSoloResultScreen players={players} tiedPlayerIndices={tiedPlayerIndices} times={times} onRestart={onRestart} onStartTiebreaker={onStartTiebreaker} />;
   }
   if (subPhase === 'handoff') {
     const currentTeamGroup = tiedTeamGroups?.find(g=>g.playerIndices.includes(currentPlayerIdx));
     return (
-      <TiebreakerHandoff
+      <TiebreakerHandoffScreen
         subtitle={`TIE-BREAKER · ${currentStep+1}/${tiedPlayerIndices.length}${currentTeamGroup ? ` · ${currentTeamGroup.teamName}` : ''}`}
         player={players[currentPlayerIdx]}
         tip1="Raad z.s.m. het random woord"
@@ -3471,7 +3485,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
       />
     );
   }
-  const elapsedDisplay = formatElapsed(elapsed);
+  const elapsedDisplay = formatElapsedTime(elapsed);
   return (
     <div className="screen round-screen">
       <div style={{width:"100%", maxWidth:"420px"}}>
@@ -3483,7 +3497,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
         </div>
 
         {/* Timer balk — groeit mee met de tijd, max bij 60s */}
-        <TimerBar pct={Math.min(elapsed / 60, 1)} color="#fbbf24" transition="width 0.05s linear" />
+        <TimerProgressBar pct={Math.min(elapsed / 60, 1)} color="#fbbf24" transition="width 0.05s linear" />
 
         {/* Tijd links, categorie rechts */}
         <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"8px"}}>
@@ -3495,7 +3509,7 @@ function TiebreakerScreen({ players, tiebreakerState, onCategoryChosen, onWordGu
       <div className="word-stage">
         <div className="word-anchor">
           <div className="word-counter">leg z.s.m. uit</div>
-          <div className="current-word">{hyphenateWord(currentWord)}</div>
+          <div className="current-word">{insertSoftHyphens(currentWord)}</div>
           <div className="times-up-banner is-hidden" aria-hidden="true" />
         </div>
       </div>
@@ -3514,15 +3528,15 @@ export default function App() {
   const [gameMode, setGameMode] = useState("woordraad"); // "woordraad" | "lettersnel"
   const [lsPlayers, setLsPlayers] = useState(null); // null = not started
   const [lsNames, setLsNames] = useState(["Dennis", "Marion", "Theo"]);
-  const LS_DEFAULT_LETTERS = ALPHABET_ALL.filter(l => !["C","Q","X","Y"].includes(l));
-  const [lsActiveLetters, setLsActiveLetters] = useState(LS_DEFAULT_LETTERS);
-  const [lsChosenLetters, setLsChosenLetters] = useState(LS_DEFAULT_LETTERS);
+  const LETTER_SNEL_DEFAULT_LETTERS = FULL_ALPHABET.filter(l => !["C","Q","X","Y"].includes(l));
+  const [lsActiveLetters, setLsActiveLetters] = useState(LETTER_SNEL_DEFAULT_LETTERS);
+  const [lsChosenLetters, setLsChosenLetters] = useState(LETTER_SNEL_DEFAULT_LETTERS);
   const [lsChosenGameMode, setLsChosenGameMode] = useState("klassiek");
   const [lsTargetScore, setLsTargetScore] = useState(10);
 
   const [wrMode, setWrMode] = useState("klassiek"); // "klassiek" | "taboe"
   const [taboePlayers, setTaboePlayers] = useState(null);
-  const [taboeRoundTime, setTaboeRoundTime] = useState(DEFAULT_ROUND_TIME);
+  const [taboeRoundTime, setTaboeRoundTime] = useState(DEFAULT_ROUND_SECONDS);
   const [taboeCategories, setTaboeCategories] = useState(() => new Set(CATEGORIES.map(c => c.id)));
 
   // WoordRaad state
@@ -3533,7 +3547,7 @@ export default function App() {
   const [roundNum, setRoundNum] = useState(0);
   const [wordDeck, setWordDeck] = useState([]);
   const [usedWords, setUsedWords] = useState(new Set());
-  const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_TIME);
+  const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_SECONDS);
   const [teams, setTeams] = useState(null);
   const [teamScores, setTeamScores] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(() => new Set());
@@ -3558,17 +3572,17 @@ export default function App() {
     setUsedWords(new Set()); setRoundTime(time);
     const catSet = categories instanceof Set ? categories : new Set();
     setSelectedCategory(catSet);
-    const pool = getWordPool(catSet);
+    const pool = buildWordPool(catSet);
     setWordDeck(shuffle(pool));
     setTeams(teamsData);
     setTeamScores(teamsData ? Array(teamsData.length).fill(null) : []);
     setPlayerStats(names.map(() => ({ rounds: [] })));
-    const order = buildPlayOrder(teamsData, names.length);
+    const order = buildPlayerTurnOrder(teamsData, names.length);
     setPlayOrder(order); setPlayOrderPos(0); setCurrentPlayerIdx(order[0] ?? 0);
     setPhase("handoff");
   };
 
-  const buildPlayOrder = (teamsData, totalPlayers) => {
+  const buildPlayerTurnOrder = (teamsData, totalPlayers) => {
     if (!teamsData) return Array.from({ length: totalPlayers }, (_, i) => i);
     const teamPlayerIndices = [];
     let offset = 0;
@@ -3609,7 +3623,7 @@ export default function App() {
   const onNext = () => {
     const nextPos = (playOrderPos + 1) % playOrder.length;
     setPlayOrderPos(nextPos); setCurrentPlayerIdx(playOrder[nextPos]);
-    const pool = getWordPool(selectedCategory);
+    const pool = buildWordPool(selectedCategory);
     const available = pool.filter(w => !usedWords.has(w));
     setWordDeck(shuffle(available.length >= 10 ? available : pool));
     setPhase("handoff");
@@ -3617,14 +3631,14 @@ export default function App() {
 
   const onContinue = () => {
     setPlayOrderPos(0); setCurrentPlayerIdx(playOrder[0] ?? 0); setRoundNum(0);
-    const pool = getWordPool(selectedCategory);
+    const pool = buildWordPool(selectedCategory);
     const available = pool.filter(w => !usedWords.has(w));
     setWordDeck(shuffle(available.length >= 10 ? available : pool));
     setPhase("handoff");
   };
 
   const onStartTiebreaker = (tiedPlayerIndices) => {
-    const candidateCategories = buildTiebreakerCandidates(selectedCategory);
+    const candidateCategories = buildTiebreakerCategoryOptions(selectedCategory);
     let tiedTeamGroups = null;
     let orderedTiedPlayerIndices = tiedPlayerIndices;
     if (teams) {
@@ -3655,7 +3669,7 @@ export default function App() {
 
   const onRestart = () => {
     setPhase("setup"); setPlayers([]); setScores([]); setUsedWords(new Set()); setWordDeck([]);
-    setRoundTime(DEFAULT_ROUND_TIME); setSelectedCategory(new Set()); setTeams(null); setTeamScores([]);
+    setRoundTime(DEFAULT_ROUND_SECONDS); setSelectedCategory(new Set()); setTeams(null); setTeamScores([]);
     setPlayerStats([]); setPlayOrder([]); setPlayOrderPos(0); setTiebreakerState(null);
   };
 
@@ -3664,7 +3678,7 @@ export default function App() {
     return (
       <>
         <style>{CSS}</style>
-        <LetterSnelGame players={lsPlayers} onRestart={() => setLsPlayers(null)} activeLetters={lsChosenLetters} gameMode={lsChosenGameMode} targetScore={lsTargetScore} />
+        <LetterSnelGameRouter players={lsPlayers} onRestart={() => setLsPlayers(null)} activeLetters={lsChosenLetters} gameMode={lsChosenGameMode} targetScore={lsTargetScore} />
       </>
     );
   }
@@ -3674,7 +3688,7 @@ export default function App() {
     return (
       <>
         <style>{CSS}</style>
-        <TaboeGame players={taboePlayers} roundTime={taboeRoundTime} selectedCategories={taboeCategories} onRestart={() => { setTaboePlayers(null); setWrMode("klassiek"); }} />
+        <TaboeRoundGame players={taboePlayers} roundTime={taboeRoundTime} selectedCategories={taboeCategories} onRestart={() => { setTaboePlayers(null); setWrMode("klassiek"); }} />
       </>
     );
   }
@@ -3684,7 +3698,7 @@ export default function App() {
       <style>{CSS}</style>
 
       {phase === "setup" && (
-        <SetupScreen
+        <GameSetupScreen
           onStart={startGame}
           gameMode={gameMode}
           setGameMode={(m) => { setGameMode(m); setLsPlayers(null); }}
@@ -3697,27 +3711,27 @@ export default function App() {
       )}
 
       {gameMode === "woordraad" && phase === "handoff" && (
-        <HandoffScreen player={players[currentPlayerIdx]} teamName={teams ? teams[getTeamIdxForPlayer(currentPlayerIdx)]?.name : null} onReady={() => setPhase("round")} />
+        <PlayerHandoffScreen player={players[currentPlayerIdx]} teamName={teams ? teams[getTeamIdxForPlayer(currentPlayerIdx)]?.name : null} onReady={() => setPhase("round")} />
       )}
 
       {gameMode === "woordraad" && phase === "round" && (() => {
         const currentPlayerTotalPoints = scores[currentPlayerIdx] ?? 0;
         const currentPlayerTotalSkips = playerStats[currentPlayerIdx]?.rounds.reduce((sum, r) => sum + r.skipped, 0) ?? 0;
         return (
-          <RoundScreen key={`${currentPlayerIdx}-${roundNum}`} player={players[currentPlayerIdx]} words={wordDeck} onRoundEnd={onRoundEnd} roundTime={roundTime} initialPoints={currentPlayerTotalPoints} initialSkips={currentPlayerTotalSkips} />
+          <ActiveRoundScreen key={`${currentPlayerIdx}-${roundNum}`} player={players[currentPlayerIdx]} words={wordDeck} onRoundEnd={onRoundEnd} roundTime={roundTime} initialPoints={currentPlayerTotalPoints} initialSkips={currentPlayerTotalSkips} />
         );
       })()}
 
       {gameMode === "woordraad" && phase === "score" && (
-        <ScoreScreen players={players} scores={scores} currentRound={roundNum} totalRounds={totalRounds} onNext={onNext} onRestart={onRestart} onContinue={onContinue} onShowStats={(playerIdx) => { setStatsInitialPlayer(playerIdx ?? 0); setPhase("stats"); }} teams={teams} teamScores={teamScores} onStartTiebreaker={onStartTiebreaker} />
+        <ScoreboardScreen players={players} scores={scores} currentRound={roundNum} totalRounds={totalRounds} onNext={onNext} onRestart={onRestart} onContinue={onContinue} onShowStats={(playerIdx) => { setStatsInitialPlayer(playerIdx ?? 0); setPhase("stats"); }} teams={teams} teamScores={teamScores} onStartTiebreaker={onStartTiebreaker} />
       )}
 
       {gameMode === "woordraad" && phase === "tiebreaker" && tiebreakerState && (
-        <TiebreakerScreen players={players} tiebreakerState={tiebreakerState} onCategoryChosen={onTiebreakerCategoryChosen} onWordGuessed={onTiebreakerWordGuessed} onRestart={onRestart} onStartTiebreaker={onStartTiebreaker} />
+        <TiebreakerRoundScreen players={players} tiebreakerState={tiebreakerState} onCategoryChosen={onTiebreakerCategoryChosen} onWordGuessed={onTiebreakerWordGuessed} onRestart={onRestart} onStartTiebreaker={onStartTiebreaker} />
       )}
 
       {gameMode === "woordraad" && phase === "stats" && (
-        <StatsScreen players={players} playerStats={playerStats} scores={scores} initialPlayer={statsInitialPlayer} roundTime={roundTime} onBack={() => setPhase("score")} />
+        <PlayerStatsScreen players={players} playerStats={playerStats} scores={scores} initialPlayer={statsInitialPlayer} roundTime={roundTime} onBack={() => setPhase("score")} />
       )}
     </>
   );
