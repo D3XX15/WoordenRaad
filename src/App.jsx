@@ -156,7 +156,7 @@ function formatElapsedTime(elapsed) {
 /**
  * Gedeeld handoff-scherm voor tie-breakers (Taboe en WoordRaad Klassiek).
  */
-function TiebreakerHandoffScreen({ subtitle, player, tip1, tip2, onStart }) {
+function TiebreakerHandoffScreen({ subtitle, player, tip1, tip2, tip3, onStart }) {
   return (
     <div className="screen handoff-screen"><div className="handoff-card">
       <div className="handoff-icon">⚡</div>
@@ -164,6 +164,7 @@ function TiebreakerHandoffScreen({ subtitle, player, tip1, tip2, onStart }) {
       <h2 className="handoff-name">{player}</h2>
       <p className="handoff-tip mb-2">{tip1}</p>
       <p className="handoff-tip mt-0">{tip2}</p>
+      {tip3 && <p className="handoff-tip" style={{marginTop:"12px"}}>{tip3}</p>}
       <button className="handoff-btn" onClick={onStart}>Start tie-breaker!</button>
     </div></div>
   );
@@ -187,7 +188,7 @@ function PlayerNameField({ index, value, onChange, onRemove, canRemove, placehol
           placeholder={placeholder}
           value={value}
           onChange={e => onChange(e.target.value)}
-          maxLength={16}
+          maxLength={8}
         />
       </div>
       {canRemove && (
@@ -318,7 +319,7 @@ function LetterSnelClassicGame({ players, onRestart, activeLetters, targetScore 
       {(phase === "ready" || phase === "playing" || phase === "awarded") && (
         <div className="ls-award-section">
           <div className="ls-award-label">{phase === "ready" ? "Druk op \"kies letter\" om te beginnen" : phase === "awarded" ? "" : spinning ? "Letter kiezen…" : "Wie was er het eerst?"}</div>
-          <div className="ls-scores-strip">
+          <div className="ls-scores-strip" style={{gridTemplateColumns:`repeat(${players.length % 4 === 0 ? 4 : players.length % 3 === 0 ? 3 : players.length % 2 === 0 ? 2 : [2,3,4].reduce((b,c) => (players.length % c > players.length % b ? c : b))}, 1fr)`}}>
             {players.map((p, i) => (
               <button key={i} className={`ls-score-chip ls-score-chip-btn ${scores[i] === topScore && topScore > 0 ? "ls-score-leader" : ""}`} onClick={() => phase === "playing" && !spinning && awardPoint(i)} disabled={phase === "ready" || spinning || phase === "awarded"}>
                 <span className="ls-score-chip-name">{p}</span>
@@ -652,14 +653,14 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
           {phase === "roundover" && (roundWinner !== null ? <>🏆 <span className="ls-ketting-turn-name">{players[roundWinner]}</span> wint de ketting!</> : "Niemand wist iets te bedenken 🤷")}
         </div>
 
-        <div className="ls-scores-strip">
+        <div className="ls-scores-strip" style={{gridTemplateColumns:`repeat(${players.length % 4 === 0 ? 4 : players.length % 3 === 0 ? 3 : players.length % 2 === 0 ? 2 : [2,3,4].reduce((b,c) => (players.length % c > players.length % b ? c : b))}, 1fr)`}}>
           {players.map((p, i) => {
             const isElim = eliminated.includes(i);
             const isActive = (phase === "playing" && activePlayers[currentTurnIdx % activePlayers.length] === i)
                           || ((phase === "ready" || phase === "spinning") && activePlayers[0] === i);
             const isWinner = phase === "roundover" && roundWinner === i;
             return (
-              <div key={i} className={`ls-score-chip ls-ketting-chip ${isActive ? "ls-ketting-chip-active" : ""} ${isElim ? "ls-ketting-chip-elim" : ""} ${isWinner ? "ls-ketting-chip-winner" : ""}`}>
+              <div key={i} role="status" aria-label={`${p}: ${scores[i]} punten`} className={`ls-score-chip ls-ketting-chip ${isActive ? "ls-ketting-chip-active" : ""} ${isElim ? "ls-ketting-chip-elim" : ""} ${isWinner ? "ls-ketting-chip-winner" : ""}`} style={{cursor:"default"}}>
                 <span className="ls-score-chip-name">{p}</span>
                 <span className="ls-score-chip-val">{scores[i]}</span>
               </div>
@@ -2245,6 +2246,7 @@ function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, 
 
   const { spin: doSpinLetter, spinning } = useLetterSpinAnimation({
     pool: TABOE_LETTER_POOL,
+    exclude: forbiddenLetter, // voorkomt dezelfde letter bij een herstart tie-breaker
     onLetter: setForbiddenLetter,
     onDone: (_target) => { setLetterLocked(true); },
   });
@@ -2315,7 +2317,8 @@ function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, 
         subtitle={`TIE-BREAKER · ${currentStep+1}/${tiedPlayerIndices.length}`}
         player={players[currentPlayerIdx]}
         tip1="Leg z.s.m. het woord uit"
-        tip2={<>Verboden letter: <span style={{color:"#f87171", fontWeight:800}}>{forbiddenLetter}</span> · {categoryLabel}</>}
+        tip2={`in de categorie: ${categoryLabel}`}
+        tip3={<>Verboden letter: <span style={{color:"#f87171", fontWeight:800}}>{forbiddenLetter}</span></>}
         onStart={startRound}
       />
     );
@@ -2325,34 +2328,44 @@ function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, 
   if (subPhase === "playing") {
     const elapsedDisplay = formatElapsedTime(elapsed);
     return (
-      <div className={`screen${getFlashClass(flash)}`}>
+      <div className={`screen round-screen${getFlashClass(flash)}`}>
+
+        {/* ── Bovenste sectie: header + timer ── */}
         <div style={{width:"100%", maxWidth:"420px"}}>
           <div className="ls-header">
             <div className="wr-logo">Tie-Breaker</div>
             <span className="round-player" style={{fontSize:"22px", textAlign:"right"}}>{players[currentPlayerIdx]}</span>
           </div>
           <TimerProgressBar pct={Math.min(elapsed / 60, 1)} color="#fbbf24" transition="width 0.05s linear" />
-          <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"16px"}}>
+          <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"8px"}}>
             <span style={{fontFamily:"'Righteous', cursive", fontSize:"22px", color:"#fbbf24", flex:1, textAlign:"left"}}>{elapsedDisplay}</span>
             <div className="round-stats" style={{flex:1, justifyContent:"flex-end"}}>
               <span className="stat correct-stat"><span>{currentStep+1}/{tiedPlayerIndices.length}</span></span>
             </div>
           </div>
-          {/* Verboden letter */}
-          <div style={{display:"flex", flexDirection:"column", alignItems:"center", marginBottom:"16px", gap:"10px"}}>
-            <div style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(56px,18vw,88px)", color:"#f87171", textShadow:"0 0 32px rgba(248,113,113,0.5)", letterSpacing:"0.05em", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center"}}>
-              {forbiddenLetter}
+        </div>
+
+        {/* ── Middelste sectie: verboden letter + woord ── */}
+        <div className="word-stage">
+          <div className="word-anchor">
+            <div style={{display:"flex", flexDirection:"column", alignItems:"center", marginBottom:"16px", gap:"6px"}}>
+              <div style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(56px,18vw,88px)", color:"#f87171", textShadow:"0 0 32px rgba(248,113,113,0.5)", letterSpacing:"0.05em", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center"}}>
+                {forbiddenLetter}
+              </div>
+              <div style={{fontSize:"11px", fontWeight:"800", letterSpacing:"0.14em", color:"#f87171", textTransform:"uppercase"}}>🚫 Verboden letter</div>
             </div>
-            <div style={{fontSize:"11px", fontWeight:"800", letterSpacing:"0.14em", color:"#f87171", textTransform:"uppercase"}}>🚫 Verboden letter</div>
-          </div>
-          {/* Woord kaart */}
-          <div style={{background:"linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.98))", border:"3px solid rgba(96,165,250,0.3)", borderRadius:"24px", padding:"28px 24px", marginBottom:"16px", boxShadow:"0 8px 32px rgba(0,0,0,0.4)", textAlign:"center"}}>
-            <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(32px,10vw,44px)", color:"white", margin:0, lineHeight:1.1}}>{currentWord ? insertSoftHyphens(currentWord) : "—"}</h2>
-          </div>
-          <div style={{display:"flex", gap:"10px", marginBottom:"12px"}}>
-            <button onClick={handleCorrect} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color:"#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor:"pointer"}}>✓ Goed</button>
+            <div style={{background:"linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.98))", border:"3px solid rgba(96,165,250,0.3)", borderRadius:"24px", padding:"28px 24px", boxShadow:"0 8px 32px rgba(0,0,0,0.4)", textAlign:"center", width:"100%", minHeight:"120px", display:"flex", alignItems:"center", justifyContent:"center"}}>
+              <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(32px,10vw,44px)", color:"white", margin:0, lineHeight:1.1}}>{currentWord ? insertSoftHyphens(currentWord) : "—"}</h2>
+            </div>
+            <div className="times-up-banner is-hidden" aria-hidden="true" />
           </div>
         </div>
+
+        {/* ── Onderste sectie: knop ── */}
+        <div style={{display:"flex", gap:"10px", width:"100%", maxWidth:"520px", padding:"0 0 max(24px, env(safe-area-inset-bottom))", flexShrink:0}}>
+          <button onClick={handleCorrect} style={{flex:1, padding:"18px", borderRadius:"16px", border:"2.5px solid rgba(74,222,128,0.4)", background:"rgba(74,222,128,0.1)", color:"#4ade80", fontFamily:"'Righteous', cursive", fontSize:"20px", cursor:"pointer"}}>✓ Goed</button>
+        </div>
+
       </div>
     );
   }
@@ -2720,13 +2733,15 @@ function TaboeRoundGame({ players, onRestart, roundTime, selectedCategories }) {
           </div>
 
           {/* Woord kaart */}
-          <div style={{background:"linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.98))", border:"3px solid rgba(96,165,250,0.3)", borderRadius:"24px", padding:"28px 24px", boxShadow:"0 8px 32px rgba(0,0,0,0.4)", textAlign:"center"}}>
+          <div style={{background:"linear-gradient(135deg,rgba(30,41,59,0.95),rgba(15,23,42,0.98))", border:"3px solid rgba(96,165,250,0.3)", borderRadius:"24px", padding:"28px 24px", boxShadow:"0 8px 32px rgba(0,0,0,0.4)", textAlign:"center", width:"100%", minHeight:"120px", display:"flex", alignItems:"center", justifyContent:"center"}}>
             <h2 style={{fontFamily:"'Righteous', cursive", fontSize:"clamp(32px, 10vw, 44px)", color:"white", margin:0, lineHeight:1.1}}>{insertSoftHyphens(card)}</h2>
           </div>
 
-          {/* Times Up Banner */}
-          <div className={`times-up-banner${timesUp ? " grace-active" : " is-hidden"}`} aria-hidden={!timesUp}>
-            {timesUp && <span>Tijd is op — nog <span className="grace-countdown">{graceCountdown !== null ? graceCountdown : '\u2026'}</span>s om te raden!</span>}
+          {/* Categorie label / Times Up Banner */}
+          <div className={`times-up-banner${timesUp ? " grace-active" : " category-banner"}`}>
+            {timesUp
+              ? <span>Tijd is op — nog <span className="grace-countdown">{graceCountdown !== null ? graceCountdown : '…'}</span>s om te raden!</span>
+              : WORD_TO_CATEGORY[card]?.label ?? '📦 Categorie'}
           </div>
 
         </div>
@@ -3806,8 +3821,8 @@ const CSS = `
   .ls-restart-btn:hover { background: rgba(255,255,255,0.15); color: white; }
 
   /* Scores strip */
-  .ls-scores-strip { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-  .ls-score-chip { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 14px 18px; border-radius: 20px; background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.12); transition: all 0.2s; }
+  .ls-scores-strip { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; } /* kolommen worden inline overschreven op basis van spelersaantal */
+  .ls-score-chip { display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 0 10px 0 18px; height: 56px; border-radius: 20px; background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.12); transition: all 0.2s; overflow: hidden; }
   .ls-score-leader { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); }
   .ls-score-chip-name { font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.85); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .ls-score-chip-val { font-family: 'Righteous', cursive; font-size: 22px; color: #f59e0b; min-width: 24px; text-align: right; flex-shrink: 0; }
@@ -3952,7 +3967,7 @@ const CSS = `
   .skip-stat { background: rgba(248,113,113,0.15); color: #f87171; }
   .round-stats-cat { font-size: 12px; color: rgba(255,255,255,0.4); }
   .word-stage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; max-width: 520px; width: 100%; gap: 0; padding: 20px; }
-  .word-anchor { display: flex; flex-direction: column; align-items: center; }
+  .word-anchor { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 420px; }
   .word-counter { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 10px; }
   .current-word { font-family: 'Righteous', cursive; font-size: clamp(38px, 11vw, 80px); background: linear-gradient(135deg, #f9fafb, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.15; animation: wordIn 0.3s cubic-bezier(0.34,1.56,0.64,1); word-break: break-word; overflow-wrap: break-word; hyphens: manual; -webkit-hyphens: manual; max-width: 100%; padding: 0 8px; text-align: center; }
   .current-word.bonus-word { background: linear-gradient(135deg, #fef9c3, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
