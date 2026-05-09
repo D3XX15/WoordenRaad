@@ -3824,7 +3824,7 @@ const CSS = `
 
   /* Scores strip */
   .ls-scores-strip { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; } /* kolommen worden inline overschreven op basis van spelersaantal */
-  .ls-score-chip { display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 0 10px 0 18px; height: 56px; border-radius: 20px; background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.12); transition: all 0.2s; overflow: hidden; }
+  .ls-score-chip { display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 0 18px; height: 56px; border-radius: 20px; background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.12); transition: all 0.2s; overflow: hidden; }
   .ls-score-leader { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); }
   .ls-score-chip-name { font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.85); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .ls-score-chip-val { font-family: 'Righteous', cursive; font-size: 22px; color: #f59e0b; min-width: 24px; text-align: right; flex-shrink: 0; }
