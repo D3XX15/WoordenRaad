@@ -2394,8 +2394,8 @@ function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, 
             {spinning ? "⏳ Letter kiezen…" : letterLocked ? "🚫 Verboden letter" : "Genereer een verboden letter"}
           </div>
           <button onClick={spinLetter} disabled={spinning}
-            style={{fontFamily:"'Righteous', cursive", fontSize:"16px", padding:"12px 28px", borderRadius:"14px", border:"2.5px solid rgba(248,113,113,0.4)", background:"rgba(248,113,113,0.1)", color: spinning ? "rgba(248,113,113,0.4)" : "#f87171", cursor: spinning ? "default" : "pointer"}}>
-            {spinning ? "Draaien…" : letterLocked ? "Opnieuw draaien 🎲" : "Genereer letter 🎲"}
+            style={{fontFamily:"'Righteous', cursive", fontSize:"16px", padding:"12px 28px", borderRadius:"14px", border:"2.5px solid rgba(245,158,11,0.5)", background:"rgba(245,158,11,0.15)", color: spinning ? "rgba(245,158,11,0.4)" : "#f59e0b", cursor: spinning ? "default" : "pointer"}}>
+            {spinning ? "Draaien…" : letterLocked ? "Opnieuw draaien" : "Genereer letter"}
           </button>
         </div>
 
