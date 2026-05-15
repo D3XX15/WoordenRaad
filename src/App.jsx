@@ -2156,7 +2156,7 @@ const EXTRA_WORD_PARTS = new Set([
 function insertSoftHyphens(word) {
   if (!word) return word;
   if (word.includes(' ')) return word.split(' ').map(insertSoftHyphens).join(' ');
-  if (word.includes('-')) return word.replace(/-/g, '-\u00AD');
+  if (word.includes('-')) return word.replace(/-/g, '\u00AD-');
   if (word.length <= 10) return word;
   const lower = word.toLowerCase();
   const isKnown = (str) => HYPHENATION_DICT.has(str) || EXTRA_WORD_PARTS.has(str);
