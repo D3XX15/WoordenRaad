@@ -1769,6 +1769,7 @@ const WORDS_BY_CATEGORY = (() => {
     'de kou is uit de lucht',
     'zijn hand overspelen',
     'zijn tanden laten zien',
+    'zijn tanden bloot lachen',
     'zijn vingers branden aan iets',
     'zo vader, zo zoon',
     'broodjeaapverhaal',
