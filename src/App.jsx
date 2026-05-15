@@ -1400,7 +1400,7 @@ const WORDS_BY_CATEGORY = (() => {
     'handschoenen', 'pet', 'bril', 'vest', 'trui', 'heuptas', 'sneaker', 'jurk', 'polo', 'wandelstok', 'sandalen', 'tuinbroek', 
     'rits', 'gesp', 'camouflage', 'helm', 'uniform', 'bodywarmer', 'blouse', 'rok', 'colbert', 'pak', 'smoking', 'japon',
     'sokken', 'ondergoed', 'beha', 'bikini', 'laarzen', 'legging', 'tanktop', 'longsleeve', 'oorbel', 'trouwring', 'vlinderdas',
-    'nekwarmer', 'wanten', 'baret', 'tulband', 'haarband', 'haarspeld', 'sleutelhanger', 'badpak', 'zwembroek', 'minirok', 'mode',
+    'wanten', 'baret', 'tulband', 'haarband', 'haarspeld', 'sleutelhanger', 'badpak', 'zwembroek', 'minirok', 'mode',
     'beenwarmers', 'slippers', 'zonneklep', 'portemonnee', 'piercing', 'bretels', 'polsband', 'pantoffels', 'broekzak', 'diadeem',
     'coltrui', 'overhemd', 'hoodie', 'sweater', 'joggingbroek', 'hemd', 'korset', 'motorpak', 'jumpsuit', 'kousen', 'blinddoek',
     'panty', 'klompen', 'veters', 'bomberjack', 'garderobe', 'laptoptas', 'wetsuit', 'trainingspak', 'broekspijp', 'boxershort',
