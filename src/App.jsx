@@ -1188,7 +1188,7 @@ const WORDS_BY_CATEGORY = (() => {
 
   const acties = [
     'applaudisseren', 'fluisteren', 'gebaren', 'gooien', 'graven', 'huppelen', 'rollen', 'ontbijten', 'diëten',
-    'ijsberen', 'klunen', 'knuffelen', 'kruipen', 'schaterlachen', 'aanvallen', 'slapen', 'stomen',  'strijken',
+    'klunen', 'knuffelen', 'kruipen', 'schaterlachen', 'aanvallen', 'slapen', 'stomen',  'strijken',
     'lopen', 'maaien', 'naaien', 'omhelzen', 'pesten', 'rennen', 'schreeuwen', 'struikelen', 'stofzuigen', 'kwijlen',
     'vallen', 'vangen', 'verstoppen', 'vliegen', 'vouwen', 'waggelen', 'helpen', 'hijsen', 'pakken', 'afkicken',
     'wiebelen', 'afrekenen', 'afscheid nemen', 'bellen', 'betalen', 'huilen', 'oogsten', 'schuilen', 'kluiven',
