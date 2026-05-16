@@ -2336,7 +2336,7 @@ function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, 
       <div className={`screen round-screen${getFlashClass(flash)}`}>
 
         {/* ── Bovenste sectie: header + timer ── */}
-        <div style={{width:"100%", maxWidth:"420px"}}>
+        <div style={{width:"100%"}}>
           <div className="ls-header">
             <div className="wr-logo">Tie-Breaker</div>
             <span className="round-player" style={{fontSize:"22px", textAlign:"right"}}>{players[currentPlayerIdx]}</span>
@@ -2681,7 +2681,7 @@ function TaboeRoundGame({ players, onRestart, roundTime, selectedCategories }) {
     <div className={`screen round-screen${getFlashClass(flash)}`}>
 
       {/* ── Bovenste sectie: header + timer (vastzittend bovenaan) ── */}
-      <div style={{width:"100%", maxWidth:"420px"}}>
+      <div style={{width:"100%"}}>
 
         {/* WoordRaad header */}
         <div className="ls-header">
@@ -3211,7 +3211,7 @@ function ActiveRoundScreen({ player, words, onRoundEnd, roundTime, initialPoints
 
   return (
     <div className={`screen round-screen${getFlashClass(flash)} ${done ? "round-done" : ""}`}>
-      <div style={{width:"100%", maxWidth:"420px"}}>
+      <div style={{width:"100%"}}>
 
         {/* WoordRaad header */}
         <div className="ls-header">
@@ -3508,7 +3508,7 @@ function TiebreakerRoundScreen({ players, tiebreakerState, onCategoryChosen, onW
   const elapsedDisplay = formatElapsedTime(elapsed);
   return (
     <div className="screen round-screen">
-      <div style={{width:"100%", maxWidth:"420px"}}>
+      <div style={{width:"100%"}}>
 
         {/* Tie-Breaker header */}
         <div className="ls-header">
@@ -3956,9 +3956,9 @@ const CSS = `
   .skip-stat { background: rgba(248,113,113,0.15); color: #f87171; }
   .round-stats-cat { font-size: 12px; color: rgba(255,255,255,0.4); }
   .word-stage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; max-width: 520px; width: 100%; gap: 0; padding: 20px; }
-  .word-anchor { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 420px; }
+  .word-anchor { display: flex; flex-direction: column; align-items: center; width: 100%; }
   .word-counter { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 10px; }
-  .current-word { font-family: 'Righteous', cursive; font-size: clamp(38px, 11vw, 80px); background: linear-gradient(135deg, #f9fafb, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.15; animation: wordIn 0.3s cubic-bezier(0.34,1.56,0.64,1); word-break: break-word; overflow-wrap: break-word; hyphens: manual; -webkit-hyphens: manual; max-width: 100%; padding: 0 8px; text-align: center; }
+  .current-word { font-family: 'Righteous', cursive; font-size: clamp(38px, 11vw, 120px); background: linear-gradient(135deg, #f9fafb, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.15; animation: wordIn 0.3s cubic-bezier(0.34,1.56,0.64,1); word-break: break-word; overflow-wrap: break-word; hyphens: manual; -webkit-hyphens: manual; max-width: 100%; padding: 0 8px; text-align: center; }
   .current-word.bonus-word { background: linear-gradient(135deg, #fef9c3, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .times-up-banner { font-family: 'Righteous', cursive; font-size: clamp(13px, 3.5vw, 16px); color: #f87171; background: rgba(248,113,113,0.12); border: 3px solid rgba(248,113,113,0.35); border-radius: 12px; padding: 8px 16px; text-align: center; min-height: 40px; margin-top: 20px; position: relative; overflow: hidden; }
   .times-up-banner.grace-active::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(248,113,113,0.22); animation: grace-drain 10s linear forwards; border-radius: 9px 0 0 9px; pointer-events: none; }
@@ -3977,7 +3977,7 @@ const CSS = `
   .word-done-msg.tier-ok { color: #fbbf24; }
   .word-done-msg.tier-great { color: #4ade80; }
 
-  .action-row { display: flex; gap: 12px; width: 100%; max-width: 520px; padding: 0 0 max(24px, env(safe-area-inset-bottom)); flex-shrink: 0; }
+  .action-row { display: flex; gap: 12px; width: 100%; padding: 0 0 max(24px, env(safe-area-inset-bottom)); flex-shrink: 0; }
   .action-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 20px 12px; border-radius: 20px; border: none; cursor: pointer; font-family: 'Righteous', cursive; transition: all 0.18s cubic-bezier(0.34,1.56,0.64,1); -webkit-tap-highlight-color: transparent; min-width: 0; }
   .action-btn:focus { outline: none; }
   .action-btn:active { transform: scale(0.93); }
@@ -4092,4 +4092,5 @@ const CSS = `
 
   @media (max-width: 380px) { .names-grid { grid-template-columns: 1fr; } .logo-title { font-size: 28px; } }
   @media (max-height: 680px) { .handoff-card { padding: 28px 20px; } .handoff-icon { font-size: 40px; margin-bottom: 10px; } .word-stage { gap: 10px; padding: 12px; } }
+  @media (min-width: 700px) { .ls-screen { max-width: 800px; } .word-stage { max-width: 800px; } .word-anchor { max-width: 760px; } }
 `;
