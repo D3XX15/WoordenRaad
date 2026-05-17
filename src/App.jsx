@@ -297,6 +297,12 @@ function LetterSnelClassicGame({ players, onRestart, activeLetters, targetScore 
     setPhase("ready");
   };
 
+  useEffect(() => {
+    if (phase !== "awarded") return;
+    const t = setTimeout(nextCard, 2500);
+    return () => clearTimeout(t);
+  }, [phase]);
+
   const topScore = Math.max(...scores);
 
   if (gameWinner !== null) {
@@ -312,8 +318,8 @@ function LetterSnelClassicGame({ players, onRestart, activeLetters, targetScore 
           letter={phase === "ready" ? null : letter}
           spinning={spinning}
           trophy={phase === "awarded"}
-          onClick={spinning ? null : phase === "awarded" ? nextCard : spinLetter}
-          clickable={!spinning}
+          onClick={spinning || phase === "awarded" ? null : spinLetter}
+          clickable={!spinning && phase !== "awarded"}
         />
       </div>
       {(phase === "ready" || phase === "playing" || phase === "awarded") && (
@@ -614,6 +620,12 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
   const timesUp = timeRemaining <= 0;
   const timerColor = timerPct > 0.5 ? "#4ade80" : timerPct > 0.25 ? "#fbbf24" : "#f87171";
 
+  useEffect(() => {
+    if (phase !== "roundover") return;
+    const t = setTimeout(() => nextRound(roundWinner), 2500);
+    return () => clearTimeout(t);
+  }, [phase]);
+
   if (gameWinner !== null) {
     return <LetterSnelWinnerScreen players={players} scores={scores} winnaarIdx={gameWinner} onRestart={onRestart} />;
   }
@@ -634,10 +646,9 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
           onClick={
             phase === "ready" ? () => { setPhase("spinning"); spinLetter(); } :
             phase === "playing" ? handleCorrect :
-            phase === "roundover" ? () => nextRound(roundWinner) :
             null
           }
-          clickable={phase !== "spinning"}
+          clickable={phase !== "spinning" && phase !== "roundover"}
         />
       </div>
 
@@ -3813,7 +3824,7 @@ const CSS = `
   .ls-ketting-btn-good:hover { background: rgba(74,222,128,0.25); border-color: #4ade80; }
 
   /* ── LS Game Screen ── */
-  .ls-screen { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 520px; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom)); gap: 0; position: relative; z-index: 1; }
+  .ls-screen { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 520px; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom)); gap: 0; position: relative; z-index: 1; justify-content: space-between; }
 
   .ls-header { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 16px 0 12px; }
   .ls-logo { font-family: 'Righteous', cursive; font-size: 22px; background: linear-gradient(135deg, #f59e0b, #ef4444, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
@@ -3837,12 +3848,12 @@ const CSS = `
   .ls-card-text { font-family: 'Righteous', cursive; font-size: clamp(22px, 6vw, 36px); background: linear-gradient(135deg, #fef9c3, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.2; text-align: center; }
 
   /* Letter */
-  .ls-letter-area { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 24px; }
-  .ls-letter { font-family: 'Righteous', cursive; font-size: clamp(100px, 30vw, 175px); line-height: 1; text-align: center; width: clamp(114px, 34vw, 200px); height: clamp(114px, 34vw, 200px); flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px solid; }
+  .ls-letter-area { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px; flex: 1; justify-content: center; }
+  .ls-letter { font-family: 'Righteous', cursive; font-size: clamp(130px, 38vw, 175px); line-height: 1; text-align: center; width: clamp(148px, 43vw, 200px); height: clamp(148px, 43vw, 200px); flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px solid; }
   .ls-letter-trophy { background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.4); font-size: clamp(80px, 22vw, 130px); animation: ls-letter-land 0.45s cubic-bezier(0.34,1.56,0.64,1); }
   .ls-letter-spinning { color: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); animation: ls-spin-flash 0.07s infinite; }
   .ls-letter-landed { background: linear-gradient(145deg, rgba(245,158,11,0.12), rgba(239,68,68,0.08)); border-color: rgba(245,158,11,0.5); animation: ls-letter-land 0.45s cubic-bezier(0.34,1.56,0.64,1); background-image: linear-gradient(135deg, #fef9c3, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .ls-letter-placeholder { font-family: 'Righteous', cursive; font-size: clamp(100px, 30vw, 175px); color: rgba(255,255,255,0.1); line-height: 1; width: clamp(114px, 34vw, 200px); height: clamp(114px, 34vw, 200px); flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px dashed rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); }
+  .ls-letter-placeholder { font-family: 'Righteous', cursive; font-size: clamp(130px, 38vw, 175px); color: rgba(255,255,255,0.1); line-height: 1; width: clamp(148px, 43vw, 200px); height: clamp(148px, 43vw, 200px); flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px dashed rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); }
   .ls-spin-btn { font-family: 'Righteous', cursive; font-size: 18px; padding: 14px 36px; border-radius: 16px; border: 3px solid; cursor: pointer; transition: all 0.2s; }
   .ls-spin-btn:not(.ls-spin-spinning) { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); color: #f59e0b; }
   .ls-spin-btn:not(.ls-spin-spinning):hover { background: rgba(245,158,11,0.25); }
