@@ -216,7 +216,7 @@ const LETTER_SNEL_CARD_PROMPTS = [
   "een sport", "iets in de supermarkt", "een voertuig", "iets in de badkamer", "een film of serie", "een merk", "iets wat koud is", "een knaagdier",
   "iets wat warm is", "iets wat lang is", "iets in de natuur", "iets op een verjaardag", "iets in een museum", "iets wat stinkt", "iets in een laboratorium",
   "iets wat je kan eten", "een superkracht", "een bloem of boom", "iets in de slaapkamer", "iets op het strand", "iets op een boerderij", "iets op een filmset",
-  "iets in een ziekenhuis", "een insect", "een roofvogel", "iets wat je kan gooien", "iets wat glinstert", "iets wat zwaar is", "iets wat licht is", "een dier",
+  "iets in een ziekenhuis", "een insect", "een vogel", "iets wat je kan gooien", "iets wat glinstert", "iets wat zwaar is", "iets wat licht is", "een dier",
   "iets wat lekker ruikt", "speelgoed", "iets van hout", "iets van metaal", "iets van plastic", "iets van glas", "een reden om te laat te komen", "iets in een haven",
   "iets wat je kan verzamelen", "iets in een handtas", "iets in je broekzak", "iets op kantoor", "iets wat je kan lezen", "iets wat je kan kweken", "iets op een camping",
   "iets in een winkelcentrum", "iets van vroeger", "iets op het internet", "iets in een speeltuin", "een kledingstuk", "iets in de ruimte", "iets in een waterpark",
