@@ -677,14 +677,12 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
         </div>
 
         {/* Timer balk — onder de score chips */}
-        {phase === "playing" && (
-          <div key={activePlayerIdx + "-" + currentTurnIdx}>
-            <TimerProgressBar pct={timerPct} color={timerColor} empty={timesUp} transition="width 0.05s linear, background 0.5s" />
-            <div style={{textAlign:"center", fontFamily:"'Righteous', cursive", fontSize:"clamp(13px, 3.5vw, 16px)", color:timerColor, transition:"color 0.5s"}}>
-              <TimerCountdown secs={timeLeft} timesUp={timesUp} />
-            </div>
+        <div key={activePlayerIdx + "-" + currentTurnIdx} style={{opacity: phase === "playing" ? 1 : 0.25, transition: "opacity 0.3s"}}>
+          <TimerProgressBar pct={phase === "playing" ? timerPct : 1} color={phase === "playing" ? timerColor : "rgba(255,255,255,0.4)"} empty={timesUp} transition="width 0.05s linear, background 0.5s" />
+          <div style={{textAlign:"center", fontFamily:"'Righteous', cursive", fontSize:"clamp(13px, 3.5vw, 16px)", color: phase === "playing" ? timerColor : "rgba(255,255,255,0.4)", transition:"color 0.5s"}}>
+            {phase === "roundover" ? "0s" : <TimerCountdown secs={phase === "playing" ? timeLeft : CHAIN_ROUND_SECONDS} timesUp={timesUp} />}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
@@ -3819,9 +3817,6 @@ const CSS = `
   .ls-ketting-chip-elim { border-color: rgba(248,113,113,0.4) !important; background: rgba(248,113,113,0.08) !important; opacity: 0.55; }
   .ls-ketting-chip-winner { border-color: #4ade80 !important; background: rgba(74,222,128,0.12) !important; box-shadow: 0 0 16px rgba(74,222,128,0.2); }
   .ls-ketting-turn-name { font-weight: 800; color: #fcd34d; }
-  .ls-ketting-btn { font-family: 'Righteous', cursive; font-size: 17px; font-weight: 700; padding: 14px 28px; border-radius: 16px; border: 2.5px solid; cursor: pointer; transition: all 0.15s; }
-  .ls-ketting-btn-good { background: rgba(74,222,128,0.12); border-color: rgba(74,222,128,0.4); color: #4ade80; }
-  .ls-ketting-btn-good:hover { background: rgba(74,222,128,0.25); border-color: #4ade80; }
 
   /* ── LS Game Screen ── */
   .ls-screen { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 520px; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom)); gap: 0; position: relative; z-index: 1; justify-content: space-between; }
@@ -3849,24 +3844,16 @@ const CSS = `
 
   /* Letter */
   .ls-letter-area { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px; flex: 1; justify-content: center; }
-  .ls-letter { font-family: 'Righteous', cursive; font-size: clamp(130px, 38vw, 175px); line-height: 1; text-align: center; width: clamp(148px, 43vw, 200px); height: clamp(148px, 43vw, 200px); flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px solid; }
+  .ls-letter { font-family: 'Righteous', cursive; font-size: clamp(150px, 48vw, 175px); line-height: 1; text-align: center; width: clamp(170px, 55vw, 200px); height: clamp(170px, 55vw, 200px); flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px solid; }
   .ls-letter-trophy { background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.4); font-size: clamp(80px, 22vw, 130px); animation: ls-letter-land 0.45s cubic-bezier(0.34,1.56,0.64,1); }
   .ls-letter-spinning { color: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); animation: ls-spin-flash 0.07s infinite; }
   .ls-letter-landed { background: linear-gradient(145deg, rgba(245,158,11,0.12), rgba(239,68,68,0.08)); border-color: rgba(245,158,11,0.5); animation: ls-letter-land 0.45s cubic-bezier(0.34,1.56,0.64,1); background-image: linear-gradient(135deg, #fef9c3, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .ls-letter-placeholder { font-family: 'Righteous', cursive; font-size: clamp(130px, 38vw, 175px); color: rgba(255,255,255,0.1); line-height: 1; width: clamp(148px, 43vw, 200px); height: clamp(148px, 43vw, 200px); flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px dashed rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); }
-  .ls-spin-btn { font-family: 'Righteous', cursive; font-size: 18px; padding: 14px 36px; border-radius: 16px; border: 3px solid; cursor: pointer; transition: all 0.2s; }
-  .ls-spin-btn:not(.ls-spin-spinning) { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.5); color: #f59e0b; }
-  .ls-spin-btn:not(.ls-spin-spinning):hover { background: rgba(245,158,11,0.25); }
-  .ls-spin-spinning { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); cursor: not-allowed; }
-
+  .ls-letter-placeholder { font-family: 'Righteous', cursive; font-size: clamp(150px, 48vw, 175px); color: rgba(255,255,255,0.1); line-height: 1; width: clamp(170px, 55vw, 200px); height: clamp(170px, 55vw, 200px); flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px dashed rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); }
   /* Award section */
   .ls-award-section { width: 100%; }
   .ls-award-label { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 14px; }
   .ls-score-chip-btn { cursor: pointer; font-family: inherit; border: none; -webkit-tap-highlight-color: transparent; transition: all 0.18s cubic-bezier(0.34,1.56,0.64,1); }
-  .ls-score-chip-btn:hover { }
   .ls-score-chip-btn:active { transform: scale(0.94); }
-  .ls-awarded-banner { background: rgba(74,222,128,0.12); border: 3px solid rgba(74,222,128,0.4); border-radius: 20px; padding: 16px 24px; text-align: center; font-size: clamp(16px, 4.5vw, 22px); font-weight: 800; width: 100%; animation: ls-award-pop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
-  .ls-awarded-name { color: #4ade80; }
 
 
   /* ── Cards & Layout ── */
@@ -4097,7 +4084,7 @@ const CSS = `
 
   @keyframes ls-letter-land { 0%{transform:scale(0.5) rotate(-8deg);opacity:0} 70%{transform:scale(1.12) rotate(2deg)} 100%{transform:scale(1) rotate(0deg);opacity:1} }
   @keyframes ls-spin-flash { 0%{opacity:0.4} 50%{opacity:0.9} 100%{opacity:0.4} }
-  @keyframes ls-award-pop { 0%{transform:scale(0.8);opacity:0} 70%{transform:scale(1.04)} 100%{transform:scale(1);opacity:1} }
+
 
   @media (max-width: 380px) { .names-grid { grid-template-columns: 1fr; } .logo-title { font-size: 28px; } }
   @media (max-height: 680px) { .handoff-card { padding: 28px 20px; } .handoff-icon { font-size: 40px; margin-bottom: 10px; } .word-stage { gap: 10px; padding: 12px; } }
