@@ -227,7 +227,7 @@ const LETTER_SNEL_CARD_PROMPTS = [
   "een gewoonte", "iets wat spannend is", "iets wat saai is", "iets wat je zegt als je je teen stoot", "een politicus", "iets wat plakt", "iets wat je kan rollen",
   "iets uit de Middeleeuwen", "iets uit de oudheid", "iets uit WO II", "iets Japans", "iets Frans", "iets Italiaans", "iets Amerikaans", "iets Nederlands", "iets in een slagerij",
   "een dessert", "een hoofdgerecht", "een ontbijtproduct", "iets wat je kan bakken", "voedsel zonder suiker", "iets wat je kan versieren", "iets op een bouwplaats",
-  "een snack of snoepje", "iets op een pizza", "iets in een salade", "een fruit", "een spel", "iets waar je bang voor kan zijn", "iets wat je weggooit",  "iets op een begrafenis",
+  "een snack of snoepje", "iets op een pizza", "iets in een salade", "een fruit", "een spel", "iets wat je weggooit",  "iets op een begrafenis",
   "iets op een festival", "iets op een braderie", "iets waarbij je concentratie nodig hebt", "een groente", "een stripfiguur", "iets op een bruiloft",
   "een berg of gebergte", "iets wat giftig is", "iets wat rond is", "een meubelstuk", "iets zachts", "een automerk", "iets in een gevangenis",
   "iets wat onzichtbaar is", "een plant", "een muziekinstrument", "iets wat je kan opvouwen", "iets waar je boos van wordt", "iets in een bakkerij",
