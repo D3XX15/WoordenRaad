@@ -667,11 +667,13 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
             const isActive = (phase === "playing" && activePlayers[currentTurnIdx % activePlayers.length] === i)
                           || ((phase === "ready" || phase === "spinning") && activePlayers[0] === i);
             const isWinner = phase === "roundover" && roundWinner === i;
+            const isClickable = phase === "playing" && !isElim;
+            const Tag = isClickable ? "button" : "div";
             return (
-              <div key={i} role="status" aria-label={`${p}: ${scores[i]} punten`} className={`ls-score-chip ls-ketting-chip ${isActive ? "ls-ketting-chip-active" : ""} ${isElim ? "ls-ketting-chip-elim" : ""} ${isWinner ? "ls-ketting-chip-winner" : ""}`} style={{cursor:"default"}}>
+              <Tag key={i} role="status" aria-label={`${p}: ${scores[i]} punten`} className={`ls-score-chip ls-ketting-chip ${isActive ? "ls-ketting-chip-active" : ""} ${isElim ? "ls-ketting-chip-elim" : ""} ${isWinner ? "ls-ketting-chip-winner" : ""} ${isClickable ? "ls-score-chip-btn" : ""}`} style={{cursor: isClickable ? "pointer" : "default"}} onClick={isClickable ? handleCorrect : undefined}>
                 <span className="ls-score-chip-name">{p}</span>
                 <span className="ls-score-chip-val">{scores[i]}</span>
-              </div>
+              </Tag>
             );
           })}
         </div>
@@ -3845,7 +3847,7 @@ const CSS = `
   /* Letter */
   .ls-letter-area { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 16px; flex: 1; justify-content: center; }
   .ls-letter { font-family: 'Righteous', cursive; font-size: clamp(150px, 48vw, 175px); line-height: 1; text-align: center; width: clamp(170px, 55vw, 200px); height: clamp(170px, 55vw, 200px); flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px solid; }
-  .ls-letter-trophy { background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.4); font-size: clamp(80px, 22vw, 130px); animation: ls-letter-land 0.45s cubic-bezier(0.34,1.56,0.64,1); }
+  .ls-letter-trophy { background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.4); font-size: clamp(90px, 28vw, 120px); animation: ls-letter-land 0.45s cubic-bezier(0.34,1.56,0.64,1); }
   .ls-letter-spinning { color: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); animation: ls-spin-flash 0.07s infinite; }
   .ls-letter-landed { background: linear-gradient(145deg, rgba(245,158,11,0.12), rgba(239,68,68,0.08)); border-color: rgba(245,158,11,0.5); animation: ls-letter-land 0.45s cubic-bezier(0.34,1.56,0.64,1); background-image: linear-gradient(135deg, #fef9c3, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .ls-letter-placeholder { font-family: 'Righteous', cursive; font-size: clamp(150px, 48vw, 175px); color: rgba(255,255,255,0.1); line-height: 1; width: clamp(170px, 55vw, 200px); height: clamp(170px, 55vw, 200px); flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 28px; border: 4px dashed rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); }
