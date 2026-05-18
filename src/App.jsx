@@ -376,8 +376,11 @@ function LetterSnelWinnerScreen({ players, scores, winnaarIdx, onRestart }) {
   );
 }
 
-// ── Timer-end feedback: geluid + trilling ────────────────────────────────────
-function playCorrectSound() {
+// ── Geluidseffecten ───────────────────────────────────────────────────────────
+function playSound(type) {
+  const cfg = type === "correct"
+    ? { oscType: "sine",     freqEnd: 1318, rampTime: 0.06, gain: 0.45, duration: 0.55 }
+    : { oscType: "triangle", freqEnd: 784,  rampTime: 0.08, gain: 0.35, duration: 0.25 };
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const now = ctx.currentTime;
@@ -385,34 +388,17 @@ function playCorrectSound() {
     const gain = ctx.createGain();
     osc.connect(gain);
     gain.connect(ctx.destination);
-    osc.type = "sine";
+    osc.type = cfg.oscType;
     osc.frequency.setValueAtTime(1046, now);
-    osc.frequency.exponentialRampToValueAtTime(1318, now + 0.06);
-    gain.gain.setValueAtTime(0.45, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+    osc.frequency.exponentialRampToValueAtTime(cfg.freqEnd, now + cfg.rampTime);
+    gain.gain.setValueAtTime(cfg.gain, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + cfg.duration);
     osc.start(now);
-    osc.stop(now + 0.55);
+    osc.stop(now + cfg.duration);
   } catch (e) {}
 }
-
-// ── Taboe timer-end: kort aflopend twee-noot geluidje ────────────────────────
-function playSkipSound() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.type = "triangle";
-    osc.frequency.setValueAtTime(1046, now);
-    osc.frequency.exponentialRampToValueAtTime(784, now + 0.08);
-    gain.gain.setValueAtTime(0.35, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-    osc.start(now);
-    osc.stop(now + 0.25);
-  } catch (e) {}
-}
+const playCorrectSound = () => playSound("correct");
+const playSkipSound    = () => playSound("skip");
 
 function playTimeUpSound() {
   if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
@@ -3556,9 +3542,8 @@ export default function App() {
   const [gameMode, setGameMode] = useState("woordraad"); // "woordraad" | "lettersnel"
   const [lsPlayers, setLsPlayers] = useState(null); // null = not started
   const [lsNames, setLsNames] = useState(["Dennis", "Marion", "Theo"]);
-  const LETTER_SNEL_DEFAULT_LETTERS = FULL_ALPHABET.filter(l => !["C","Q","X","Y"].includes(l));
-  const [lsActiveLetters, setLsActiveLetters] = useState(LETTER_SNEL_DEFAULT_LETTERS);
-  const [lsChosenLetters, setLsChosenLetters] = useState(LETTER_SNEL_DEFAULT_LETTERS);
+  const [lsActiveLetters, setLsActiveLetters] = useState(TABOE_LETTER_POOL);
+  const [lsChosenLetters, setLsChosenLetters] = useState(TABOE_LETTER_POOL);
   const [lsChosenGameMode, setLsChosenGameMode] = useState("klassiek");
   const [lsTargetScore, setLsTargetScore] = useState(10);
 
