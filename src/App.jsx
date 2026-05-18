@@ -1253,7 +1253,7 @@ const WORDS_BY_CATEGORY = (() => {
     'gierig', 'nonchalant', 'laf', 'fanatiek', 'betrouwbaar', 'onverschillig', 'assertief', 'cynisch', 'verstrooid', 'lafaard', 'verbijsterd',
     'smoorverliefd', 'heimwee', 'ontroerd', 'geschokt', 'materialistisch', 'tegendraads', 'maf', 'subjectief', 'objectief', 'vreemd', 'aardig',
     'schijnheilig', 'zelfbewust', 'mal', 'luiwammes', 'lapzwans', 'viezerik', 'pestkop', 'buitenbeentje', 'nietsnut', 'vreemde vogel', 'kreng',
-    'menselijk', 'vrouwelijk', 'mannelijk', 'einzelgänger', 'treiteraar', 'smeerlap', 'huichelaar', 'blaaskaak', 'slijmjurk', 'dwaas', 'sukkel',
+    'menselijk', 'einzelgänger', 'treiteraar', 'smeerlap', 'huichelaar', 'blaaskaak', 'slijmjurk', 'dwaas', 'sukkel',
     'smeerpoets', 'lolbroek', 'lulhannes', 'betweter', 'wijsneus', 'mierenneuker', 'koekenbakker', 'apart', 'krankzinnig', 'kneus', 'druiloor',
     'hansworst', 'heikneuter', 'zeurkous', 'halvezool', 'flapdrol', 'mafkees', 'vastberaden', 'angsthaas', 'aandachtig', 'aanstellerij', 'trouw',
     'leugenaar', 'aasgier', 'abnormaal', 'achterlijk', 'ad rem', 'gevat', 'afzetter', 'gemeen', 'allemansvriend', 'amateuristisch', 'flapuit',
