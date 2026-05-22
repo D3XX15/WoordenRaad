@@ -212,7 +212,7 @@ function getFlashClass(flash) {
 
 // ── LetterSnel Cards ────────────────────────────────────────────────────────
 const LETTER_SNEL_CARD_PROMPTS = [
-  "een kleur", "een land", "een stad", "een jongensnaam", "een meisjesnaam", "keukengerei", "iets in de tuin", "een beroep", "een natuurverschijnsel",
+  "een kleur", "een land, regio of stad", "een jongensnaam", "een meisjesnaam", "keukengerei", "iets in de tuin", "een beroep", "een natuurverschijnsel",
   "een sport", "iets in de supermarkt", "een voertuig", "iets in de badkamer", "een film of serie", "een merk", "iets wat koud is", "een knaagdier",
   "iets wat warm is", "iets wat lang is", "iets in de natuur", "iets op een verjaardag", "iets in een museum", "iets wat stinkt", "iets in een laboratorium",
   "iets wat je kan eten", "een superkracht", "een bloem of boom", "iets in de slaapkamer", "iets op het strand", "iets op een boerderij", "iets op een filmset",
@@ -229,7 +229,7 @@ const LETTER_SNEL_CARD_PROMPTS = [
   "een dessert", "een hoofdgerecht", "een ontbijtproduct", "iets wat je kan bakken", "voedsel zonder suiker", "iets wat je kan versieren", "iets op een bouwplaats",
   "een snack of snoepje", "iets op een pizza", "iets in een salade", "een fruit", "een spel", "iets wat je weggooit",  "iets op een begrafenis",
   "iets op een festival", "iets op een braderie", "iets waarbij je concentratie nodig hebt", "een groente", "een stripfiguur", "iets op een bruiloft",
-  "een berg of gebergte", "iets wat giftig is", "iets wat rond is", "een meubelstuk", "iets zachts", "een automerk", "iets in een gevangenis",
+  "iets wat giftig is", "iets wat rond is", "een meubelstuk", "iets zachts", "een automerk", "iets in een gevangenis",
   "iets wat onzichtbaar is", "een plant", "een muziekinstrument", "iets wat je kan opvouwen", "iets waar je boos van wordt", "iets in een bakkerij",
   "iets wat je meeneemt op reis", "een melkproduct", "iets wat je op brood doet", "iets roods", "iets wat je mee naar school neemt", "iets wat langzaam gaat",
   "iets wat vierkant is", "iets wat kan breken", "iets wat kan groeien", "iets scherps", "iets wat je kan drinken", "iets wat licht geeft", "iets in een piramide",
