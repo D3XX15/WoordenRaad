@@ -1375,7 +1375,7 @@ const WORDS_BY_CATEGORY = (() => {
     'concert', 'festival', 'repetitie', 'songtekst', 'opname', 'live optreden', 'muziekschool', 'koorlid', 'mondharmonica',
     'operazanger', 'componist', 'gitarist', 'drummer', 'pianist', 'violist', 'single', 'geluidsinstallatie', 'tamboerijn',
     'kapelmeester', 'bandlid', 'producer', 'pianospelen', 'djembé', 'dirigent', 'dj', 'cello', 'optreden', 'country', 'gospel',
-    'disco', 'techno', 'house', 'trance', 'drum and bass', 'ambient', 'tenor', 'sopraan', 'cd', 'latin', 'afrobeat', 'musicus',
+    'disco', 'techno', 'house', 'trance', 'drum and bass', 'tenor', 'sopraan', 'cd', 'latin', 'afrobeat', 'musicus',
     'toonladder', 'muzieknoot', 'maat', 'tempo', 'dynamiek', 'podium', 'soundcheck', 'zanger', 'bongo', 'alt', 'pop', 'hardcore',
     'octaaf', 'interval', 'crescendo', 'panfluit', 'doedelzak', 'groupie', 'coverband', 'kazoo', 'songwriter', 'geluidstechnicus',
     'strijkorkest', 'fanfare', 'jazzband', 'rockband', 'liveband', 'remix', 'mashup', 'sample', 'popgroep', 'duo', 'trio',
