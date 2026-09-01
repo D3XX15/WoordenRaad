@@ -641,9 +641,9 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
       {/* Label + score chips */}
       <div className="ls-award-section">
         <div className="ls-award-label">
-          {phase === "ready" && (<><span className="ls-ketting-turn-name">{players[activePlayers[0]]}</span> begint — tik op het vak</>)}
+          {phase === "ready" && (<><span className="ls-ketting-turn-name">{players[activePlayers[0]]}</span> begint — tik op het vraagteken voor een letter</>)}
           {phase === "spinning" && "Letter kiezen…"}
-          {phase === "playing" && (<><span className="ls-ketting-turn-name">{players[activePlayerIdx]}</span> is aan de beurt</>)}
+          {phase === "playing" && (<><span className="ls-ketting-turn-name">{players[activePlayerIdx]}</span> heeft de beurt. Tik op de letter bij een goed antwoord.</>)}
           {phase === "roundover" && (roundWinner !== null ? <>🏆 <span className="ls-ketting-turn-name">{players[roundWinner]}</span> wint de ketting!</> : "Niemand wist iets te bedenken 🤷")}
         </div>
 
