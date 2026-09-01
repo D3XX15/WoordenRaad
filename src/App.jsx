@@ -3895,7 +3895,7 @@ const CSS = `
   .add-player-in-team { margin-top: 12px; }
 
   .teams-setup-wrapper { border: 3px solid #60a5fa; border-radius: 24px; padding: 25px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
-  .setup-wrapper-badge { position: absolute; top: -14px; left: 20px; background-color: #3b82f6; color: white; padding: 4px 16px; border-radius: 12px; font-size: 0.75rem; font-weight: 900; letter-spacing: 1px; z-index: 1; }
+  .setup-wrapper-badge { position: absolute; top: -14px; left: 20px; background-color: #2563eb; color: white; padding: 4px 16px; border-radius: 12px; font-size: 0.75rem; font-weight: 900; letter-spacing: 1px; z-index: 1; }
   .teams-grid { display: flex; flex-direction: column; gap: 14px; }
   .team-section-container { margin-bottom: 14px; padding: 10px 0; width: 100%; background-color: transparent; border-radius: 16px; }
   .team-header-row { position: relative; display: flex; align-items: center; margin-bottom: 8px; }
