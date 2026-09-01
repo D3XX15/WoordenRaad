@@ -1095,7 +1095,7 @@ const WORDS_BY_CATEGORY = (() => {
     'imam', 'rabbijn', 'monnik', 'non', 'abt', 'Dalai Lama', 'pastoor', 'dominee', 'Leger des Heils', '95 stellingen',
     'ayatollah', 'apostel', 'profeet', 'heilige', 'martelaar', 'engel', 'duivel', 'celibaat', 'klaagmuur', 'koster',
     'messias', 'Jezus', 'Mekka', 'Jeruzalem', 'bedevaartsoord', 'heiligdom', 'ritueel', 'davidster', 'scepter',
-    'bijbel', 'koran', 'torah', 'psalm', 'communie', 'koosjer', 'halal', 'haram', 'keppel', 'atheïsme', 'agnost',
+    'Bijbel', 'Koran', 'Thora', 'psalm', 'communie', 'koosjer', 'halal', 'haram', 'keppel', 'atheïsme', 'agnost',
     'altaar', 'God', 'Pasen', 'Kerstmis', 'Pinksteren', 'kloostertuin', 'rozenkrans', 'lot', 'Hervorming', 'ideologie',
     'Chanoekkah', 'Suikerfeest', 'Offerfeest', 'godsdienst', 'relikwie', 'brandstapel', 'Boeddha', 'Allah', 'idool',
     'aanbidden', 'bidden', 'aalmoes', 'antichrist', 'Ark van Noach', 'bekeren', 'bezeten', 'conclaaf', 'hiernamaals',
