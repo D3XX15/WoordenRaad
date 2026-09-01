@@ -2811,7 +2811,7 @@ function pickRoundEndMessage(correctCount, roundTime, totalScore = correctCount)
 }
 
 function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onStartLS, lsActiveLetters, setLsActiveLetters }) {
-  const [names, setNames] = useState(["Dennis", "Marion", "Theo"]);
+  const [names, setNames] = useState(["", "", ""]);
   const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_SECONDS);
   const [teamMode, setTeamMode] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState(() => new Set(CATEGORIES.map((c) => c.id)));
@@ -2826,7 +2826,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
   const toggleTeamMode = () => {
     setTeamMode((prev) => {
       if (!prev) { setTeamSizes([2, 2]); setTeamNames(["Team 1", "Team 2"]); setNames(Array(4).fill("")); }
-      else { setNames(["Dennis", "Marion", "Theo"]); }
+      else { setNames(["", "", ""]); }
       return !prev;
     });
   };
@@ -3541,7 +3541,7 @@ function TiebreakerRoundScreen({ players, tiebreakerState, onCategoryChosen, onW
 export default function App() {
   const [gameMode, setGameMode] = useState("woordraad"); // "woordraad" | "lettersnel"
   const [lsPlayers, setLsPlayers] = useState(null); // null = not started
-  const [lsNames, setLsNames] = useState(["Dennis", "Marion", "Theo"]);
+  const [lsNames, setLsNames] = useState(["", "", ""]);
   const [lsActiveLetters, setLsActiveLetters] = useState(TABOE_LETTER_POOL);
   const [lsChosenLetters, setLsChosenLetters] = useState(TABOE_LETTER_POOL);
   const [lsChosenGameMode, setLsChosenGameMode] = useState("klassiek");
