@@ -324,7 +324,7 @@ function LetterSnelClassicGame({ players, onRestart, activeLetters, targetScore 
       </div>
       {(phase === "ready" || phase === "playing" || phase === "awarded") && (
         <div className="ls-award-section">
-          <div className="ls-award-label">{phase === "ready" ? "Tik op het vak om een letter te kiezen" : phase === "awarded" ? `${players[winner]} haalt een punt!` : spinning ? "Letter kiezen…" : "Wie was er het eerst?"}</div>
+          <div className="ls-award-label">{phase === "ready" ? "Tik op het vraagteken om een letter te kiezen" : phase === "awarded" ? `${players[winner]} krijgt er een punt bij 🔼` : spinning ? "Letter kiezen…" : "Wie zei dat? Tik op je naam voor een punt"}</div>
           <div className="ls-scores-strip" style={{gridTemplateColumns:`repeat(${Math.min(3, players.length % 2 === 0 ? 2 : players.length % 3 === 0 ? 3 : 2)}, 1fr)`}}>
             {players.map((p, i) => (
               <button key={i} className={`ls-score-chip ls-score-chip-btn ${scores[i] === topScore && topScore > 0 ? "ls-score-leader" : ""}`} onClick={() => phase === "playing" && !spinning && awardPoint(i)} disabled={phase === "ready" || spinning || phase === "awarded"}>
