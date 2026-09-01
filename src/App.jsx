@@ -3013,7 +3013,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
 
             {(wrGameMode === "klassiek" || wrGameMode === "taboe") && (
             <div className="setup-section-wrap" style={{borderColor: "#60a5fa"}}>
-              <div className="setup-wrapper-badge" style={{background: "#3b82f6"}}>CATEGORIEËN</div>
+              <div className="setup-wrapper-badge" style={{background: "#2563eb"}}>CATEGORIEËN</div>
               <div className="cat-word-count">{totalWordsCount} / {absoluteTotalWords} woorden</div>
               <div className="category-grid">
                 {(showAllCategories ? CATEGORIES : CATEGORIES.slice(0, 8)).map(cat => (
