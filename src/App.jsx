@@ -763,7 +763,7 @@ function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setAc
       </div>
 
       <div className="setup-section-wrap" style={{borderColor: "#f97316"}}>
-        <div className="setup-wrapper-badge" style={{background:"#ea580c"}}>EINDDOEL</div>
+        <div className="setup-wrapper-badge" style={{background:"#ea580c"}}>EINDSCORE</div>
         <div className="time-control">
           <div className="time-click-wrap">
             <div className="time-click-zone time-click-left" onClick={() => setTargetScore(s => Math.max(1, s - 1))}>
