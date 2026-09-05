@@ -176,7 +176,7 @@ function TiebreakerHandoffScreen({ subtitle, player, tip1, tip2, tip3, onStart }
 
 /** Tijdweergave: toont seconden of een rinkelende wekker als de tijd op is. */
 function TimerCountdown({ secs, timesUp }) {
-  return timesUp ? <span className="alarm-ringing">⏰</span> : <>{secs} s</>;
+  return timesUp ? <span className="alarm-ringing">⏰</span> : <>{secs}</>;
 }
 
 /**
