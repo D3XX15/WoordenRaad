@@ -62,11 +62,16 @@ function useLetterSpinAnimation({ pool, exclude = null, onLetter, onDone }) {
 }
 
 /** Header-balk bovenaan een game-scherm (logo links, stop-knop rechts). */
-function GameHeaderBar({ logo, onStop }) {
+function GameHeaderBar({ logo, onStop, stopDisabled = false }) {
   return (
     <div className="ls-header">
       <div className="ls-logo">{logo}</div>
-      <button className="ls-restart-btn" onClick={onStop}>↩ Stop</button>
+      <button
+        className={`ls-restart-btn${stopDisabled ? " btn-disabled" : ""}`}
+        onClick={stopDisabled ? undefined : onStop}
+        disabled={stopDisabled}
+        title={stopDisabled ? "Stoppen kan pas als de ronde niet meer loopt" : undefined}
+      >↩ Stop</button>
     </div>
   );
 }
@@ -202,6 +207,29 @@ function PlayerNameField({ index, value, onChange, onRemove, canRemove, placehol
   );
 }
 
+/**
+ * Herbruikbare +/− tijdsduur-instelling voor setup-schermen.
+ * Hergebruikt in GameSetupScreen (WoordRaad) en LetterSnelSetupPanel (Ketting).
+ */
+function TimeStepperControl({ label, value, onChange, min, max, step, unit = "s", borderColor, badgeColor }) {
+  return (
+    <div className="setup-section-wrap" style={{borderColor}}>
+      <div className="setup-wrapper-badge" style={badgeColor ? {background: badgeColor} : undefined}>{label}</div>
+      <div className="time-control">
+        <div className="time-click-wrap">
+          <div className="time-click-zone time-click-left" onClick={() => onChange(t => Math.max(min, t - step))}>
+            <span className={`time-click-symbol${value <= min ? " time-click-disabled" : ""}`}>−</span>
+          </div>
+          <span className="time-display">{value} {unit}</span>
+          <div className="time-click-zone time-click-right" onClick={() => onChange(t => Math.min(max, t + step))}>
+            <span className={`time-click-symbol${value >= max ? " time-click-disabled" : ""}`}>+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Geeft de CSS-klasse terug voor een flash-type (correct / skip / bonus). */
 function getFlashClass(flash) {
   if (flash === "correct") return " taboe-flash-correct";
@@ -243,13 +271,18 @@ const LETTER_SNEL_CARD_PROMPTS = [
 
 const FULL_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-function LetterSnelGameRouter({ players, onRestart, activeLetters, gameMode, targetScore }) {
-  if (gameMode === "ketting") return <LetterSnelChainGame players={players} onRestart={onRestart} activeLetters={activeLetters} targetScore={targetScore} />;
-  return <LetterSnelClassicGame players={players} onRestart={onRestart} activeLetters={activeLetters} targetScore={targetScore} />;
+/** Geeft de index van de speler met de hoogste score terug (bij gelijke stand: de eerste). */
+function getLeaderIndex(scores) {
+  return scores.reduce((best, s, i) => (s > scores[best] ? i : best), 0);
+}
+
+function LetterSnelGameRouter({ players, onRestart, activeLetters, gameMode, roundTime }) {
+  if (gameMode === "ketting") return <LetterSnelChainGame players={players} onRestart={onRestart} activeLetters={activeLetters} roundTime={roundTime} />;
+  return <LetterSnelClassicGame players={players} onRestart={onRestart} activeLetters={activeLetters} />;
 }
 
 // ── LetterSnel Klassiek ───────────────────────────────────────────────────────
-function LetterSnelClassicGame({ players, onRestart, activeLetters, targetScore }) {
+function LetterSnelClassicGame({ players, onRestart, activeLetters }) {
   const alphabet = activeLetters && activeLetters.length > 0 ? activeLetters : FULL_ALPHABET;
   const [scores, setScores] = useState(Array(players.length).fill(0));
   const [currentCardIdx, setCurrentCardIdx] = useState(0);
@@ -281,11 +314,18 @@ function LetterSnelClassicGame({ players, onRestart, activeLetters, targetScore 
     newScores[playerIdx]++;
     setScores(newScores);
     setWinner(playerIdx);
-    if (newScores[playerIdx] >= targetScore) {
-      setGameWinner(playerIdx);
-      return;
-    }
     setPhase("awarded");
+  };
+
+  // Stoppen mag alleen als er geen ronde actief is: vóór het kiezen van een
+  // letter (phase "ready") of ná het toekennen van een punt (phase "awarded").
+  // Zodra een letter gekozen wordt/is en er nog geen punt is toegekend
+  // (phase "playing", inclusief het spinnen zelf) staat de knop uit.
+  const canStop = phase === "ready" || phase === "awarded";
+
+  const handleStop = () => {
+    if (!canStop) return;
+    setGameWinner(getLeaderIndex(scores));
   };
 
   const nextCard = () => {
@@ -298,10 +338,10 @@ function LetterSnelClassicGame({ players, onRestart, activeLetters, targetScore 
   };
 
   useEffect(() => {
-    if (phase !== "awarded") return;
+    if (phase !== "awarded" || gameWinner !== null) return;
     const t = setTimeout(nextCard, 1400);
     return () => clearTimeout(t);
-  }, [phase]);
+  }, [phase, gameWinner]);
 
   const topScore = Math.max(...scores);
 
@@ -311,7 +351,7 @@ function LetterSnelClassicGame({ players, onRestart, activeLetters, targetScore 
 
   return (
     <div className="ls-screen">
-      <GameHeaderBar logo="LetterSnel" onStop={onRestart} />
+      <GameHeaderBar logo="LetterSnel" onStop={handleStop} stopDisabled={!canStop} />
       <LetterSnelCardDisplay cardIdx={currentCardIdx} card={currentCard} />
       <div className="ls-letter-area">
         <LetterSnelActiveLetter
@@ -421,9 +461,9 @@ function playTimeUpSound() {
     note(now + 0.20, 349, 0.30); // F4
   } catch (e) {}
 }
-const CHAIN_ROUND_SECONDS = 10;
+const DEFAULT_CHAIN_ROUND_SECONDS = 10;
 
-function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore }) {
+function LetterSnelChainGame({ players, onRestart, activeLetters, roundTime = DEFAULT_CHAIN_ROUND_SECONDS }) {
   const alphabet = activeLetters && activeLetters.length > 0 ? activeLetters : FULL_ALPHABET;
   const [scores, setScores] = useState(Array(players.length).fill(0));
   const [currentCardIdx, setCurrentCardIdx] = useState(0);
@@ -461,7 +501,7 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
   });
 
   // timer
-  const [timeRemaining, setTimeRemaining] = useState(CHAIN_ROUND_SECONDS);
+  const [timeRemaining, setTimeRemaining] = useState(roundTime);
   const timerRef = useRef(null);
   const startTimeRef = useRef(null);
 
@@ -515,24 +555,31 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
       newScores[winnerIdx]++;
       scoresRef.current = newScores;
       setScores(newScores);
-      if (newScores[winnerIdx] >= targetScore) {
-        setGameWinner(winnerIdx);
-        phaseRef.current = "gameover";
-        return;
-      }
     }
     setRoundWinner(winnerIdx);
     phaseRef.current = "roundover";
     setPhase("roundover");
   };
 
+  // Stoppen mag alleen als er geen ronde actief is: vóór het spinnen van een
+  // letter (phase "ready") of ná afloop van een ronde (phase "roundover").
+  // Zolang er gespind wordt of de klok loopt (phase "spinning"/"playing")
+  // staat de knop uit.
+  const canStop = phase === "ready" || phase === "roundover";
+
+  const handleStop = () => {
+    if (!canStop) return;
+    stopTimer();
+    setGameWinner(getLeaderIndex(scores));
+  };
+
   const startTimer = () => {
     stopTimer();
-    setTimeRemaining(CHAIN_ROUND_SECONDS);
+    setTimeRemaining(roundTime);
     startTimeRef.current = Date.now();
     timerRef.current = setInterval(() => {
       const elapsed = (Date.now() - startTimeRef.current) / 1000;
-      const remaining = Math.max(0, CHAIN_ROUND_SECONDS - elapsed);
+      const remaining = Math.max(0, roundTime - elapsed);
       setTimeRemaining(remaining);
       if (remaining <= 0) {
         stopTimer();
@@ -598,19 +645,19 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
     setRoundWinner(null);
     setPhase("ready");
     stopTimer();
-    setTimeRemaining(CHAIN_ROUND_SECONDS);
+    setTimeRemaining(roundTime);
   };
 
   const topScore = Math.max(...scores, 0);
-  const timerPct = timeRemaining / CHAIN_ROUND_SECONDS;
+  const timerPct = timeRemaining / roundTime;
   const timesUp = timeRemaining <= 0;
   const timerColor = timerPct > 0.5 ? "#4ade80" : timerPct > 0.25 ? "#fbbf24" : "#f87171";
 
   useEffect(() => {
-    if (phase !== "roundover") return;
+    if (phase !== "roundover" || gameWinner !== null) return;
     const t = setTimeout(() => nextRound(roundWinner), 2500);
     return () => clearTimeout(t);
-  }, [phase]);
+  }, [phase, gameWinner]);
 
   if (gameWinner !== null) {
     return <LetterSnelWinnerScreen players={players} scores={scores} winnaarIdx={gameWinner} onRestart={onRestart} />;
@@ -618,7 +665,7 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
 
   return (
     <div className="ls-screen">
-      <GameHeaderBar logo="LetterSnel" onStop={onRestart} />
+      <GameHeaderBar logo="LetterSnel" onStop={handleStop} stopDisabled={!canStop} />
 
       {/* Card */}
       <LetterSnelCardDisplay cardIdx={currentCardIdx} card={currentCard} />
@@ -668,7 +715,7 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
         <div key={activePlayerIdx + "-" + currentTurnIdx} style={{opacity: phase === "playing" ? 1 : 0.25, transition: "opacity 0.3s"}}>
           <TimerProgressBar pct={phase === "playing" ? timerPct : 1} color={phase === "playing" ? timerColor : "rgba(255,255,255,0.4)"} empty={timesUp} transition="width 0.05s linear, background 0.5s" />
           <div style={{textAlign:"center", fontFamily:"'Righteous', cursive", fontSize:"clamp(13px, 3.5vw, 16px)", color: phase === "playing" ? timerColor : "rgba(255,255,255,0.4)", transition:"color 0.5s"}}>
-            {phase === "roundover" ? "0" : <TimerCountdown secs={phase === "playing" ? timeLeft : CHAIN_ROUND_SECONDS} timesUp={timesUp} />}
+            {phase === "roundover" ? "0" : <TimerCountdown secs={phase === "playing" ? timeLeft : roundTime} timesUp={timesUp} />}
           </div>
         </div>
       </div>
@@ -679,7 +726,7 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
 // ── LetterSnel Setup overlay ─────────────────────────────────────────────────
 function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setActiveLetters }) {
   const [lsGameMode, setLsGameMode] = useState("klassiek");
-  const [targetScore, setTargetScore] = useState(10);
+  const [lsRoundTime, setLsRoundTime] = useState(10);
   const canStart = names.length >= 2 && names.every(n => n.trim().length > 0) && activeLetters.length >= 2;
 
   const addPlayer = () => { if (names.length < 10) setNames(prev => [...prev, ""]); };
@@ -762,25 +809,23 @@ function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setAc
         <div className="ls-letters-count">{activeLetters.length} van 26 letters actief</div>
       </div>
 
-      <div className="setup-section-wrap" style={{borderColor: "#f97316"}}>
-        <div className="setup-wrapper-badge" style={{background:"#ea580c"}}>EINDSCORE</div>
-        <div className="time-control">
-          <div className="time-click-wrap">
-            <div className="time-click-zone time-click-left" onClick={() => setTargetScore(s => Math.max(1, s - 1))}>
-              <span className={`time-click-symbol${targetScore <= 1 ? " time-click-disabled" : ""}`}>−</span>
-            </div>
-            <span className="time-display">{targetScore} pt</span>
-            <div className="time-click-zone time-click-right" onClick={() => setTargetScore(s => Math.min(50, s + 1))}>
-              <span className={`time-click-symbol${targetScore >= 50 ? " time-click-disabled" : ""}`}>+</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      {lsGameMode === "ketting" && (
+        <TimeStepperControl
+          label="RONDETIJD"
+          value={lsRoundTime}
+          onChange={setLsRoundTime}
+          min={5}
+          max={30}
+          step={1}
+          borderColor="#f97316"
+          badgeColor="#ea580c"
+        />
+      )}
 
       <button
-        className={`start-btn ${canStart ? "ready-solid" : ""}`}
+        className={`start-btn start-btn-ls ${canStart ? "ready-solid" : ""}`}
         style={{marginTop: "12px"}}
-        onClick={() => canStart && onStartLS(names.map(n => n.trim()), activeLetters, lsGameMode, targetScore)}
+        onClick={() => canStart && onStartLS(names.map(n => n.trim()), activeLetters, lsGameMode, lsRoundTime)}
         disabled={!canStart}
       >
         {canStart ? "Spel starten ➜" : activeLetters.length < 2 ? "Kies minimaal 2 letters" : "Vul alles in…"}
@@ -3027,20 +3072,15 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
             </div>
             )}
 
-            <div className="setup-section-wrap" style={{borderColor: "#60a5fa"}}>
-              <div className="setup-wrapper-badge">RONDETIJD</div>
-              <div className="time-control">
-                <div className="time-click-wrap">
-                  <div className="time-click-zone time-click-left" onClick={() => setRoundTime(t => Math.max(30, t - 30))}>
-                    <span className={`time-click-symbol${roundTime <= 30 ? " time-click-disabled" : ""}`}>−</span>
-                  </div>
-                  <span className="time-display">{roundTime} s</span>
-                  <div className="time-click-zone time-click-right" onClick={() => setRoundTime(t => Math.min(300, t + 30))}>
-                    <span className={`time-click-symbol${roundTime >= 300 ? " time-click-disabled" : ""}`}>+</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <TimeStepperControl
+              label="RONDETIJD"
+              value={roundTime}
+              onChange={setRoundTime}
+              min={30}
+              max={300}
+              step={30}
+              borderColor="#60a5fa"
+            />
 
             <button className={`start-btn ${canStart ? "ready-solid" : ""}`} onClick={handleStart} disabled={!canStart}>
               {canStart ? "Spel starten ➜" : "Vul alles in…"}
@@ -3544,7 +3584,7 @@ export default function App() {
   const [lsActiveLetters, setLsActiveLetters] = useState(TABOE_LETTER_POOL);
   const [lsChosenLetters, setLsChosenLetters] = useState(TABOE_LETTER_POOL);
   const [lsChosenGameMode, setLsChosenGameMode] = useState("klassiek");
-  const [lsTargetScore, setLsTargetScore] = useState(10);
+  const [lsRoundTime, setLsRoundTime] = useState(10);
 
   const [wrMode, setWrMode] = useState("klassiek"); // "klassiek" | "taboe"
   const [taboePlayers, setTaboePlayers] = useState(null);
@@ -3690,7 +3730,7 @@ export default function App() {
     return (
       <>
         <style>{CSS}</style>
-        <LetterSnelGameRouter players={lsPlayers} onRestart={() => setLsPlayers(null)} activeLetters={lsChosenLetters} gameMode={lsChosenGameMode} targetScore={lsTargetScore} />
+        <LetterSnelGameRouter players={lsPlayers} onRestart={() => setLsPlayers(null)} activeLetters={lsChosenLetters} gameMode={lsChosenGameMode} roundTime={lsRoundTime} />
       </>
     );
   }
@@ -3716,7 +3756,7 @@ export default function App() {
           setGameMode={(m) => { setGameMode(m); setLsPlayers(null); }}
           lsNames={lsNames}
           setLsNames={setLsNames}
-          onStartLS={(names, letters, mode, tScore) => { setLsChosenLetters(letters); setLsChosenGameMode(mode); setLsTargetScore(tScore ?? 10); setLsPlayers(names); }}
+          onStartLS={(names, letters, mode, roundTime) => { setLsChosenLetters(letters); setLsChosenGameMode(mode); setLsRoundTime(roundTime ?? 10); setLsPlayers(names); }}
           lsActiveLetters={lsActiveLetters}
           setLsActiveLetters={setLsActiveLetters}
         />
@@ -3869,6 +3909,8 @@ const CSS = `
   .start-btn, .handoff-btn, .continue-btn, .next-btn { background-image: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; }
   .start-btn:active, .handoff-btn:active, .next-btn:active { transform: scale(0.98); }
   .start-btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+  .start-btn-ls::before { background: linear-gradient(135deg, #f59e0b, #ef4444, #f97316); }
+  .start-btn-ls { background-image: linear-gradient(135deg, #f59e0b, #ef4444, #f97316); }
 
   .cat-word-count { text-align: center; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.28); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
   
