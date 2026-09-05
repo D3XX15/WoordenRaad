@@ -43,7 +43,7 @@ function useLetterSpinAnimation({ pool, exclude = null, onLetter, onDone }) {
     const available = exclude ? pool.filter(l => l !== exclude) : pool;
     const target = available[Math.floor(Math.random() * available.length)];
 
-    // Vaste interval van 60ms, identiek aan v23 — geen herstart halverwege
+    // Vaste interval van 60ms
     const tick = () => {
       spinCountRef.current++;
       if (spinCountRef.current < totalTicks) {
@@ -113,7 +113,7 @@ function TimerProgressBar({ pct, color, empty = false, transition = "width 0.05s
 }
 
 /**
- * Gedeelde resultatenweergave voor solo tie-breakers (Taboe en WoordRaad Klassiek).
+ * Gedeelde resultatenweergave voor solo tie-breakers (WoordRaad Klassiek en Taboe).
  * Toont ranking op tijd, gelijkspel-banner of winnaar-banner, en een "Nieuw spel"-knop.
  */
 function TiebreakerSoloResultScreen({ players, tiedPlayerIndices, times, onRestart, onStartTiebreaker }) {
@@ -1175,9 +1175,8 @@ const WORDS_BY_CATEGORY = (() => {
     'fouilleren', 'galg', 'gangster', 'gedetineerde', 'vermomming', 'gespuis', 'gratie', 'guillotine', 'handgemeen',
     'handhaver', 'handlanger', 'hechtenis', 'pimp', 'hoorzitting', 'huisvredebreuk', 'huurmoordenaar', 'eerwraak',
     'incident', 'beschuldiging', 'onschuldig', 'stelen', 'pikken', 'jatten', 'inrekenen', 'Interpol', 'isoleercel',
-    'HALT', 'joyride', 'junkie', 'wijkagent', 'smeris', 'wout', 'kannibaal', 'kleptomaan', 'kruimeldief',
-    'klopjacht', 'knokploeg', 'steekpenning', 'smeergeld', 'omkoping', 'kortgeding', 'kraakpand',
-    'internationaal strafrecht'
+    'HALT', 'joyride', 'junkie', 'wijkagent', 'smeris', 'wout', 'kannibaal', 'kleptomaan', 'kruimeldief', 'strafrecht',
+    'klopjacht', 'knokploeg', 'steekpenning', 'smeergeld', 'omkoping', 'kortgeding', 'kraakpand', 'pyromaan'
   ];
 
   const acties = [
