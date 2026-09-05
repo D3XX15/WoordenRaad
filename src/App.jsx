@@ -421,7 +421,7 @@ function playTimeUpSound() {
     note(now + 0.20, 349, 0.30); // F4
   } catch (e) {}
 }
-const CHAIN_ROUND_SECONDS = 15;
+const CHAIN_ROUND_SECONDS = 11;
 
 function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore }) {
   const alphabet = activeLetters && activeLetters.length > 0 ? activeLetters : FULL_ALPHABET;
