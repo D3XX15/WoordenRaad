@@ -668,7 +668,7 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore })
         <div key={activePlayerIdx + "-" + currentTurnIdx} style={{opacity: phase === "playing" ? 1 : 0.25, transition: "opacity 0.3s"}}>
           <TimerProgressBar pct={phase === "playing" ? timerPct : 1} color={phase === "playing" ? timerColor : "rgba(255,255,255,0.4)"} empty={timesUp} transition="width 0.05s linear, background 0.5s" />
           <div style={{textAlign:"center", fontFamily:"'Righteous', cursive", fontSize:"clamp(13px, 3.5vw, 16px)", color: phase === "playing" ? timerColor : "rgba(255,255,255,0.4)", transition:"color 0.5s"}}>
-            {phase === "roundover" ? "0s" : <TimerCountdown secs={phase === "playing" ? timeLeft : CHAIN_ROUND_SECONDS} timesUp={timesUp} />}
+            {phase === "roundover" ? "0" : <TimerCountdown secs={phase === "playing" ? timeLeft : CHAIN_ROUND_SECONDS} timesUp={timesUp} />}
           </div>
         </div>
       </div>
