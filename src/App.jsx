@@ -176,7 +176,7 @@ function TiebreakerHandoffScreen({ subtitle, player, tip1, tip2, tip3, onStart }
 
 /** Tijdweergave: toont seconden of een rinkelende wekker als de tijd op is. */
 function TimerCountdown({ secs, timesUp }) {
-  return timesUp ? <span className="alarm-ringing">⏰</span> : <>{secs}s</>;
+  return timesUp ? <span className="alarm-ringing">⏰</span> : <>{secs} s</>;
 }
 
 /**
@@ -421,7 +421,7 @@ function playTimeUpSound() {
     note(now + 0.20, 349, 0.30); // F4
   } catch (e) {}
 }
-const CHAIN_ROUND_SECONDS = 11;
+const CHAIN_ROUND_SECONDS = 12;
 
 function LetterSnelChainGame({ players, onRestart, activeLetters, targetScore }) {
   const alphabet = activeLetters && activeLetters.length > 0 ? activeLetters : FULL_ALPHABET;
@@ -3034,7 +3034,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
                   <div className="time-click-zone time-click-left" onClick={() => setRoundTime(t => Math.max(30, t - 30))}>
                     <span className={`time-click-symbol${roundTime <= 30 ? " time-click-disabled" : ""}`}>−</span>
                   </div>
-                  <span className="time-display">{roundTime}s</span>
+                  <span className="time-display">{roundTime} s</span>
                   <div className="time-click-zone time-click-right" onClick={() => setRoundTime(t => Math.min(300, t + 30))}>
                     <span className={`time-click-symbol${roundTime >= 300 ? " time-click-disabled" : ""}`}>+</span>
                   </div>
