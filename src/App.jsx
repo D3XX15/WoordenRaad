@@ -299,7 +299,7 @@ function LetterSnelClassicGame({ players, onRestart, activeLetters, targetScore 
 
   useEffect(() => {
     if (phase !== "awarded") return;
-    const t = setTimeout(nextCard, 1000);
+    const t = setTimeout(nextCard, 1400);
     return () => clearTimeout(t);
   }, [phase]);
 
