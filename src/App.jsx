@@ -850,7 +850,6 @@ function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setAc
 
       <button
         className={`start-btn start-btn-ls ${canStart ? "ready-solid" : ""}`}
-        style={{marginTop: "12px"}}
         onClick={() => canStart && onStartLS(names.map(n => n.trim()).filter(n => n.length > 0), activeLetters, lsGameMode, lsRoundTime)}
         disabled={!canStart}
       >
@@ -3007,32 +3006,32 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
               <p className="logo-sub">Leg het woord uit terwijl de rest raadt!</p>
             </div>
 
-            {/* WoordRaad modus kiezer */}
-            <div className="ls-mode-wrap" style={{borderColor:"#60a5fa"}}>
-              <div className="setup-wrapper-badge" style={{background:"#2563eb", top:"-14px"}}>MODUS</div>
-              <div className="ls-mode-grid">
-                <button
-                  className={`ls-mode-btn ${wrGameMode === "klassiek" ? "ls-mode-btn-active" : "ls-mode-btn-inactive"}`}
-                  onClick={() => setWrGameMode("klassiek")}
-                  style={wrGameMode === "klassiek" ? {borderColor:"#60a5fa", background:"rgba(96,165,250,0.15)"} : {}}
-                >
-                  <span className="ls-mode-icon">🤔</span>
-                  <span className="ls-mode-title">Klassiek</span>
-                  <span className="ls-mode-desc">Leg of beeld zoveel mogelijk woorden uit binnen de tijd.</span>
-                </button>
-                <button
-                  className={`ls-mode-btn ${wrGameMode === "taboe" ? "ls-mode-btn-active" : "ls-mode-btn-inactive"}`}
-                  onClick={() => setWrGameMode("taboe")}
-                  style={wrGameMode === "taboe" ? {borderColor:"#60a5fa", background:"rgba(96,165,250,0.15)"} : {}}
-                >
-                  <span className="ls-mode-icon">🤫</span>
-                  <span className="ls-mode-title">Taboe</span>
-                  <span className="ls-mode-desc">Leg het woord uit zonder de verboden letter te noemen.</span>
-                </button>
-              </div>
-            </div>
-
             <div className="setup-section">
+              {/* WoordRaad modus kiezer */}
+              <div className="ls-mode-wrap" style={{borderColor:"#60a5fa"}}>
+                <div className="setup-wrapper-badge" style={{background:"#2563eb", top:"-14px"}}>MODUS</div>
+                <div className="ls-mode-grid">
+                  <button
+                    className={`ls-mode-btn ${wrGameMode === "klassiek" ? "ls-mode-btn-active" : "ls-mode-btn-inactive"}`}
+                    onClick={() => setWrGameMode("klassiek")}
+                    style={wrGameMode === "klassiek" ? {borderColor:"#60a5fa", background:"rgba(96,165,250,0.15)"} : {}}
+                  >
+                    <span className="ls-mode-icon">🤔</span>
+                    <span className="ls-mode-title">Klassiek</span>
+                    <span className="ls-mode-desc">Leg of beeld zoveel mogelijk woorden uit binnen de tijd.</span>
+                  </button>
+                  <button
+                    className={`ls-mode-btn ${wrGameMode === "taboe" ? "ls-mode-btn-active" : "ls-mode-btn-inactive"}`}
+                    onClick={() => setWrGameMode("taboe")}
+                    style={wrGameMode === "taboe" ? {borderColor:"#60a5fa", background:"rgba(96,165,250,0.15)"} : {}}
+                  >
+                    <span className="ls-mode-icon">🤫</span>
+                    <span className="ls-mode-title">Taboe</span>
+                    <span className="ls-mode-desc">Leg het woord uit zonder de verboden letter te noemen.</span>
+                  </button>
+                </div>
+              </div>
+
               {/* Solo/Teams toggle — gedeeld tussen beide branches */}
               {(() => {
                 const SoloTeamsToggle = () => (
@@ -3100,38 +3099,38 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
                 </div>
               );
               })()}
-            </div>
 
-            {(wrGameMode === "klassiek" || wrGameMode === "taboe") && (
-            <div className="setup-section-wrap" style={{borderColor: "#60a5fa"}}>
-              <div className="setup-wrapper-badge" style={{background: "#2563eb"}}>CATEGORIEËN</div>
-              <div className="cat-word-count">{totalWordsCount} / {absoluteTotalWords} woorden</div>
-              <div className="category-grid">
-                {(showAllCategories ? CATEGORIES : CATEGORIES.slice(0, 8)).map(cat => (
-                  <button key={cat.id} className={`category-btn${selectedCategories.has(cat.id) ? " category-btn-active" : ""}`} onClick={() => toggleCategory(cat.id)}>{cat.label}</button>
-                ))}
-                {!showAllCategories && (
-                  <button className="category-btn cat-expand-btn" onClick={() => setShowAllCategories(true)}>
-                    +{CATEGORIES.length - 8} meer
-                  </button>
-                )}
+              {(wrGameMode === "klassiek" || wrGameMode === "taboe") && (
+              <div className="setup-section-wrap" style={{borderColor: "#60a5fa"}}>
+                <div className="setup-wrapper-badge" style={{background: "#2563eb"}}>CATEGORIEËN</div>
+                <div className="cat-word-count">{totalWordsCount} / {absoluteTotalWords} woorden</div>
+                <div className="category-grid">
+                  {(showAllCategories ? CATEGORIES : CATEGORIES.slice(0, 8)).map(cat => (
+                    <button key={cat.id} className={`category-btn${selectedCategories.has(cat.id) ? " category-btn-active" : ""}`} onClick={() => toggleCategory(cat.id)}>{cat.label}</button>
+                  ))}
+                  {!showAllCategories && (
+                    <button className="category-btn cat-expand-btn" onClick={() => setShowAllCategories(true)}>
+                      +{CATEGORIES.length - 8} meer
+                    </button>
+                  )}
+                </div>
               </div>
+              )}
+
+              <TimeStepperControl
+                label="RONDETIJD"
+                value={roundTime}
+                onChange={setRoundTime}
+                min={30}
+                max={300}
+                step={30}
+                borderColor="#60a5fa"
+              />
+
+              <button className={`start-btn ${canStart ? "ready-solid" : ""}`} onClick={handleStart} disabled={!canStart}>
+                {canStart ? "Spel starten ➜" : "Vul alles in…"}
+              </button>
             </div>
-            )}
-
-            <TimeStepperControl
-              label="RONDETIJD"
-              value={roundTime}
-              onChange={setRoundTime}
-              min={30}
-              max={300}
-              step={30}
-              borderColor="#60a5fa"
-            />
-
-            <button className={`start-btn ${canStart ? "ready-solid" : ""}`} onClick={handleStart} disabled={!canStart}>
-              {canStart ? "Spel starten ➜" : "Vul alles in…"}
-            </button>
           </>
         )}
       </div>
@@ -3863,9 +3862,9 @@ const CSS = `
   .gm-label { white-space: nowrap; }
 
   /* ── LS Setup ── */
-  .ls-setup-section { width: 100%; }
-  .ls-setup-players-wrap { border: 3px solid #f97316; border-radius: 24px; padding: 25px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
-  .ls-letters-wrap { border: 3px solid #f97316; border-radius: 24px; padding: 20px 16px 14px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
+  .ls-setup-section { width: 100%; display: flex; flex-direction: column; gap: 32px; }
+  .ls-setup-players-wrap { border: 3px solid #f97316; border-radius: 24px; padding: 25px; background-color: rgba(0,0,0,0.02); position: relative; }
+  .ls-letters-wrap { border: 3px solid #f97316; border-radius: 24px; padding: 20px 16px 14px; background-color: rgba(0,0,0,0.02); position: relative; }
   .ls-letter-toggle-row { display: flex; gap: 5px; justify-content: center; margin-bottom: 7px; }
   .ls-letter-toggle-btn { width: 36px; height: 36px; border-radius: 10px; border: 2.5px solid; font-family: 'Righteous', cursive; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.13s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .ls-letter-toggle-on { background: rgba(249,115,22,0.2); border-color: #f97316; color: #fed7aa; }
@@ -3873,7 +3872,7 @@ const CSS = `
   .ls-letter-toggle-on:hover { background: rgba(249,115,22,0.35); border-color: #fb923c; }
   .ls-letter-toggle-off:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.6); }
   .ls-letters-count { text-align: center; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 4px; }
-  .ls-mode-wrap { border: 3px solid #f97316; border-radius: 24px; padding: 20px 16px 16px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
+  .ls-mode-wrap { border: 3px solid #f97316; border-radius: 24px; padding: 20px 16px 16px; background-color: rgba(0,0,0,0.02); position: relative; }
   .ls-mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .ls-mode-btn { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 14px 10px; border-radius: 16px; border: 2.5px solid; cursor: pointer; font-family: inherit; transition: all 0.15s; text-align: center; }
   .ls-mode-btn-active { background: rgba(245,158,11,0.15); border-color: #f59e0b; }
@@ -3938,8 +3937,8 @@ const CSS = `
   .logo-icon { font-size: 52px; margin-bottom: 8px; }
   .logo-title { font-family: 'Righteous', cursive; font-size: 36px; background: linear-gradient(135deg, #93c5fd, #60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .logo-sub { color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 4px; }
-  .setup-section { margin-bottom: 28px; }
-  .setup-section-wrap { border: 3px solid; border-radius: 24px; padding: 20px 20px 14px; margin-bottom: 28px; position: relative; }
+  .setup-section { display: flex; flex-direction: column; gap: 32px; }
+  .setup-section-wrap { border: 3px solid; border-radius: 24px; padding: 20px 20px 14px; position: relative; }
   .names-grid { display: grid; grid-template-columns: 1fr; gap: 4px; }
 
   /* ── Toggles & Buttons ── */
@@ -3982,7 +3981,7 @@ const CSS = `
   .add-player-integrated:hover { background: rgba(52,211,153,0.2); }
   .add-player-in-team { margin-top: 12px; }
 
-  .teams-setup-wrapper { border: 3px solid #60a5fa; border-radius: 24px; padding: 25px; background-color: rgba(0,0,0,0.02); margin-bottom: 20px; position: relative; }
+  .teams-setup-wrapper { border: 3px solid #60a5fa; border-radius: 24px; padding: 25px; background-color: rgba(0,0,0,0.02); position: relative; }
   .setup-wrapper-badge { position: absolute; top: -14px; left: 20px; background-color: #2563eb; color: white; padding: 4px 16px; border-radius: 12px; font-size: 0.75rem; font-weight: 900; letter-spacing: 1px; z-index: 1; }
   .teams-grid { display: flex; flex-direction: column; gap: 14px; }
   .team-section-container { margin-bottom: 14px; padding: 10px 0; width: 100%; background-color: transparent; border-radius: 16px; }
