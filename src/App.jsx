@@ -209,7 +209,7 @@ function normalizeSlots(names, max = MAX_PLAYERS, min = MIN_PLAYERS) {
 function soloPlayerPlaceholder(index) {
   if (index === 0) return "Jouw naam";
   if (index === 1) return "Tegenstander";
-  return "+1 (optioneel)";
+  return "Extra speler (optioneel)";
 }
 
 /**
