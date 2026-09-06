@@ -759,7 +759,13 @@ function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setAc
   const canStart = filledNamesCount >= MIN_PLAYERS && activeLetters.length >= 2;
 
   const removePlayer = (i) => { if (names.length > 2) setNames(prev => normalizeSlots(prev.filter((_, j) => j !== i))); };
-  const updateName = (i, v) => setNames(prev => normalizeSlots(prev.map((n, j) => j === i ? v : n)));
+  // Was het veld al ingevuld en wordt het nu leeggemaakt? Dan verdwijnt precies
+  // dát veld (net als bij de −-knop) en schuiven de namen erna een plekje op.
+  const updateName = (i, v) => setNames(prev => {
+    const wasFilled = (prev[i] ?? "").trim().length > 0;
+    if (wasFilled && v.trim().length === 0) return normalizeSlots(prev.filter((_, j) => j !== i));
+    return normalizeSlots(prev.map((n, j) => j === i ? v : n));
+  });
 
   const toggleLetter = (letter) => {
     setActiveLetters(prev =>
@@ -2926,20 +2932,30 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
     setNames(prev => { const n = [...prev]; n.splice(offset, oldSize, ...normalized); return n; });
     setTeamSizes(prev => prev.map((s, i) => i === t ? normalized.length : s));
   };
+  // Was het veld al ingevuld en wordt het nu leeggemaakt? Dan verdwijnt precies
+  // dát teamveld en schuiven de overige teamleden een plekje op.
   const updateTeamPlayerName = (t, p, v) => {
     const offset = getTeamOffset(t);
     const slice = names.slice(offset, offset + teamSizes[t]);
-    slice[p] = v;
+    const wasFilled = (slice[p] ?? "").trim().length > 0;
+    if (wasFilled && v.trim().length === 0) slice.splice(p, 1);
+    else slice[p] = v;
     setTeamPlayerSlice(t, slice);
   };
-  const removePlayerFromTeam = (t) => {
+  const removePlayerFromTeam = (t, p) => {
     if (teamSizes[t] <= MIN_PLAYERS) return;
     const offset = getTeamOffset(t);
     const slice = names.slice(offset, offset + teamSizes[t]);
-    slice.pop(); // verwijdert altijd de laatste speler van het team
+    slice.splice(p, 1); // verwijdert precies de speler waarvan op de −-knop is geklikt
     setTeamPlayerSlice(t, slice);
   };
-  const updateName = (i, v) => setNames(p => normalizeSlots(p.map((n, j) => j === i ? v : n)));
+  // Was het veld al ingevuld en wordt het nu leeggemaakt? Dan verdwijnt precies
+  // dát veld (net als bij de −-knop) en schuiven de namen erna een plekje op.
+  const updateName = (i, v) => setNames(p => {
+    const wasFilled = (p[i] ?? "").trim().length > 0;
+    if (wasFilled && v.trim().length === 0) return normalizeSlots(p.filter((_, j) => j !== i));
+    return normalizeSlots(p.map((n, j) => j === i ? v : n));
+  });
   const canStart = (teamMode
     ? teamSizes.every((size, t) => names.slice(getTeamOffset(t), getTeamOffset(t) + size).filter(n => n.trim().length > 0).length >= MIN_PLAYERS)
     : names.filter(n => n.trim().length > 0).length >= MIN_PLAYERS
@@ -3068,7 +3084,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
                                       maxLength={16}
                                     />
                                   </div>
-                                  {size > 2 && <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayerFromTeam(t)}>−</button>}
+                                  {size > 2 && <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayerFromTeam(t, p)}>−</button>}
                                 </div>
                               );
                             })}
@@ -3076,8 +3092,8 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
                         </div>
                       );
                     })}
+                    {teamSizes.length < 6 && <button className="add-player-integrated dashed team-add-btn" onClick={addTeam}>Team toevoegen</button>}
                   </div>
-                  {teamSizes.length < 6 && <button className="add-player-integrated dashed team-add-btn" onClick={addTeam}>Team toevoegen</button>}
                 </div>
               ) : (
                 <div className="teams-setup-wrapper">
@@ -3979,17 +3995,17 @@ const CSS = `
   .btn-subtle { background: rgba(255,255,255,0.1) !important; color: white !important; }
   .add-player-integrated { width: 100%; height: 44px; margin-top: 8px; background: rgba(52,211,153,0.1); border: 2px dashed #34d399; border-radius: 12px; color: #34d399; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; font-size: 1rem; font-weight: 600; }
   .add-player-integrated:hover { background: rgba(52,211,153,0.2); }
-  .add-player-in-team { margin-top: 12px; }
 
   .teams-setup-wrapper { border: 3px solid #60a5fa; border-radius: 24px; padding: 25px; background-color: rgba(0,0,0,0.02); position: relative; }
   .setup-wrapper-badge { position: absolute; top: -14px; left: 20px; background-color: #2563eb; color: white; padding: 4px 16px; border-radius: 12px; font-size: 0.75rem; font-weight: 900; letter-spacing: 1px; z-index: 1; }
-  .teams-grid { display: flex; flex-direction: column; gap: 14px; }
-  .team-section-container { margin-bottom: 14px; padding: 10px 0; width: 100%; background-color: transparent; border-radius: 16px; }
-  .team-header-row { position: relative; display: flex; align-items: center; margin-bottom: 8px; }
-  .team-name-input-flat { background: transparent !important; border: none !important; border-bottom: 2px solid rgba(74,144,226,0.4) !important; color: #4a90e2 !important; font-size: 1.1rem; font-weight: bold; text-transform: uppercase; padding: 2px 0; width: 100%; outline: none; }
-  .delete-btn-round { position: absolute; right: 0; top: 0; background: rgba(0,0,0,0.02); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 10px; }
+  .teams-grid { display: flex; flex-direction: column; gap: 10px; }
+  .team-section-container { width: 100%; background-color: transparent; border-radius: 16px; }
+  .team-header-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .team-name-input-flat { background: transparent !important; border: none !important; border-bottom: 2px solid rgba(74,144,226,0.4) !important; color: #4a90e2 !important; font-size: 1.1rem; font-weight: bold; text-transform: uppercase; padding: 2px 0; flex: 1; min-width: 0; outline: none; }
+  .delete-btn-round { flex-shrink: 0; background: rgba(255,71,87,0.12); color: #ff4757; border: 1.5px solid rgba(255,71,87,0.35); border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; font-weight: 700; transition: background 0.2s, border-color 0.2s; }
+  .delete-btn-round:hover { background: rgba(255,71,87,0.25); border-color: rgba(255,71,87,0.6); }
   .team-players-list { display: flex; flex-direction: column; gap: 4px; }
-  .team-add-btn { margin-top: 15px; border-color: #60a5fa; color: #60a5fa; background: rgba(96,165,250,0.1); }
+  .team-add-btn { margin-top: 0; border-color: #60a5fa; color: #60a5fa; background: rgba(96,165,250,0.1); }
   .team-add-btn:hover { background: rgba(74,144,226,0.2); }
   .small-group { height: 38px !important; margin-bottom: 4px !important; }
   .small-group .player-name-container { border-radius: 10px; }
