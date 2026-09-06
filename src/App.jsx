@@ -184,6 +184,34 @@ function TimerCountdown({ secs, timesUp }) {
   return timesUp ? <span className="alarm-ringing">⏰</span> : <>{secs}</>;
 }
 
+const MIN_PLAYERS = 2;
+const MAX_PLAYERS = 9;
+
+/**
+ * Zorgt dat de namenlijst altijd bestaat uit de aaneengesloten ingevulde namen
+ * (vanaf het begin) gevolgd door precies één lege "volgende" invoer:
+ * - Groeit pas: veld N verschijnt pas zodra alle velden vóór N zijn ingevuld.
+ * - Krimpt: wordt een ingevulde naam weer leeggemaakt, dan verdwijnen alle
+ *   velden erna weer (die bestonden immers alleen dankzij die naam).
+ * Altijd minstens `min` en hoogstens `max` velden.
+ * Gebruikt voor zowel de losse spelerslijst als de spelerslijst per team.
+ */
+function normalizeSlots(names, max = MAX_PLAYERS, min = MIN_PLAYERS) {
+  let filledPrefix = 0;
+  while (filledPrefix < names.length && names[filledPrefix].trim().length > 0) filledPrefix++;
+  const desiredLen = Math.min(Math.max(min, filledPrefix + 1), max);
+  if (names.length > desiredLen) return names.slice(0, desiredLen);
+  if (names.length < desiredLen) return [...names, ...Array(desiredLen - names.length).fill("")];
+  return names;
+}
+
+/** Placeholder-tekst per positie in de losse (niet-team) spelerslijst. */
+function soloPlayerPlaceholder(index) {
+  if (index === 0) return "Jouw naam";
+  if (index === 1) return "Tegenstander";
+  return "Tegenstander";
+}
+
 /**
  * Hergebruikt in GameSetupScreen (WoordRaad) en LetterSnelSetupPanel.
  */
@@ -727,11 +755,11 @@ function LetterSnelChainGame({ players, onRestart, activeLetters, roundTime = DE
 function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setActiveLetters }) {
   const [lsGameMode, setLsGameMode] = useState("klassiek");
   const [lsRoundTime, setLsRoundTime] = useState(10);
-  const canStart = names.length >= 2 && names.every(n => n.trim().length > 0) && activeLetters.length >= 2;
+  const filledNamesCount = names.filter(n => n.trim().length > 0).length;
+  const canStart = filledNamesCount >= MIN_PLAYERS && activeLetters.length >= 2;
 
-  const addPlayer = () => { if (names.length < 10) setNames(prev => [...prev, ""]); };
-  const removePlayer = (i) => { if (names.length > 2) setNames(prev => prev.filter((_, j) => j !== i)); };
-  const updateName = (i, v) => setNames(prev => prev.map((n, j) => j === i ? v : n));
+  const removePlayer = (i) => { if (names.length > 2) setNames(prev => normalizeSlots(prev.filter((_, j) => j !== i))); };
+  const updateName = (i, v) => setNames(prev => normalizeSlots(prev.map((n, j) => j === i ? v : n)));
 
   const toggleLetter = (letter) => {
     setActiveLetters(prev =>
@@ -785,11 +813,9 @@ function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setAc
               onChange={v => updateName(i, v)}
               onRemove={() => removePlayer(i)}
               canRemove={names.length > 2}
+              placeholder={soloPlayerPlaceholder(i)}
             />
           ))}
-          {names.length < 10 && (
-            <button className="add-player-integrated" onClick={addPlayer}>Speler toevoegen</button>
-          )}
         </div>
       </div>
 
@@ -825,7 +851,7 @@ function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setAc
       <button
         className={`start-btn start-btn-ls ${canStart ? "ready-solid" : ""}`}
         style={{marginTop: "12px"}}
-        onClick={() => canStart && onStartLS(names.map(n => n.trim()), activeLetters, lsGameMode, lsRoundTime)}
+        onClick={() => canStart && onStartLS(names.map(n => n.trim()).filter(n => n.length > 0), activeLetters, lsGameMode, lsRoundTime)}
         disabled={!canStart}
       >
         {canStart ? "Spel starten ➜" : activeLetters.length < 2 ? "Kies minimaal 2 letters" : "Vul alles in…"}
@@ -2855,7 +2881,7 @@ function pickRoundEndMessage(correctCount, roundTime, totalScore = correctCount)
 }
 
 function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onStartLS, lsActiveLetters, setLsActiveLetters }) {
-  const [names, setNames] = useState(["", "", ""]);
+  const [names, setNames] = useState(["", ""]);
   const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_SECONDS);
   const [teamMode, setTeamMode] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState(() => new Set(CATEGORIES.map((c) => c.id)));
@@ -2866,19 +2892,19 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
 
   const allCategoryIds = CATEGORIES.map((c) => c.id);
   const allSelected = allCategoryIds.every((id) => selectedCategories.has(id));
+  const getTeamOffset = (t) => teamSizes.slice(0, t).reduce((a, b) => a + b, 0);
 
   const toggleTeamMode = () => {
     setTeamMode((prev) => {
       if (!prev) { setTeamSizes([2, 2]); setTeamNames(["Team 1", "Team 2"]); setNames(Array(4).fill("")); }
-      else { setNames(["", "", ""]); }
+      else { setNames(["", ""]); }
       return !prev;
     });
   };
 
-  const addPlayer = () => {
-    if (teamMode) {
-      if (teamSizes.length < 10) { const ns = [...teamSizes, 2]; setTeamSizes(ns); setTeamNames(p => [...p, `Team ${p.length + 1}`]); setNames(p => [...p, "", ""]); }
-    } else { if (names.length < 10) setNames(p => [...p, ""]); }
+  // "Team toevoegen" blijft een losse knop; de spelerslijst zelf (solo en per team) groeit vanzelf.
+  const addTeam = () => {
+    if (teamSizes.length < 10) { setTeamSizes(p => [...p, 2]); setTeamNames(p => [...p, `Team ${p.length + 1}`]); setNames(p => [...p, "", ""]); }
   };
   const removePlayer = (index) => {
     if (teamMode) {
@@ -2889,28 +2915,45 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
         const numToRemove = teamSizes[index];
         setNames(p => { const n = [...p]; n.splice(offset, numToRemove); return n; });
       }
-    } else { if (names.length > 2) setNames(p => p.filter((_, i) => i !== index)); }
+    } else { if (names.length > 2) setNames(p => normalizeSlots(p.filter((_, i) => i !== index))); }
   };
-  const addPlayerToTeam = (t) => {
-    if (teamSizes[t] >= 10) return;
-    const offset = teamSizes.slice(0, t + 1).reduce((a, b) => a + b, 0);
-    setTeamSizes(p => p.map((s, i) => i === t ? s + 1 : s));
-    setNames(p => { const n = [...p]; n.splice(offset, 0, ""); return n; });
+  // Past de spelerslijst van één team aan (nieuwe waarde óf een speler minder) en
+  // normaliseert daarna diens grootte: aanvullen met een lege "volgende" invoer,
+  // of juist inkrimpen zodra een ingevulde naam weer leeg wordt gemaakt.
+  const setTeamPlayerSlice = (t, newSlice) => {
+    const offset = getTeamOffset(t);
+    const oldSize = teamSizes[t];
+    const normalized = normalizeSlots(newSlice, MAX_PLAYERS, MIN_PLAYERS);
+    setNames(prev => { const n = [...prev]; n.splice(offset, oldSize, ...normalized); return n; });
+    setTeamSizes(prev => prev.map((s, i) => i === t ? normalized.length : s));
+  };
+  const updateTeamPlayerName = (t, p, v) => {
+    const offset = getTeamOffset(t);
+    const slice = names.slice(offset, offset + teamSizes[t]);
+    slice[p] = v;
+    setTeamPlayerSlice(t, slice);
   };
   const removePlayerFromTeam = (t) => {
-    if (teamSizes[t] <= 2) return;
-    const offset = teamSizes.slice(0, t + 1).reduce((a, b) => a + b, 0);
-    setTeamSizes(p => p.map((s, i) => i === t ? s - 1 : s));
-    setNames(p => { const n = [...p]; n.splice(offset - 1, 1); return n; });
+    if (teamSizes[t] <= MIN_PLAYERS) return;
+    const offset = getTeamOffset(t);
+    const slice = names.slice(offset, offset + teamSizes[t]);
+    slice.pop(); // verwijdert altijd de laatste speler van het team
+    setTeamPlayerSlice(t, slice);
   };
-  const updateName = (i, v) => setNames(p => p.map((n, j) => j === i ? v : n));
-  const canStart = names.every((n) => n.trim().length > 0) && selectedCategories.size > 0;
+  const updateName = (i, v) => setNames(p => normalizeSlots(p.map((n, j) => j === i ? v : n)));
+  const canStart = (teamMode
+    ? teamSizes.every((size, t) => names.slice(getTeamOffset(t), getTeamOffset(t) + size).filter(n => n.trim().length > 0).length >= MIN_PLAYERS)
+    : names.filter(n => n.trim().length > 0).length >= MIN_PLAYERS
+  ) && selectedCategories.size > 0;
 
   const buildTeams = () => {
     if (!teamMode) return null;
-    const trimmed = names.map(n => n.trim());
     const result = []; let offset = 0;
-    for (let t = 0; t < teamSizes.length; t++) { result.push({ name: teamNames[t] || `Team ${t + 1}`, players: trimmed.slice(offset, offset + teamSizes[t]) }); offset += teamSizes[t]; }
+    for (let t = 0; t < teamSizes.length; t++) {
+      const players = names.slice(offset, offset + teamSizes[t]).map(n => n.trim()).filter(n => n.length > 0);
+      result.push({ name: teamNames[t] || `Team ${t + 1}`, players });
+      offset += teamSizes[t];
+    }
     return result;
   };
 
@@ -2924,8 +2967,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
       return next;
     });
   };
-  const handleStart = () => { if (!canStart) return; onStart(names.map(n => n.trim()), roundTime, buildTeams(), selectedCategories, wrGameMode); };
-  const getTeamOffset = (t) => teamSizes.slice(0, t).reduce((a, b) => a + b, 0);
+  const handleStart = () => { if (!canStart) return; onStart(names.map(n => n.trim()).filter(n => n.length > 0), roundTime, buildTeams(), selectedCategories, wrGameMode); };
 
   return (
     <div className="screen">
@@ -3019,19 +3061,24 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
                                 <div key={idx} className="player-input-group small-group">
                                   <div className="player-name-container player-bg">
                                     <span className="player-index-badge">{p + 1}</span>
-                                    <input className="integrated-name-input" placeholder={`Speler ${p + 1}`} value={names[idx] ?? ""} onChange={e => updateName(idx, e.target.value)} maxLength={16} />
+                                    <input
+                                      className="integrated-name-input"
+                                      placeholder={`Speler ${p + 1}`}
+                                      value={names[idx] ?? ""}
+                                      onChange={e => updateTeamPlayerName(t, p, e.target.value)}
+                                      maxLength={16}
+                                    />
                                   </div>
                                   {size > 2 && <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayerFromTeam(t)}>−</button>}
                                 </div>
                               );
                             })}
                           </div>
-                          {size < 10 && <button className="add-player-integrated add-player-in-team" onClick={() => addPlayerToTeam(t)}>Speler toevoegen</button>}
                         </div>
                       );
                     })}
                   </div>
-                  {teamSizes.length < 6 && <button className="add-player-integrated dashed team-add-btn" onClick={addPlayer}>Team toevoegen</button>}
+                  {teamSizes.length < 6 && <button className="add-player-integrated dashed team-add-btn" onClick={addTeam}>Team toevoegen</button>}
                 </div>
               ) : (
                 <div className="teams-setup-wrapper">
@@ -3046,9 +3093,9 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
                         onChange={v => updateName(i, v)}
                         onRemove={() => removePlayer(i)}
                         canRemove={names.length > 2}
+                        placeholder={soloPlayerPlaceholder(i)}
                       />
                     ))}
-                    {names.length < 10 && <button className="add-player-integrated" onClick={addPlayer}>Speler toevoegen</button>}
                   </div>
                 </div>
               );
@@ -3580,7 +3627,7 @@ function TiebreakerRoundScreen({ players, tiebreakerState, onCategoryChosen, onW
 export default function App() {
   const [gameMode, setGameMode] = useState("woordraad"); // "woordraad" | "lettersnel"
   const [lsPlayers, setLsPlayers] = useState(null); // null = not started
-  const [lsNames, setLsNames] = useState(["", "", ""]);
+  const [lsNames, setLsNames] = useState(["", ""]);
   const [lsActiveLetters, setLsActiveLetters] = useState(TABOE_LETTER_POOL);
   const [lsChosenLetters, setLsChosenLetters] = useState(TABOE_LETTER_POOL);
   const [lsChosenGameMode, setLsChosenGameMode] = useState("klassiek");
