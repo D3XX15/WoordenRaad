@@ -1154,7 +1154,8 @@ const WORDS_BY_CATEGORY = (() => {
     'rijtjeshuis', 'ijsbaan', 'provincie', 'hoofdstad', 'gemeente', 'afsluitdijk', 'waddeneiland', 'bejaardentehuis', 'circuit',
     'clubhuis', 'continent', 'dansvloer', 'dierenkliniek', 'dierenwinkel', 'dojo', 'drukkerij', 'duiventil', 'etalage', 'expo',
     'gala', 'gangpad', 'gehucht', 'gekkenhuis', 'getto', 'golfbaan', 'golfstaat', 'green', 'IJsselmeer', 'smelterij', 'kajuit',
-    'industrieterrein', 'jaarbeurs', 'jachtgebied', 'kade', 'paskamer', 'etage', 'woonwagenkamp', 'kerncentrale', 'doolhof'
+    'industrieterrein', 'jaarbeurs', 'jachtgebied', 'kade', 'paskamer', 'etage', 'woonwagenkamp', 'kerncentrale', 'doolhof',
+    'Mississippi', 'Nijl', 'poolcirkel', 'Kaukasus', 'Thames'
   ];
 
   const religie = [
@@ -1350,9 +1351,8 @@ const WORDS_BY_CATEGORY = (() => {
     'Vaticaanstad', 'Wit-Rusland', 'Centraal-Afrikaanse Republiek', 'Trinidad en Tobago', 'Kaapverdië',
     'Dominica', 'Palestina', 'Schotland', 'Wales', 'Catalonië', 'Koerdistan', 'Tibet', 'Puerto Rico',
     'Groenland', 'Aruba', 'Curaçao', 'Bermuda', 'Gibraltar', 'Frans-Guyana', 'Tahiti', 'Sint Maarten',
-    'Afrika', 'Azië', 'Europa', 'Noord-Amerika', 'Zuid-Amerika', 'Oceanië', 'Himalaya', 'Kaspische Zee',
-    'Mississippi', 'Nijl', 'Sahara', 'Thames', 'Corsica', 'Hawaï', 'Kaukasus', 'Sicilië', 'Siberië',
-    'poolcirkel'
+    'Afrika', 'Azië', 'Europa', 'Noord-Amerika', 'Zuid-Amerika', 'Oceanië', 'Himalaya',
+    'Sahara', 'Corsica', 'Hawaï', 'Sicilië', 'Siberië'
   ];
 
   const wetenschap = [
