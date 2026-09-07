@@ -3066,7 +3066,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, playerNames, setPlaye
             <div className="logo-area" style={{marginBottom: "36px"}}>
               <div className="logo-icon">🎯</div>
               <h1 className="logo-title" style={{background:"linear-gradient(135deg,#f59e0b,#ef4444,#f97316)", WebkitBackgroundClip:"text", backgroundClip:"text", WebkitTextFillColor:"transparent"}}>LetterSnel</h1>
-              <p className="logo-sub">Bedenk een woord bij de random letter!</p>
+              <p className="logo-sub">Bedenk een antwoord bij de letter!</p>
             </div>
             <LetterSnelSetupPanel onStartLS={onStartLS} names={playerNames} setNames={setPlayerNames} activeLetters={lsActiveLetters} setActiveLetters={setLsActiveLetters} />
           </>
