@@ -495,7 +495,7 @@ function LetterSnelWinnerScreen({ players, scores, winnaarIdx, onRestart }) {
             );
           })}
         </div>
-        <button className="start-btn ready-solid" style={{marginTop:"8px", width:"100%"}} onClick={onRestart}>Nieuw spel ↩</button>
+        <button className="start-btn" style={{marginTop:"8px", width:"100%"}} onClick={onRestart}>Nieuw spel ↩</button>
       </div>
     </div>
   );
@@ -892,7 +892,7 @@ function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setAc
       )}
 
       <button
-        className={`start-btn start-btn-ls ${canStart ? "ready-solid" : ""}`}
+        className="start-btn start-btn-ls"
         onClick={() => canStart && onStartLS(names.map(n => n.trim()).filter(n => n.length > 0), activeLetters, lsGameMode, lsRoundTime)}
         disabled={!canStart}
       >
@@ -2516,7 +2516,7 @@ function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, 
         <button
           onClick={startPlay}
           disabled={!canStart}
-          className={`start-btn${canStart ? " ready-solid" : ""}`}
+          className="start-btn"
           style={{width:"100%"}}>
           {canStart ? "Tie-breaker starten ➜" : "Vul alles in…"}
         </button>
@@ -3144,7 +3144,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, playerNames, setPlaye
                         </div>
                       );
                     })}
-                    {teamSizes.length < 6 && <button className="add-player-integrated dashed team-add-btn" onClick={addTeam}>Team toevoegen</button>}
+                    {teamSizes.length < 6 && <button className="add-player-integrated team-add-btn" onClick={addTeam}>Team toevoegen</button>}
                   </div>
                 </div>
               ) : (
@@ -3203,7 +3203,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, playerNames, setPlaye
                   onToggle={toggleTaboeLetter}
                   onToggleAll={setTaboeActiveLetters}
                   variant="blue"
-                  label="VERBODEN LETTER"
+                  label="VERBODEN LETTERS"
                 />
               )}
 
@@ -3217,7 +3217,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, playerNames, setPlaye
                 borderColor="#60a5fa"
               />
 
-              <button className={`start-btn ${canStart ? "ready-solid" : ""}`} onClick={handleStart} disabled={!canStart}>
+              <button className="start-btn" onClick={handleStart} disabled={!canStart}>
                 {canStart ? "Spel starten ➜" : (wrGameMode === "taboe" && taboeActiveLetters.length < 1) ? "Kies minimaal 1 letter" : "Vul alles in…"}
               </button>
             </div>
@@ -3929,9 +3929,9 @@ export default function App() {
 }
 
 const CSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Righteous&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Righteous&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { font-family: 'Roboto', sans-serif; background: #060d1a; min-height: 100vh; min-height: 100dvh; color: white; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+  html, body { font-family: 'Nunito', sans-serif; background: #060d1a; min-height: 100vh; min-height: 100dvh; color: white; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
 
   .taboe-flash-correct { animation: taboe-flash-green 0.35s ease-out; }
   .taboe-flash-skip { animation: taboe-flash-red 0.35s ease-out; }
