@@ -3203,7 +3203,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, playerNames, setPlaye
                   onToggle={toggleTaboeLetter}
                   onToggleAll={setTaboeActiveLetters}
                   variant="blue"
-                  label="VERBODEN LETTERS"
+                  label="VERBODEN LETTER"
                 />
               )}
 
