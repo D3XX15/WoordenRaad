@@ -40,7 +40,7 @@ function useLetterSpinAnimation({ pool, exclude = null, onLetter, onDone }) {
     setSpinning(true);
     spinCountRef.current = 0;
     const totalTicks = 18 + Math.floor(Math.random() * 12);
-    const available = exclude ? pool.filter(l => l !== exclude) : pool;
+    const available = (exclude && pool.length > 1) ? pool.filter(l => l !== exclude) : pool;
     const target = available[Math.floor(Math.random() * available.length)];
 
     // Vaste interval van 60ms
@@ -212,20 +212,29 @@ function soloPlayerPlaceholder(index) {
   return "Extra speler (optioneel)";
 }
 
+/** Placeholder-tekst per positie binnen één team. */
+function teamPlayerPlaceholder(p) {
+  if (p < MIN_PLAYERS) return `Speler ${p + 1}`;
+  return "Extra speler (optioneel)";
+}
+
 /**
  * Hergebruikt in GameSetupScreen (WoordRaad) en LetterSnelSetupPanel.
+ * @param {boolean} optional - Als true: dit is een (nog) leeg, niet-verplicht extra
+ *        spelerveld. Krijgt een gestippelde rand zodat duidelijk is dat het spel ook
+ *        zonder deze speler gewoon start.
  */
-function PlayerNameField({ index, value, onChange, onRemove, canRemove, placeholder = "Naam invullen..." }) {
+function PlayerNameField({ index, value, onChange, onRemove, canRemove, placeholder = "Naam invullen...", optional = false, maxLength = 12 }) {
   return (
     <div className="player-input-group small-group">
-      <div className="player-name-container player-bg">
+      <div className={`player-name-container player-bg${optional ? " player-name-container-optional" : ""}`}>
         <span className="player-index-badge">{index + 1}</span>
         <input
           className="integrated-name-input"
           placeholder={placeholder}
           value={value}
           onChange={e => onChange(e.target.value)}
-          maxLength={8}
+          maxLength={maxLength}
         />
       </div>
       {canRemove && (
@@ -254,6 +263,54 @@ function TimeStepperControl({ label, value, onChange, min, max, step, unit = "s"
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Herbruikbaar letter-toggle-klavier: laat spelers per letter aan- of uitzetten
+ * of die letter mag meedoen als willekeurig gekozen letter.
+ * Hergebruikt in LetterSnelSetupPanel (oranje thema) en de WoordRaad Taboe-setup
+ * (blauw thema, voor het kiezen van mogelijke verboden letters).
+ * @param {string[]} pool           - Alle letters die getoond worden (in volgorde)
+ * @param {string[]} activeLetters  - De letters die momenteel actief (aan) staan
+ * @param {(l: string) => void} onToggle - Callback bij het aan/uitzetten van een letter
+ * @param {"orange"|"blue"} variant - Kleurthema van de "aan"-knoppen en badge
+ * @param {string} label           - Tekst op het badge-label (default "LETTERS")
+ * @param {(letters: string[]) => void} [onToggleAll] - Als meegegeven: toont een
+ *        knop waarmee in één keer alle letters aan- of uitgezet kunnen worden.
+ */
+function LetterTogglePicker({ pool, activeLetters, onToggle, variant = "orange", label = "LETTERS", onToggleAll }) {
+  const accentColor = variant === "blue" ? "#60a5fa" : "#f97316";
+  const badgeColor = variant === "blue" ? "#2563eb" : "#ea580c";
+  const onClass = variant === "blue" ? "ls-letter-toggle-on-blue" : "ls-letter-toggle-on";
+  const rows = [];
+  for (let i = 0; i < pool.length; i += 7) rows.push(pool.slice(i, i + 7));
+  const allActive = activeLetters.length === pool.length;
+  return (
+    <div className="ls-letters-wrap" style={{ borderColor: accentColor }}>
+      <div className="setup-wrapper-badge" style={{ background: badgeColor }}>{label}</div>
+      <div className="ls-letters-count">{activeLetters.length} letters actief</div>
+      {rows.map((row, ri) => (
+        <div key={ri} className="ls-letter-toggle-row">
+          {row.map(l => (
+            <button
+              key={l}
+              className={`ls-letter-toggle-btn ${activeLetters.includes(l) ? onClass : "ls-letter-toggle-off"}`}
+              onClick={() => onToggle(l)}
+            >{l}</button>
+          ))}
+        </div>
+      ))}
+      {onToggleAll && (
+        <button
+          className="ls-letters-toggle-all-btn"
+          style={{ borderColor: accentColor, color: variant === "blue" ? "#bfdbfe" : "#fed7aa" }}
+          onClick={() => onToggleAll(allActive ? [] : [...pool])}
+        >
+          {allActive ? "Geen letters" : "Alle letters"}
+        </button>
+      )}
     </div>
   );
 }
@@ -775,13 +832,6 @@ function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setAc
     );
   };
 
-  const letterRows = [
-    FULL_ALPHABET.slice(0, 7),
-    FULL_ALPHABET.slice(7, 14),
-    FULL_ALPHABET.slice(14, 21),
-    FULL_ALPHABET.slice(21, 26),
-  ];
-
   return (
     <div className="ls-setup-section">
 
@@ -820,26 +870,13 @@ function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setAc
               onRemove={() => removePlayer(i)}
               canRemove={names.length > 2}
               placeholder={soloPlayerPlaceholder(i)}
+              optional={i >= MIN_PLAYERS && name.trim().length === 0}
             />
           ))}
         </div>
       </div>
 
-      <div className="ls-letters-wrap">
-        <div className="setup-wrapper-badge" style={{background:"#ea580c"}}>LETTERS</div>
-        {letterRows.map((row, ri) => (
-          <div key={ri} className="ls-letter-toggle-row">
-            {row.map(l => (
-              <button
-                key={l}
-                className={`ls-letter-toggle-btn ${activeLetters.includes(l) ? "ls-letter-toggle-on" : "ls-letter-toggle-off"}`}
-                onClick={() => toggleLetter(l)}
-              >{l}</button>
-            ))}
-          </div>
-        ))}
-        <div className="ls-letters-count">{activeLetters.length} van 26 letters actief</div>
-      </div>
+      <LetterTogglePicker pool={FULL_ALPHABET} activeLetters={activeLetters} onToggle={toggleLetter} variant="orange" />
 
       {lsGameMode === "ketting" && (
         <TimeStepperControl
@@ -2303,7 +2340,7 @@ function buildTiebreakerCategoryOptions(selectedCats) {
 const TABOE_LETTER_POOL = FULL_ALPHABET.filter(l => !["Q","X","Y"].includes(l));
 
 // ── Taboe Tie-breaker ────────────────────────────────────────────────────────
-function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, onRestart, onStartTiebreaker }) {
+function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, letterPool = TABOE_LETTER_POOL, onRestart, onStartTiebreaker }) {
   const [chosenCategoryId, setChosenCategoryId] = useState(null);
   const [forbiddenLetter, setForbiddenLetter] = useState(null);
   const [letterLocked, setLetterLocked] = useState(false);
@@ -2317,7 +2354,7 @@ function TaboeTiebreakerGame({ players, tiedPlayerIndices, candidateCategories, 
   const startTimeRef = useRef(null);
 
   const { spin: doSpinLetter, spinning } = useLetterSpinAnimation({
-    pool: TABOE_LETTER_POOL,
+    pool: letterPool,
     exclude: forbiddenLetter, // voorkomt dezelfde letter bij een herstart tie-breaker
     onLetter: setForbiddenLetter,
     onDone: (_target) => { setLetterLocked(true); },
@@ -2495,7 +2532,8 @@ const TaboeStatsScreen = ({ players, playerStats, scores, initialPlayer, onBack 
 );
 
 // ── Taboe Spel ───────────────────────────────────────────────────────────────
-function TaboeRoundGame({ players, onRestart, roundTime, selectedCategories }) {
+function TaboeRoundGame({ players, onRestart, roundTime, selectedCategories, activeLetters }) {
+  const letterPool = activeLetters && activeLetters.length >= 1 ? activeLetters : TABOE_LETTER_POOL;
   const [deck] = useState(() => shuffle(buildWordPool(selectedCategories)));
   const [cardIdx, setCardIdx] = useState(0);
   const [playerIdx, setPlayerIdx] = useState(0);
@@ -2524,7 +2562,7 @@ function TaboeRoundGame({ players, onRestart, roundTime, selectedCategories }) {
   const roundLetterRef = useRef(null); // gedeelde letter voor de hele spelronde
 
   const { spin: doSpinLetter, spinning } = useLetterSpinAnimation({
-    pool: TABOE_LETTER_POOL,
+    pool: letterPool,
     exclude: forbiddenLetter,
     onLetter: setForbiddenLetter,
     onDone: (target) => {
@@ -2739,6 +2777,7 @@ function TaboeRoundGame({ players, onRestart, roundTime, selectedCategories }) {
         players={players}
         tiedPlayerIndices={tiebreakerState.tiedPlayerIndices}
         candidateCategories={tiebreakerState.candidateCategories}
+        letterPool={letterPool}
         onRestart={onRestart}
         onStartTiebreaker={startTiebreaker}
       />
@@ -2885,15 +2924,21 @@ function pickRoundEndMessage(correctCount, roundTime, totalScore = correctCount)
   return { message: pool[idx](correctCount, totalScore), tier, count: correctCount, totalScore };
 }
 
-function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, onStartLS, lsActiveLetters, setLsActiveLetters }) {
-  const [names, setNames] = useState(["", ""]);
-  const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_SECONDS);
+function GameSetupScreen({ onStart, gameMode, setGameMode, playerNames, setPlayerNames, onStartLS, lsActiveLetters, setLsActiveLetters }) {
   const [teamMode, setTeamMode] = useState(false);
+  // Los spelerslijstje voor Teams-modus (structureel anders dan de solo-lijst: bevat
+  // alle teamleden achter elkaar). De solo-namenlijst (playerNames) wordt gedeeld
+  // met LetterSnel, zodat je spelers maar één keer hoeft in te vullen.
+  const [teamPlayerNames, setTeamPlayerNames] = useState(["", "", "", ""]);
+  const names = teamMode ? teamPlayerNames : playerNames;
+  const setNames = teamMode ? setTeamPlayerNames : setPlayerNames;
+  const [roundTime, setRoundTime] = useState(DEFAULT_ROUND_SECONDS);
   const [selectedCategories, setSelectedCategories] = useState(() => new Set(CATEGORIES.map((c) => c.id)));
   const [teamSizes, setTeamSizes] = useState([2, 2]);
   const [teamNames, setTeamNames] = useState(["Team 1", "Team 2"]);
   const [wrGameMode, setWrGameMode] = useState("klassiek"); // "klassiek" | "taboe"
   const [showAllCategories, setShowAllCategories] = useState(false);
+  const [taboeActiveLetters, setTaboeActiveLetters] = useState(FULL_ALPHABET);
 
   const allCategoryIds = CATEGORIES.map((c) => c.id);
   const allSelected = allCategoryIds.every((id) => selectedCategories.has(id));
@@ -2901,8 +2946,9 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
 
   const toggleTeamMode = () => {
     setTeamMode((prev) => {
-      if (!prev) { setTeamSizes([2, 2]); setTeamNames(["Team 1", "Team 2"]); setNames(Array(4).fill("")); }
-      else { setNames(["", ""]); }
+      if (!prev) { setTeamSizes([2, 2]); setTeamNames(["Team 1", "Team 2"]); setTeamPlayerNames(Array(4).fill("")); }
+      // Bij terug naar Solo hoeft niets gereset: de gedeelde playerNames-lijst
+      // (ongewijzigd gebleven terwijl Teams actief was) verschijnt gewoon weer.
       return !prev;
     });
   };
@@ -2959,7 +3005,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
   const canStart = (teamMode
     ? teamSizes.every((size, t) => names.slice(getTeamOffset(t), getTeamOffset(t) + size).filter(n => n.trim().length > 0).length >= MIN_PLAYERS)
     : names.filter(n => n.trim().length > 0).length >= MIN_PLAYERS
-  ) && selectedCategories.size > 0;
+  ) && selectedCategories.size > 0 && (wrGameMode !== "taboe" || taboeActiveLetters.length >= 1);
 
   const buildTeams = () => {
     if (!teamMode) return null;
@@ -2972,6 +3018,14 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
     return result;
   };
 
+  const toggleTaboeLetter = (letter) => {
+    setTaboeActiveLetters(prev =>
+      prev.includes(letter)
+        ? prev.length > 1 ? prev.filter(l => l !== letter) : prev
+        : [...prev, letter].sort()
+    );
+  };
+
   const totalWordsCount = Array.from(selectedCategories).reduce((total, catId) => total + (WORDS_BY_CATEGORY[catId]?.length || 0), 0);
   const absoluteTotalWords = CATEGORIES.reduce((total, cat) => total + (WORDS_BY_CATEGORY[cat.id]?.length || 0), 0);
   const toggleCategory = (id) => {
@@ -2982,7 +3036,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
       return next;
     });
   };
-  const handleStart = () => { if (!canStart) return; onStart(names.map(n => n.trim()).filter(n => n.length > 0), roundTime, buildTeams(), selectedCategories, wrGameMode); };
+  const handleStart = () => { if (!canStart) return; onStart(names.map(n => n.trim()).filter(n => n.length > 0), roundTime, buildTeams(), selectedCategories, wrGameMode, taboeActiveLetters); };
 
   return (
     <div className="screen">
@@ -3012,7 +3066,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
               <h1 className="logo-title" style={{background:"linear-gradient(135deg,#f59e0b,#ef4444,#f97316)", WebkitBackgroundClip:"text", backgroundClip:"text", WebkitTextFillColor:"transparent"}}>LetterSnel</h1>
               <p className="logo-sub">Noem een woord dat start met de letter!</p>
             </div>
-            <LetterSnelSetupPanel onStartLS={onStartLS} names={lsNames} setNames={setLsNames} activeLetters={lsActiveLetters} setActiveLetters={setLsActiveLetters} />
+            <LetterSnelSetupPanel onStartLS={onStartLS} names={playerNames} setNames={setPlayerNames} activeLetters={lsActiveLetters} setActiveLetters={setLsActiveLetters} />
           </>
         ) : (
           <>
@@ -3072,20 +3126,18 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
                           <div className="team-players-list">
                             {Array.from({ length: size }, (_, p) => {
                               const idx = offset + p;
+                              const value = names[idx] ?? "";
                               return (
-                                <div key={idx} className="player-input-group small-group">
-                                  <div className="player-name-container player-bg">
-                                    <span className="player-index-badge">{p + 1}</span>
-                                    <input
-                                      className="integrated-name-input"
-                                      placeholder={`Speler ${p + 1}`}
-                                      value={names[idx] ?? ""}
-                                      onChange={e => updateTeamPlayerName(t, p, e.target.value)}
-                                      maxLength={16}
-                                    />
-                                  </div>
-                                  {size > 2 && <button className="integrated-delete-btn btn-subtle" onClick={() => removePlayerFromTeam(t, p)}>−</button>}
-                                </div>
+                                <PlayerNameField
+                                  key={idx}
+                                  index={p}
+                                  value={value}
+                                  onChange={v => updateTeamPlayerName(t, p, v)}
+                                  onRemove={() => removePlayerFromTeam(t, p)}
+                                  canRemove={size > 2}
+                                  placeholder={teamPlayerPlaceholder(p)}
+                                  optional={p >= MIN_PLAYERS && value.trim().length === 0}
+                                />
                               );
                             })}
                           </div>
@@ -3109,6 +3161,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
                         onRemove={() => removePlayer(i)}
                         canRemove={names.length > 2}
                         placeholder={soloPlayerPlaceholder(i)}
+                        optional={i >= MIN_PLAYERS && name.trim().length === 0}
                       />
                     ))}
                   </div>
@@ -3120,6 +3173,16 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
               <div className="setup-section-wrap" style={{borderColor: "#60a5fa"}}>
                 <div className="setup-wrapper-badge" style={{background: "#2563eb"}}>CATEGORIEËN</div>
                 <div className="cat-word-count">{totalWordsCount} / {absoluteTotalWords} woorden</div>
+                <div
+                  className="cat-select-all-row"
+                  role="switch"
+                  aria-checked={allSelected}
+                  onClick={() => toggleCategory("all")}
+                >
+                  <span className={`toggle-switch${allSelected ? " toggle-switch-on" : ""}`}>
+                    <span className="toggle-switch-thumb" />
+                  </span>
+                </div>
                 <div className="category-grid">
                   {(showAllCategories ? CATEGORIES : CATEGORIES.slice(0, 8)).map(cat => (
                     <button key={cat.id} className={`category-btn${selectedCategories.has(cat.id) ? " category-btn-active" : ""}`} onClick={() => toggleCategory(cat.id)}>{cat.label}</button>
@@ -3133,6 +3196,17 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
               </div>
               )}
 
+              {wrGameMode === "taboe" && (
+                <LetterTogglePicker
+                  pool={FULL_ALPHABET}
+                  activeLetters={taboeActiveLetters}
+                  onToggle={toggleTaboeLetter}
+                  onToggleAll={setTaboeActiveLetters}
+                  variant="blue"
+                  label="VERBODEN LETTERS"
+                />
+              )}
+
               <TimeStepperControl
                 label="RONDETIJD"
                 value={roundTime}
@@ -3144,7 +3218,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, lsNames, setLsNames, 
               />
 
               <button className={`start-btn ${canStart ? "ready-solid" : ""}`} onClick={handleStart} disabled={!canStart}>
-                {canStart ? "Spel starten ➜" : "Vul alles in…"}
+                {canStart ? "Spel starten ➜" : (wrGameMode === "taboe" && taboeActiveLetters.length < 1) ? "Kies minimaal 1 letter" : "Vul alles in…"}
               </button>
             </div>
           </>
@@ -3159,9 +3233,8 @@ function PlayerHandoffScreen({ player, teamName, onReady }) {
     <div className="screen handoff-screen">
       <div className="handoff-card">
         <div className="handoff-icon">📱</div>
-        <p className="handoff-sub">Geef de telefoon aan</p>
+        <p className="handoff-sub">Geef de telefoon aan{teamName && <><br />de speler van {teamName}</>}</p>
         <h2 className="handoff-name">{player}</h2>
-        {teamName && <p className="handoff-team">{teamName}</p>}
         <button className="handoff-btn" onClick={onReady}>Start ronde ➜</button>
       </div>
     </div>
@@ -3642,7 +3715,9 @@ function TiebreakerRoundScreen({ players, tiebreakerState, onCategoryChosen, onW
 export default function App() {
   const [gameMode, setGameMode] = useState("woordraad"); // "woordraad" | "lettersnel"
   const [lsPlayers, setLsPlayers] = useState(null); // null = not started
-  const [lsNames, setLsNames] = useState(["", ""]);
+  // Gedeelde spelerslijst voor de solo-namenvelden: door WoordRaad (niet-Teams) en
+  // LetterSnel samen gebruikt, zodat namen maar één keer ingevuld hoeven te worden.
+  const [playerNames, setPlayerNames] = useState(["", ""]);
   const [lsActiveLetters, setLsActiveLetters] = useState(TABOE_LETTER_POOL);
   const [lsChosenLetters, setLsChosenLetters] = useState(TABOE_LETTER_POOL);
   const [lsChosenGameMode, setLsChosenGameMode] = useState("klassiek");
@@ -3652,6 +3727,7 @@ export default function App() {
   const [taboePlayers, setTaboePlayers] = useState(null);
   const [taboeRoundTime, setTaboeRoundTime] = useState(DEFAULT_ROUND_SECONDS);
   const [taboeCategories, setTaboeCategories] = useState(() => new Set(CATEGORIES.map(c => c.id)));
+  const [taboeActiveLetters, setTaboeActiveLetters] = useState(FULL_ALPHABET);
 
   // WoordRaad state
   const [phase, setPhase] = useState("setup");
@@ -3673,12 +3749,13 @@ export default function App() {
 
   const totalRounds = players.length;
 
-  const startGame = (names, time, teamsData, categories, wrGameMode) => {
+  const startGame = (names, time, teamsData, categories, wrGameMode, activeLetters) => {
     setWrMode(wrGameMode || "klassiek");
     if (wrGameMode === "taboe") {
       setTaboePlayers(names);
       setTaboeRoundTime(time);
       setTaboeCategories(categories instanceof Set ? categories : new Set(CATEGORIES.map(c => c.id)));
+      setTaboeActiveLetters(Array.isArray(activeLetters) && activeLetters.length >= 1 ? activeLetters : FULL_ALPHABET);
       return;
     }
     const empty = Array(names.length).fill(null);
@@ -3802,7 +3879,7 @@ export default function App() {
     return (
       <>
         <style>{CSS}</style>
-        <TaboeRoundGame players={taboePlayers} roundTime={taboeRoundTime} selectedCategories={taboeCategories} onRestart={() => { setTaboePlayers(null); setWrMode("klassiek"); }} />
+        <TaboeRoundGame players={taboePlayers} roundTime={taboeRoundTime} selectedCategories={taboeCategories} activeLetters={taboeActiveLetters} onRestart={() => { setTaboePlayers(null); setWrMode("klassiek"); }} />
       </>
     );
   }
@@ -3816,8 +3893,8 @@ export default function App() {
           onStart={startGame}
           gameMode={gameMode}
           setGameMode={(m) => { setGameMode(m); setLsPlayers(null); }}
-          lsNames={lsNames}
-          setLsNames={setLsNames}
+          playerNames={playerNames}
+          setPlayerNames={setPlayerNames}
           onStartLS={(names, letters, mode, roundTime) => { setLsChosenLetters(letters); setLsChosenGameMode(mode); setLsRoundTime(roundTime ?? 10); setLsPlayers(names); }}
           lsActiveLetters={lsActiveLetters}
           setLsActiveLetters={setLsActiveLetters}
@@ -3852,9 +3929,9 @@ export default function App() {
 }
 
 const CSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Righteous&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Righteous&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { font-family: 'Nunito', sans-serif; background: #060d1a; min-height: 100vh; min-height: 100dvh; color: white; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+  html, body { font-family: 'Roboto', sans-serif; background: #060d1a; min-height: 100vh; min-height: 100dvh; color: white; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
 
   .taboe-flash-correct { animation: taboe-flash-green 0.35s ease-out; }
   .taboe-flash-skip { animation: taboe-flash-red 0.35s ease-out; }
@@ -3884,10 +3961,14 @@ const CSS = `
   .ls-letter-toggle-row { display: flex; gap: 5px; justify-content: center; margin-bottom: 7px; }
   .ls-letter-toggle-btn { width: 36px; height: 36px; border-radius: 10px; border: 2.5px solid; font-family: 'Righteous', cursive; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.13s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .ls-letter-toggle-on { background: rgba(249,115,22,0.2); border-color: #f97316; color: #fed7aa; }
+  .ls-letter-toggle-on-blue { background: rgba(96,165,250,0.2); border-color: #60a5fa; color: #bfdbfe; }
   .ls-letter-toggle-off { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.25); }
   .ls-letter-toggle-on:hover { background: rgba(249,115,22,0.35); border-color: #fb923c; }
+  .ls-letter-toggle-on-blue:hover { background: rgba(96,165,250,0.35); border-color: #93c5fd; }
   .ls-letter-toggle-off:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.6); }
-  .ls-letters-count { text-align: center; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 4px; }
+  .ls-letters-count { text-align: center; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 12px; }
+  .ls-letters-toggle-all-btn { display: block; width: 150px; text-align: center; margin: 4px auto 8px; padding: 6px 0; border-radius: 10px; border: 2.5px solid; background: transparent; font-family: 'Righteous', cursive; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; transition: filter 0.15s; }
+  .ls-letters-toggle-all-btn:hover { filter: brightness(1.4); }
   .ls-mode-wrap { border: 3px solid #f97316; border-radius: 24px; padding: 20px 16px 16px; background-color: rgba(0,0,0,0.02); position: relative; }
   .ls-mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .ls-mode-btn { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 14px 10px; border-radius: 16px; border: 2.5px solid; cursor: pointer; font-family: inherit; transition: all 0.15s; text-align: center; }
@@ -3896,7 +3977,7 @@ const CSS = `
   .ls-mode-btn-inactive:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.25); }
   .ls-mode-icon { font-size: 22px; }
   .ls-mode-title { font-size: 13px; font-weight: 800; color: white; letter-spacing: 0.03em; }
-  .ls-mode-desc { font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.3; }
+  .ls-mode-desc { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.3; }
   .ls-mode-btn-active .ls-mode-title { color: #fcd34d; }
   .ls-mode-btn-active .ls-mode-desc { color: rgba(252,211,77,0.7); }
 
@@ -3975,19 +4056,27 @@ const CSS = `
   .start-btn-ls { background-image: linear-gradient(135deg, #f59e0b, #ef4444, #f97316); }
 
   .cat-word-count { text-align: center; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.28); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+  .cat-select-all-row { display: flex; align-items: center; justify-content: center; margin-bottom: 14px; cursor: pointer; user-select: none; }
+  .toggle-switch { display: inline-block; width: 44px; height: 24px; border-radius: 999px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); position: relative; flex-shrink: 0; transition: background 0.2s, border-color 0.2s; }
+  .toggle-switch-thumb { position: absolute; top: 1px; left: 1px; width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,0.6); transition: transform 0.2s, background 0.2s; }
+  .toggle-switch-on { background: rgba(96,165,250,0.35); border-color: #60a5fa; }
+  .toggle-switch-on .toggle-switch-thumb { transform: translateX(20px); background: #60a5fa; }
   
   .category-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; font-weight: 700; }
   .category-btn { font-family: inherit; font-weight: inherit; line-height: inherit; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; padding: 5px 11px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s; user-select: none; }
   .category-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: white; }
   .cat-expand-btn { border-style: dashed; color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.25); }
   .cat-expand-btn:hover { color: white; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.08); }
-  .category-btn-active { background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.45); color: rgba(110,231,183,0.95); }
-  .category-btn-active:hover { background: rgba(52,211,153,0.2); border-color: #34d399; color: #6ee7b7; }
+  .category-btn-active { background: rgba(96,165,250,0.12); border-color: rgba(96,165,250,0.5); color: #bfdbfe; }
+  .category-btn-active:hover { background: rgba(96,165,250,0.22); border-color: #60a5fa; color: #dbeafe; }
 
   .player-input-group { display: flex; margin-bottom: 4px; height: 48px; width: 100%; }
   .player-name-container { display: flex; align-items: center; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 0 12px; flex-grow: 1; transition: border-color 0.2s; }
   .player-input-group:has(.integrated-delete-btn) .player-name-container { border-radius: 12px 0 0 12px; }
   .player-bg { background: rgba(255,255,255,0.06) !important; border: none; }
+  .player-name-container-optional { border: 1.5px dashed rgba(255,255,255,0.22) !important; background: rgba(255,255,255,0.02) !important; }
+  .player-name-container-optional .player-index-badge { opacity: 0.45; }
+  .player-name-container-optional .integrated-name-input::placeholder { color: rgba(255,255,255,0.32); font-style: italic; }
   .player-index-badge { color: rgba(255,255,255,0.3); font-weight: bold; font-size: 0.85rem; min-width: 20px; }
   .integrated-name-input { background: transparent !important; border: none !important; color: white !important; width: 100%; height: 100%; font-size: 1rem; outline: none; padding-left: 8px; }
   .integrated-delete-btn { background: #ff4757; color: white; border: none; border-radius: 0 12px 12px 0; width: 48px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: background 0.2s; }
@@ -4001,7 +4090,7 @@ const CSS = `
   .teams-grid { display: flex; flex-direction: column; gap: 10px; }
   .team-section-container { width: 100%; background-color: transparent; border-radius: 16px; }
   .team-header-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .team-name-input-flat { background: transparent !important; border: none !important; border-bottom: 2px solid rgba(74,144,226,0.4) !important; color: #4a90e2 !important; font-size: 1.1rem; font-weight: bold; text-transform: uppercase; padding: 2px 0; flex: 1; min-width: 0; outline: none; }
+  .team-name-input-flat { background: transparent !important; border: none !important; border-bottom: 2px solid rgba(74,144,226,0.4) !important; color: #4a90e2 !important; font-size: 1.1rem; font-weight: bold; padding: 2px 0; flex: 1; min-width: 0; outline: none; }
   .delete-btn-round { flex-shrink: 0; background: rgba(255,71,87,0.12); color: #ff4757; border: 1.5px solid rgba(255,71,87,0.35); border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; font-weight: 700; transition: background 0.2s, border-color 0.2s; }
   .delete-btn-round:hover { background: rgba(255,71,87,0.25); border-color: rgba(255,71,87,0.6); }
   .team-players-list { display: flex; flex-direction: column; gap: 4px; }
@@ -4028,7 +4117,6 @@ const CSS = `
   .handoff-icon { font-size: 52px; margin-bottom: 16px; animation: bounce 1.5s infinite; }
   .handoff-sub { font-size: 12px; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; margin-bottom: 12px; }
   .handoff-name { font-family: 'Righteous', cursive; font-size: clamp(28px, 8vw, 42px); margin-bottom: 24px; background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: inline-block; }
-  .handoff-team { font-size: 13px; color: #34d399; font-weight: 800; letter-spacing: 0.06em; margin-top: -10px; margin-bottom: 16px; }
   .handoff-tip { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
 
   .round-screen { flex-direction: column; background: none; transition: background 0.2s; padding-top: max(28px, env(safe-area-inset-top)); }
