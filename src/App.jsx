@@ -845,7 +845,7 @@ function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setAc
           >
             <span className="ls-mode-icon">⚡</span>
             <span className="ls-mode-title">Klassiek</span>
-            <span className="ls-mode-desc">Wie roept als eerste een woord dat begint met de letter?</span>
+            <span className="ls-mode-desc">Roep als eerste een woord dat begint met de letter</span>
           </button>
           <button
             className={`ls-mode-btn ${lsGameMode === "ketting" ? "ls-mode-btn-active" : "ls-mode-btn-inactive"}`}
@@ -853,7 +853,7 @@ function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setAc
           >
             <span className="ls-mode-icon">🔗</span>
             <span className="ls-mode-title">Ketting</span>
-            <span className="ls-mode-desc">Wie staat als laatste overeind in de strijd tegen de klok?</span>
+            <span className="ls-mode-desc">Sta als laatste overeind in de strijd tegen de klok</span>
           </button>
         </div>
       </div>
@@ -3002,10 +3002,12 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, playerNames, setPlaye
     if (wasFilled && v.trim().length === 0) return normalizeSlots(p.filter((_, j) => j !== i));
     return normalizeSlots(p.map((n, j) => j === i ? v : n));
   });
-  const canStart = (teamMode
+  const playersReady = teamMode
     ? teamSizes.every((size, t) => names.slice(getTeamOffset(t), getTeamOffset(t) + size).filter(n => n.trim().length > 0).length >= MIN_PLAYERS)
-    : names.filter(n => n.trim().length > 0).length >= MIN_PLAYERS
-  ) && selectedCategories.size > 0 && (wrGameMode !== "taboe" || taboeActiveLetters.length >= 1);
+    : names.filter(n => n.trim().length > 0).length >= MIN_PLAYERS;
+  const categoriesReady = selectedCategories.size > 0;
+  const lettersReady = wrGameMode !== "taboe" || taboeActiveLetters.length >= 1;
+  const canStart = playersReady && categoriesReady && lettersReady;
 
   const buildTeams = () => {
     if (!teamMode) return null;
@@ -3064,7 +3066,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, playerNames, setPlaye
             <div className="logo-area" style={{marginBottom: "36px"}}>
               <div className="logo-icon">🎯</div>
               <h1 className="logo-title" style={{background:"linear-gradient(135deg,#f59e0b,#ef4444,#f97316)", WebkitBackgroundClip:"text", backgroundClip:"text", WebkitTextFillColor:"transparent"}}>LetterSnel</h1>
-              <p className="logo-sub">Noem een woord dat start met de letter!</p>
+              <p className="logo-sub">Bedenk een woord bij de random letter!</p>
             </div>
             <LetterSnelSetupPanel onStartLS={onStartLS} names={playerNames} setNames={setPlayerNames} activeLetters={lsActiveLetters} setActiveLetters={setLsActiveLetters} />
           </>
@@ -3073,7 +3075,7 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, playerNames, setPlaye
             <div className="logo-area">
               <div className="logo-icon">💬</div>
               <h1 className="logo-title">WoordRaad</h1>
-              <p className="logo-sub">Leg het woord uit terwijl de rest raadt!</p>
+              <p className="logo-sub">Leg of beeld het woord z.s.m. uit!</p>
             </div>
 
             <div className="setup-section">
@@ -3218,7 +3220,15 @@ function GameSetupScreen({ onStart, gameMode, setGameMode, playerNames, setPlaye
               />
 
               <button className="start-btn" onClick={handleStart} disabled={!canStart}>
-                {canStart ? "Spel starten ➜" : (wrGameMode === "taboe" && taboeActiveLetters.length < 1) ? "Kies minimaal 1 letter" : "Vul alles in…"}
+                {canStart
+                  ? "Spel starten ➜"
+                  : !playersReady
+                  ? (teamMode ? "Voeg minimaal 2 teams toe" : "Voeg minimaal 2 spelers toe")
+                  : !categoriesReady
+                  ? "Kies minimaal 1 categorie"
+                  : !lettersReady
+                  ? "Kies minimaal 1 letter"
+                  : "Vul alles in…"}
               </button>
             </div>
           </>
