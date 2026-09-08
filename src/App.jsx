@@ -845,7 +845,7 @@ function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setAc
           >
             <span className="ls-mode-icon">⚡</span>
             <span className="ls-mode-title">Klassiek</span>
-            <span className="ls-mode-desc">Roep als eerste een woord<br />dat begint met de letter</span>
+            <span className="ls-mode-desc">Roep als eerste een woord dat begint met de letter</span>
           </button>
           <button
             className={`ls-mode-btn ${lsGameMode === "ketting" ? "ls-mode-btn-active" : "ls-mode-btn-inactive"}`}
@@ -853,7 +853,7 @@ function LetterSnelSetupPanel({ onStartLS, names, setNames, activeLetters, setAc
           >
             <span className="ls-mode-icon">🔗</span>
             <span className="ls-mode-title">Ketting</span>
-            <span className="ls-mode-desc">Wie staat als laatste overeind<br />in de strijd tegen de klok?</span>
+            <span className="ls-mode-desc">Wie staat als laatste overeind in de strijd tegen de klok?</span>
           </button>
         </div>
       </div>
