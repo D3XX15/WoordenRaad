@@ -1081,9 +1081,9 @@ const WORDS_BY_CATEGORY = (() => {
 
   const sport = [
     'aerobics', 'alpineskiën', 'american football', 'atletiek', 'badminton', 'taekwondo', 'discipline',
-    'balletdansen', 'basketbal', 'beachvolleybal', 'bergsport', 'biatlon', 'bingo', 'trofee', 'blessure',
+    'balletdansen', 'basketbal', 'beachvolleybal', 'klimsport', 'biatlon', 'bingo', 'trofee', 'blessure',
     'biljarten', 'BMX', 'bobslee', 'boksen', 'bowling', 'breakdance', 'doping', 'scheenbeschermer', 'VAR',
-    'cricket', 'curling', 'dammen', 'discuswerpen', 'ganzenbord', 'rivaliteit', 'doelpunt', 'hobby',
+    'cricket', 'curling', 'dammen', 'discuswerpen', 'ganzenbord', 'rivaliteit', 'doelpunt', 'hobby', 'green',
     'dressuur', 'duiken', 'e-sporten', 'estafette', 'fietsen', 'freerunning', 'tennis', 'honkbal', 'arbiter',
     'frisbee', 'gewichtheffen', 'gokken', 'golfen', 'gymnastiek', 'handbal', 'tafeltennis', 'scheidsrechter',
     'hardlopen', 'hengelen', 'hindernisloop', 'hockey', 'hoogspringen', 'hordelopen', 'slagbal', 'atleet',
@@ -1190,7 +1190,7 @@ const WORDS_BY_CATEGORY = (() => {
     'hostel', 'studentenhuis', 'flatgebouw', 'appartement', 'studio', 'stal', 'slachthuis', 'bestemming', 'filmhuis', 'knooppunt',
     'rijtjeshuis', 'ijsbaan', 'provincie', 'hoofdstad', 'gemeente', 'afsluitdijk', 'waddeneiland', 'bejaardentehuis', 'circuit',
     'clubhuis', 'continent', 'dansvloer', 'dierenkliniek', 'dierenwinkel', 'dojo', 'drukkerij', 'duiventil', 'etalage', 'expo',
-    'gala', 'gangpad', 'gehucht', 'gekkenhuis', 'getto', 'golfbaan', 'golfstaat', 'green', 'IJsselmeer', 'smelterij', 'kajuit',
+    'gala', 'gangpad', 'gehucht', 'gekkenhuis', 'getto', 'golfbaan', 'golfstaat', 'IJsselmeer', 'smelterij', 'kajuit',
     'industrieterrein', 'jaarbeurs', 'jachtgebied', 'kade', 'paskamer', 'etage', 'woonwagenkamp', 'kerncentrale', 'doolhof',
     'Mississippi', 'Nijl', 'poolcirkel', 'Kaukasus', 'Thames'
   ];
